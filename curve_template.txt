@@ -1,0 +1,8 @@
+~Curve
+#MNEM .UNIT  LOG CODES        DESCRIPTION
+#---- ------ --------------   -----------------------------
+DEPT .m        00 001 00 00               :Depth Index - Measured Depth       
+LITH .         00 000 00 00               :See remarks
+
+~Ascii
+{logs}
