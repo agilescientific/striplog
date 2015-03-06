@@ -6,7 +6,6 @@ Defines intervals and rock for holding lithologies.
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
-import csv
 
 import las
 
@@ -28,6 +27,15 @@ class Well(las.LASReader):
 
     If we start using pandas dataframes, this is the place to
     do it.
+
+    Args:
+      f (str): The path to an LAS file. 
+      null_subs (float): Something to substitute for the declared
+        null value, which is probably -999.25. Often it's convenient
+        to use np.nan. 
+      unknown_as_other (bool): Whether you'd like to load unknown
+        sections as plain text blocks. A hack to cope with LAS3 files
+        without having to handle arbitrary sections. 
     """
     def __init__(self, f, null_subs=None, unknown_as_other=False):
 
@@ -44,33 +52,10 @@ class Well(las.LASReader):
         Add a striplog to the well object. Returns nothing.
 
         Args:
-           striplog (Striplog): A striplog object.
-           name (str): A name for the log, e.g. 'cuttings', or 'Smith 2012'
+          striplog (Striplog): A striplog object.
+          name (str): A name for the log, e.g. 'cuttings', or 'Smith 2012'
         """
         self.striplog[name] = striplog
-
-    def __get_curve_params(self, abbrev, fname):
-        """
-        Returns a dictionary of petrophysical parameters for
-        plotting purposes.
-        """
-        params = {'acronym': abbrev}
-        with open(fname, 'rU') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                if row['acronymn'] == abbrev:
-                    params['track'] = int(row['track'])
-                    params['units'] = row['units']
-                    params['xleft'] = float(row['xleft'])
-                    params['xright'] = float(row['xright'])
-                    params['logarithmic'] = row['logarithmic']
-                    params['hexcolor'] = row['hexcolor']
-                    params['fill_left_cond'] = bool(row['fill_left_cond'])
-                    params['fill_left'] = row['fill_left']
-                    params['fill_right_cond'] = bool(row['fill_right_cond'])
-                    params['fill_right'] = row['fill_right']
-                    params['xticks'] = row['xticks'].split(',')
-        return params
 
     def to_las(self):
         """

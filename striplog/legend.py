@@ -24,11 +24,26 @@ class LegendError(Exception):
 
 class Decor(object):
     """
-    A single display style. Analogous to 'Rock', a Decor describes how to
-    display a given set of Rock properties.
+    A single display style. A Decor describes how to display a given set
+    of Rock properties.
 
-    In general, you will want to use a Legend, which is just a list of
-    Decors, and leave the Decors to the Legend.
+    In general, you will not usually use a Decor on its own. Instead, you
+    will want to use a Legend, which is just a list of Decors, and leave
+    the Decors to the Legend.
+
+    Args:
+      params (dict): The parameters you want in the Decor. There must be a 
+        Rock to attach the decoration to, and at least one other attribute.
+        It's completely up to you, but you probably want at least a colour
+        (hex names like #AAA or #d3d3d3, or matplotlib's English-language
+        names listed at http://ageo.co/modelrcolour are acceptable. 
+
+        The only other parameter the class recognizes for now is 'width',
+        which is the width of the striplog element.
+
+    Example:
+      d = {'rock': my_rock, 'colour': 'red'}
+      my_decor = Decor(d)
     """
     def __init__(self, params):
         for k, v in params.items():
@@ -36,8 +51,14 @@ class Decor(object):
             try:
                 v = v.lower()
             except AttributeError:
-                pass
+                v = v
             setattr(self, k, v)
+
+        if not getattr(self, 'rock', None):
+            raise LegendError("You must provide a Rock object to decorate.")
+
+        if len(self.__dict__) < 2:
+            raise LegendError("You must provide at least one decoration.")
 
         # Make sure we have a width, even if it's None.
         w = getattr(self, 'width', None)
@@ -52,11 +73,15 @@ class Decor(object):
             setattr(self, 'colour', a)
             delattr(self, 'color')
 
-        # Make sure the colour is correctly formatted.
+        # Make sure the colour is correctly formatted, and allow
+        # the use of matplotlib's English-language colour names.
         c = getattr(self, 'colour', None)
         if c:
             if c[0] != '#':
-                self.colour = '#' + c
+                try:
+                    self.colour = utils.name_to_hex(c)
+                except KeyError:
+                    raise LegendError("Colour not recognized: " + c)
         else:
             self.colour = None
 
