@@ -152,10 +152,10 @@ class Striplog(object):
             # Lithology interval data
             ~OTHER
             # TOP       BOT        LITH
-              312.34,   459.61,    Sandstone
-              459.71,   589.61,    Limestone
-              589.71,   827.50,    Green shale
-              827.60,   1010.84,   Fine sandstone
+            312.34,   459.61,    Sandstone
+            459.71,   589.61,    Limestone
+            589.71,   827.50,    Green shale
+            827.60,   1010.84,   Fine sandstone
         """
         text = re.sub(r'(\n+|\r\n|\r)', '\n', text.strip())
 

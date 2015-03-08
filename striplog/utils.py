@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 """
-Helper functions.
+Helper functions for the striplog and geotransect packages.
 
 """
 import re
@@ -46,7 +46,7 @@ def rgb_to_hex(rgb):
     http://ageo.co/1CFxXpO
 
     Args:
-      rgb (tuple): A tuple or list of RGB values in the 
+      rgb (tuple): A tuple or list of RGB values in the
         range 0-255 (i.e. not 0 to 1).
 
     Returns:
@@ -154,9 +154,9 @@ def find_synonym(word, synonyms=SYNONYMS):
     Args:
       word (str): A word.
       synonyms (dict): A mapping of 'preferred' words to lists of
-        equivalent words. If word is one of the equivalent words, 
+        equivalent words. If word is one of the equivalent words
         then the preferred word is returned. If it isn't, then the
-        original word is returned. 
+        original word is returned.
 
     Returns:
       str: The preferred word, or the input word if not found.

@@ -1,0 +1,6 @@
+Legend
+======
+
+.. automodule:: legend
+   :members:
+

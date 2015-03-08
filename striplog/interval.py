@@ -28,6 +28,14 @@ class Interval(object):
     Initialize with a top (and optional base) and a description and/or
     an ordered list of components, each of which is a Rock.
 
+    Args:
+        top (float): Required top depth. Required.
+        base (float): Base depth. Optional.
+        lexicon (dict): A lexicon. See documentation. Optional unless you only
+            provide descriptions, because it's needed to extract components.
+        max_component (int): The number of components to extract. Default 1.
+        abbreviations (bool): Whether to parse for abbreviations. 
+
     """
     def __init__(self, top, base=None,
                  description='',
@@ -123,6 +131,16 @@ class Interval(object):
         return 'interval'
 
     def summary(self, fmt='%a %c %g %l', initial=False):
+        """
+        Returns a summary of the interval.
+
+        Args:
+            fmt (str): A format string. Optional.
+            initial (bool): Whether to capitalize the first letter.
+
+        Returns:
+            str: An English-language summary.
+        """
         s = [i.summary(fmt=fmt, initial=initial) for i in self.components]
         summary = " with ".join(s)
         return "{0} m of {1}".format(self.thickness, summary)

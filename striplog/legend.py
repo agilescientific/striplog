@@ -32,11 +32,11 @@ class Decor(object):
     the Decors to the Legend.
 
     Args:
-      params (dict): The parameters you want in the Decor. There must be a 
+      params (dict): The parameters you want in the Decor. There must be a
         Rock to attach the decoration to, and at least one other attribute.
         It's completely up to you, but you probably want at least a colour
         (hex names like #AAA or #d3d3d3, or matplotlib's English-language
-        names listed at http://ageo.co/modelrcolour are acceptable. 
+        names listed at http://ageo.co/modelrcolour are acceptable.
 
         The only other parameter the class recognizes for now is 'width',
         which is the width of the striplog element.

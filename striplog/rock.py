@@ -35,7 +35,6 @@ class Rock(object):
         - porosity
         - cementation
         - lithology code
-
     """
 
     def __init__(self, properties):
@@ -151,6 +150,7 @@ class Rock(object):
         Args:
         rock (dict): A rock dictionary.
         fmt (str): Describes the format with
+
             a = amount
             c = colour
             g = grainsize
@@ -160,9 +160,10 @@ class Rock(object):
         str. A summary string.
 
         Example:
-        r = {'colour': 'Red',
-             'grainsize': 'VF-F',
-             'lithology': 'Sandstone'}
+        
+            r = {'colour': 'Red',
+                 'grainsize': 'VF-F',
+                 'lithology': 'Sandstone'}
 
         summarize(r)  -->  'Red vf-f sandstone'
         """

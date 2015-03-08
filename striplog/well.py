@@ -29,13 +29,13 @@ class Well(las.LASReader):
     do it.
 
     Args:
-      f (str): The path to an LAS file. 
+      f (str): The path to an LAS file.
       null_subs (float): Something to substitute for the declared
         null value, which is probably -999.25. Often it's convenient
-        to use np.nan. 
+        to use np.nan.
       unknown_as_other (bool): Whether you'd like to load unknown
         sections as plain text blocks. A hack to cope with LAS3 files
-        without having to handle arbitrary sections. 
+        without having to handle arbitrary sections.
     """
     def __init__(self, f, null_subs=None, unknown_as_other=False):
 
