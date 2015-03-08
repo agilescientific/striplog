@@ -8,18 +8,18 @@ import re
 
 
 def get_template(name):
-    with open(name + '_template.txt') as f:
-        text = re.sub(r'\r\n', r'\n', f.read())
-        text = re.sub(r'\{([FISDE°].*?)\}', r'{{\1}}', text)
-        return text
+    """
+    Still unsure about best way to do this, hence cruft.
+    """
+    # with open(name + '_template.txt') as f:
+    #     text = re.sub(r'\r\n', r'\n', f.read())
+    #     text = re.sub(r'\{([FISDE°].*?)\}', r'{{\1}}', text)
+    #     return text
+    text = re.sub(r'\r\n', r'\n', name)
+    text = re.sub(r'\{([FISDE°].*?)\}', r'{{\1}}', text)
+    return text
 
-"""LAS = get_template('LAS')
-cuttings = get_template('cuttings')
-lithology = get_template('lithology')
-curve = get_template('curve')"""
-
-
-LAS = """~Version
+__LAS = """~Version
 VERS .              3.0       :CWLS LOG ASCII STANDARD - VERSION 3.0
 WRAP .               NO       :ONE LINE PER DEPTH STEP
 DLM  .            COMMA       :DELIMITING CHARACTER
@@ -64,7 +64,7 @@ R5   .                                                       :REMARK LINE 5
 
 {curve}"""
 
-cuttings = """~Cuttings_Parameter
+__cuttings = """~Cuttings_Parameter
 CUT  .   {source}         : Cuttings source          {S}
 CUTDR.   MD               : Cuttings depth reference {S}
 
@@ -77,7 +77,7 @@ CUTD .                    : Cuttings description     {S}
 {data}"""
 
 
-lithology = """~Lithology_Parameter
+__lithology = """~Lithology_Parameter
 LITH .   {source:16s} : Lithology source          {S}
 LITHD.   MD               : Lithology depth reference {S}
 
@@ -89,7 +89,7 @@ LITHN.                    : Lithology name            {S}
 ~Lithology_Data | Lithology_Definition
 {data}"""
 
-curve = """~Curve
+__curve = """~Curve
 #MNEM .UNIT  LOG CODES        DESCRIPTION
 #---- ------ --------------   -----------------------------
 DEPT .m        00 001 00 00               :Depth Index - Measured Depth       
@@ -97,3 +97,9 @@ LITH .         00 000 00 00               :See remarks
 
 ~Ascii
 {logs}"""
+
+LAS = get_template(__LAS)
+cuttings = get_template(__cuttings)
+lithology = get_template(__lithology)
+curve = get_template(__curve)
+

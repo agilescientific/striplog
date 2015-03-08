@@ -16,6 +16,7 @@ from matplotlib import patches
 
 from rock import Rock
 import utils
+from defaults import LEGEND_CSV
 
 
 class LegendError(Exception):
@@ -179,6 +180,13 @@ class Legend(object):
             raise StopIteration
         self.__index += 1
         return result
+
+    @classmethod
+    def default(cls):
+        """
+        Generate a default legend.
+        """
+        return cls.from_csv(LEGEND_CSV)
 
     @classmethod
     def from_csv(cls, string):
