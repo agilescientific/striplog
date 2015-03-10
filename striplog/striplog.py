@@ -16,6 +16,7 @@ import numpy as np
 from PIL import Image
 from matplotlib import pyplot as plt
 from matplotlib import patches
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
 from interval import Interval
 import utils
@@ -31,6 +32,10 @@ class Striplog(object):
     A Striplog is a sequence of intervals.
 
     We will build them from LAS files or CSVs.
+
+    Args:
+        list_of_Intervals (list): A list of Interval objects.
+        source (str): A source for the data. Default None.
     """
     def __init__(self, list_of_Intervals, source=None):
         self.source = source
@@ -317,6 +322,17 @@ class Striplog(object):
         """
         Plotting, but only the Rectangles. You have to set up the figure.
         Returns a matplotlib axis object.
+
+        Args:
+           ax (axis): The matplotlib axis to plot into.
+           legend (Legend): The Legend to use for colours, etc.
+           ladder (bool): Whether to use widths or not. Default False.
+           default_width (int): A width for the plot if not using widths.
+               Default 1.
+
+        Returns:
+           axis. The matplotlib axis.
+
         """
         for i in self.__list:
             origin = (0, i.top)
@@ -325,6 +341,7 @@ class Striplog(object):
 
             if ladder:
                 w = legend.get_width(i.primary) or default_width
+                w = default_width * w/legend.max_width
             else:
                 w = default_width
 
@@ -336,14 +353,21 @@ class Striplog(object):
     def plot(self, legend, width=1, ladder=False, aspect=10):
         """
         Hands-free plotting.
-        """
-        if ladder:
-            width = legend.max_width
 
+        Args:
+           legend (Legend): The Legend to use for colours, etc.
+           width (int): The width of the plot, in inches. Default 1.
+           ladder (bool): Whether to use widths or not. Default False.
+           aspect (int): The aspect ratio of the plot. Default 10.
+
+        Returns:
+           None. The plot is a side-effect.
+
+        """
         fig = plt.figure(figsize=(width, aspect*width))
 
         # And a series of Rectangle patches for the striplog.
-        ax = fig.add_subplot(111)
+        ax = fig.add_axes([0, 0, 1, 1])
 
         self.plot_axis(ax=ax,
                        legend=legend,
@@ -354,7 +378,23 @@ class Striplog(object):
         ax.set_ylim([self.stop, self.start])
         ax.set_xticks([])
 
-        fig.show()
+        majorLocator   = MultipleLocator(5)
+        majorFormatter = FormatStrFormatter('%d')
+        ax.yaxis.set_major_locator(majorLocator)
+        ax.yaxis.set_major_formatter(majorFormatter)
+
+        minorLocator   = MultipleLocator(1)
+        ax.yaxis.set_minor_locator(minorLocator)
+
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['bottom'].set_visible(False)
+        ax.yaxis.set_ticks_position('left')
+        ax.get_yaxis().set_tick_params(which='both', direction='out')
+
+        ax.patch.set_alpha(0)
+
+        plt.show()
 
         return None
 
@@ -364,7 +404,13 @@ class Striplog(object):
         If there's no description, it looks in the summaries.
 
         If you pass a Rock, then it will search the components, not the
-        descriptions.
+        descriptions or summaries.
+
+        Args:
+            search_term (string or Rock): The thing you want to search for. 
+                Strings are treated as regular expressions.
+        Returns:
+           Striplog: A striplog that contains only the 'hit' Intervals. 
         """
         hits = []
 

@@ -16,7 +16,7 @@ from matplotlib import patches
 
 from rock import Rock
 import utils
-from defaults import LEGEND_CSV
+from defaults import LEGEND
 
 
 class LegendError(Exception):
@@ -143,6 +143,12 @@ class Legend(object):
     """
     A look-up table to assist in the conversion of Rocks to
     a plot colour.
+
+    Args:
+        list_of_Decors (list): The decors to collect into a legend. In
+            general, you will want to leave legend building to the constructor
+            class methods, `Legend.default()`, and `Legend.from_csv(string)`.
+            We can add others over time, such as `from_xls` and so on.
     """
 
     def __init__(self, list_of_Decors):
@@ -184,14 +190,24 @@ class Legend(object):
     @classmethod
     def default(cls):
         """
-        Generate a default legend.
+        Generate a default legend. No arguments.
+
+        Returns:
+            Legend: The legend stored in `defaults.py`.
         """
-        return cls.from_csv(LEGEND_CSV)
+        return cls.from_csv(LEGEND)
 
     @classmethod
     def from_csv(cls, string):
         """
         Read CSV text and generate a Legend.
+
+        Note:
+            To edit a legend, the easiest thing to do is probably this:
+
+            - `legend.to_csv()`
+            - Edit the legend, call it `new_legend`.
+            - `legend = Legend.from_csv(new_legend)`
         """
         f = StringIO.StringIO(string)
         r = csv.DictReader(f, skipinitialspace=True)
@@ -207,6 +223,54 @@ class Legend(object):
             list_of_Decors.append(Decor(d))
 
         return cls(list_of_Decors)
+
+    def to_csv(self):
+        """
+        Prints a legend as a CSV string.
+
+        No arguments.
+
+        Returns:
+            str: The legend as a CSV.
+        """
+        # We can't delegate this to Decor because we need to know the superset
+        # of all Decor properties. There may be lots of blanks. 
+        header = []
+        rock_header = []
+        for row in self:
+            for j in row.__dict__.keys():
+                header.append(j)
+            for k in row.rock.__dict__.keys():
+                rock_header.append(k)
+        header = set(header)
+        rock_header = set(rock_header)
+
+        header = set(header)
+        rock_header = set(rock_header)
+        header.remove('rock')
+        header_row = ''
+        if 'colour' in header:
+            header_row += 'colour,'
+            header.remove('colour')
+            has_colour = True
+        for item in header:
+            header_row += item + ','
+        for item in rock_header:
+            header_row += 'rock ' + item + ','
+
+        # Now we have a header row! Phew. 
+        # Next we'll go back over the legend and collect everything.
+        result = header_row.strip(',') + '\n'
+        for row in self:
+            if has_colour:
+                result += row.__dict__.get('colour', '') + ','
+            for item in header:
+                result += str(row.__dict__.get(item, '')) + ','
+            for item in rock_header:
+                result += str(row.rock.__dict__.get(item, '')) + ','
+            result += '\n'
+
+        return result
 
     @property
     def max_width(self):
