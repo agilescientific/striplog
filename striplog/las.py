@@ -102,36 +102,6 @@ class LASItem(object):
                        descr=descr.strip())
 
 
-def __read_wrapped_row(f, n):
-    """
-    Read a "row" of data from the Ascii section of a "wrapped" LAS file.
-
-    `f` must be a file object opened for reading.
-    `n` is the number of fields in the row.
-
-    Returns the list of floats read from the file.
-    """
-    depth = float(f.readline().strip(r', \t'))
-    values = [depth]
-    while len(values) < n:
-        new_values = [float(s.strip(r', \t')) for s in f.readline().split()]
-        values.extend(new_values)
-    return values
-
-
-def __read_wrapped_data(f, dt):
-    data = []
-    ncols = len(dt.names)
-    while True:
-        try:
-            row = __read_wrapped_row(f, ncols)
-        except Exception:
-            break
-        data.append(tuple(row))
-    data = np.array(data, dtype=dt)
-    return data
-
-
 class LASSection(object):
     """
     Represents a "section" of a LAS file.
@@ -306,6 +276,34 @@ class LASReader(object):
             if null_subs is not None:
                 self.data2d[self.data2d == self.null] = null_subs
 
+    def __read_wrapped_row(self, f, n):
+        """
+        Read a "row" of data from the Ascii section of a "wrapped" LAS file.
+
+        `f` must be a file object opened for reading.
+        `n` is the number of fields in the row.
+
+        Returns the list of floats read from the file.
+        """
+        depth = float(f.readline().strip(r', \t'))
+        values = [depth]
+        while len(values) < n:
+            new_vals = [float(s.strip(r', \t')) for s in f.readline().split()]
+            values.extend(new_vals)
+        return values
+
+    def __read_wrapped_data(self, f, dt):
+        data = []
+        ncols = len(dt.names)
+        while True:
+            try:
+                row = self.__read_wrapped_row(f, ncols)
+            except Exception:
+                break
+            data.append(tuple(row))
+        data = np.array(data, dtype=dt)
+        return data
+
     def __read_las(self, f, unknown_as_other):
         """
         Read an LAS file.
@@ -410,7 +408,7 @@ class LASReader(object):
         # The data type is determined by the items from the '~Curves' section.
         dt = np.dtype([(name, float) for name in self.curves.names])
         if self.wrap:
-            a = __read_wrapped_data(f, dt)
+            a = self.__read_wrapped_data(f, dt)
         else:
             if self.dlm:
                 if self.dlm == ' ':

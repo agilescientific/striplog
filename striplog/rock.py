@@ -7,11 +7,6 @@ Defines intervals and rock for holding lithologies.
 :license: Apache 2.0
 """
 
-import re
-import warnings
-
-from utils import find_word_groups, find_synonym
-
 
 class RockError(Exception):
     pass
@@ -39,7 +34,8 @@ class Rock(object):
 
     def __init__(self, properties):
         for k, v in properties.items():
-            setattr(self, k.lower(), v.lower())
+            if k and v:
+                setattr(self, k.lower(), v.lower())
 
     def __repr__(self):
         s = str(self)
@@ -48,7 +44,7 @@ class Rock(object):
     def __str__(self):
         s = []
         for key in self.__dict__:
-            t = "{key}='{value}'"
+            t = "'{key}':'{value}'"
             s.append(t.format(key=key, value=self.__dict__[key]))
         return ', '.join(s)
 
@@ -73,74 +69,26 @@ class Rock(object):
         return hash(frozenset(self.__dict__.keys()))
 
     @classmethod
-    def __parse_component(self, text, lexicon, first_only=True):
+    def from_text(cls, text, lexicon, required=None, first_only=True):
         """
-        Takes a piece of text representing a lithologic description for one
-        component of a rock, e.g. "Red vf-f sandstone" and turns it into a
-        Rock object.
+        Generate a Rock from a text string, using a Lexicon.
+
+        Args:
+            text (str): The text string to parse.
+            lexicon (Lexicon): The dictionary to use for the 
+                categories and lexemes. 
+            first_only (bool): Whether to only take the first
+                match of a lexeme against the text string.
+
+        Returns:
+            Rock: A rock object, or None if there was no 
+                must-have field.
         """
-        lithologies = lexicon['lithologies']
-        amounts = lexicon['amounts']
-        colours = lexicon['colours']
-        grainsizes = lexicon['grainsizes']
-
-        component = {}
-
-        f = re.IGNORECASE
-        p = re.compile(r'(\b' + r'\b|\b'.join(lithologies) + r'\b)', flags=f)
-        l = p.findall(text)
-        if l:
-            if first_only:
-                lith = [l[0]]  # First lithology only
-            else:
-                lith = l       # Will give a list of liths
-        else:
-            with warnings.catch_warnings():
-                warnings.simplefilter("always")
-                w = "No lithology in lexicon matching '{0}'".format(text)
-                warnings.warn(w)
-            lith = [None]
-
-        lith = [find_synonym(i) for i in lith]
-        if first_only:
-            component['lithology'] = lith[0]
-        else:
-            component['lithology'] = lith[:]
-
-        # Get 'amount' descriptor for component.
-        p = re.compile(r'(\b' + r'\b|'.join(amounts) + r'\b)', flags=f)
-        a = p.findall(text)
-        if a:
-            if first_only:
-                component['amount'] = a[0]
-            else:
-                component['amount'] = a
-
-        # Get colours of this component.
-        c = find_word_groups(text, colours)
-        if c:
-            if first_only:
-                component['colour'] = c[0]
-            else:
-                component['colour'] = c
-
-        # Get grainsize of this component.
-        g = find_word_groups(text, grainsizes)
-        if g:
-            if first_only:
-                component['grainsize'] = g[0]
-            else:
-                component['grainsize'] = g
-
-        return component
-
-    @classmethod
-    def from_text(cls, text, lexicon, first_only=True):
-        rock_dict = cls.__parse_component(text, lexicon, first_only=first_only)
-        if rock_dict['lithology']:
-            return cls(rock_dict)
-        else:
+        rock_dict = lexicon.get_component(text, first_only=first_only)
+        if required and required not in rock_dict:
             return None
+        else:
+            return cls(rock_dict)
 
     def summary(self, fmt='%C %g %l', initial=True):
         """
@@ -158,6 +106,10 @@ class Rock(object):
 
         Returns:
         str. A summary string.
+
+        TODO:
+            Make the Rock completely agnostic to its contents.
+            We should be able to use it for fossils, tops, whatever.
 
         Example:
         

@@ -3,11 +3,9 @@
 Helper functions for the striplog and geotransect packages.
 
 """
-import re
 
 import xlrd
 
-from defaults import SYNONYMS
 from matplotlib import colors
 
 
@@ -94,88 +92,3 @@ def get_abbreviations_from_xls(fname):
             abbreviations[a] = defns[i]
 
     return abbreviations
-
-
-def find_word_groups(text, tokens, proximity=2):
-    """
-    Given a string and a list of regex tokens, finds and combines words into
-    groups based on their proximity.
-
-    Args:
-       text (str): Some text.
-       tokens (list): A list of regex strings.
-
-    Returns:
-       list. The combined strings it found.
-
-    Example:
-       COLOURS = [r"red(?:dish)?", r"grey(?:ish)?", r"green(?:ish)?"]
-       s = 'GREYISH-GREEN limestone with RED or GREY sandstone.'
-       find_word_groups(s, COLOURS) --> ['greyish green', 'red', 'grey']
-    """
-    f = re.IGNORECASE
-    regex = re.compile(r'(\b' + r'\b|\b'.join(tokens) + r'\b)', flags=f)
-    candidates = regex.finditer(text)
-
-    starts, ends = [], []
-    groups = []
-
-    for item in candidates:
-        starts.append(item.span()[0])
-        ends.append(item.span()[1])
-        groups.append(item.group().lower())
-
-    new_starts = []  # As a check only.
-    new_groups = []  # This is what I want.
-
-    skip = False
-    for i, g in enumerate(groups):
-        if skip:
-            skip = False
-            continue
-        if (i < len(groups)-1) and (starts[i+1]-ends[i] <= proximity):
-            new_groups.append(g + "-" + groups[i+1])
-            new_starts.append(starts[i])
-            skip = True
-        else:
-            if g not in new_groups:
-                new_groups.append(g)
-                new_starts.append(starts[i])
-            skip = False
-
-    return new_groups
-
-
-def find_synonym(word, synonyms=SYNONYMS):
-    """
-    Given a string and a dict of synonyms, returns the 'preferred'
-    word.
-
-    Args:
-      word (str): A word.
-      synonyms (dict): A mapping of 'preferred' words to lists of
-        equivalent words. If word is one of the equivalent words
-        then the preferred word is returned. If it isn't, then the
-        original word is returned.
-
-    Returns:
-      str: The preferred word, or the input word if not found.
-
-    Example:
-      >>> syn = {'snake': ['python', 'adder']}
-      >>> find_synonym('adder', syn)
-      'snake'
-      >>> find_synonym('rattler', syn)
-      'rattler'
-    """
-    # Make the reverse look-up table.
-    reverse_lookup = {}
-    for k, v in synonyms.iteritems():
-        for i in v:
-            reverse_lookup[i] = k
-
-    # Now check words against this table.
-    if word in reverse_lookup:
-        return reverse_lookup[word]
-    else:
-        return word
