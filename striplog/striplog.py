@@ -118,12 +118,12 @@ class Striplog(object):
         Take a log-like stream of numbers or strings representing lithologies.
 
         Args:
-           loglike (array-like): The input stream of loglike data.
-           offset (int): Offset (down) from top at which to get lithology,
-           to be sure of getting 'clean' pixels.
+            loglike (array-like): The input stream of loglike data.
+            offset (int): Offset (down) from top at which to get lithology,
+            to be sure of getting 'clean' pixels.
 
         Returns:
-           ndarray. Two ndarrays: tops and lithologies.
+            ndarray. Two ndarrays: tops and lithologies.
         """
         loglike = np.array(loglike)
         all_edges = loglike[1:] == loglike[:-1]
@@ -229,16 +229,16 @@ class Striplog(object):
         Read an image and generate Striplog.
 
         Args:
-           filename (str): An image file, preferably high-res PNG.
-           start (float or int): The depth at the top of the image.
-           stop (float or int): The depth at the bottom of the image.
-           offset (int): The number of pixels to skip at the top of each
-              change in colour.
-           tolerance (float): The Euclidean distance between hex colours,
-              which has a maximum (black to white) of 25.98 in base 10.
+            filename (str): An image file, preferably high-res PNG.
+            start (float or int): The depth at the top of the image.
+            stop (float or int): The depth at the bottom of the image.
+            offset (int): The number of pixels to skip at the top of each
+                change in colour.
+            tolerance (float): The Euclidean distance between hex colours,
+               which has a maximum (black to white) of 25.98 in base 10.
 
         Returns:
-           str. The CSV string from which to build the Striplog object.
+            str. The CSV string from which to build the Striplog object.
 
         """
         im = np.array(Image.open(filename))
@@ -282,16 +282,18 @@ class Striplog(object):
 
         return cls.from_csv(csv_text, lexicon, source=source)
 
-    def to_csv(self, dlm=",", header=True):
+    def to_csv(self, use_descriptions=False, dlm=",", header=True):
         """
         Returns a CSV string built from the summaries of the Intervals.
 
         Args:
-           dlm (str): The delimiter.
-           source (str): The sourse of the data.
+            use_descriptions (bool): Whether to use descriptions instead
+                of summaries.
+            dlm (str): The delimiter.
+            source (str): The sourse of the data.
 
         Returns:
-           str. A string of comma-separated values.
+            str. A string of comma-separated values.
 
         """
         data = ''
@@ -413,6 +415,22 @@ class Striplog(object):
 
         return None
 
+    def sample(self, depth):
+        """
+        Get the interval at a particular depth.
+
+        Args:
+            depth (Number): The depth to query.
+
+        Returns:
+            Interval: The interval at that depth, or None if
+                the depth is outside the striplog's range.
+        """
+        for iv in self:
+            if iv.top <= depth <= iv.base:
+                return iv
+        return None
+
     def find(self, search_term):
         """
         Look for a regex expression in the descriptions of the striplog.
@@ -428,9 +446,7 @@ class Striplog(object):
            Striplog: A striplog that contains only the 'hit' Intervals. 
         """
         hits = []
-
         for i, iv in enumerate(self):
-
             try:
                 search_text = iv.description or iv.primary.summary()
                 pattern = re.compile(search_term)
@@ -439,7 +455,6 @@ class Striplog(object):
             except TypeError:
                 if search_term in iv.components:
                     hits.append(i)
-
         return self[hits]
 
     @property

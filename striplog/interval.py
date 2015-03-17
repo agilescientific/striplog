@@ -150,7 +150,7 @@ class Interval(object):
         """
         s = [i.summary(fmt=fmt, initial=initial) for i in self.components]
         summary = " with ".join(s)
-        return "{0} m of {1}".format(self.thickness, summary)
+        return "{0:.2f} m of {1}".format(self.thickness, summary)
 
     @staticmethod
     def __split_description(text):
