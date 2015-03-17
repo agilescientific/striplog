@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf 8 -*-
 """
-A lexicon is a dictionary of vocabulary to use for parsing
-lithologic or stratigraphic decriptions. 
+A vocabulary for parsing lithologic or stratigraphic decriptions. 
 
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
@@ -13,6 +12,8 @@ import warnings
 import re
 
 import defaults
+
+SPECIAL = ['synonyms', 'parts_of_speech']
 
 
 class LexiconError(Exception):
@@ -31,10 +32,14 @@ class Lexicon(object):
 
     def __init__(self, params):
         for k, v in params.items():
+            k = re.sub(' ', '_', k)
             setattr(self, k, v)
 
         if not params.get('synonyms'):
             self.synonyms = None
+
+        if not params.get('parts_of_speech'):
+            self.parts_of_speech = None
 
     def __repr__(self):
         return str(self.__dict__)
@@ -148,7 +153,7 @@ class Lexicon(object):
         """
         Takes a piece of text representing a lithologic description for one
         component of a rock, e.g. "Red vf-f sandstone" and turns it into a
-        Rock object.
+        dictionary of attributes.
 
         TODO:
             Generalize this so that we can use any types of word, as specified
@@ -159,8 +164,8 @@ class Lexicon(object):
         for i, (category, words) in enumerate(self.__dict__.items()):
 
             # There is probably a more elegant way to do this.
-            if category == 'synonyms':
-                # 'synonyms' is a special entry in the lexicon.
+            if category in SPECIAL:
+                # There are special entries in the lexicon.
                 continue
 
             groups = self.find_word_groups(text, category)
@@ -200,5 +205,6 @@ class Lexicon(object):
         Returns:
             list: A list of strings of category names.
         """
-        keys = [k for k in self.__dict__.keys() if k != 'synonyms']
+        special = ['synonyms', 'parts of speech']
+        keys = [k for k in self.__dict__.keys() if k not in special]
         return keys

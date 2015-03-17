@@ -19,6 +19,7 @@ from matplotlib import patches
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
 from interval import Interval
+from legend import Legend
 import utils
 import templates
 
@@ -140,22 +141,24 @@ class Striplog(object):
                  lexicon=None,
                  source='CSV',
                  dlm=',',
-                 ignore_las=False):
+                 points=False):
         """
-        Convert an OTHER field containing interval data to an interval
-        dictionary. Handles an arbitrary number of fields; it's up to you
-        to know what they are.
+        Convert a CSV string into a striplog. Expects 2 or 3 fields:
+            top, description
+            OR
+            top, base, description
 
         Args:
-           text (str): The input text, given by ``well.other``.
-           dlm (str): The delimiter, given by ``well.dlm``. Default: CSV
+            text (str): The input text, given by ``well.other``.
+            lexicon (Lexicon): A lexicon, required to extract components.
+            source (str): A source. Default: 'CSV'.
+            dlm (str): The delimiter, given by ``well.dlm``. Default: ','
+            points (bool): Whether to treat as points or as intervals.
 
         Returns:
-           dict. A dictionary with keys 'tops', 'bases', and 'liths'.
+            Striplog: A ``striplog`` object.
 
         Example:
-            # Lithology interval data
-            ~OTHER
             # TOP       BOT        LITH
             312.34,   459.61,    Sandstone
             459.71,   589.61,    Limestone
@@ -170,9 +173,12 @@ class Striplog(object):
         for row in reader:
             as_strings.append(row)
 
-        result = {'tops': [], 'bases': [], 'liths': []}
+        result = {'tops': [], 'bases': [], 'descrs': []}
 
         for i, row in enumerate(as_strings):
+            if len(row) == 2:
+                row = [row[0], None, row[1]]
+
             # TOP
             this_top = float(row[0])
 
@@ -186,25 +192,29 @@ class Striplog(object):
             else:
                 this_base = float(row[1])
 
-            # LITH
-            this_lith = row[2].strip()
+            # DESCRIPTION
+            this_descr = row[2].strip()
 
-            # If this top is not the same as the last base, add a layer first.
-            if (i > 0) and (this_top != result['bases'][-1]):
-                result['tops'].append(result['bases'][-1])  # Last base.
-                result['bases'].append(this_top)
-                result['liths'].append('')
+            # Deal with making intervals or points...
+            if not points:
+                # Insert intervals where needed.
+                if (i > 0) and (this_top != result['bases'][-1]):
+                    result['tops'].append(result['bases'][-1])
+                    result['bases'].append(this_top)
+                    result['descrs'].append('')
+            else:
+                this_base = None
 
             # ASSIGN
             result['tops'].append(this_top)
             result['bases'].append(this_base)
-            result['liths'].append(this_lith)
+            result['descrs'].append(this_descr)
 
         # Build the list.
         list_of_Intervals = []
         for i, t in enumerate(result['tops']):
             b = result['bases'][i]
-            d = result['liths'][i]
+            d = result['descrs'][i]
             interval = Interval(t, b, description=d, lexicon=lexicon)
             list_of_Intervals.append(interval)
 
@@ -350,7 +360,7 @@ class Striplog(object):
 
         return ax
 
-    def plot(self, legend, width=1, ladder=False, aspect=10):
+    def plot(self, legend=None, width=1, ladder=False, aspect=10):
         """
         Hands-free plotting.
 
@@ -368,6 +378,11 @@ class Striplog(object):
 
         # And a series of Rectangle patches for the striplog.
         ax = fig.add_axes([0, 0, 1, 1])
+
+        if not legend:
+            # Build a random-coloured legend.
+            rocks = [i[0] for i in self.top]
+            legend = Legend.random(rocks)
 
         self.plot_axis(ax=ax,
                        legend=legend,

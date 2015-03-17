@@ -19,10 +19,11 @@ from rock import Rock
 class IntervalError(Exception):
     pass
 
+
 @total_ordering
 class Interval(object):
     """
-    Used to represent a lithologic or strigraphic interval, or a single point,
+    Used to represent a lithologic or stratigraphic interval, or a single point,
     such as a sample location. 
 
     Initialize with a top (and optional base) and a description and/or
@@ -70,10 +71,10 @@ class Interval(object):
                     warnings.warn(w)
                 self.components = []
 
-        try:
+        if self.components:
             self.primary = self.components[0]
-        except:
-            raise IntervalError('There are no components.')
+        else:
+            self.primary = None
 
     def __repr__(self):
         s = str(self)
@@ -91,10 +92,17 @@ class Interval(object):
         if isinstance(other, self.__class__):
             top = min(self.top, other.top)
             base = max(self.base, other.base)
-            d1 = max(self, other).description
-            d2 = min(self, other).description
-            d =  d1.strip(' .,') + '  with ' + d2.strip(' .,')
+            prop = 100 * max(self, other).thickness / (base-top)
+            d1 = max(self, other).description.strip(' .,')
+            d2 = min(self, other).description.strip(' .,')
+            d =  '{:.1f}% {} with {:.1f}% {}'.format(prop, d1, 100-prop, d2)
             c = max(self, other).components + min(self, other).components
+            return Interval(top, base, description=d, components=c)
+        elif isinstance(other, Rock):
+            top = self.top
+            base = self.base
+            d = self.description + ' with ' + other.summary()
+            c = self.components + [other]
             return Interval(top, base, description=d, components=c)
         elif isinstance(other, numbers.Number):
             top = self.top
@@ -104,7 +112,6 @@ class Interval(object):
             return Interval(top, base, description=d, components=c)
         else:
             raise IntervalError("You can only add intervals or thicknesses.")
-
 
     # Must supply __eq__ and one other rich comparison for
     # the total_ordering function to provide the others.
@@ -130,7 +137,7 @@ class Interval(object):
             return 'top'
         return 'interval'
 
-    def summary(self, fmt='%a %c %g %l', initial=False):
+    def summary(self, fmt=None, initial=False):
         """
         Returns a summary of the interval.
 
@@ -145,9 +152,11 @@ class Interval(object):
         summary = " with ".join(s)
         return "{0} m of {1}".format(self.thickness, summary)
 
-    def __split_description(self, text):
+    @staticmethod
+    def __split_description(text):
         """
-        Split a description into its components.
+        Split a description into parts, each of which can be turned into
+        a single component.
         """
         # Protect some special sequences.
         t = re.sub(r'(\d) ?in\. ', r'\1 inch ', text)  # Protect.
@@ -166,14 +175,14 @@ class Interval(object):
 
     def __parse_description(self, lexicon, max_component=1):
         """
-        Turns a description into a lists of rocks. The items in the list
-        are in the order they were found in the description, which is
+        Turns a description into a lists of components. The items in the
+        list are in the order they were found in the description, which is
         usually order of importance.
-            """
+        """
         text = self.description
         components = []
         for p, part in enumerate(self.__split_description(text)):
-            if p > max_component - 1:
+            if p == max_component:
                 break
             components.append(Rock.from_text(part, lexicon))
 

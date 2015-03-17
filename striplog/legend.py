@@ -13,6 +13,7 @@ import warnings
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import patches
+from matplotlib.colors import rgb2hex
 
 from rock import Rock
 import utils
@@ -77,12 +78,24 @@ class Decor(object):
         # Make sure the colour is correctly formatted, and allow
         # the use of matplotlib's English-language colour names.
         c = getattr(self, 'colour', None)
-        if c:
-            if c[0] != '#':
+        if c is not None:
+            if type(c) in [list, tuple, np.ndarray]:
+                try:
+                    self.colour = rgb2hex(c)
+                except TypeError:
+                    raise LegendError("Colour not recognized: " + c)
+            elif c[0] != '#':
                 try:
                     self.colour = utils.name_to_hex(c)
                 except KeyError:
                     raise LegendError("Colour not recognized: " + c)
+            elif len(c) == 4:
+                try:
+                    self.colour = c[:2] + c[1] + 2*c[2] + 2*c[3]
+                except TypeError:
+                    raise LegendError("Colour not recognized: " + c)
+            else:
+                pass  # Leave the colour alone. Could assert here.
         else:
             self.colour = None
 
@@ -96,6 +109,14 @@ class Decor(object):
             t = "{key}='{value}'"
             s.append(t.format(key=key, value=self.__dict__[key]))
         return ', '.join(s)
+
+    @classmethod
+    def random(cls, rock):
+        """
+        Returns a Decor with a random colour.
+        """
+        colour = np.random.rand(3,)
+        return cls({'colour': colour, 'rock':rock})
 
     @property
     def rgb(self):
@@ -196,6 +217,17 @@ class Legend(object):
             Legend: The legend stored in `defaults.py`.
         """
         return cls.from_csv(LEGEND)
+
+    @classmethod
+    def random(cls, list_of_Rocks):
+        """
+        Generate a random legend for a given list of rocks.
+
+        Returns:
+            Legend: A legend with random colours.
+        """
+        list_of_Decors = [Decor.random(r) for r in list_of_Rocks]
+        return cls(list_of_Decors)
 
     @classmethod
     def from_csv(cls, string):

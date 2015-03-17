@@ -59,5 +59,9 @@ LEXICON = { 'lithology':[r'overburden', r'sandstone', r'siltstone', r'shale', r'
             'synonyms': {'Overburden': ['Drift'],
                          'Anhydrite': ['Gypsum'],
                          'Salt': ['Halite', 'Sylvite'],
-                        }
+                        },
+            'parts of speech': {'noun': ['lithology'],
+                    'adjective': ['colour', 'grainsize'],
+                    'subordinate': ['amount'],
+                    }
             }

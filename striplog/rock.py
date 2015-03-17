@@ -6,6 +6,7 @@ Defines intervals and rock for holding lithologies.
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
+import re
 
 
 class RockError(Exception):
@@ -90,26 +91,20 @@ class Rock(object):
         else:
             return cls(rock_dict)
 
-    def summary(self, fmt='%C %g %l', initial=True):
+    def summary(self, fmt=None, initial=True):
         """
         Given a rock dict and a format string,
         return a summary description of a rock.
 
         Args:
-        rock (dict): A rock dictionary.
-        fmt (str): Describes the format with
-
-            a = amount
-            c = colour
-            g = grainsize
-            l = lithology
+            rock (dict): A rock dictionary.
+            fmt (str): Describes the format with a string. Use '%'
+                to signal a field in the Rock, which is analogous 
+                to a dictionary. If no format is given, you will 
+                just get a list of attributes. 
 
         Returns:
-        str. A summary string.
-
-        TODO:
-            Make the Rock completely agnostic to its contents.
-            We should be able to use it for fossils, tops, whatever.
+            str: A summary string.
 
         Example:
         
@@ -117,35 +112,34 @@ class Rock(object):
                  'grainsize': 'VF-F',
                  'lithology': 'Sandstone'}
 
-        summarize(r)  -->  'Red vf-f sandstone'
+        summarize(r)  -->  'Red, vf-f, sandstone'
         """
-        rock_dict = self.__dict__
+        # TODO: Use nouns and adjectives properly.
+        # TODO: Use {key} instead of %key.
+        if not fmt:
+            string, flist = '', []
+            for item in self.__dict__:
+                string += '{}, '
+                flist.append(item)
+            string = string.strip(', ')
+        else:
+            fmt = re.sub(r'%%', '_percent_', fmt)
+            string = re.sub(r'%(\w+)', '{}', fmt)
+            string = re.sub(r'_percent_', '%', string)
+            flist = re.findall(r'%(\w+)', fmt)
 
-        fields = {'a': 'amount',
-                  'c': 'colour',
-                  'g': 'grainsize',
-                  'l': 'lithology'
-                  }
+        words = []
+        for key in flist:
+            word = self.__dict__.get(key.lower())
+            if word and key[0].isupper():
+                word = word.capitalize()
+            if word and key.isupper():
+                word = word.upper()
+            if not word:
+                word = ''
+            words.append(word)
 
-        flist = fmt.split('%')
-
-        fmt_items = []
-        fmt_string = flist.pop(0)
-
-        skip = 0
-        for i, item in enumerate(flist):
-            this_item = rock_dict.get(fields[item[0].lower()])
-            if this_item:
-                this_item = this_item.lower()
-                if item.isupper():
-                    this_item = this_item.capitalize()
-                fmt_items.append(this_item)
-                fmt_string += '{' + str(i-skip) + '}' + item[1:]
-            else:
-                skip += 1
-
-        # The star trick lets us unpack from a list.
-        summary = fmt_string.format(*fmt_items)
+        summary = string.format(*words)
 
         if initial and summary:
             summary = summary[0].upper() + summary[1:]
