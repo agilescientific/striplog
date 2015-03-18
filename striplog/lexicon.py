@@ -107,7 +107,7 @@ class Lexicon(object):
                 skip = False
                 continue
             if (i < len(groups)-1) and (starts[i+1]-ends[i] <= proximity):
-                new_groups.append(g + "-" + groups[i+1])
+                new_groups.append(g + " " + groups[i+1])
                 new_starts.append(starts[i])
                 skip = True
             else:

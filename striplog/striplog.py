@@ -274,6 +274,35 @@ class Striplog(object):
         return cls(list_of_Intervals, source="Image")
 
     @classmethod
+    def from_array(cls, a, lexicon, source="", points=False):
+        """
+        Turn an array-like into a Striplog. It should have the following
+        format (where `base` is optional):
+
+            [(top, base, description),
+             (top, base, description),
+             ...
+             ]
+
+        Args:
+            a (array-like): A list of lists or of tuples, or an array.
+            lexicon (Lexicon): A language dictionary to extract structured
+                objects from the descriptions.
+            source (str): The source of the data. Default: ''.
+            points (bool): Whether to treat as point data. Default: False.
+        """
+        csv_text = ''
+        for interval in a:
+            interval = [str(i) for i in interval]
+            if (len(interval) < 2) or (len(interval) > 3):
+                raise StriplogError('Elements must have 2 or 3 items')
+            descr = interval[-1].strip('" ')
+            interval[-1] = '"' + descr + '"'
+            csv_text += ', '.join(interval) + '\n'
+
+        return cls.from_csv(csv_text, lexicon, source=source, points=points)
+
+    @classmethod
     def from_las3(cls, string, lexicon, source="LAS", dlm=','):
         """
         Turn LAS3 'Lithology' section into a Striplog.
@@ -281,15 +310,21 @@ class Striplog(object):
         NB Does not read an actual LAS file. Use the Well object for that.
         """
         f = re.DOTALL | re.IGNORECASE
-        regex = r'^\~.+?Data.+?\n(.+?)(?:\n\n+|\n*\~|\n*$)'
+        regex = r'\n\~(\w+?)_Data.+?\n(.+?)(?:\n\n+|\n*\~|\n*$)'
         pattern = re.compile(regex, flags=f)
-        csv_text = pattern.search(string).group(1)
+        texts = pattern.findall(string)
 
-        s = re.search(r'\.(.+?)\: ?.+?source', string)
-        if s:
-            source = s.group(1).strip()
+        result = {}
+        for text in texts:
+            striplog = cls.from_csv(text[1], lexicon, source=source)
+            result[text[0].lower()] = striplog
 
-        return cls.from_csv(csv_text, lexicon, source=source)
+            # TODO: make this handle multiple CSV strings in the file
+            # s = re.search(r'\.(.+?)\: ?.+?source', string)
+            # if s:
+            #     source = s.group(1).strip()
+
+        return result
 
     def to_csv(self, use_descriptions=False, dlm=",", header=True):
         """
@@ -297,7 +332,7 @@ class Striplog(object):
 
         Args:
             use_descriptions (bool): Whether to use descriptions instead
-                of summaries.
+                of summaries, if available.
             dlm (str): The delimiter.
             source (str): The sourse of the data.
 
@@ -312,32 +347,41 @@ class Striplog(object):
             data += '  {0:48s}'.format('Lithology')
 
         for i in self.__list:
-            if i.primary:
-                summary = i.primary.summary()
+            if use_descriptions and i.description:
+                text = i.description
+            elif i.primary:
+                text = i.primary.summary()
             else:
-                summary = ''
+                text = ''
             data += '{0:9.3f}'.format(i.top)
             data += '{0}{1:9.3f}'.format(dlm, i.base)
-            data += '{0}  {1:48s}'.format(dlm, summary)
+            data += '{0}  {1:48s}'.format(dlm, '"'+text+'"')
             data += '\n'
 
         return data
 
-    def to_las3(self, dlm=",", source="Striplog"):
+    def to_las3(self, use_descriptions=False, dlm=",", source="Striplog"):
         """
         Returns an LAS 3.0 section string.
 
         Args:
-           dlm (str): The delimiter.
-           source (str): The sourse of the data.
+            use_descriptions (bool): Whether to use descriptions instead
+                of summaries, if available.
+            dlm (str): The delimiter.
+            source (str): The sourse of the data.
 
         Returns:
-           str. A string forming Lithology section of an LAS3 file.
+            str. A string forming Lithology section of an LAS3 file.
 
         """
-        data = self.to_csv(dlm=dlm, header=False)
+        data = self.to_csv(use_descriptions=use_descriptions,
+                           dlm=dlm,
+                           header=False)
 
-        return templates.lithology.format(source=source, data=data)
+        return templates.section.format(name='Lithology',
+                                        short="LITH",
+                                        source=source,
+                                        data=data)
 
     def plot_axis(self, ax, legend, ladder=False, default_width=1):
         """
@@ -345,14 +389,14 @@ class Striplog(object):
         Returns a matplotlib axis object.
 
         Args:
-           ax (axis): The matplotlib axis to plot into.
-           legend (Legend): The Legend to use for colours, etc.
-           ladder (bool): Whether to use widths or not. Default False.
-           default_width (int): A width for the plot if not using widths.
-               Default 1.
+            ax (axis): The matplotlib axis to plot into.
+            legend (Legend): The Legend to use for colours, etc.
+            ladder (bool): Whether to use widths or not. Default False.
+            default_width (int): A width for the plot if not using widths.
+                Default 1.
 
         Returns:
-           axis. The matplotlib axis.
+            axis. The matplotlib axis.
 
         """
         for i in self.__list:
@@ -371,19 +415,25 @@ class Striplog(object):
 
         return ax
 
-    def plot(self, legend=None, width=1, ladder=False, aspect=10, interval=10):
+    def plot(self,
+             legend=None,
+             width=1,
+             ladder=False,
+             aspect=10,
+             interval=(1,10)):
         """
         Hands-free plotting.
 
         Args:
-           legend (Legend): The Legend to use for colours, etc.
-           width (int): The width of the plot, in inches. Default 1.
-           ladder (bool): Whether to use widths or not. Default False.
-           aspect (int): The aspect ratio of the plot. Default 10.
-           interval (int): The depth label interval. Default 10.
+            legend (Legend): The Legend to use for colours, etc.
+            width (int): The width of the plot, in inches. Default 1.
+            ladder (bool): Whether to use widths or not. Default False.
+            aspect (int): The aspect ratio of the plot. Default 10.
+            interval (int or tuple): The (minor,major) tick interval for depth.
+                Only the major interval is labeled. Default (1,10).
 
         Returns:
-           None. The plot is a side-effect.
+            None. The plot is a side-effect.
 
         """
         fig = plt.figure(figsize=(width, aspect*width))
@@ -393,7 +443,7 @@ class Striplog(object):
 
         if not legend:
             # Build a random-coloured legend.
-            rocks = [i[0] for i in self.top]
+            rocks = [i[0] for i in self.top if i[0]]
             legend = Legend.random(rocks)
 
         self.plot_axis(ax=ax,
@@ -405,13 +455,16 @@ class Striplog(object):
         ax.set_ylim([self.stop, self.start])
         ax.set_xticks([])
 
-        majorLocator   = MultipleLocator(interval)
+        if type(interval) is int:
+            interval = (1, interval)
+
+        minorLocator   = MultipleLocator(interval[0])
+        ax.yaxis.set_minor_locator(minorLocator)
+
+        majorLocator   = MultipleLocator(interval[1])
         majorFormatter = FormatStrFormatter('%d')
         ax.yaxis.set_major_locator(majorLocator)
         ax.yaxis.set_major_formatter(majorFormatter)
-
-        minorLocator   = MultipleLocator(1)
-        ax.yaxis.set_minor_locator(minorLocator)
 
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
@@ -468,22 +521,25 @@ class Striplog(object):
         return self[hits]
 
     @property
-    def thick(self):
-        max_int = None
+    def thickest(self):
+        """
+        Returns the thickest interval.
+        """
+        max_int, max_thick = None, 0
         for i in self:
-            if i.thickness > max_int.thickness:
-                max_int = i
+            if i.thickness > max_thick:
+                max_int, max_thick = i, i.thickness
         return max_int
 
     @property
-    def thin(self):
+    def thinnest(self):
         """
         Returns the thinnest interval.
         """
-        min_int = None
+        min_int, min_thick = None, 0
         for i in self:
-            if i.thickness < min_int.thickness:
-                min_int = i
+            if i.thickness < min_thick:
+                min_int, min_thick = i, i.thickness
         return min_int
 
     @property

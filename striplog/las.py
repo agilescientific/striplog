@@ -341,16 +341,17 @@ class LASReader(object):
                     if len(line) < 2:
                         raise LASError("Missing section character after '~'.")
                     current_section_label = line[1:2]
+                    las3_flag = '_' in line
                     other = False
-                    if current_section_label == 'V':
+                    if current_section_label == 'V' and not las3_flag:
                         current_section = self.version
-                    elif current_section_label == 'W':
+                    elif current_section_label == 'W' and not las3_flag:
                         current_section = self.well
-                    elif current_section_label == 'C':
+                    elif current_section_label == 'C' and not las3_flag:
                         current_section = self.curves
-                    elif current_section_label == 'P':
+                    elif current_section_label == 'P' and not las3_flag:
                         current_section = self.parameters
-                    elif current_section_label == 'O':
+                    elif current_section_label == 'O' and not las3_flag:
                         current_section = self.other
                         other = True
                     elif unknown_as_other:

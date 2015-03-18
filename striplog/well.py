@@ -6,12 +6,22 @@ Defines intervals and rock for holding lithologies.
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
+import time
+
+import re
 
 import las
+import templates
 
 
 class WellError(Exception):
     pass
+
+
+class Extra(dict):
+    def __init__(self, **kwargs):
+        dict.__init__(self, kwargs)
+        self.__dict__ = self
 
 
 class Well(las.LASReader):
@@ -29,42 +39,100 @@ class Well(las.LASReader):
     do it.
 
     Args:
-      f (str): The path to an LAS file.
-      null_subs (float): Something to substitute for the declared
-        null value, which is probably -999.25. Often it's convenient
-        to use np.nan.
-      unknown_as_other (bool): Whether you'd like to load unknown
-        sections as plain text blocks. A hack to cope with LAS3 files
-        without having to handle arbitrary sections.
+        f (str): The path to an LAS file.
+        null_subs (float): Something to substitute for the declared
+            null value, which is probably -999.25. Often it's convenient
+            to use np.nan.
+        unknown_as_other (bool): Whether you'd like to load unknown
+            sections as plain text blocks. A hack to cope with LAS3 files
+            without having to handle arbitrary sections.
     """
-    def __init__(self, f, null_subs=None, unknown_as_other=False):
+    def __init__(self, f=None, null_subs=None, unknown_as_other=True):
 
-        # First generate the parent object.
-        super(Well, self).__init__(f, null_subs, unknown_as_other)
+        # First generate the parent object if possible.
+        if f:
+            super(Well, self).__init__(f, null_subs, unknown_as_other)
 
-        # Add an empty striplog dict for later.
-        self.striplog = {}
+        # Add an empty striplog dict-like for later.
+        self.striplog = Extra()
 
     # __repr__, __str__, etc, will come from LASReader
+
+    def add_las(self, f, null_subs=None, unknown_as_other=True):
+        """
+        Add data from a LAS to the well object. Returns nothing.
+
+        Args:
+            f (str): The path to an LAS file.
+            null_subs (float): Something to substitute for the declared
+                null value, which is probably -999.25. Often it's convenient
+                to use np.nan.
+            unknown_as_other (bool): Whether you'd like to load unknown
+                sections as plain text blocks. A hack to cope with LAS3 files
+                without having to handle arbitrary sections.
+        """
+        pass
 
     def add_striplog(self, striplog, name):
         """
         Add a striplog to the well object. Returns nothing.
 
         Args:
-          striplog (Striplog): A striplog object.
-          name (str): A name for the log, e.g. 'cuttings', or 'Smith 2012'
+            striplog (Striplog): A striplog object.
+            name (str): A name for the log, e.g. 'cuttings', or 'Smith 2012'
         """
-        self.striplog[name] = striplog
+        setattr(self.striplog, name, striplog)
 
-    def to_las(self):
+    def striplogs_to_las3(self, use_descriptions=False):
         """
-        Save this well as an LAS 3 file.
-        """
-        pass
+        Form the LAS3 string.
 
-    def plot(self):
+        Notes:
+            - It's debatable if this should be a ``striplog`` function, but it
+                contains well-level information so I'm putting it here. 
+            - I can't decide whether to handle file writing, or just leave it
+                to the user. So all this does for now is return a string.
         """
-        Plot a simple representation of the well.
-        """
-        pass
+        data = ''
+        for name, striplog in self.striplog.items():
+            if name[3].lower() in 'aeiou':
+                short = re.sub(r'[aeiou]', '', name)[:4].upper()
+            else:
+                short = name[:4].upper()
+            name = name.capitalize()
+            this_data = striplog.to_csv(use_descriptions=use_descriptions,
+                                        header=False)
+            template = templates.section
+            data += template.format(name=name,
+                                    short=short,
+                                    source=striplog.source,
+                                    data=this_data) + '\n'
+
+        eref, apd = -999.25, -999.25
+        if self.parameters.DREF.data == 'KB':
+            try:
+                eref = float(self.parameters.EREF.data)
+            except AttributeError:
+                print "There is no EREF"
+        if self.parameters.PDAT.data == 'GL':
+            try:
+                apd = float(self.parameters.APD.data)
+            except AttributeError:
+                print "There is no APD"
+
+        time_now = time.strftime("%Y/%m/%d %H:%M", time.gmtime())
+        template = templates.las
+        result = template.format(prog='striplog.py',
+                                      date=time_now,
+                                      start=self.start,  # NB from logs
+                                      stop=self.stop,    # NB from logs
+                                      step=-999.25,  # striplogs have no step
+                                      null=self.null,
+                                      well=self.well.WELL.data,
+                                      uwi=self.well.UWI.data,
+                                      lic=self.well.LIC.data,
+                                      apd=apd,
+                                      eref=eref,
+                                      section=data,
+                                      curve='')
+        return result.strip() + '\n'

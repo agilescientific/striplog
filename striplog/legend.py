@@ -113,7 +113,7 @@ class Decor(object):
     @classmethod
     def random(cls, rock):
         """
-        Returns a Decor with a random colour.
+        Returns a minimal Decor with a random colour.
         """
         colour = np.random.rand(3,)
         return cls({'colour': colour, 'rock':rock})

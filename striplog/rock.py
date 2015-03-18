@@ -45,7 +45,7 @@ class Rock(object):
     def __str__(self):
         s = []
         for key in self.__dict__:
-            t = "'{key}':'{value}'"
+            t = '"{key}":"{value}"'
             s.append(t.format(key=key, value=self.__dict__[key]))
         return ', '.join(s)
 
