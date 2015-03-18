@@ -19,12 +19,12 @@ def get_template(name):
     text = re.sub(r'\{([FISDE°].*?)\}', r'{{\1}}', text)
     return text
 
-__LAS = """~Version
+__las = """~Version
 VERS .              3.0       :CWLS LOG ASCII STANDARD - VERSION 3.0
 WRAP .               NO       :ONE LINE PER DEPTH STEP
 DLM  .            COMMA       :DELIMITING CHARACTER
-PROG .  {prog:>12s}       :LAS Program name and version
-CREA . {date:16s}     :LAS Creation date {{YYYY/MM/DD hh:mm}}
+PROG .      {prog:>12s}       :LAS Program name and version
+CREA . {date:16s}       :LAS Creation date {{YYYY/MM/DD hh:mm}}
 
 ~Well 
 #MNEM .UNIT  DATA             DESCRIPTION
@@ -54,11 +54,9 @@ DREF .        KB              :DEPTH REFERENCE
 EREF .M       {KBRSS:8.3f}        :ELEVATION OF DEPTH
 
 #Remarks
-R1   .         Lithologic descriptions from cuttings.        :REMARK LINE 1
-R2   .         Striplog lithologies                          :REMARK LINE 2
+R1   .                                                       :REMARK LINE 1
+R2   .                                                       :REMARK LINE 2
 R3   .                                                       :REMARK LINE 3
-R4   .                                                       :REMARK LINE 4
-R5   .                                                       :REMARK LINE 5
 
 {lith}
 
@@ -98,7 +96,7 @@ LITH .         00 000 00 00               :See remarks
 ~Ascii
 {logs}"""
 
-LAS = get_template(__LAS)
+las = get_template(__las)
 cuttings = get_template(__cuttings)
 lithology = get_template(__lithology)
 curve = get_template(__curve)

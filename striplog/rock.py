@@ -124,9 +124,9 @@ class Rock(object):
             string = string.strip(', ')
         else:
             fmt = re.sub(r'%%', '_percent_', fmt)
-            string = re.sub(r'%(\w+)', '{}', fmt)
+            string = re.sub(r'\{(\w+)\}', '{}', fmt)
             string = re.sub(r'_percent_', '%', string)
-            flist = re.findall(r'%(\w+)', fmt)
+            flist = re.findall(r'\{(\w+)\}', fmt)
 
         words = []
         for key in flist:

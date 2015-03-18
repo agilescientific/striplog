@@ -87,7 +87,7 @@ class Striplog(object):
             raise StriplogError("There must be one Interval for each index.")
 
     def __iter__(self):
-        return self
+        return iter(self.__list)
 
     def next(self):  # __next__() in Python 3
         try:
@@ -115,7 +115,9 @@ class Striplog(object):
     @classmethod
     def __intervals_from_loglike(self, loglike, offset=2):
         """
-        Take a log-like stream of numbers or strings representing lithologies.
+        Take a log-like stream of numbers or strings,
+        and return two arrays: one of the tops (changes), and one of the
+        values from the stream.
 
         Args:
             loglike (array-like): The input stream of loglike data.
@@ -123,7 +125,7 @@ class Striplog(object):
             to be sure of getting 'clean' pixels.
 
         Returns:
-            ndarray. Two ndarrays: tops and lithologies.
+            Two ndarrays: tops and values.
         """
         loglike = np.array(loglike)
         all_edges = loglike[1:] == loglike[:-1]
@@ -132,9 +134,9 @@ class Striplog(object):
         tops = np.where(edges)[0]
         tops = np.append(0, tops)
 
-        liths = loglike[tops + offset]
+        values = loglike[tops + offset]
 
-        return tops, liths
+        return tops, values
 
     @classmethod
     def from_csv(cls, text,
@@ -223,7 +225,8 @@ class Striplog(object):
     @classmethod
     def from_img(cls, filename, start, stop, legend,
                  source="Image",
-                 offset=2,
+                 offset=10,
+                 pixel_offset=2,
                  tolerance=0):
         """
         Read an image and generate Striplog.
@@ -232,22 +235,28 @@ class Striplog(object):
             filename (str): An image file, preferably high-res PNG.
             start (float or int): The depth at the top of the image.
             stop (float or int): The depth at the bottom of the image.
-            offset (int): The number of pixels to skip at the top of each
-                change in colour.
+            legend (Legend): A legend to look up the components in.
+            source (str): A source for the data. Default: 'Image'.
+            offset (Number): The percentage of the way across the image from
+                which to extract the pixel column. Default: 10.
+            pixel_offset (int): The number of pixels to skip at the top of
+                each change in colour. Default: 2.
             tolerance (float): The Euclidean distance between hex colours,
-               which has a maximum (black to white) of 25.98 in base 10.
+                which has a maximum (black to white) of 441.67 in base 10.
+                Default: 0.
 
         Returns:
-            str. The CSV string from which to build the Striplog object.
+            Striplog: The ``striplog`` object.
 
         """
         im = np.array(Image.open(filename))
-        col = im.shape[1]/10.  # One tenth of way across image.
+        col = im.shape[1]/(100./offset)
         rgb = im[:, col, :3]
         loglike = np.array([utils.rgb_to_hex(t) for t in rgb])
 
         # Get the pixels and colour values at 'tops' (i.e. changes).
-        pixels, hexes = cls.__intervals_from_loglike(loglike, offset=offset)
+        pixels, hexes = cls.__intervals_from_loglike(loglike,
+                                                     offset=pixel_offset)
 
         # Scale pixel values to actual depths.
         length = float(loglike.size)
@@ -362,7 +371,7 @@ class Striplog(object):
 
         return ax
 
-    def plot(self, legend=None, width=1, ladder=False, aspect=10):
+    def plot(self, legend=None, width=1, ladder=False, aspect=10, interval=10):
         """
         Hands-free plotting.
 
@@ -371,6 +380,7 @@ class Striplog(object):
            width (int): The width of the plot, in inches. Default 1.
            ladder (bool): Whether to use widths or not. Default False.
            aspect (int): The aspect ratio of the plot. Default 10.
+           interval (int): The depth label interval. Default 10.
 
         Returns:
            None. The plot is a side-effect.
@@ -395,7 +405,7 @@ class Striplog(object):
         ax.set_ylim([self.stop, self.start])
         ax.set_xticks([])
 
-        majorLocator   = MultipleLocator(5)
+        majorLocator   = MultipleLocator(interval)
         majorFormatter = FormatStrFormatter('%d')
         ax.yaxis.set_major_locator(majorLocator)
         ax.yaxis.set_major_formatter(majorFormatter)
@@ -415,19 +425,19 @@ class Striplog(object):
 
         return None
 
-    def sample(self, depth):
+    def depth(self, d):
         """
         Get the interval at a particular depth.
 
         Args:
-            depth (Number): The depth to query.
+            d (Number): The depth to query.
 
         Returns:
             Interval: The interval at that depth, or None if
                 the depth is outside the striplog's range.
         """
         for iv in self:
-            if iv.top <= depth <= iv.base:
+            if iv.top <= d <= iv.base:
                 return iv
         return None
 

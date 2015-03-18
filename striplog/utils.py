@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 """
-Helper functions for the striplog and geotransect packages.
+Helper functions for the striplog package.
 
 """
 
@@ -14,10 +14,10 @@ def hex_to_name(hexx):
     Convert hex to a color name, using matplotlib's colour names.
 
     Args:
-      hexx (str): A hexadecimal colour, starting with '#'.
+        hexx (str): A hexadecimal colour, starting with '#'.
 
     Returns:
-      str: The name of the colour, or None if not found.
+        str: The name of the colour, or None if not found.
     """
     for n, h in colors.cnames:
         if h == hexx.upper():
@@ -30,10 +30,10 @@ def name_to_hex(name):
     Convert a color name to hex, using matplotlib's colour names.
 
     Args:
-      name (str): The name of a colour, e.g. 'red'.
+        name (str): The name of a colour, e.g. 'red'.
 
     Returns:
-      str: The hex code for the colour.
+        str: The hex code for the colour.
     """
     return colors.cnames[name].lower()
 
@@ -60,10 +60,10 @@ def hex_to_rgb(hexx):
     http://ageo.co/1CFxXpO
 
     Args:
-      hexx (str): A hexadecimal colour, starting with '#'.
+        hexx (str): A hexadecimal colour, starting with '#'.
 
     Returns:
-      tuple: The equivalent RGB triple, in the range 0 to 255.
+        tuple: The equivalent RGB triple, in the range 0 to 255.
     """
     h = hexx.strip('#')
     l = len(h)
@@ -77,10 +77,10 @@ def get_abbreviations_from_xls(fname):
     return a dictionary with abbrev:definition key:value pairs.
 
     Args:
-      fname (str): The path of an Excel .xls file.
+        fname (str): The path of an Excel .xls file.
 
     Returns:
-      dict: A mapping of abbreviation to definition.
+        dict: A mapping of abbreviation to definition.
     """
     book = xlrd.open_workbook(fname)
     abbreviations = {}

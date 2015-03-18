@@ -197,14 +197,11 @@ class Lexicon(object):
     @property
     def categories(self):
         """
-        Lists the categories in teh lexicon, except the
-        optional `synonyms` category, which is special.
-
-        Args:
+        Lists the categories in the lexicon, except the
+        optional categories.
 
         Returns:
             list: A list of strings of category names.
         """
-        special = ['synonyms', 'parts of speech']
-        keys = [k for k in self.__dict__.keys() if k not in special]
+        keys = [k for k in self.__dict__.keys() if k not in SPECIAL]
         return keys

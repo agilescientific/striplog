@@ -148,7 +148,7 @@ class Interval(object):
         Returns:
             str: An English-language summary.
         """
-        s = [i.summary(fmt=fmt, initial=initial) for i in self.components]
+        s = [r.summary(fmt=fmt, initial=initial) for r in self.components]
         summary = " with ".join(s)
         return "{0:.2f} m of {1}".format(self.thickness, summary)
 
