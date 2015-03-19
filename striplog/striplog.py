@@ -382,6 +382,35 @@ class Striplog(object):
                                         source=source,
                                         data=data)
 
+    def to_log(self, step=1.0, start=None, stop=None, legend=None):
+        """
+        Return a fully sampled log from a striplog.
+        """
+        if not start:
+            start = self.start
+
+        if not stop:
+            stop = self.stop
+
+        pts = np.floor((stop - start)/step)
+        stop = self.start + step * pts
+        depth = np.linspace(start, stop, pts+1)
+        result = np.zeros_like(depth)   # Make a container for the result
+
+        # Make a look-up table for the log values.
+        if legend:
+            table = {j.rock: i+1 for i, j in enumerate(legend)}
+        else:
+            table = {j[0]: i+1 for i, j in enumerate(self.top)}
+
+        for i in self:
+            top_index = np.ceil((i.top-start)/step)
+            base_index = np.ceil((i.base-start)/step)+1
+            key = table.get(i.primary) or 0
+            result[top_index:base_index] = key
+
+        return depth, result
+
     def plot_axis(self, ax, legend, ladder=False, default_width=1):
         """
         Plotting, but only the Rectangles. You have to set up the figure.

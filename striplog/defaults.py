@@ -38,7 +38,7 @@ LEXICON = { 'lithology':[r'overburden', r'sandstone', r'siltstone', r'shale', r'
                         r'minor', r'some', r'abundant', r'rare', r'flakes?',
                         r'[-\.\d]+%'
                        ],
-            'grainsize': [r'vf', r'f', r'm', r'c', r'vc',
+            'grainsize': [r'vf(?:-)?', r'f(?:-)?', r'm(?:-)?', r'c(?:-)?', r'vc',
                            r'very fine(?: to)?', r'fine(?: to)?', r'medium(?: to)?', r'coarse(?: to)?', r'very coarse',
                            r'v fine(?: to)?', r'med(?: to)?', r'med.(?: to)?', r'v coarse',
                            r'grains?', r'granules?', r'pebbles?', r'cobbles?', r'boulders?',

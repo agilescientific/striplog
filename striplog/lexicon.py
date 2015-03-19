@@ -74,16 +74,16 @@ class Lexicon(object):
         groups based on their proximity.
 
         Args:
-           text (str): Some text.
-           tokens (list): A list of regex strings.
+            text (str): Some text.
+            tokens (list): A list of regex strings.
 
         Returns:
-           list. The combined strings it found.
+            list. The combined strings it found.
 
         Example:
-           COLOURS = [r"red(?:dish)?", r"grey(?:ish)?", r"green(?:ish)?"]
-           s = 'GREYISH-GREEN limestone with RED or GREY sandstone.'
-           find_word_groups(s, COLOURS) --> ['greyish green', 'red', 'grey']
+            COLOURS = [r"red(?:dish)?", r"grey(?:ish)?", r"green(?:ish)?"]
+            s = 'GREYISH-GREEN limestone with RED or GREY sandstone.'
+            find_word_groups(s, COLOURS) --> ['greyish green', 'red', 'grey']
         """
         f = re.IGNORECASE
         words = getattr(self, category)
@@ -107,7 +107,11 @@ class Lexicon(object):
                 skip = False
                 continue
             if (i < len(groups)-1) and (starts[i+1]-ends[i] <= proximity):
-                new_groups.append(g + " " + groups[i+1])
+                if g[-1] == '-':
+                    sep = ''  # Don't insert spaces after hyphens.
+                else:
+                    sep = ' '
+                new_groups.append(g + sep + groups[i+1])
                 new_starts.append(starts[i])
                 skip = True
             else:
@@ -124,17 +128,17 @@ class Lexicon(object):
         word.
 
         Args:
-          word (str): A word.
+            word (str): A word.
 
         Returns:
-          str: The preferred word, or the input word if not found.
+            str: The preferred word, or the input word if not found.
 
         Example:
-          >>> syn = {'snake': ['python', 'adder']}
-          >>> find_synonym('adder', syn)
-          'snake'
-          >>> find_synonym('rattler', syn)
-          'rattler'
+            >>> syn = {'snake': ['python', 'adder']}
+            >>> find_synonym('adder', syn)
+            'snake'
+            >>> find_synonym('rattler', syn)
+            'rattler'
         """
         if self.synonyms:
             # Make the reverse look-up table.

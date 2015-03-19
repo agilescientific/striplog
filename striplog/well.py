@@ -7,7 +7,6 @@ Defines intervals and rock for holding lithologies.
 :license: Apache 2.0
 """
 import time
-
 import re
 
 import las
