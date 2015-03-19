@@ -12,6 +12,7 @@ import re
 
 import las
 import templates
+from striplog import Striplog
 
 
 class WellError(Exception):
@@ -46,8 +47,19 @@ class Well(las.LASReader):
         unknown_as_other (bool): Whether you'd like to load unknown
             sections as plain text blocks. A hack to cope with LAS3 files
             without having to handle arbitrary sections.
+
+    Note:
+        This module is not very general. It was written to support a very
+        specific workflow. If it seems to be useful for other things,
+        we can come back and try to generalize it.
+
+        Essentially, this entire thing needs to be replaced by Something
+        that properly supports the LAS 3.0 format, both reading and writing.
     """
-    def __init__(self, f=None, null_subs=None, unknown_as_other=True):
+    def __init__(self, f=None,
+                 lexicon=None,
+                 null_subs=None,
+                 unknown_as_other=True):
 
         # First generate the parent object if possible.
         if f:
@@ -55,6 +67,22 @@ class Well(las.LASReader):
 
         # Add an empty striplog dict-like for later.
         self.striplog = Extra()
+
+        # If we got an OTHER section, let's try loading it as striplogs...
+        other = getattr(self, 'other', None)
+        if other:
+            f = re.MULTILINE
+            pattern = re.compile(r'^(\~)(?=\w+?_Parameter)', flags=f)
+            chunks = filter(None, pattern.split(self.other))
+
+            # This is gross but I can't see how else to get the tilde
+            # back on the strings when I do the re.split().
+            nchunks = [a + b for a, b in zip(chunks[::2], chunks[1::2])]
+
+            for section in nchunks:
+                name = re.search(r'^\~(\w+?)_', section, flags=f).group(1)
+                striplog = Striplog.from_las3(section, lexicon=lexicon)
+                self.add_striplog(striplog, name.lower())
 
     # __repr__, __str__, etc, will come from LASReader
 

@@ -274,7 +274,7 @@ class Striplog(object):
         return cls(list_of_Intervals, source="Image")
 
     @classmethod
-    def from_array(cls, a, lexicon, source="", points=False):
+    def from_array(cls, a, lexicon=None, source="", points=False):
         """
         Turn an array-like into a Striplog. It should have the following
         format (where `base` is optional):
@@ -303,28 +303,27 @@ class Striplog(object):
         return cls.from_csv(csv_text, lexicon, source=source, points=points)
 
     @classmethod
-    def from_las3(cls, string, lexicon, source="LAS", dlm=','):
+    def from_las3(cls, string, lexicon=None, source="LAS", dlm=','):
         """
         Turn LAS3 'Lithology' section into a Striplog.
 
-        NB Does not read an actual LAS file. Use the Well object for that.
+        Note:
+            Handles multiple 'Data' sections. It would be smarter for it
+            to handle one at a time, and to deal with parsing the multiple
+            sections in the Well object.
+
+            Does not read an actual LAS file. Use the Well object for that.
         """
         f = re.DOTALL | re.IGNORECASE
-        regex = r'\n\~(\w+?)_Data.+?\n(.+?)(?:\n\n+|\n*\~|\n*$)'
+        regex = r'\~\w+?_Data.+?\n(.+?)(?:\n\n+|\n*\~|\n*$)'
         pattern = re.compile(regex, flags=f)
-        texts = pattern.findall(string)
+        text = pattern.search(string).group(1)
 
-        result = {}
-        for text in texts:
-            striplog = cls.from_csv(text[1], lexicon, source=source)
-            result[text[0].lower()] = striplog
+        s = re.search(r'\.(.+?)\: ?.+?source', string)
+        if s:
+            source = s.group(1).strip()
 
-            # TODO: make this handle multiple CSV strings in the file
-            # s = re.search(r'\.(.+?)\: ?.+?source', string)
-            # if s:
-            #     source = s.group(1).strip()
-
-        return result
+        return cls.from_csv(text, lexicon, source=source)
 
     def to_csv(self, use_descriptions=False, dlm=",", header=True):
         """
