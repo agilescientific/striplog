@@ -4,13 +4,11 @@ Lithology and stratigraphic logs for wells.
 [![Codacy badge][codacy-image] ][codacy-url]
 [![Apache 2.0 license][license-image] ][license-url]
 
-Utilities for handling lithology logs. 
-
-Not stable: this project and everything in it is chnging rapidly at the moment. 
+Utilities for handling lithologic and stratigraphic 'interval' logs. Includes a version of `las.py` for loading LAS well log data. 
 
 ## Dependencies
 
-- [NumPy](http://www.numpy.org/).
+- [NumPy](http://www.numpy.org/)
 - [Pillow](https://pillow.readthedocs.org/)
 - [matplotlib](http://matplotlib.org/)
 
