@@ -3,16 +3,17 @@
 striplog
 ==================
 """
-import defaults
-import interval
-import las
-import legend
-import rock
-import utils
-import well
-import striplog
-import lexicon
+from legend import Decor, Legend
+from interval import Interval
+from rock import Rock
+from well import Well
+from striplog import Striplog
+from lexicon import Lexicon
 
-__all__ = ['defaults', 'interval', 'las',
-           'legend', 'rock', 'lexicon',
-           'utils', 'well', 'striplog']
+__all__ = ['Lexicon',
+           'Rock',
+           'Decor',
+           'Legend',
+           'Interval',
+           'Well',
+           'Striplog']
