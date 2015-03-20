@@ -15,10 +15,16 @@ from striplog import Striplog
 
 
 class WellError(Exception):
+    """
+    Generic error class.
+    """
     pass
 
 
 class Extra(dict):
+    """
+    Helper class for making dict-like things.
+    """
     def __init__(self, **kwargs):
         dict.__init__(self, kwargs)
         self.__dict__ = self
@@ -116,7 +122,7 @@ class Well(las.LASReader):
 
         Notes:
             - It's debatable if this should be a ``striplog`` function, but it
-                contains well-level information so I'm putting it here. 
+                contains well-level information so I'm putting it here.
             - I can't decide whether to handle file writing, or just leave it
                 to the user. So all this does for now is return a string.
         """

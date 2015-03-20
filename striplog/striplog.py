@@ -25,6 +25,9 @@ import templates
 
 
 class StriplogError(Exception):
+    """
+    Generic error class.
+    """
     pass
 
 
@@ -397,7 +400,7 @@ class Striplog(object):
     def to_log(self, step=1.0, start=None, stop=None, legend=None):
         """
         Return a fully sampled log from a striplog. Useful for crossplotting
-        with log data, for example. 
+        with log data, for example.
 
         Args:
             step (float): The step size. Default: 1.0.
@@ -476,7 +479,7 @@ class Striplog(object):
              width=1,
              ladder=False,
              aspect=10,
-             interval=(1,10)):
+             interval=(1, 10)):
         """
         Hands-free plotting.
 
@@ -513,10 +516,10 @@ class Striplog(object):
         if type(interval) is int:
             interval = (1, interval)
 
-        minorLocator   = MultipleLocator(interval[0])
+        minorLocator = MultipleLocator(interval[0])
         ax.yaxis.set_minor_locator(minorLocator)
 
-        majorLocator   = MultipleLocator(interval[1])
+        majorLocator = MultipleLocator(interval[1])
         majorFormatter = FormatStrFormatter('%d')
         ax.yaxis.set_major_locator(majorLocator)
         ax.yaxis.set_major_formatter(majorFormatter)
@@ -558,10 +561,10 @@ class Striplog(object):
         descriptions or summaries.
 
         Args:
-            search_term (string or Rock): The thing you want to search for. 
+            search_term (string or Rock): The thing you want to search for.
                 Strings are treated as regular expressions.
         Returns:
-           Striplog: A striplog that contains only the 'hit' Intervals. 
+           Striplog: A striplog that contains only the 'hit' Intervals.
         """
         hits = []
         for i, iv in enumerate(self):

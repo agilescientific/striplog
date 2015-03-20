@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf 8 -*-
 """
-A vocabulary for parsing lithologic or stratigraphic decriptions. 
+A vocabulary for parsing lithologic or stratigraphic decriptions.
 
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
@@ -16,7 +16,11 @@ import defaults
 
 SPECIAL = ['synonyms', 'parts_of_speech', 'abbreviations']
 
+
 class LexiconError(Exception):
+    """
+    Generic error class.
+    """
     pass
 
 
@@ -60,13 +64,13 @@ class Lexicon(object):
 
     @classmethod
     def from_json_file(cls, json_file):
-    	"""
-    	Load a lexicon from a JSON file.
+        """
+        Load a lexicon from a JSON file.
 
-    	Args:
-    	    json_file (str): The path to a JSON dump.
-    	"""
-    	with open('lexicon.json', 'r') as fp:
+        Args:
+            json_file (str): The path to a JSON dump.
+        """
+        with open('lexicon.json', 'r') as fp:
             return cls(json.load(fp))
 
     def find_word_groups(self, text, category, proximity=2):
@@ -179,7 +183,7 @@ class Lexicon(object):
             """
             it = iter(data)
             for i in xrange(0, len(data), SIZE):
-                yield {k:data[k] for k in islice(it, SIZE)}
+                yield {k: data[k] for k in islice(it, SIZE)}
 
         def cb(g):
             """Regex callback"""
@@ -187,7 +191,7 @@ class Lexicon(object):
 
         # Special cases.
 
-        # TODO: We should handle these with a special set of 
+        # TODO: We should handle these with a special set of
         # replacements that are made before the others.
         text = re.sub(r'w/', r'wi', text)
 
@@ -218,9 +222,6 @@ class Lexicon(object):
                 continue
 
             groups = self.find_word_groups(text, category)
-            # Could ask if we really want groups, or just words. Then need:        
-            # p = re.compile(r'(\b' + r'\b|\b'.join(lithologies) + r'\b)', flags=f)
-            #words = p.findall(text)
 
             if groups and first_only:
                 groups = groups[:1]
@@ -232,8 +233,8 @@ class Lexicon(object):
                 if required:
                     with warnings.catch_warnings():
                         warnings.simplefilter("always")
-                        w = "No lithology in lexicon matching '{0}'".format(text)
-                        warnings.warn(w)
+                        w = "No lithology in lexicon matching '{0}'"
+                        warnings.warn(w.format(text))
 
             filtered = [self.find_synonym(i) for i in groups]
             if first_only:

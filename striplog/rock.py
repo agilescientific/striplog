@@ -10,6 +10,9 @@ import re
 
 
 class RockError(Exception):
+    """
+    Generic error class.
+    """
     pass
 
 
@@ -76,13 +79,13 @@ class Rock(object):
 
         Args:
             text (str): The text string to parse.
-            lexicon (Lexicon): The dictionary to use for the 
-                categories and lexemes. 
+            lexicon (Lexicon): The dictionary to use for the
+                categories and lexemes.
             first_only (bool): Whether to only take the first
                 match of a lexeme against the text string.
 
         Returns:
-            Rock: A rock object, or None if there was no 
+            Rock: A rock object, or None if there was no
                 must-have field.
         """
         rock_dict = lexicon.get_component(text, first_only=first_only)
@@ -99,15 +102,15 @@ class Rock(object):
         Args:
             rock (dict): A rock dictionary.
             fmt (str): Describes the format with a string. Use '%'
-                to signal a field in the Rock, which is analogous 
-                to a dictionary. If no format is given, you will 
-                just get a list of attributes. 
+                to signal a field in the Rock, which is analogous
+                to a dictionary. If no format is given, you will
+                just get a list of attributes.
 
         Returns:
             str: A summary string.
 
         Example:
-        
+
             r = {'colour': 'Red',
                  'grainsize': 'VF-F',
                  'lithology': 'Sandstone'}

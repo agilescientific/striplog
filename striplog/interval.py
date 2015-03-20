@@ -16,6 +16,9 @@ from rock import Rock
 
 
 class IntervalError(Exception):
+    """
+    Generic error class.
+    """
     pass
 
 
@@ -95,7 +98,7 @@ class Interval(object):
             prop = 100 * max(self, other).thickness / (base-top)
             d1 = max(self, other).description.strip(' .,')
             d2 = min(self, other).description.strip(' .,')
-            d =  '{:.1f}% {} with {:.1f}% {}'.format(prop, d1, 100-prop, d2)
+            d = '{:.1f}% {} with {:.1f}% {}'.format(prop, d1, 100-prop, d2)
             c = max(self, other).components + min(self, other).components
             return Interval(top, base, description=d, components=c)
         elif isinstance(other, Rock):

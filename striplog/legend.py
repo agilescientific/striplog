@@ -21,6 +21,9 @@ from defaults import LEGEND
 
 
 class LegendError(Exception):
+    """
+    Generic error class.
+    """
     pass
 
 
@@ -116,7 +119,7 @@ class Decor(object):
         Returns a minimal Decor with a random colour.
         """
         colour = np.random.rand(3,)
-        return cls({'colour': colour, 'rock':rock})
+        return cls({'colour': colour, 'rock': rock})
 
     @property
     def rgb(self):
@@ -266,7 +269,7 @@ class Legend(object):
             str: The legend as a CSV.
         """
         # We can't delegate this to Decor because we need to know the superset
-        # of all Decor properties. There may be lots of blanks. 
+        # of all Decor properties. There may be lots of blanks.
         header = []
         rock_header = []
         for row in self:
@@ -290,7 +293,7 @@ class Legend(object):
         for item in rock_header:
             header_row += 'rock ' + item + ','
 
-        # Now we have a header row! Phew. 
+        # Now we have a header row! Phew.
         # Next we'll go back over the legend and collect everything.
         result = header_row.strip(',') + '\n'
         for row in self:

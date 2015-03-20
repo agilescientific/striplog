@@ -26,7 +26,7 @@ DLM  .            COMMA       :DELIMITING CHARACTER
 PROG .      {prog:>12s}      :LAS Program name and version
 CREA . {date:16s}       :LAS Creation date {{YYYY/MM/DD hh:mm}}
 
-~Well 
+~Well
 #MNEM .UNIT  DATA             DESCRIPTION
 #---- ------ --------------   -----------------------------
 STRT .M      {start:8.3f}         :START DEPTH
@@ -42,7 +42,7 @@ PROV .       NOVA SCOTIA           :PROVINCE
 UWI  .       {uwi:21s} :UNIQUE WELL ID
 LIC  .       {lic:21s} :LICENSE NUMBER
 
-~Parameter 
+~Parameter
 #MNEM .UNIT  VALUE            DESCRIPTION
 #---- ------ --------------   -----------------------------
 
@@ -77,7 +77,7 @@ __section = """~{name}_Parameter
 __curve = """~Curve
 #MNEM .UNIT  LOG CODES        DESCRIPTION
 #---- ------ --------------   -----------------------------
-DEPT .m        00 001 00 00               :Depth Index - Measured Depth       
+DEPT .m        00 001 00 00               :Depth Index - Measured Depth
 LITH .         00 000 00 00               :See remarks
 
 ~Ascii
@@ -86,4 +86,3 @@ LITH .         00 000 00 00               :See remarks
 las = get_template(__las)
 section = get_template(__section)
 curve = get_template(__curve)
-
