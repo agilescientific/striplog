@@ -4,8 +4,6 @@ Helper functions for the striplog package.
 
 """
 
-import xlrd
-
 from matplotlib import colors
 
 

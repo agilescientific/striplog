@@ -13,7 +13,6 @@ import numbers
 from functools import total_ordering
 
 from rock import Rock
-#from striplog import Striplog
 
 
 class IntervalError(Exception):
@@ -23,8 +22,8 @@ class IntervalError(Exception):
 @total_ordering
 class Interval(object):
     """
-    Used to represent a lithologic or stratigraphic interval, or a single point,
-    such as a sample location. 
+    Used to represent a lithologic or stratigraphic interval, or single point,
+    such as a sample location.
 
     Initialize with a top (and optional base) and a description and/or
     an ordered list of components, each of which is a Rock.
@@ -35,7 +34,7 @@ class Interval(object):
         lexicon (dict): A lexicon. See documentation. Optional unless you only
             provide descriptions, because it's needed to extract components.
         max_component (int): The number of components to extract. Default 1.
-        abbreviations (bool): Whether to parse for abbreviations. 
+        abbreviations (bool): Whether to parse for abbreviations.
 
     """
     def __init__(self, top, base=None,
