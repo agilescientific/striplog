@@ -312,7 +312,7 @@ class Legend(object):
         """
         return max([row.width for row in self.__list])
 
-    def get_colour(self, rock, default='#EEEEEE'):
+    def get_colour(self, rock, default='#eeeeee'):
         """
         Get the display colour of a Rock.
 

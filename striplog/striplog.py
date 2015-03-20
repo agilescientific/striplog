@@ -143,7 +143,8 @@ class Striplog(object):
                  lexicon=None,
                  source='CSV',
                  dlm=',',
-                 points=False):
+                 points=False,
+                 abbreviations=False):
         """
         Convert a CSV string into a striplog. Expects 2 or 3 fields:
             top, description
@@ -166,6 +167,9 @@ class Striplog(object):
             459.71,   589.61,    Limestone
             589.71,   827.50,    Green shale
             827.60,   1010.84,   Fine sandstone
+
+        TODO:
+            Automatic abbreviation detection.
         """
         text = re.sub(r'(\n+|\r\n|\r)', '\n', text.strip())
 
@@ -217,7 +221,9 @@ class Striplog(object):
         for i, t in enumerate(result['tops']):
             b = result['bases'][i]
             d = result['descrs'][i]
-            interval = Interval(t, b, description=d, lexicon=lexicon)
+            interval = Interval(t, b, description=d,
+                                lexicon=lexicon,
+                                abbreviations=abbreviations)
             list_of_Intervals.append(interval)
 
         return cls(list_of_Intervals, source=source)
@@ -303,7 +309,10 @@ class Striplog(object):
         return cls.from_csv(csv_text, lexicon, source=source, points=points)
 
     @classmethod
-    def from_las3(cls, string, lexicon=None, source="LAS", dlm=','):
+    def from_las3(cls, string, lexicon=None,
+                  source="LAS",
+                  dlm=',',
+                  abbreviations=False):
         """
         Turn LAS3 'Lithology' section into a Striplog.
 
@@ -323,7 +332,10 @@ class Striplog(object):
         if s:
             source = s.group(1).strip()
 
-        return cls.from_csv(text, lexicon, source=source)
+        return cls.from_csv(text, lexicon,
+                            source=source,
+                            dlm=dlm,
+                            abbreviations=abbreviations)
 
     def to_csv(self, use_descriptions=False, dlm=",", header=True):
         """
@@ -384,7 +396,23 @@ class Striplog(object):
 
     def to_log(self, step=1.0, start=None, stop=None, legend=None):
         """
-        Return a fully sampled log from a striplog.
+        Return a fully sampled log from a striplog. Useful for crossplotting
+        with log data, for example. 
+
+        Args:
+            step (float): The step size. Default: 1.0.
+            start (float): The start depth of the new log. You will want to
+                match the logs, so use the start depth from the LAS file.
+                Default: The start of the striplog.
+            stop (float): The stop depth of the new log. Use the stop depth
+                of the LAS file. Default: The stop depth of the striplog.
+            legend (Legend): If you want the codes to come from a legend,
+                provide one. Otherwise the codes come from the log, using
+                integers in the other they are encountered. If you use a
+                legend, they are assigned in the order of the legend.
+
+        Returns:
+            ndarray: Two ndarrays in a tuple, (depth, logdata).
         """
         if not start:
             start = self.start
@@ -462,7 +490,6 @@ class Striplog(object):
 
         Returns:
             None. The plot is a side-effect.
-
         """
         fig = plt.figure(figsize=(width, aspect*width))
 

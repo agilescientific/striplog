@@ -10,11 +10,11 @@ A vocabulary for parsing lithologic or stratigraphic decriptions.
 import json
 import warnings
 import re
+from itertools import islice
 
 import defaults
 
-SPECIAL = ['synonyms', 'parts_of_speech']
-
+SPECIAL = ['synonyms', 'parts_of_speech', 'abbreviations']
 
 class LexiconError(Exception):
     pass
@@ -27,7 +27,8 @@ class Lexicon(object):
     Most commonly you will just load the default one.
 
     Args:
-        params (dict): The dictionary to use.
+        params (dict): The dictionary to use. For an example, refer to the
+            default lexicon in ``defaults.py``.
     """
 
     def __init__(self, params):
@@ -35,18 +36,18 @@ class Lexicon(object):
             k = re.sub(' ', '_', k)
             setattr(self, k, v)
 
-        if not params.get('synonyms'):
-            self.synonyms = None
-
-        if not params.get('parts_of_speech'):
-            self.parts_of_speech = None
+        # Make sure the special attributes are set.
+        # We probably don't really need to do this.
+        for attr in SPECIAL:
+            if not getattr(self, attr, None):
+                setattr(self, attr, None)
 
     def __repr__(self):
         return str(self.__dict__)
 
     def __str__(self):
         keys = self.__dict__.keys()
-        counts = [len(v) for k, v in self.__dict__.items()]
+        counts = [len(v) for k, v in self.__dict__.items() if v]
         s = "Lexicon("
         for i in zip(keys, counts):
             s += "'{0}': {1} items, ".format(*i)
@@ -125,7 +126,7 @@ class Lexicon(object):
     def find_synonym(self, word):
         """
         Given a string and a dict of synonyms, returns the 'preferred'
-        word.
+        word. Case insensitive.
 
         Args:
             word (str): A word.
@@ -139,19 +140,63 @@ class Lexicon(object):
             'snake'
             >>> find_synonym('rattler', syn)
             'rattler'
+
+        TODO:
+            Make it handle case, returning the same case it received.
         """
-        if self.synonyms:
+        if word and self.synonyms:
             # Make the reverse look-up table.
             reverse_lookup = {}
             for k, v in self.synonyms.items():
                 for i in v:
-                    reverse_lookup[i] = k
+                    reverse_lookup[i.lower()] = k.lower()
 
             # Now check words against this table.
-            if word in reverse_lookup:
-                return reverse_lookup[word]
+            if word.lower() in reverse_lookup:
+                return reverse_lookup[word.lower()]
 
         return word
+
+    def expand_abbreviations(self, text):
+        """
+        Parse a piece of text and replace any abbreviations with their full
+        word equivalents. Uses the lexicon.abbreviations dictionary to find
+        abbreviations.
+
+        Args:
+            text (str): The text to parse.
+
+        Returns:
+            str: The text with abbreviations replaced.
+        """
+        if not self.abbreviations:
+            raise LexiconError("No abbreviations in lexicon.")
+
+        def chunks(data, SIZE=25):
+            """
+            Regex only supports 100 groups for munging callbacks. So we have to
+            chunk the abbreviation dicitonary.
+            """
+            it = iter(data)
+            for i in xrange(0, len(data), SIZE):
+                yield {k:data[k] for k in islice(it, SIZE)}
+
+        def cb(g):
+            """Regex callback"""
+            return self.abbreviations.get(g.group(0)) or g.group(0)
+
+        # Special cases.
+
+        # TODO: We should handle these with a special set of 
+        # replacements that are made before the others.
+        text = re.sub(r'w/', r'wi', text)
+
+        # Main loop.
+        for subdict in chunks(self.abbreviations):
+            regex = r'(\b' + r'\b)|(\b'.join(subdict.keys()) + r'\b)'
+            text = re.sub(regex, cb, text)
+
+        return text
 
     def get_component(self, text, required=False, first_only=True):
         """

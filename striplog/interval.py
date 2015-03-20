@@ -61,7 +61,8 @@ class Interval(object):
         if self.description and (not self.components):
             if lexicon:
                 comps = self.__parse_description(lexicon,
-                                                 max_component=max_component)
+                                                 max_component=max_component,
+                                                 abbreviations=abbreviations)
                 self.components = comps
             else:
                 with warnings.catch_warnings():
@@ -147,6 +148,9 @@ class Interval(object):
 
         Returns:
             str: An English-language summary.
+
+        TODO:
+            Allow formatting of the entire string, not just the rock.
         """
         s = [r.summary(fmt=fmt, initial=initial) for r in self.components]
         summary = " with ".join(s)
@@ -173,13 +177,19 @@ class Interval(object):
 
         return [i.strip() for i in parts]
 
-    def __parse_description(self, lexicon, max_component=1):
+    def __parse_description(self, lexicon,
+                            max_component=1,
+                            abbreviations=False):
         """
         Turns a description into a lists of components. The items in the
         list are in the order they were found in the description, which is
         usually order of importance.
         """
-        text = self.description
+        if abbreviations:
+            text = lexicon.expand_abbreviations(self.description)
+        else:
+            text = self.description
+
         components = []
         for p, part in enumerate(self.__split_description(text)):
             if p == max_component:

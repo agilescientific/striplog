@@ -69,26 +69,3 @@ def hex_to_rgb(hexx):
     l = len(h)
 
     return tuple(int(h[i:i+l//3], 16) for i in range(0, l, l//3))
-
-
-def get_abbreviations_from_xls(fname):
-    """
-    Given a filename to an Excel spreadsheet containing abbreviations,
-    return a dictionary with abbrev:definition key:value pairs.
-
-    Args:
-        fname (str): The path of an Excel .xls file.
-
-    Returns:
-        dict: A mapping of abbreviation to definition.
-    """
-    book = xlrd.open_workbook(fname)
-    abbreviations = {}
-    for s in range(book.nsheets):
-        sh = book.sheet_by_index(s)
-        abbrs = [c.value.encode('utf-8') for c in sh.col(0)]
-        defns = [c.value.encode('utf-8') for c in sh.col(1)]
-        for i, a in enumerate(abbrs):
-            abbreviations[a] = defns[i]
-
-    return abbreviations
