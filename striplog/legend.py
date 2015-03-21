@@ -113,6 +113,36 @@ class Decor(object):
             s.append(t.format(key=key, value=self.__dict__[key]))
         return ', '.join(s)
 
+    def __add__(self, other):
+        if isinstance(other, self.__class__):
+            result = [self, other]
+            return Legend(result)
+        elif isinstance(other, Legend):
+            result = [self] + other.__list
+            return Legend(result)
+        else:
+            raise LegendError("You can only add legends or decors.")
+
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+
+        s = {k: v for k, v in self.__dict__.items() if v}
+        o = {k: v for k, v in other.__dict__.items() if v}
+        if not cmp(s, o):
+            return True
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    # If we define __eq__ we also need __hash__ otherwise the object
+    # becomes unhashable. All this does is hash the frozenset of the
+    # keys. (You can only hash immutables.)
+    def __hash__(self):
+        return hash(frozenset(self.__dict__.keys()))
+
     @classmethod
     def random(cls, rock):
         """
@@ -225,6 +255,27 @@ class Legend(object):
 
     def __len__(self):
         return len(self.__list)
+
+    def __contains__(self, item):
+        if isinstance(item, Decor):
+            for d in self.__list:
+                if item == d:
+                    return True
+        if isinstance(item, Rock):
+            for d in self.__list:
+                if item == d.rock:
+                    return True        
+        return False
+
+    def __add__(self, other):
+        if isinstance(other, self.__class__):
+            result = self.__list + other.__list
+            return Legend(result)
+        elif isinstance(other, Decor):
+            result = self.__list + [other]
+            return Legend(result)
+        else:
+            raise LegendError("You can only add legends or decors.")
 
     @classmethod
     def default(cls):
