@@ -1,6 +1,0 @@
-Legend
-======
-
-.. automodule:: legend
-   :members:
-

@@ -1,6 +1,0 @@
-Rock
-====
-
-.. automodule:: rock 
-   :members:
-

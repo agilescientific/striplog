@@ -1,6 +1,0 @@
-Interval
-========
-
-.. automodule:: interval 
-   :members:
-
