@@ -35,12 +35,21 @@ import numpy as np
 
 
 def is_identifier(s):
+    """
+    Helper function for finding LAS identifier strings.
+
+    Returns:
+        bool: Whether the string is an identifier.
+    """
     if s in keyword.kwlist:
         return False
     return re.match(r'^[a-z_][a-z0-9_]*$', s, re.I) is not None
 
 
 class LASError(Exception):
+    """
+    Generic error class.
+    """
     pass
 
 
@@ -72,6 +81,9 @@ class LASItem(object):
         return s
 
     def __convert_to_value(self, s):
+        """
+        Converts strings to numbers, if possible.
+        """
         try:
             value = int(s)
         except ValueError:
@@ -83,6 +95,9 @@ class LASItem(object):
 
     @classmethod
     def from_line(cls, line):
+        """
+        Gets data from a line.
+        """
         first, descr = line.rsplit(':', 1)
         descr = descr.strip()
         name, mid = first.split('.', 1)
@@ -134,12 +149,18 @@ class LASSection(object):
         self.names = []
 
     def add_item(self, item):
+        """
+        Helper function to add attributes.
+        """
         self.items[item.name] = item
         self.names.append(item.name)
         if is_identifier(item.name) and not hasattr(self, item.name):
             setattr(self, item.name, item)
 
     def display(self):
+        """
+        Helper function to show items.
+        """
         for name in self.names:
             item = self.items[name]
             namestr = name
@@ -293,6 +314,10 @@ class LASReader(object):
         return values
 
     def __read_wrapped_data(self, f, dt):
+        """
+        Reads a block of wrapped data by repeatedly calling
+        __read_wrapped_row().
+        """
         data = []
         ncols = len(dt.names)
         while True:

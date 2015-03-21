@@ -132,12 +132,25 @@ class Interval(object):
 
     @property
     def thickness(self):
+        """
+        Returns the thickness of the interval.
+
+        Returns:
+            Float: The thickness.
+        """
         return abs(self.base - self.top)
 
     @property
     def kind(self):
+        """
+        The type of Interval: a 'point' (where base = top),
+        or an 'interval', where thickness > 0.
+
+        Returns:
+            str: Either 'point' or 'interval'.
+        """
         if self.thickness > 0:
-            return 'top'
+            return 'point'
         return 'interval'
 
     def summary(self, fmt=None, initial=False):

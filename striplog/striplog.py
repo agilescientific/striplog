@@ -92,6 +92,11 @@ class Striplog(object):
         return iter(self.__list)
 
     def next(self):  # __next__() in Python 3
+        """
+        Supports iterable.
+
+        __next__() in Python 3.
+        """
         try:
             result = self.__list[self.__index]
         except IndexError:
@@ -281,7 +286,11 @@ class Striplog(object):
         return cls(list_of_Intervals, source="Image")
 
     @classmethod
-    def from_array(cls, a, lexicon=None, source="", points=False):
+    def from_array(cls, a,
+                   lexicon=None,
+                   source="",
+                   points=False,
+                   abbreviations=False):
         """
         Turn an array-like into a Striplog. It should have the following
         format (where `base` is optional):
@@ -310,7 +319,11 @@ class Striplog(object):
             interval[-1] = '"' + descr + '"'
             csv_text += ', '.join(interval) + '\n'
 
-        return cls.from_csv(csv_text, lexicon, source=source, points=points)
+        return cls.from_csv(csv_text,
+                            lexicon,
+                            source=source,
+                            points=points,
+                            abbreviations=abbreviations)
 
     @classmethod
     def from_las3(cls, string, lexicon=None,

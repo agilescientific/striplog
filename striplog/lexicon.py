@@ -60,6 +60,12 @@ class Lexicon(object):
 
     @classmethod
     def default(cls):
+        """
+        Makes the default lexicon, as provided in ``defaults.py``.
+
+        Returns:
+            Lexicon: The default lexicon.
+        """
         return cls(defaults.LEXICON)
 
     @classmethod

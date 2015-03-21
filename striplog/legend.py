@@ -244,7 +244,12 @@ class Legend(object):
     def __iter__(self):
         return iter(self.__list)
 
-    def next(self):  # __next__() in Python 3
+    def next(self):
+        """
+        Supports iterable.
+
+        __next__() in Python 3.
+        """
         try:
             result = self.__list[self.__index]
         except IndexError:
