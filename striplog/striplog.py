@@ -127,7 +127,7 @@ class Striplog(object):
             to be sure of getting 'clean' pixels.
 
         Returns:
-            Two ndarrays: tops and values.
+            ndarray: Two arrays, tops and values.
         """
         loglike = np.array(loglike)
         all_edges = loglike[1:] == loglike[:-1]
@@ -170,7 +170,7 @@ class Striplog(object):
             589.71,   827.50,    Green shale
             827.60,   1010.84,   Fine sandstone
 
-        TODO:
+        Todo:
             Automatic abbreviation detection.
         """
         text = re.sub(r'(\n+|\r\n|\r)', '\n', text.strip())
@@ -255,7 +255,6 @@ class Striplog(object):
 
         Returns:
             Striplog: The ``striplog`` object.
-
         """
         im = np.array(Image.open(filename))
         col = im.shape[1]/(100./offset)
@@ -298,7 +297,10 @@ class Striplog(object):
                 objects from the descriptions.
             source (str): The source of the data. Default: ''.
             points (bool): Whether to treat as point data. Default: False.
-        """
+
+        Returns:
+            Striplog: The ``striplog`` object.
+         """
         csv_text = ''
         for interval in a:
             interval = [str(i) for i in interval]
@@ -316,8 +318,18 @@ class Striplog(object):
                   dlm=',',
                   abbreviations=False):
         """
-        Turn LAS3 'Lithology' section into a Striplog.
+        Turn LAS3 'lithology' section into a Striplog.
 
+        Args:
+            string (str): A section from an LAS3 file.
+            lexicon (Lexicon): The language for conversion to components.
+            source (str): A source for the data.
+            dlm (str): The delimiter.
+            abbreviations (bool): Whether to expand abbreviations.
+
+        Returns:
+            Striplog: The ``striplog`` object.
+ 
         Note:
             Handles multiple 'Data' sections. It would be smarter for it
             to handle one at a time, and to deal with parsing the multiple
@@ -347,11 +359,10 @@ class Striplog(object):
             use_descriptions (bool): Whether to use descriptions instead
                 of summaries, if available.
             dlm (str): The delimiter.
-            source (str): The sourse of the data.
+            header (bool): Whether to form a header row.
 
         Returns:
-            str. A string of comma-separated values.
-
+            str: A string of comma-separated values.
         """
         data = ''
 
@@ -384,8 +395,7 @@ class Striplog(object):
             source (str): The sourse of the data.
 
         Returns:
-            str. A string forming Lithology section of an LAS3 file.
-
+            str: A string forming Lithology section of an LAS3 file.
         """
         data = self.to_csv(use_descriptions=use_descriptions,
                            dlm=dlm,
@@ -456,8 +466,7 @@ class Striplog(object):
                 Default 1.
 
         Returns:
-            axis. The matplotlib axis.
-
+            axis: The matplotlib axis.
         """
         for i in self.__list:
             origin = (0, i.top)
@@ -493,7 +502,7 @@ class Striplog(object):
                 Only the major interval is labeled. Default (1,10).
 
         Returns:
-            None. The plot is a side-effect.
+            None: The plot is a side-effect.
         """
         fig = plt.figure(figsize=(width, aspect*width))
 

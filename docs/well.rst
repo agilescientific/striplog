@@ -1,6 +1,6 @@
 Well
 ====
 
-.. automodule:: Well 
+.. automodule:: well 
    :members:
 

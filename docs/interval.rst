@@ -3,4 +3,3 @@ Interval
 
 .. automodule:: interval 
    :members:
-
