@@ -17,10 +17,15 @@ Lithology and stratigraphic logs for wells.
 
 Utilities for handling lithologic and stratigraphic 'interval' logs. Includes a version of `las.py` for loading LAS well log data. 
 
+Docs
+----
+
+* `Read The Docs <https://pythonhosted.org/striplog/>`_
+
 Dependencies
 ------------
 
-* `NumPy <http://www.numpy.org/>_`
-* `Pillow <https://pillow.readthedocs.org/>_`
-* `matplotlib <http://matplotlib.org/>_`
+* `NumPy <http://www.numpy.org/>`_
+* `Pillow <https://pillow.readthedocs.org/>`_
+* `matplotlib <http://matplotlib.org/>`_
 
