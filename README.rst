@@ -29,3 +29,7 @@ Dependencies
 * `Pillow <https://pillow.readthedocs.org/>`_
 * `matplotlib <http://matplotlib.org/>`_
 
+Install
+-------
+
+* ``pip install striplog``
