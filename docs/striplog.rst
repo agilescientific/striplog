@@ -1,0 +1,6 @@
+Striplog
+========
+
+.. automodule:: striplog 
+   :members:
+
