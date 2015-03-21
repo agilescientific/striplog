@@ -1698,8 +1698,8 @@ div#notebook {
 <li><a href="#Decor">Decor</a>: One element from a legend — describes how to display a Rock.</li>
 <li><a href="#Legend">Legend</a>: A set of Decors — describes how to display a set of Rocks or a Striplog.</li>
 <li><a href="#Interval">Interval</a>: One element from a Striplog — consists of a top, base, a description, a Rock, and a source.</li>
-<li><a href="#Stripog">Striplog</a>: A set of Intervals.</li>
 </ul>
+<p>Striplogs (a set of <code>Interval</code>s) are described in <a href="Striplog_object.ipynb">a separate notebook</a>.</p>
 </div>
 </div>
 </div>
@@ -1744,11 +1744,11 @@ div#notebook {
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[9]:
+In&nbsp;[1]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lexicon</span> <span class="kn">import</span> <span class="n">Lexicon</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Lexicon</span>
 <span class="k">print</span> <span class="n">Lexicon</span><span class="o">.</span><span class="n">__doc__</span>
 </pre></div>
 
@@ -1784,7 +1784,7 @@ In&nbsp;[9]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[10]:
+In&nbsp;[2]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1801,7 +1801,7 @@ In&nbsp;[10]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[10]:</div>
+    Out[2]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -1819,24 +1819,7 @@ In&nbsp;[10]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[11]:
-</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">json</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;abbreviations.json&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">lexicon</span><span class="o">.</span><span class="n">abbreviations</span><span class="p">))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">
-In&nbsp;[12]:
+In&nbsp;[3]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1852,7 +1835,7 @@ In&nbsp;[12]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[12]:</div>
+    Out[3]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -1881,7 +1864,7 @@ In&nbsp;[12]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[13]:
+In&nbsp;[4]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1897,7 +1880,7 @@ In&nbsp;[13]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[13]:</div>
+    Out[4]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -1915,7 +1898,7 @@ In&nbsp;[13]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[14]:
+In&nbsp;[5]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1930,7 +1913,7 @@ In&nbsp;[14]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[15]:
+In&nbsp;[6]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1946,7 +1929,7 @@ In&nbsp;[15]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[15]:</div>
+    Out[6]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -1975,10 +1958,11 @@ In&nbsp;[15]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="rock">Rock</h2>
+<h2 id="Rock">Rock<a class="anchor-link" href="#Rock">&#182;</a></h2>
 </div>
 </div>
 </div>
+
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -1991,11 +1975,11 @@ In&nbsp;[15]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[16]:
+In&nbsp;[8]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">interval</span> <span class="kn">import</span> <span class="n">Rock</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Rock</span>
 </pre></div>
 
 </div>
@@ -2006,7 +1990,7 @@ In&nbsp;[16]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[17]:
+In&nbsp;[9]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2063,7 +2047,7 @@ In&nbsp;[17]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[18]:
+In&nbsp;[10]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2083,7 +2067,7 @@ In&nbsp;[18]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[18]:</div>
+    Out[10]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2101,7 +2085,7 @@ Rock(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sand&quot;
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[19]:
+In&nbsp;[11]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2117,12 +2101,12 @@ In&nbsp;[19]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[19]:</div>
+    Out[11]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
 <pre>
-rock.Rock
+striplog.rock.Rock
 </pre>
 </div>
 
@@ -2144,7 +2128,7 @@ rock.Rock
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[20]:
+In&nbsp;[12]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2160,7 +2144,7 @@ In&nbsp;[20]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[20]:</div>
+    Out[12]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2187,7 +2171,7 @@ In&nbsp;[20]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[21]:
+In&nbsp;[13]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2203,7 +2187,7 @@ In&nbsp;[21]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[21]:</div>
+    Out[13]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2230,7 +2214,7 @@ In&nbsp;[21]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[22]:
+In&nbsp;[14]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2246,7 +2230,7 @@ In&nbsp;[22]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[22]:</div>
+    Out[14]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2273,7 +2257,7 @@ In&nbsp;[22]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[23]:
+In&nbsp;[15]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2292,7 +2276,7 @@ In&nbsp;[23]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[23]:</div>
+    Out[15]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2319,11 +2303,11 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[24]:
+In&nbsp;[17]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lexicon</span> <span class="kn">import</span> <span class="n">Lexicon</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Lexicon</span>
 </pre></div>
 
 </div>
@@ -2334,7 +2318,7 @@ In&nbsp;[24]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[25]:
+In&nbsp;[18]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2349,7 +2333,7 @@ In&nbsp;[25]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[26]:
+In&nbsp;[19]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2366,7 +2350,7 @@ In&nbsp;[26]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[26]:</div>
+    Out[19]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2384,7 +2368,7 @@ Rock(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[27]:
+In&nbsp;[20]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2401,7 +2385,7 @@ In&nbsp;[27]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[27]:</div>
+    Out[20]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2438,11 +2422,11 @@ Rock(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[28]:
+In&nbsp;[21]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">legend</span> <span class="kn">import</span> <span class="n">Decor</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Decor</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="o">%</span><span class="k">matplotlib</span> <span class="n">inline</span>
@@ -2465,7 +2449,7 @@ In&nbsp;[28]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[29]:
+In&nbsp;[22]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2526,7 +2510,7 @@ In&nbsp;[29]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[30]:
+In&nbsp;[23]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2546,7 +2530,7 @@ In&nbsp;[30]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[30]:</div>
+    Out[23]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2573,7 +2557,7 @@ Decor(width=&apos;3.0&apos;, colour=&apos;#86f0b6&apos;, rock=&apos;&quot;colour
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[31]:
+In&nbsp;[24]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2589,7 +2573,7 @@ In&nbsp;[31]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[31]:</div>
+    Out[24]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2607,7 +2591,7 @@ In&nbsp;[31]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[32]:
+In&nbsp;[25]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2623,7 +2607,7 @@ In&nbsp;[32]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[32]:</div>
+    Out[25]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2641,7 +2625,7 @@ In&nbsp;[32]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[33]:
+In&nbsp;[26]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2724,11 +2708,11 @@ M461tEWnfwyNja9hA2G2r/GUyazgQJgVHAizggNhVnAgzAr/A1PCCiep8tH3AAAAAElFTkSuQmCC
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[34]:
+In&nbsp;[27]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">legend</span> <span class="kn">import</span> <span class="n">Legend</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Legend</span>
 <span class="k">print</span> <span class="n">Legend</span><span class="o">.</span><span class="n">__doc__</span>
 </pre></div>
 
@@ -2774,7 +2758,7 @@ In&nbsp;[34]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[35]:
+In&nbsp;[28]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2808,7 +2792,7 @@ In&nbsp;[35]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[36]:
+In&nbsp;[29]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2825,7 +2809,7 @@ In&nbsp;[36]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[36]:</div>
+    Out[29]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2847,7 +2831,7 @@ width=&apos;2.0&apos;, colour=&apos;#ff4c4a&apos;, rock=&apos;&quot;lithology&qu
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[37]:
+In&nbsp;[30]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2907,7 +2891,7 @@ colour,width,rock colour,rock lithology,rock grainsize
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[38]:
+In&nbsp;[31]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2923,7 +2907,7 @@ In&nbsp;[38]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[38]:</div>
+    Out[31]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2968,7 +2952,7 @@ width=&apos;1.0&apos;, colour=&apos;#666666&apos;, rock=&apos;&quot;colour&quot;
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[39]:
+In&nbsp;[32]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2984,7 +2968,7 @@ In&nbsp;[39]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[39]:</div>
+    Out[32]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3002,7 +2986,7 @@ In&nbsp;[39]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[40]:
+In&nbsp;[33]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3021,7 +3005,7 @@ In&nbsp;[40]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[40]:</div>
+    Out[33]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3048,7 +3032,7 @@ In&nbsp;[40]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[41]:
+In&nbsp;[34]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3064,7 +3048,7 @@ In&nbsp;[41]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[41]:</div>
+    Out[34]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3091,7 +3075,7 @@ In&nbsp;[41]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[42]:
+In&nbsp;[35]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3107,7 +3091,7 @@ In&nbsp;[42]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[42]:</div>
+    Out[35]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3134,7 +3118,7 @@ Rock(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[43]:
+In&nbsp;[36]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3150,7 +3134,7 @@ In&nbsp;[43]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[43]:</div>
+    Out[36]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3178,7 +3162,7 @@ width=&apos;2.0&apos;, colour=&apos;#ff4c4a&apos;, rock=&apos;&quot;lithology&qu
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[44]:
+In&nbsp;[37]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3973,18 +3957,19 @@ e21DYmaebpkVOSRmBQ6JWYFDYlbgkJgV/AeUMzJptCq0YgAAAABJRU5ErkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="interval">Interval</h2>
+<h2 id="Interval">Interval<a class="anchor-link" href="#Interval">&#182;</a></h2>
 </div>
 </div>
 </div>
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[45]:
+In&nbsp;[38]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">interval</span> <span class="kn">import</span> <span class="n">Interval</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Interval</span>
 <span class="k">print</span> <span class="n">Interval</span><span class="o">.</span><span class="n">__doc__</span>
 </pre></div>
 
@@ -4027,7 +4012,7 @@ In&nbsp;[45]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[46]:
+In&nbsp;[39]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4044,7 +4029,7 @@ In&nbsp;[46]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[46]:</div>
+    Out[39]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -4071,7 +4056,7 @@ Interval(top: 20.0, base: 40.0, description: &apos;Grey sandstone.&apos;, compon
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[47]:
+In&nbsp;[40]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4087,7 +4072,7 @@ In&nbsp;[47]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[47]:</div>
+    Out[40]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -4114,7 +4099,7 @@ Rock(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[48]:
+In&nbsp;[41]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4130,7 +4115,7 @@ In&nbsp;[48]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[48]:</div>
+    Out[41]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -4157,7 +4142,7 @@ In&nbsp;[48]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[49]:
+In&nbsp;[42]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4172,7 +4157,7 @@ In&nbsp;[49]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[50]:
+In&nbsp;[43]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4216,7 +4201,7 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[51]:
+In&nbsp;[44]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4232,7 +4217,7 @@ In&nbsp;[51]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[51]:</div>
+    Out[44]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -4259,7 +4244,7 @@ Interval(top: 20.0, base: 65.0, description: &apos;55.6% Red sandstone with 44.4
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[52]:
+In&nbsp;[45]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4275,7 +4260,7 @@ In&nbsp;[52]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[52]:</div>
+    Out[45]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -4302,7 +4287,7 @@ Interval(top: 20.0, base: 45.0, description: &apos;Grey sandstone.&apos;, compon
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[53]:
+In&nbsp;[46]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4318,7 +4303,7 @@ In&nbsp;[53]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[53]:</div>
+    Out[46]:</div>
 
 
 <div class="output_text output_subarea output_pyout">

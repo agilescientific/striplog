@@ -1693,7 +1693,7 @@ In&nbsp;[1]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">well</span> <span class="kn">import</span> <span class="n">Well</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Well</span>
 <span class="k">print</span> <span class="n">Well</span><span class="o">.</span><span class="n">__doc__</span>
 </pre></div>
 
@@ -1832,8 +1832,7 @@ In&nbsp;[5]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Striplog</span>
-<span class="kn">from</span> <span class="nn">legend</span> <span class="kn">import</span> <span class="n">Legend</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Striplog</span><span class="p">,</span> <span class="n">Legend</span>
 <span class="n">legend</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
 </pre></div>
 
@@ -2104,11 +2103,11 @@ In&nbsp;[12]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[13]:
+In&nbsp;[15]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="n">xls</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s">&#39;HOME&#39;</span><span class="p">],</span> <span class="s">&quot;Dropbox/Agile/NS_DOE/2014-1G/data/_Cuttings_descriptions.xlsx&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">xls</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s">&#39;HOME&#39;</span><span class="p">],</span> <span class="s">&quot;Dropbox/Agile/NS_DOE/2014-1G/data/_Cuttings.xlsx&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -2119,7 +2118,7 @@ In&nbsp;[13]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[14]:
+In&nbsp;[16]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2135,7 +2134,7 @@ In&nbsp;[14]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[15]:
+In&nbsp;[18]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2143,7 +2142,7 @@ In&nbsp;[15]:
 <span class="n">bases</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">sh</span><span class="o">.</span><span class="n">col_slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
 <span class="n">descr</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">sh</span><span class="o">.</span><span class="n">col_slice</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
 
-<span class="nb">zip</span><span class="p">(</span><span class="n">tops</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">descr</span><span class="p">)</span>
+<span class="nb">zip</span><span class="p">(</span><span class="n">tops</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">descr</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
 </pre></div>
 
 </div>
@@ -2155,7 +2154,7 @@ In&nbsp;[15]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[15]:</div>
+    Out[18]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2172,109 +2171,7 @@ In&nbsp;[15]:
  (0.0,
   27.0,
   u&apos;Overburden: reddish brown, clay, sand and small cobbles, occasional rounded quartz grains, frosted and clear.&apos;),
- (27.0, 27.5, u&apos;Shale: reddish brown, greasy, soft.&apos;),
- (27.5, 29.0, u&apos;sandstone: brown red, very fine grained, soft.&apos;),
- (29.0,
-  30.0,
-  u&apos;sandstone: brown red, medium to coarse grain, subrounded to rounded, good, siliceous cement, 12 % porosity, no shows.&apos;),
- (30.0, 32.5, u&apos;Siltstone: dark reddish brown, blocky, soft.&apos;),
- (32.5,
-  38.0,
-  u&apos;Sandstone: dark red brown, very fine grained, subangular, good, moderately hardness, siliceous cement, 10 to 12% porosity, no shows.&apos;),
- (38.0, 50.0, u&apos;Siltstone: as above&apos;),
- (50.0,
-  52.5,
-  u&apos;Sandstone : greenish gray to reddish brown, very fine to fine grained, subangular, good sorting, soft, silica to slightly calcareous cement, 10% porosity, no shows.&apos;),
- (52.5, 54.0, u&apos;Siltstone: as above&apos;),
- (54.0, 55.0, u&apos;Shale: brown red, soft, fissible&apos;),
- (55.0,
-  59.0,
-  u&apos;Sandstone: quartz arenite, light to moderately gray, very fine to fine grained, subangular, well sorted brittle, 15% porosity, no shows. (20% of sst is reddish gray)&apos;),
- (59.0, 60.0, u&apos;Coal: black, high lustre, concoidal fracture.&apos;),
- (60.0, 60.5, u&apos;Sandstone: quartz arenite, as above.&apos;),
- (60.5, 70.0, u&apos;Siltstone: dark reddish brown, blocky, soft.&apos;),
- (70.0, 72.5, u&apos;Shale: dark gray to black, fissile.&apos;),
- (72.5, 75.0, u&apos;Siltstone: as above&apos;),
- (75.0,
-  78.0,
-  u&apos;Shale: dark red brown, fissile to blocky, carbonaceous plant fragments.&apos;),
- (78.0, 79.5, u&apos;Siltstone: as above&apos;),
- (79.5, 80.0, u&apos;Sandstone: light gray, as above&apos;),
- (80.0, 82.5, u&apos;Siltstone: reddish brown, blocky, moderately hard.&apos;),
- (82.5, 88.0, u&apos;Siltstone: as above&apos;),
- (88.0,
-  90.0,
-  u&apos;Conglomerate: moderately orange pink, fine to very coarse grained, subangular, moderately, silica, 12 % porosity, no shows.&apos;),
- (90.0,
-  93.5,
-  u&apos;Sandstone: pale reddish brown, fine to medium grain, subangular, medium sorted, silica, 10 % porosity, no shows.&apos;),
- (93.5, 97.0, u&apos;Siltstone: dark reddish brown, blocky, moderately hard.&apos;),
- (97.0,
-  104.0,
-  u&apos;Sandstone: very fine to fine grain, subangular, medium, silica, feldspathic, minor pyrite, minor coal chips, 10 % porosity, no shows.&apos;),
- (104.0, 105.0, u&apos;Siltstone: as above.&apos;),
- (105.0,
-  111.0,
-  u&apos;Sandstone: quartz arenite, light gray, very fine to fine grained, subangular to subrounded, well, moderately hard, carbonaceous plant fragments, 12 % porosity, no shows.&apos;),
- (111.0,
-  130.0,
-  u&apos;Siltstone: moderately reddish brown to light gray, interbedded with shale; shale disperses quickly in water.&apos;),
- (130.0,
-  145.0,
-  u&apos;Siltstone: dark reddish brown to moderately red, shale stringers disperse quickly in water, minor scattered chips.&apos;),
- (145.0,
-  182.0,
-  u&apos;Interbedded Slitstone Shale and Sandstone: dark reddish brown, shale disperses quickly in water, sandstone is very fine to fine grained.&apos;),
- (182.0,
-  186.0,
-  u&apos;Sandstone: light, gray, quartz arenite, very fine to fine grain, subrounded, well, soft, siliceous to slightly .ialcareous cement, pyrite, plant fag, 10 % porosity, coal chips, no shows.&apos;),
- (186.0,
-  206.0,
-  u&apos;Interbedded Siltstone Shale and Sandstone: as interval at 145 to 182 metres.&apos;),
- (206.0,
-  210.0,
-  u&apos;Sandstone: light gray, quartz arenite, very fine grain, subangular, well, soft, poorly indurated, siliceous and slightly calcareous cement, carbonaceous plant fragments, 12 % Por, no shows.&apos;),
- (210.0,
-  215.5,
-  u&apos;Interbedded Siltstone Shale and Sandstone: light gray to red brown pink, sandstone stringers are very fine grained, minor chert fragment.&apos;),
- (215.5,
-  229.5,
-  u&apos;Sandstone: light to medium light gray, quartz arenite, very fine to fine grained, subrounded to subrounded, well, hard, siliceous to slightly calcareous cement, minor kaolin, 8 to 12 % porosity, no shows.&apos;),
- (229.5,
-  295.0,
-  u&apos;Interbedded Siltstone and Shale: grayish red to dark reddish brown, sandy, blocky, moderately hard to soft, local thin coal stringers, local plant fragments.&apos;),
- (295.0, 296.5, u&apos;Shale: red brown, soft.&apos;),
- (296.5, 298.0, u&apos;Shale: greenish grey.&apos;),
- (298.0, 321.0, u&apos;Interbedded Siltstone And Shale: as above.&apos;),
- (321.0,
-  330.0,
-  u&apos;Sandstone: dark reddish brown and light gray, very fine to fine grained, well, subrounded, silica cement slightly calcareous cement, 6 to 12 % porosity, (sandstone is both dark reddish brown and light, gray; both feldspathic and quartz arenite), no shows.&apos;),
- (330.0, 345.0, u&apos;Siltstone: dark reddish brown, as above.&apos;),
- (345.0,
-  350.0,
-  u&apos;Shale: moderately gray, blocky to fissile, moderately hard.&apos;),
- (350.0,
-  361.5,
-  u&apos;Sandstone: quartz arenite, light gray to white gray, very fine grained, subangular, well, hard, silica cement, nor kaolin, local pyrite blebs, plant fragment, 6 % porosity, no shows.&apos;),
- (361.5,
-  417.0,
-  u&apos;Interbedded Siltstone and Shale: dark reddish brown, moderately hard.&apos;),
- (417.0,
-  436.0,
-  u&apos;Sandstone: light gray and red brown, very fine grained, subangular, well, moderate to hard, silica cement, olinitic,up to 6 to 8 % porosity, local pyrite blebs, coal chips and carbonaceous plant fragment, no shows.&apos;),
- (436.0,
-  445.0,
-  u&apos;Siltstone with Sandstone stringers: dark red brown to light gray, sandstone stringers as above, local pyrite ears and blebs, coal smears.&apos;),
- (445.0,
-  463.0,
-  u&apos;Sandstone: light gray, very fine grained, subrounded, well, moderate to hard, silica, coal blebs, pyrite blebs, up to 6 % porosity, no shows. (siltstone and shale stringers red and gray)&apos;),
- (463.0,
-  475.0,
-  u&apos;Limestone: packstone to grainstone with mudstone interbeds, medium to dark gray, scattered barite chips, 3 to 6 % porosity, no shows, anhydrite stringers at base.&apos;),
- (475.0,
-  491.5,
-  u&apos;Anhydrite: white to light and dark gray, massive to blocky, interbedded with very fine grained sandstone, (feldspathic to arenaceous), siltstone (dark reddish brown) and limestone, (yellow gray to moderately gray).&apos;),
- (491.5, 493.5, u&apos;Salt: crystalline.&apos;)]
+ (27.0, 27.5, u&apos;Shale: reddish brown, greasy, soft.&apos;)]
 </pre>
 </div>
 
@@ -2301,11 +2198,11 @@ In&nbsp;[15]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[16]:
+In&nbsp;[19]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="nb">zip</span><span class="p">(</span><span class="n">tops</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">descr</span><span class="p">)[</span><span class="mi">3</span><span class="p">:]</span>
+<div class="highlight"><pre><span class="nb">zip</span><span class="p">(</span><span class="n">tops</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">descr</span><span class="p">)[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
 </pre></div>
 
 </div>
@@ -2317,7 +2214,7 @@ In&nbsp;[16]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[16]:</div>
+    Out[19]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2326,108 +2223,7 @@ In&nbsp;[16]:
   27.0,
   u&apos;Overburden: reddish brown, clay, sand and small cobbles, occasional rounded quartz grains, frosted and clear.&apos;),
  (27.0, 27.5, u&apos;Shale: reddish brown, greasy, soft.&apos;),
- (27.5, 29.0, u&apos;sandstone: brown red, very fine grained, soft.&apos;),
- (29.0,
-  30.0,
-  u&apos;sandstone: brown red, medium to coarse grain, subrounded to rounded, good, siliceous cement, 12 % porosity, no shows.&apos;),
- (30.0, 32.5, u&apos;Siltstone: dark reddish brown, blocky, soft.&apos;),
- (32.5,
-  38.0,
-  u&apos;Sandstone: dark red brown, very fine grained, subangular, good, moderately hardness, siliceous cement, 10 to 12% porosity, no shows.&apos;),
- (38.0, 50.0, u&apos;Siltstone: as above&apos;),
- (50.0,
-  52.5,
-  u&apos;Sandstone : greenish gray to reddish brown, very fine to fine grained, subangular, good sorting, soft, silica to slightly calcareous cement, 10% porosity, no shows.&apos;),
- (52.5, 54.0, u&apos;Siltstone: as above&apos;),
- (54.0, 55.0, u&apos;Shale: brown red, soft, fissible&apos;),
- (55.0,
-  59.0,
-  u&apos;Sandstone: quartz arenite, light to moderately gray, very fine to fine grained, subangular, well sorted brittle, 15% porosity, no shows. (20% of sst is reddish gray)&apos;),
- (59.0, 60.0, u&apos;Coal: black, high lustre, concoidal fracture.&apos;),
- (60.0, 60.5, u&apos;Sandstone: quartz arenite, as above.&apos;),
- (60.5, 70.0, u&apos;Siltstone: dark reddish brown, blocky, soft.&apos;),
- (70.0, 72.5, u&apos;Shale: dark gray to black, fissile.&apos;),
- (72.5, 75.0, u&apos;Siltstone: as above&apos;),
- (75.0,
-  78.0,
-  u&apos;Shale: dark red brown, fissile to blocky, carbonaceous plant fragments.&apos;),
- (78.0, 79.5, u&apos;Siltstone: as above&apos;),
- (79.5, 80.0, u&apos;Sandstone: light gray, as above&apos;),
- (80.0, 82.5, u&apos;Siltstone: reddish brown, blocky, moderately hard.&apos;),
- (82.5, 88.0, u&apos;Siltstone: as above&apos;),
- (88.0,
-  90.0,
-  u&apos;Conglomerate: moderately orange pink, fine to very coarse grained, subangular, moderately, silica, 12 % porosity, no shows.&apos;),
- (90.0,
-  93.5,
-  u&apos;Sandstone: pale reddish brown, fine to medium grain, subangular, medium sorted, silica, 10 % porosity, no shows.&apos;),
- (93.5, 97.0, u&apos;Siltstone: dark reddish brown, blocky, moderately hard.&apos;),
- (97.0,
-  104.0,
-  u&apos;Sandstone: very fine to fine grain, subangular, medium, silica, feldspathic, minor pyrite, minor coal chips, 10 % porosity, no shows.&apos;),
- (104.0, 105.0, u&apos;Siltstone: as above.&apos;),
- (105.0,
-  111.0,
-  u&apos;Sandstone: quartz arenite, light gray, very fine to fine grained, subangular to subrounded, well, moderately hard, carbonaceous plant fragments, 12 % porosity, no shows.&apos;),
- (111.0,
-  130.0,
-  u&apos;Siltstone: moderately reddish brown to light gray, interbedded with shale; shale disperses quickly in water.&apos;),
- (130.0,
-  145.0,
-  u&apos;Siltstone: dark reddish brown to moderately red, shale stringers disperse quickly in water, minor scattered chips.&apos;),
- (145.0,
-  182.0,
-  u&apos;Interbedded Slitstone Shale and Sandstone: dark reddish brown, shale disperses quickly in water, sandstone is very fine to fine grained.&apos;),
- (182.0,
-  186.0,
-  u&apos;Sandstone: light, gray, quartz arenite, very fine to fine grain, subrounded, well, soft, siliceous to slightly .ialcareous cement, pyrite, plant fag, 10 % porosity, coal chips, no shows.&apos;),
- (186.0,
-  206.0,
-  u&apos;Interbedded Siltstone Shale and Sandstone: as interval at 145 to 182 metres.&apos;),
- (206.0,
-  210.0,
-  u&apos;Sandstone: light gray, quartz arenite, very fine grain, subangular, well, soft, poorly indurated, siliceous and slightly calcareous cement, carbonaceous plant fragments, 12 % Por, no shows.&apos;),
- (210.0,
-  215.5,
-  u&apos;Interbedded Siltstone Shale and Sandstone: light gray to red brown pink, sandstone stringers are very fine grained, minor chert fragment.&apos;),
- (215.5,
-  229.5,
-  u&apos;Sandstone: light to medium light gray, quartz arenite, very fine to fine grained, subrounded to subrounded, well, hard, siliceous to slightly calcareous cement, minor kaolin, 8 to 12 % porosity, no shows.&apos;),
- (229.5,
-  295.0,
-  u&apos;Interbedded Siltstone and Shale: grayish red to dark reddish brown, sandy, blocky, moderately hard to soft, local thin coal stringers, local plant fragments.&apos;),
- (295.0, 296.5, u&apos;Shale: red brown, soft.&apos;),
- (296.5, 298.0, u&apos;Shale: greenish grey.&apos;),
- (298.0, 321.0, u&apos;Interbedded Siltstone And Shale: as above.&apos;),
- (321.0,
-  330.0,
-  u&apos;Sandstone: dark reddish brown and light gray, very fine to fine grained, well, subrounded, silica cement slightly calcareous cement, 6 to 12 % porosity, (sandstone is both dark reddish brown and light, gray; both feldspathic and quartz arenite), no shows.&apos;),
- (330.0, 345.0, u&apos;Siltstone: dark reddish brown, as above.&apos;),
- (345.0,
-  350.0,
-  u&apos;Shale: moderately gray, blocky to fissile, moderately hard.&apos;),
- (350.0,
-  361.5,
-  u&apos;Sandstone: quartz arenite, light gray to white gray, very fine grained, subangular, well, hard, silica cement, nor kaolin, local pyrite blebs, plant fragment, 6 % porosity, no shows.&apos;),
- (361.5,
-  417.0,
-  u&apos;Interbedded Siltstone and Shale: dark reddish brown, moderately hard.&apos;),
- (417.0,
-  436.0,
-  u&apos;Sandstone: light gray and red brown, very fine grained, subangular, well, moderate to hard, silica cement, olinitic,up to 6 to 8 % porosity, local pyrite blebs, coal chips and carbonaceous plant fragment, no shows.&apos;),
- (436.0,
-  445.0,
-  u&apos;Siltstone with Sandstone stringers: dark red brown to light gray, sandstone stringers as above, local pyrite ears and blebs, coal smears.&apos;),
- (445.0,
-  463.0,
-  u&apos;Sandstone: light gray, very fine grained, subrounded, well, moderate to hard, silica, coal blebs, pyrite blebs, up to 6 % porosity, no shows. (siltstone and shale stringers red and gray)&apos;),
- (463.0,
-  475.0,
-  u&apos;Limestone: packstone to grainstone with mudstone interbeds, medium to dark gray, scattered barite chips, 3 to 6 % porosity, no shows, anhydrite stringers at base.&apos;),
- (475.0,
-  491.5,
-  u&apos;Anhydrite: white to light and dark gray, massive to blocky, interbedded with very fine grained sandstone, (feldspathic to arenaceous), siltstone (dark reddish brown) and limestone, (yellow gray to moderately gray).&apos;),
- (491.5, 493.5, u&apos;Salt: crystalline.&apos;)]
+ (27.5, 29.0, u&apos;sandstone: brown red, very fine grained, soft.&apos;)]
 </pre>
 </div>
 
@@ -2440,11 +2236,11 @@ In&nbsp;[16]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[17]:
+In&nbsp;[20]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lexicon</span> <span class="kn">import</span> <span class="n">Lexicon</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Lexicon</span>
 <span class="n">lexicon</span> <span class="o">=</span> <span class="n">Lexicon</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
 </pre></div>
 
@@ -2456,7 +2252,7 @@ In&nbsp;[17]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[18]:
+In&nbsp;[21]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2473,7 +2269,7 @@ In&nbsp;[18]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[18]:</div>
+    Out[21]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2491,7 +2287,7 @@ Striplog(50 Intervals, start=0.0, stop=493.5)
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[19]:
+In&nbsp;[22]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2511,76 +2307,77 @@ In&nbsp;[19]:
 
 <div class="output_png output_subarea ">
 <img src="data:image/png;base64,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
-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
+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
+QmCC
 "
 >
 </div>
@@ -2594,7 +2391,7 @@ JscJTI4TmBwnMDn/D33hFns7vgvoAAAAAElFTkSuQmCC
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[20]:
+In&nbsp;[23]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2629,7 +2426,7 @@ top: 30.0, base: 32.5, description: &apos;Siltstone: dark reddish brown, blocky,
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[21]:
+In&nbsp;[24]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2644,7 +2441,7 @@ In&nbsp;[21]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[22]:
+In&nbsp;[25]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2660,7 +2457,7 @@ In&nbsp;[22]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[22]:</div>
+    Out[25]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2688,7 +2485,7 @@ In&nbsp;[22]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[23]:
+In&nbsp;[26]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2711,7 +2508,7 @@ VERS .              3.0       :CWLS LOG ASCII STANDARD - VERSION 3.0
 WRAP .               NO       :ONE LINE PER DEPTH STEP
 DLM  .            COMMA       :DELIMITING CHARACTER
 PROG .       striplog.py      :LAS Program name and version
-CREA . 2015/03/21 12:54       :LAS Creation date {YYYY/MM/DD hh:mm}
+CREA . 2015/03/21 23:12       :LAS Creation date {YYYY/MM/DD hh:mm}
 
 ~Well
 #MNEM .UNIT  DATA             DESCRIPTION
@@ -2862,7 +2659,7 @@ CUTTD.                    : Cuttings description     {S}
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[24]:
+In&nbsp;[27]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2893,7 +2690,7 @@ In&nbsp;[24]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[25]:
+In&nbsp;[28]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2935,7 +2732,7 @@ Wrote file /Users/matt/Dropbox/Agile/NS_DOE/2014-1G/data/LAS/P-117_striplog.las
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[26]:
+In&nbsp;[29]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2951,7 +2748,7 @@ In&nbsp;[26]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[27]:
+In&nbsp;[30]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2967,7 +2764,7 @@ In&nbsp;[27]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[27]:</div>
+    Out[30]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2985,7 +2782,7 @@ In&nbsp;[27]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[28]:
+In&nbsp;[31]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3195,7 +2992,7 @@ ygAAAABJRU5ErkJggg==
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[29]:
+In&nbsp;[32]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3210,7 +3007,7 @@ In&nbsp;[29]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[30]:
+In&nbsp;[33]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3242,7 +3039,7 @@ In&nbsp;[30]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>
-/Library/Python/2.7/site-packages/matplotlib/figure.py:387: UserWarning: matplotlib is currently using a non-GUI backend, so cannot show the figure
+/Users/matt/biscuit/lib/python2.7/site-packages/matplotlib/figure.py:387: UserWarning: matplotlib is currently using a non-GUI backend, so cannot show the figure
   &quot;matplotlib is currently using a non-GUI backend, &quot;
 
 </pre>
@@ -3401,7 +3198,7 @@ AV8CNgCvALYDl2Xmr/p8OTcAa2k9pUjgp8B/6Ng30MtlvAX4BvA99j11uB64nz5fHzXH0OMgaTQN
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[31]:
+In&nbsp;[34]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3417,7 +3214,7 @@ In&nbsp;[31]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[37]:
+In&nbsp;[35]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4729,7 +4526,7 @@ IiIVKWAUERERkYoUMIqIiIhIRf8fRVYOne2UvBQAAAAASUVORK5CYII=
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[35]:
+In&nbsp;[36]:
 </div>
 <div class="inner_cell">
     <div class="input_area">

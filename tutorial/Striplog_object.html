@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="utf-8" />
-<title>Striplog_objects</title>
+<title>Striplog_object</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -1718,10 +1718,7 @@ In&nbsp;[2]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">legend</span> <span class="kn">import</span> <span class="n">Legend</span>
-<span class="kn">from</span> <span class="nn">lexicon</span> <span class="kn">import</span> <span class="n">Lexicon</span>
-<span class="kn">from</span> <span class="nn">interval</span> <span class="kn">import</span> <span class="n">Interval</span>
-<span class="kn">from</span> <span class="nn">rock</span> <span class="kn">import</span> <span class="n">Rock</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Legend</span><span class="p">,</span> <span class="n">Lexicon</span><span class="p">,</span> <span class="n">Interval</span><span class="p">,</span> <span class="n">Rock</span>
 </pre></div>
 
 </div>
@@ -1758,7 +1755,7 @@ In&nbsp;[3]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[5]:
+In&nbsp;[4]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1808,7 +1805,7 @@ In&nbsp;[5]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[6]:
+In&nbsp;[5]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1823,7 +1820,7 @@ In&nbsp;[6]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[7]:
+In&nbsp;[6]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1840,7 +1837,7 @@ In&nbsp;[7]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[7]:</div>
+    Out[6]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -1882,7 +1879,7 @@ Striplog(26 Intervals, start=200.0, stop=300.0)
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[10]:
+In&nbsp;[7]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1917,7 +1914,7 @@ top: 236.595744681, base: 237.911025145, description: &apos;&apos;, components: 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[11]:
+In&nbsp;[8]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1933,7 +1930,7 @@ In&nbsp;[11]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[11]:</div>
+    Out[8]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -1967,7 +1964,7 @@ In&nbsp;[11]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[12]:
+In&nbsp;[9]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2097,7 +2094,7 @@ VfXXLB2XrwC+tPwvL9+Trhl096pvwE3Ag8B3gX3AFcCJwGeBPcB2YOPU5/8hSz+o7AZ+5Uhf27fZ
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[13]:
+In&nbsp;[10]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2117,87 +2114,86 @@ In&nbsp;[13]:
 
 <div class="output_png output_subarea ">
 <img src="data:image/png;base64,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
-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
+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
 "
 >
 </div>
@@ -2220,7 +2216,7 @@ okd+EqbiXyehO2a0cAQYjgDDEWA4AgxHgOEIMBwBhvsf8MhDrne1Fj4AAAAASUVORK5CYII=
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[14]:
+In&nbsp;[11]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2347,7 +2343,7 @@ BzA5DmByHMDkOIDJcQCT4wAmxwFMzv8B8AktDU3+lb0AAAAASUVORK5CYII=
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[15]:
+In&nbsp;[12]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2378,7 +2374,7 @@ Volcanic
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[16]:
+In&nbsp;[13]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2414,7 +2410,7 @@ In&nbsp;[16]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[17]:
+In&nbsp;[14]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2430,7 +2426,7 @@ In&nbsp;[17]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[17]:</div>
+    Out[14]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2448,7 +2444,7 @@ In&nbsp;[17]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[18]:
+In&nbsp;[15]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2465,7 +2461,7 @@ In&nbsp;[18]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[18]:</div>
+    Out[15]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2493,7 +2489,7 @@ array([ 237.91102515,  238.72340426,  239.8065764 ,  240.77369439,
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[19]:
+In&nbsp;[16]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2546,7 +2542,7 @@ top: 238.723404255, base: 239.806576402, description: &apos;&apos;, components: 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[20]:
+In&nbsp;[17]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2562,7 +2558,7 @@ In&nbsp;[20]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[20]:</div>
+    Out[17]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2580,7 +2576,7 @@ Striplog(4 Intervals, start=230.328820116, stop=255.435203095)
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[21]:
+In&nbsp;[18]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2596,7 +2592,7 @@ In&nbsp;[21]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[21]:</div>
+    Out[18]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2615,7 +2611,7 @@ In&nbsp;[21]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[22]:
+In&nbsp;[19]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2631,7 +2627,7 @@ In&nbsp;[22]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[22]:</div>
+    Out[19]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2649,7 +2645,7 @@ In&nbsp;[22]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[23]:
+In&nbsp;[20]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2683,7 +2679,7 @@ top: 247.234042553, base: 255.435203095, description: &apos;&apos;, components: 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[24]:
+In&nbsp;[21]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2703,54 +2699,55 @@ In&nbsp;[24]:
 
 <div class="output_png output_subarea ">
 <img src="data:image/png;base64,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
-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
+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
+gg==
 "
 >
 </div>
@@ -2773,7 +2770,7 @@ nAHhqrunXkOqqru7pl4H0YEIqN1zC4UzIJwB4QwIZ0C4PwBwmQ4KdpyTgAAAAABJRU5ErkJggg==
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[25]:
+In&nbsp;[22]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2790,7 +2787,7 @@ In&nbsp;[25]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[25]:</div>
+    Out[22]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2817,7 +2814,7 @@ Rock(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[26]:
+In&nbsp;[23]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2898,7 +2895,7 @@ nAHhDAhX3T31GlJV3d019TqI9kVA7ZxbKJwB4QwIZ0A4A8L9AdhrDgrs9ZvLAAAAAElFTkSuQmCC
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[27]:
+In&nbsp;[24]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2914,7 +2911,7 @@ In&nbsp;[27]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[27]:</div>
+    Out[24]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2941,7 +2938,7 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[28]:
+In&nbsp;[25]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2957,7 +2954,7 @@ In&nbsp;[28]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[28]:</div>
+    Out[25]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -2985,7 +2982,7 @@ Rock(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;siltstone&
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[30]:
+In&nbsp;[26]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3030,7 +3027,7 @@ top: 200.0, base: 230.328820116, description: &apos;&apos;, components: [Rock(&q
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[31]:
+In&nbsp;[27]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3046,7 +3043,7 @@ In&nbsp;[31]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[31]:</div>
+    Out[27]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3064,7 +3061,7 @@ Striplog(2 Intervals, start=230.328820116, stop=234.700193424)
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[36]:
+In&nbsp;[28]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3080,7 +3077,7 @@ In&nbsp;[36]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[37]:
+In&nbsp;[29]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3096,7 +3093,7 @@ In&nbsp;[37]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[37]:</div>
+    Out[29]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3124,7 +3121,7 @@ Striplog(3 Intervals, start=294.816247582, stop=350.0)
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[38]:
+In&nbsp;[30]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3191,7 +3188,7 @@ LITHD.                    : Lithology description     {S}
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[39]:
+In&nbsp;[31]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3207,7 +3204,7 @@ In&nbsp;[39]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[39]:</div>
+    Out[31]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3225,7 +3222,7 @@ In&nbsp;[39]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[40]:
+In&nbsp;[32]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3266,7 +3263,7 @@ In&nbsp;[40]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[41]:
+In&nbsp;[33]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3290,7 +3287,7 @@ In&nbsp;[41]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[42]:
+In&nbsp;[34]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3306,7 +3303,7 @@ In&nbsp;[42]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[42]:</div>
+    Out[34]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3324,7 +3321,7 @@ Rock()
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[43]:
+In&nbsp;[35]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3340,7 +3337,7 @@ In&nbsp;[43]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[43]:</div>
+    Out[35]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3358,7 +3355,7 @@ Rock(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[44]:
+In&nbsp;[36]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3409,7 +3406,7 @@ In&nbsp;[44]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[45]:
+In&nbsp;[37]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3426,7 +3423,7 @@ In&nbsp;[45]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[45]:</div>
+    Out[37]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3444,7 +3441,7 @@ Striplog(26 Intervals, start=200.0, stop=300.0)
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[46]:
+In&nbsp;[38]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3460,7 +3457,7 @@ In&nbsp;[46]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[46]:</div>
+    Out[38]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3504,7 +3501,7 @@ In&nbsp;[46]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[47]:
+In&nbsp;[39]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3523,7 +3520,7 @@ In&nbsp;[47]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[48]:
+In&nbsp;[40]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3541,13 +3538,13 @@ In&nbsp;[48]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>
-interval.py:72: UserWarning: You must provide a lexicon to generate rock components from descriptions.
+/Users/matt/biscuit/lib/python2.7/site-packages/striplog/interval.py:74: UserWarning: You must provide a lexicon to generate rock components from descriptions.
   warnings.warn(w)
-interval.py:72: UserWarning: You must provide a lexicon to generate rock components from descriptions.
+/Users/matt/biscuit/lib/python2.7/site-packages/striplog/interval.py:74: UserWarning: You must provide a lexicon to generate rock components from descriptions.
   warnings.warn(w)
-interval.py:72: UserWarning: You must provide a lexicon to generate rock components from descriptions.
+/Users/matt/biscuit/lib/python2.7/site-packages/striplog/interval.py:74: UserWarning: You must provide a lexicon to generate rock components from descriptions.
   warnings.warn(w)
-interval.py:72: UserWarning: You must provide a lexicon to generate rock components from descriptions.
+/Users/matt/biscuit/lib/python2.7/site-packages/striplog/interval.py:74: UserWarning: You must provide a lexicon to generate rock components from descriptions.
   warnings.warn(w)
 
 </pre>
@@ -3561,7 +3558,7 @@ interval.py:72: UserWarning: You must provide a lexicon to generate rock compone
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[49]:
+In&nbsp;[41]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3595,7 +3592,7 @@ top: 500.0, base: 501.0, description: &apos;Cretaceous&apos;, components: []
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[50]:
+In&nbsp;[42]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3611,7 +3608,7 @@ In&nbsp;[50]:
 
 
 <div class="output_area"><div class="prompt output_prompt">
-    Out[50]:</div>
+    Out[42]:</div>
 
 
 <div class="output_text output_subarea output_pyout">
@@ -3648,7 +3645,7 @@ Interval(top: 200.0, base: 350.0, description: &apos;Sobrarbe Fm.&apos;, compone
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[51]:
+In&nbsp;[43]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3669,7 +3666,7 @@ In&nbsp;[51]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[52]:
+In&nbsp;[44]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3687,17 +3684,17 @@ In&nbsp;[52]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>
-interval.py:72: UserWarning: You must provide a lexicon to generate rock components from descriptions.
+/Users/matt/biscuit/lib/python2.7/site-packages/striplog/interval.py:74: UserWarning: You must provide a lexicon to generate rock components from descriptions.
   warnings.warn(w)
-interval.py:72: UserWarning: You must provide a lexicon to generate rock components from descriptions.
+/Users/matt/biscuit/lib/python2.7/site-packages/striplog/interval.py:74: UserWarning: You must provide a lexicon to generate rock components from descriptions.
   warnings.warn(w)
-interval.py:72: UserWarning: You must provide a lexicon to generate rock components from descriptions.
+/Users/matt/biscuit/lib/python2.7/site-packages/striplog/interval.py:74: UserWarning: You must provide a lexicon to generate rock components from descriptions.
   warnings.warn(w)
-interval.py:72: UserWarning: You must provide a lexicon to generate rock components from descriptions.
+/Users/matt/biscuit/lib/python2.7/site-packages/striplog/interval.py:74: UserWarning: You must provide a lexicon to generate rock components from descriptions.
   warnings.warn(w)
-interval.py:72: UserWarning: You must provide a lexicon to generate rock components from descriptions.
+/Users/matt/biscuit/lib/python2.7/site-packages/striplog/interval.py:74: UserWarning: You must provide a lexicon to generate rock components from descriptions.
   warnings.warn(w)
-interval.py:72: UserWarning: You must provide a lexicon to generate rock components from descriptions.
+/Users/matt/biscuit/lib/python2.7/site-packages/striplog/interval.py:74: UserWarning: You must provide a lexicon to generate rock components from descriptions.
   warnings.warn(w)
 
 </pre>
@@ -3711,7 +3708,7 @@ interval.py:72: UserWarning: You must provide a lexicon to generate rock compone
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[53]:
+In&nbsp;[45]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3753,20 +3750,16 @@ top: 1300.0, base: 1300.0, description: &apos;2.2&apos;, components: []
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
+<div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
-In&nbsp;[48]:
 </div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class="highlight"><pre> 
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr />
 
+<p style="color:gray">©2015 Agile Geoscience. Licensed CC-BY. <a href="https://github.com/agile-geoscience/striplog">striplog.py</a></p>
 </div>
 </div>
-</div>
-
 </div>
     </div>
   </div>
