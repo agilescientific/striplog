@@ -1,0 +1,6 @@
+Lexicon
+========
+
+.. automodule:: lexicon 
+   :members:
+

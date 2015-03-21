@@ -94,7 +94,7 @@ class Rock(object):
         else:
             return cls(rock_dict)
 
-    def summary(self, fmt=None, initial=True):
+    def summary(self, fmt=None, initial=True, default=''):
         """
         Given a rock dict and a format string,
         return a summary description of a rock.
@@ -105,6 +105,8 @@ class Rock(object):
                 to signal a field in the Rock, which is analogous
                 to a dictionary. If no format is given, you will
                 just get a list of attributes.
+            initial (bool): Whether to capitialize the first letter.
+            default (str): What to give if there's no rock defined.
 
         Returns:
             str: A summary string.
@@ -115,10 +117,10 @@ class Rock(object):
                  'grainsize': 'VF-F',
                  'lithology': 'Sandstone'}
 
-        summarize(r)  -->  'Red, vf-f, sandstone'
+            summarize(r)  -->  'Red, vf-f, sandstone'
         """
-        # TODO: Use nouns and adjectives properly.
-        # TODO: Use {key} instead of %key.
+        if default and not self.__dict__: return default
+
         if not fmt:
             string, flist = '', []
             for item in self.__dict__:

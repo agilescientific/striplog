@@ -11,26 +11,29 @@ Striplog is a family of classes to facilitate the loading, processing, and analy
 Requirements
 ------------
 
-* `NumPy`
-* `matplotlib` if you want to plot anything.
-* `PIL` if you want to import striplog images.
-* `xlrd` if you want to read from Excel files.
+* `NumPy`, which handles some of the numerics.
+* `matplotlib`, a plotting library.
+* `pillow`, an image processing library (a version of PIL).
 
-Tutorial
---------
+Tutorials
+---------
 
-:download:`Please read this IPython Notebook.<../tutorial/Tutorial.html>`
- 
+:download:`The basic objects.<../tutorial/Basic_objects.html>`
+:download:`The striplog object.<../tutorial/Striplog_object.html>`
+:download:`The well object.<../tutorial/Well_object.html>`
+
 The code
 --------
 
 .. toctree::
    :maxdepth: 2
 
+   lexicon
    rock
    interval
    legend
    striplog
+   well
 
 Indices and tables
 ------------------
@@ -38,4 +41,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

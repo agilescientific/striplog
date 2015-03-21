@@ -6,7 +6,6 @@ A striplog is a sequence of intervals.
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
-
 import re
 import StringIO
 import csv
@@ -417,6 +416,7 @@ class Striplog(object):
         Returns:
             ndarray: Two ndarrays in a tuple, (depth, logdata).
         """
+        # Make the preparations.
         if not start:
             start = self.start
 
@@ -426,7 +426,7 @@ class Striplog(object):
         pts = np.floor((stop - start)/step)
         stop = self.start + step * pts
         depth = np.linspace(start, stop, pts+1)
-        result = np.zeros_like(depth)   # Make a container for the result
+        result = np.zeros_like(depth)
 
         # Make a look-up table for the log values.
         if legend:
@@ -434,6 +434,7 @@ class Striplog(object):
         else:
             table = {j[0]: i+1 for i, j in enumerate(self.top)}
 
+        # Assign the values from the lookup table.
         for i in self:
             top_index = np.ceil((i.top-start)/step)
             base_index = np.ceil((i.base-start)/step)+1

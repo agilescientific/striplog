@@ -194,13 +194,25 @@ class Legend(object):
         return '\n'.join(s)
 
     def __getitem__(self, key):
-        return self.__list[key]
+        if not key:
+            return
+        elif type(key) is slice:
+            i = key.indices(len(self.__list))
+            result = [self.__list[n] for n in range(*i)]
+            return Legend(result)
+        elif type(key) is list:
+            result = []
+            for j in key:
+                result.append(self.__list[j])
+            return Legend(result)
+        else:
+            return self.__list[key]
 
     def __setitem__(self, key, value):
         self.__list[key] = value
 
     def __iter__(self):
-        return self
+        return iter(self.__list)
 
     def next(self):  # __next__() in Python 3
         try:
@@ -210,6 +222,9 @@ class Legend(object):
             raise StopIteration
         self.__index += 1
         return result
+
+    def __len__(self):
+        return len(self.__list)
 
     @classmethod
     def default(cls):
