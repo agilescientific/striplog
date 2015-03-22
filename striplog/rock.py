@@ -119,7 +119,8 @@ class Rock(object):
 
             summarize(r)  -->  'Red, vf-f, sandstone'
         """
-        if default and not self.__dict__: return default
+        if default and not self.__dict__:
+            return default
 
         if not fmt:
             string, flist = '', []
