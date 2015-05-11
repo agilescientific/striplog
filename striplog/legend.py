@@ -386,18 +386,22 @@ class Legend(object):
         """
         return max([row.width for row in self.__list])
 
-    def get_colour(self, rock, default='#eeeeee'):
+    def get_colour(self, rock, default='#eeeeee', match_only=None):
         """
         Get the display colour of a Rock.
 
         Args:
            rock (rock): The rock to look up.
            default (str): The colour to return in the event of no match.
-
+           match_only (list): The rock attributes to include in the comparison.
+                Default: All of them
         Returns:
            str. The hex string of the matching Decor in the Legend.
         """
         if rock:
+            if match_only:
+                # Filter the rock only those attributes
+                rock = {k: rock[k] for k in match_only}
             for decor in self.__list:
                 if rock == decor.rock:
                     return decor.colour

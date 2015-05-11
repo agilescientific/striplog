@@ -466,7 +466,12 @@ class Striplog(object):
 
         return depth, result
 
-    def plot_axis(self, ax, legend, ladder=False, default_width=1):
+    def plot_axis(self,
+                  ax,
+                  legend,
+                  ladder=False,
+                  default_width=1,
+                  match_only=None):
         """
         Plotting, but only the Rectangles. You have to set up the figure.
         Returns a matplotlib axis object.
@@ -477,13 +482,15 @@ class Striplog(object):
             ladder (bool): Whether to use widths or not. Default False.
             default_width (int): A width for the plot if not using widths.
                 Default 1.
+            match_only (list): A list of strings matching the attributes
+                you want to compare when plotting.
 
         Returns:
             axis: The matplotlib axis.
         """
         for i in self.__list:
             origin = (0, i.top)
-            colour = legend.get_colour(i.primary)
+            colour = legend.get_colour(i.primary, match_only=match_only)
             thick = i.base - i.top
 
             if ladder:
@@ -502,7 +509,8 @@ class Striplog(object):
              width=1,
              ladder=False,
              aspect=10,
-             interval=(1, 10)):
+             interval=(1, 10),
+             match_only=None):
         """
         Hands-free plotting.
 
@@ -513,6 +521,8 @@ class Striplog(object):
             aspect (int): The aspect ratio of the plot. Default 10.
             interval (int or tuple): The (minor,major) tick interval for depth.
                 Only the major interval is labeled. Default (1,10).
+            match_only (list): A list of strings matching the attributes
+                you want to compare when plotting.
 
         Returns:
             None: The plot is a side-effect.
@@ -530,7 +540,8 @@ class Striplog(object):
         self.plot_axis(ax=ax,
                        legend=legend,
                        ladder=ladder,
-                       default_width=width)
+                       default_width=width
+                       match_only=match_only)
 
         ax.set_xlim([0, width])
         ax.set_ylim([self.stop, self.start])
