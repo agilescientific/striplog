@@ -161,7 +161,8 @@ class Striplog(object):
                  source='CSV',
                  dlm=',',
                  points=False,
-                 abbreviations=False):
+                 abbreviations=False,
+                 complete=False):
         """
         Convert a CSV string into a striplog. Expects 2 or 3 fields:
             top, description
@@ -174,6 +175,10 @@ class Striplog(object):
             source (str): A source. Default: 'CSV'.
             dlm (str): The delimiter, given by ``well.dlm``. Default: ','
             points (bool): Whether to treat as points or as intervals.
+            abbreviations (bool): Whether to expand abbreviations in the
+                description. Default: False.
+            complete (bool): Whether to make 'blank' intervals, or just leave
+                gaps. Default: False.
 
         Returns:
             Striplog: A ``striplog`` object.
@@ -221,7 +226,7 @@ class Striplog(object):
             # Deal with making intervals or points...
             if not points:
                 # Insert intervals where needed.
-                if (i > 0) and (this_top != result['bases'][-1]):
+                if complete and (i > 0) and (this_top != result['bases'][-1]):
                     result['tops'].append(result['bases'][-1])
                     result['bases'].append(this_top)
                     result['descrs'].append('')
@@ -352,7 +357,7 @@ class Striplog(object):
 
         Returns:
             Striplog: The ``striplog`` object.
- 
+
         Note:
             Handles multiple 'Data' sections. It would be smarter for it
             to handle one at a time, and to deal with parsing the multiple
