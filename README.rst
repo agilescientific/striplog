@@ -1,6 +1,10 @@
 striplog
 ========
 
+.. image:: https://pypip.in/version/striplog/badge.svg
+    :target: https://pypi.python.org/pypi/striplog/
+    :alt: Latest version
+    
 .. image:: https://pypip.in/status/striplog/badge.svg
     :target: https://pypi.python.org/pypi/striplog/
     :alt: Development status
