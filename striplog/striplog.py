@@ -77,6 +77,9 @@ class Striplog(object):
     def __len__(self):
         return len(self.__list)
 
+    def __delitem__(self, key):
+        del self.__list[key]
+
     def __setitem__(self, key, value):
         if not key:
             return
@@ -113,11 +116,18 @@ class Striplog(object):
 
     def __reversed__(self):
         # Not sure if this should return a Striplog or not.
+        # Maybe it's nonsensical to even allow the operation.
         return self.__list[::-1]
 
     def __add__(self, other):
-        result = self.__list + other.__list
-        return Striplog(result)
+        if isinstance(other, self.__class__):
+            result = self.__list + other.__list
+            return Striplog(result)
+        elif isinstance(other, Interval):
+            result = self.__list + [other]
+            return Striplog(result)
+        else:
+            raise StriplogError("You can only add striplogs or intervals.")
 
     @classmethod
     def __intervals_from_loglike(self, loglike, offset=2):
@@ -471,7 +481,7 @@ class Striplog(object):
                   legend,
                   ladder=False,
                   default_width=1,
-                  include=None):
+                  match_only=None):
         """
         Plotting, but only the Rectangles. You have to set up the figure.
         Returns a matplotlib axis object.
@@ -482,7 +492,7 @@ class Striplog(object):
             ladder (bool): Whether to use widths or not. Default False.
             default_width (int): A width for the plot if not using widths.
                 Default 1.
-            include (list): A list of strings matching the attributes you
+            match_only (list): A list of strings matching the attributes you
                 want to compare when plotting.
 
         Returns:
@@ -490,7 +500,7 @@ class Striplog(object):
         """
         for i in self.__list:
             origin = (0, i.top)
-            colour = legend.get_colour(i.primary, include=include)
+            colour = legend.get_colour(i.primary, match_only=match_only)
             thick = i.base - i.top
 
             if ladder:
@@ -510,7 +520,7 @@ class Striplog(object):
              ladder=False,
              aspect=10,
              interval=(1, 10),
-             include=None):
+             match_only=None):
         """
         Hands-free plotting.
 
@@ -521,7 +531,7 @@ class Striplog(object):
             aspect (int): The aspect ratio of the plot. Default 10.
             interval (int or tuple): The (minor,major) tick interval for depth.
                 Only the major interval is labeled. Default (1,10).
-            include (list): A list of strings matching the attributes you
+            match_only (list): A list of strings matching the attributes you
                 want to compare when plotting.
 
         Returns:
@@ -541,7 +551,7 @@ class Striplog(object):
                        legend=legend,
                        ladder=ladder,
                        default_width=width,
-                       include=include)
+                       match_only=match_only)
 
         ax.set_xlim([0, width])
         ax.set_ylim([self.stop, self.start])
