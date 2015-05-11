@@ -384,23 +384,36 @@ class Legend(object):
         The maximum width of all the Decors in the Legend. This is needed
         to scale a Legend or Striplog when plotting with widths turned on.
         """
-        return max([row.width for row in self.__list])
+        maximum = max([row.width for row in self.__list])
+        return maximum or 0
 
-    def get_colour(self, rock, default='#eeeeee'):
+    def get_colour(self, rock, default='#eeeeee', include=None):
         """
         Get the display colour of a Rock.
 
         Args:
            rock (rock): The rock to look up.
            default (str): The colour to return in the event of no match.
+           include (list): The rock attributes to include in the comparison.
+               Default: All of them.
 
         Returns:
            str. The hex string of the matching Decor in the Legend.
         """
         if rock:
+            if include:
+                # Filter the rock to only those attributes.
+                rock = {k: rock[k] for k in include}
             for decor in self.__list:
-                if rock == decor.rock:
+                if include:
+                    # Filter the comparison rock too.
+                    compare = {k: decor.rock[k] for k in include}
+                else:
+                    compare = decor.rock
+
+                if rock == compare:
                     return decor.colour
+
         return default
 
     def get_width(self, rock, default=0):
