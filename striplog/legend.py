@@ -394,8 +394,8 @@ class Legend(object):
         Args:
            rock (rock): The rock to look up.
            default (str): The colour to return in the event of no match.
-           match_only (list): The rock attributes to include in the comparison.
-               Default: All of them.
+           match_only (list of str): The rock attributes to include in the
+               comparison. Default: All of them.
 
         Returns:
            str. The hex string of the matching Decor in the Legend.
@@ -416,6 +416,8 @@ class Legend(object):
         Args:
            rock (rock): The rock to look up.
            default (float): The width to return in the event of no match.
+           match_only (list of str): The rock attributes to include in the
+               comparison. Default: All of them.
 
         Returns:
            float. The width of the matching Decor in the Legend.
