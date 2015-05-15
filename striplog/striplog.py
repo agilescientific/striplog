@@ -77,6 +77,9 @@ class Striplog(object):
     def __len__(self):
         return len(self.__list)
 
+    def __delitem__(self, key):
+        del self.__list[key]
+
     def __setitem__(self, key, value):
         if not key:
             return
@@ -113,11 +116,18 @@ class Striplog(object):
 
     def __reversed__(self):
         # Not sure if this should return a Striplog or not.
+        # Maybe it's nonsensical to even allow the operation.
         return self.__list[::-1]
 
     def __add__(self, other):
-        result = self.__list + other.__list
-        return Striplog(result)
+        if isinstance(other, self.__class__):
+            result = self.__list + other.__list
+            return Striplog(result)
+        elif isinstance(other, Interval):
+            result = self.__list + [other]
+            return Striplog(result)
+        else:
+            raise StriplogError("You can only add striplogs or intervals.")
 
     @classmethod
     def __intervals_from_loglike(self, loglike, offset=2):
@@ -151,7 +161,8 @@ class Striplog(object):
                  source='CSV',
                  dlm=',',
                  points=False,
-                 abbreviations=False):
+                 abbreviations=False,
+                 complete=False):
         """
         Convert a CSV string into a striplog. Expects 2 or 3 fields:
             top, description
@@ -164,6 +175,10 @@ class Striplog(object):
             source (str): A source. Default: 'CSV'.
             dlm (str): The delimiter, given by ``well.dlm``. Default: ','
             points (bool): Whether to treat as points or as intervals.
+            abbreviations (bool): Whether to expand abbreviations in the
+                description. Default: False.
+            complete (bool): Whether to make 'blank' intervals, or just leave
+                gaps. Default: False.
 
         Returns:
             Striplog: A ``striplog`` object.
@@ -211,7 +226,7 @@ class Striplog(object):
             # Deal with making intervals or points...
             if not points:
                 # Insert intervals where needed.
-                if (i > 0) and (this_top != result['bases'][-1]):
+                if complete and (i > 0) and (this_top != result['bases'][-1]):
                     result['tops'].append(result['bases'][-1])
                     result['bases'].append(this_top)
                     result['descrs'].append('')
@@ -312,7 +327,6 @@ class Striplog(object):
          """
         csv_text = ''
         for interval in a:
-            print interval
             interval = [str(i) for i in interval]
             if (len(interval) < 2) or (len(interval) > 3):
                 raise StriplogError('Elements must have 2 or 3 items')
@@ -343,7 +357,7 @@ class Striplog(object):
 
         Returns:
             Striplog: The ``striplog`` object.
- 
+
         Note:
             Handles multiple 'Data' sections. It would be smarter for it
             to handle one at a time, and to deal with parsing the multiple
@@ -483,8 +497,8 @@ class Striplog(object):
             ladder (bool): Whether to use widths or not. Default False.
             default_width (int): A width for the plot if not using widths.
                 Default 1.
-            match_only (list): A list of strings matching the attributes
-                you want to compare when plotting.
+            match_only (list): A list of strings matching the attributes you
+                want to compare when plotting.
 
         Returns:
             axis: The matplotlib axis.
@@ -523,8 +537,8 @@ class Striplog(object):
             aspect (int): The aspect ratio of the plot. Default 10.
             interval (int or tuple): The (minor,major) tick interval for depth.
                 Only the major interval is labeled. Default (1,10).
-            match_only (list): A list of strings matching the attributes
-                you want to compare when plotting.
+            match_only (list): A list of strings matching the attributes you
+                want to compare when plotting.
 
         Returns:
             None: The plot is a side-effect.
