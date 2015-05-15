@@ -269,7 +269,7 @@ class Legend(object):
         if isinstance(item, Rock):
             for d in self.__list:
                 if item == d.rock:
-                    return True        
+                    return True
         return False
 
     def __add__(self, other):
@@ -401,13 +401,13 @@ class Legend(object):
         if rock:
             if match_only:
                 # Filter the rock only those attributes
-                rock = {k: rock[k] for k in match_only}
+                rock = Rock({k: getattr(rock, k) for k in match_only})
             for decor in self.__list:
                 if rock == decor.rock:
                     return decor.colour
         return default
 
-    def get_width(self, rock, default=0):
+    def get_width(self, rock, default=0, match_only=None):
         """
         Get the display width of a Rock.
 
@@ -419,6 +419,9 @@ class Legend(object):
            float. The width of the matching Decor in the Legend.
         """
         if rock:
+            if match_only:
+                # Filter the rock only those attributes
+                rock = Rock({k: getattr(rock, k) for k in match_only})
             for decor in self.__list:
                 if rock == decor.rock:
                     return decor.width

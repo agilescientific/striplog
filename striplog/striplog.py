@@ -312,6 +312,7 @@ class Striplog(object):
          """
         csv_text = ''
         for interval in a:
+            print interval
             interval = [str(i) for i in interval]
             if (len(interval) < 2) or (len(interval) > 3):
                 raise StriplogError('Elements must have 2 or 3 items')
@@ -492,12 +493,13 @@ class Striplog(object):
             origin = (0, i.top)
             colour = legend.get_colour(i.primary, match_only=match_only)
             thick = i.base - i.top
+            d = default_width
 
             if ladder:
-                w = legend.get_width(i.primary) or default_width
-                w = default_width * w/legend.max_width
+                w = legend.get_width(i.primary, match_only=match_only) or d
+                w = d * w/legend.max_width
             else:
-                w = default_width
+                w = d
 
             rect = patches.Rectangle(origin, w, thick, color=colour)
             ax.add_patch(rect)
@@ -540,7 +542,7 @@ class Striplog(object):
         self.plot_axis(ax=ax,
                        legend=legend,
                        ladder=ladder,
-                       default_width=width
+                       default_width=width,
                        match_only=match_only)
 
         ax.set_xlim([0, width])
