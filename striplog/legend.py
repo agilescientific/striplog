@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Defines a legend for displaying rocks.
+Defines a legend for displaying components.
 
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
@@ -15,7 +15,7 @@ from matplotlib import pyplot as plt
 from matplotlib import patches
 from matplotlib.colors import rgb2hex
 
-from rock import Rock
+from component import Component
 import utils
 from defaults import LEGEND
 
@@ -30,7 +30,7 @@ class LegendError(Exception):
 class Decor(object):
     """
     A single display style. A Decor describes how to display a given set
-    of Rock properties.
+    of Component properties.
 
     In general, you will not usually use a Decor on its own. Instead, you
     will want to use a Legend, which is just a list of Decors, and leave
@@ -38,7 +38,7 @@ class Decor(object):
 
     Args:
       params (dict): The parameters you want in the Decor. There must be a
-        Rock to attach the decoration to, and at least one other attribute.
+        Component to attach the decoration to, and at least 1 other attribute.
         It's completely up to you, but you probably want at least a colour
         (hex names like #AAA or #d3d3d3, or matplotlib's English-language
         names listed at http://ageo.co/modelrcolour are acceptable.
@@ -47,7 +47,8 @@ class Decor(object):
         which is the width of the striplog element.
 
     Example:
-      d = {'rock': my_rock, 'colour': 'red'}
+      my_rock = Component({ ... })
+      d = {'component': my_rock, 'colour': 'red'}
       my_decor = Decor(d)
     """
     def __init__(self, params):
@@ -59,8 +60,8 @@ class Decor(object):
                 v = v
             setattr(self, k, v)
 
-        if not getattr(self, 'rock', None):
-            raise LegendError("You must provide a Rock object to decorate.")
+        if not getattr(self, 'component', None):
+            raise LegendError("You must provide a Component to decorate.")
 
         if len(self.__dict__) < 2:
             raise LegendError("You must provide at least one decoration.")
@@ -144,12 +145,12 @@ class Decor(object):
         return hash(frozenset(self.__dict__.keys()))
 
     @classmethod
-    def random(cls, rock):
+    def random(cls, component):
         """
         Returns a minimal Decor with a random colour.
         """
         colour = np.random.rand(3,)
-        return cls({'colour': colour, 'rock': rock})
+        return cls({'colour': colour, 'component': component})
 
     @property
     def rgb(self):
@@ -179,7 +180,7 @@ class Decor(object):
                                   color=self.colour)
         ax.add_patch(rect1)
         plt.text(1.2*u, 0.5*u,
-                 self.rock.summary(),
+                 self.component.summary(),
                  fontsize=max(u, 15),
                  verticalalignment='center',
                  horizontalalignment='left')
@@ -195,7 +196,7 @@ class Decor(object):
 
 class Legend(object):
     """
-    A look-up table to assist in the conversion of Rocks to
+    A look-up table to assist in the conversion of Components to
     a plot colour.
 
     Args:
@@ -266,9 +267,9 @@ class Legend(object):
             for d in self.__list:
                 if item == d:
                     return True
-        if isinstance(item, Rock):
+        if isinstance(item, Component):
             for d in self.__list:
-                if item == d.rock:
+                if item == d.component:
                     return True
         return False
 
@@ -293,14 +294,14 @@ class Legend(object):
         return cls.from_csv(LEGEND)
 
     @classmethod
-    def random(cls, list_of_Rocks):
+    def random(cls, list_of_Components):
         """
-        Generate a random legend for a given list of rocks.
+        Generate a random legend for a given list of components.
 
         Returns:
             Legend: A legend with random colours.
         """
-        list_of_Decors = [Decor.random(r) for r in list_of_Rocks]
+        list_of_Decors = [Decor.random(r) for r in list_of_Components]
         return cls(list_of_Decors)
 
     @classmethod
@@ -319,13 +320,13 @@ class Legend(object):
         r = csv.DictReader(f, skipinitialspace=True)
         list_of_Decors = []
         for row in r:
-            d, rock = {}, {}
+            d, component = {}, {}
             for k, v in row.iteritems():
-                if k[:4].lower() == 'rock':
-                    rock[k[5:]] = v.lower()
+                if k[:4].lower() == 'component':
+                    component[k[5:]] = v.lower()
                 else:
                     d[k] = v.lower()
-            d['rock'] = Rock(rock)
+            d['component'] = Component(component)
             list_of_Decors.append(Decor(d))
 
         return cls(list_of_Decors)
@@ -342,18 +343,18 @@ class Legend(object):
         # We can't delegate this to Decor because we need to know the superset
         # of all Decor properties. There may be lots of blanks.
         header = []
-        rock_header = []
+        component_header = []
         for row in self:
             for j in row.__dict__.keys():
                 header.append(j)
-            for k in row.rock.__dict__.keys():
-                rock_header.append(k)
+            for k in row.component.__dict__.keys():
+                component_header.append(k)
         header = set(header)
-        rock_header = set(rock_header)
+        component_header = set(component_header)
 
         header = set(header)
-        rock_header = set(rock_header)
-        header.remove('rock')
+        component_header = set(component_header)
+        header.remove('component')
         header_row = ''
         if 'colour' in header:
             header_row += 'colour,'
@@ -361,8 +362,8 @@ class Legend(object):
             has_colour = True
         for item in header:
             header_row += item + ','
-        for item in rock_header:
-            header_row += 'rock ' + item + ','
+        for item in component_header:
+            header_row += 'component ' + item + ','
 
         # Now we have a header row! Phew.
         # Next we'll go back over the legend and collect everything.
@@ -372,8 +373,8 @@ class Legend(object):
                 result += row.__dict__.get('colour', '') + ','
             for item in header:
                 result += str(row.__dict__.get(item, '')) + ','
-            for item in rock_header:
-                result += str(row.rock.__dict__.get(item, '')) + ','
+            for item in component_header:
+                result += str(row.component.__dict__.get(item, '')) + ','
             result += '\n'
 
         return result
@@ -387,69 +388,70 @@ class Legend(object):
         maximum = max([row.width for row in self.__list])
         return maximum or 0
 
-    def get_colour(self, rock, default='#eeeeee', match_only=None):
+    def get_colour(self, c, default='#eeeeee', match_only=None):
         """
-        Get the display colour of a Rock.
+        Get the display colour of a component.
 
         Args:
-           rock (rock): The rock to look up.
+           c (component): The component to look up.
            default (str): The colour to return in the event of no match.
-           match_only (list of str): The rock attributes to include in the
+           match_only (list of str): The component attributes to include in the
                comparison. Default: All of them.
 
         Returns:
            str. The hex string of the matching Decor in the Legend.
         """
-        if rock:
+        if c:
             if match_only:
-                # Filter the rock only those attributes
-                rock = Rock({k: getattr(rock, k) for k in match_only})
+                # Filter the component only those attributes
+                c = Component({k: getattr(c, k) for k in match_only})
             for decor in self.__list:
-                if rock == decor.rock:
+                if c == decor.component:
                     return decor.colour
         return default
 
-    def get_width(self, rock, default=0, match_only=None):
+    def get_width(self, c, default=0, match_only=None):
         """
-        Get the display width of a Rock.
+        Get the display width of a component.
 
         Args:
-           rock (rock): The rock to look up.
+           c (component): The component to look up.
            default (float): The width to return in the event of no match.
-           match_only (list of str): The rock attributes to include in the
+           match_only (list of str): The component attributes to include in the
                comparison. Default: All of them.
 
         Returns:
            float. The width of the matching Decor in the Legend.
         """
-        if rock:
+        if c:
             if match_only:
-                # Filter the rock only those attributes
-                rock = Rock({k: getattr(rock, k) for k in match_only})
+                # Filter the component only those attributes
+                c = Component({k: getattr(c, k) for k in match_only})
             for decor in self.__list:
-                if rock == decor.rock:
+                if c == decor.component:
                     return decor.width
         return default
 
-    def get_rock(self, colour, tolerance=0, default=None):
+    def get_component(self, colour, tolerance=0, default=None):
         """
-        Get the rock corresponding to a display colour. This is for generating
-        a Striplog object from a colour image of a striplog.
+        Get the component corresponding to a display colour. This is for
+        generating a Striplog object from a colour image of a striplog.
 
         Args:
            colour (str): The hex colour string to look up.
            tolerance (float): The colourspace distance within which to match.
-           default (rock or None): The rock to return in the event of no match.
+           default (component or None): The component to return in the event
+           of no match.
 
         Returns:
-           rock. The rock best matching the provided colour.
+           component. The component best matching the provided colour.
         """
         if not (0 <= tolerance <= np.sqrt(195075)):
             raise LegendError('Tolerance must be between 0 and 441.67')
 
         for decor in self.__list:
             if colour.lower() == decor.colour:
-                return decor.rock
+                return decor.component
 
         # If we're here, we didn't find one yet.
         r1, g1, b1 = utils.hex_to_rgb(colour)
@@ -463,7 +465,7 @@ class Legend(object):
             r2, g2, b2 = decor.rgb
             distance = np.sqrt((r2-r1)**2. + (g2-g1)**2. + (b2-b1)**2.)
             if distance < best_match_dist:
-                best_match = decor.rock
+                best_match = decor.component
                 best_match_dist = distance
                 best_match_colour = decor.colour
 

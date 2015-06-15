@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Defines intervals for holding rocks.
+Defines intervals for holding components.
 
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
@@ -12,7 +12,7 @@ import warnings
 import numbers
 from functools import total_ordering
 
-from rock import Rock
+from component import Component
 
 
 class IntervalError(Exception):
@@ -29,7 +29,7 @@ class Interval(object):
     such as a sample location.
 
     Initialize with a top (and optional base) and a description and/or
-    an ordered list of components, each of which is a Rock.
+    an ordered list of components.
 
     Args:
         top (float): Required top depth. Required.
@@ -70,7 +70,7 @@ class Interval(object):
                 with warnings.catch_warnings():
                     warnings.simplefilter("always")
                     w = "You must provide a lexicon to generate "
-                    w += "rock components from descriptions."
+                    w += "components from descriptions."
                     warnings.warn(w)
                 self.components = []
 
@@ -101,7 +101,7 @@ class Interval(object):
             d = '{:.1f}% {} with {:.1f}% {}'.format(prop, d1, 100-prop, d2)
             c = max(self, other).components + min(self, other).components
             return Interval(top, base, description=d, components=c)
-        elif isinstance(other, Rock):
+        elif isinstance(other, Component):
             top = self.top
             base = self.base
             d = self.description + ' with ' + other.summary()
@@ -209,6 +209,6 @@ class Interval(object):
         for p, part in enumerate(self.__split_description(text)):
             if p == max_component:
                 break
-            components.append(Rock.from_text(part, lexicon))
+            components.append(Component.from_text(part, lexicon))
 
         return components

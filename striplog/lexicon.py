@@ -211,8 +211,8 @@ class Lexicon(object):
     def get_component(self, text, required=False, first_only=True):
         """
         Takes a piece of text representing a lithologic description for one
-        component of a rock, e.g. "Red vf-f sandstone" and turns it into a
-        dictionary of attributes.
+        component, e.g. "Red vf-f sandstone" and turns it into a dictionary
+        of attributes.
 
         TODO:
             Generalize this so that we can use any types of word, as specified

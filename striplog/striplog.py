@@ -290,12 +290,12 @@ class Striplog(object):
         tops = [start + (p/length) * (stop-start) for p in pixels]
         bases = tops[1:] + [stop]
 
-        # Get the rocks corresponding to the colours.
-        rocks = [legend.get_rock(h, tolerance=tolerance) for h in hexes]
+        # Get the components corresponding to the colours.
+        comps = [legend.get_component(h, tolerance=tolerance) for h in hexes]
 
         list_of_Intervals = []
         for i, t in enumerate(tops):
-            interval = Interval(t, bases[i], components=[rocks[i]])
+            interval = Interval(t, bases[i], components=[comps[i]])
             list_of_Intervals.append(interval)
 
         return cls(list_of_Intervals, source="Image")
@@ -468,7 +468,7 @@ class Striplog(object):
 
         # Make a look-up table for the log values.
         if legend:
-            table = {j.rock: i+1 for i, j in enumerate(legend)}
+            table = {j.component: i+1 for i, j in enumerate(legend)}
         else:
             table = {j[0]: i+1 for i, j in enumerate(self.top)}
 
@@ -550,8 +550,8 @@ class Striplog(object):
 
         if not legend:
             # Build a random-coloured legend.
-            rocks = [i[0] for i in self.top if i[0]]
-            legend = Legend.random(rocks)
+            comps = [i[0] for i in self.top if i[0]]
+            legend = Legend.random(comps)
 
         self.plot_axis(ax=ax,
                        legend=legend,
@@ -607,12 +607,12 @@ class Striplog(object):
         Look for a regex expression in the descriptions of the striplog.
         If there's no description, it looks in the summaries.
 
-        If you pass a Rock, then it will search the components, not the
+        If you pass a Component, then it will search the components, not the
         descriptions or summaries.
 
         Args:
-            search_term (string or Rock): The thing you want to search for.
-                Strings are treated as regular expressions.
+            search_term (string or Component): The thing you want to search
+                for. Strings are treated as regular expressions.
         Returns:
            Striplog: A striplog that contains only the 'hit' Intervals.
         """
@@ -653,7 +653,7 @@ class Striplog(object):
     @property
     def cum(self):
         """
-        Returns the cumulative thickness of all rock-filled intervals.
+        Returns the cumulative thickness of all filled intervals.
 
         It would be nice to use sum() for this (by defining __radd__),
         but I quite like the ability to add striplogs and get a striplog
@@ -669,7 +669,7 @@ class Striplog(object):
     @property
     def mean(self):
         """
-        Returns the mean thickness of all rock-filled intervals.
+        Returns the mean thickness of all filled intervals.
         """
         return self.cum / len(self)
 
