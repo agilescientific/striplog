@@ -7,7 +7,6 @@ Defines components for holding properties of rocks or samples or whatevers.
 :license: Apache 2.0
 """
 import re
-import warnings
 
 
 class ComponentError(Exception):
@@ -150,17 +149,3 @@ class Component(object):
             summary = summary[0].upper() + summary[1:]
 
         return summary
-
-
-def Rock(*args, **kwargs):
-    """
-    Graceful deprecation for old class name.
-    """
-
-    with warnings.catch_warnings():
-        warnings.simplefilter("always")
-        w = "The 'Rock' class was renamed 'Component'. "
-        w += "Please update your code."
-        warnings.warn(w, DeprecationWarning, stacklevel=2)
-
-    return Component(*args, **kwargs)

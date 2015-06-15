@@ -1,27 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Defines components for holding properties of rocks or samples or whatevers.
+Replaced by component.py. Kept this for graceful deprecation.
 
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
-import re
 import warnings
 
-from component import Component
+from striplog import Component
 
 
-class Rock(Component):
+def Rock(*args, **kwargs):
     """
     Graceful deprecation for old class name.
     """
-    def __init__(self, *args, **kwargs):
 
-        with warnings.catch_warnings():
-            warnings.simplefilter("always")
-            w = "The 'Rock' class was renamed 'Component'. "
-            w += "Please update your code."
-            warnings.warn(w, DeprecationWarning)
+    with warnings.catch_warnings():
+        warnings.simplefilter("always")
+        w = "The 'Rock' class was renamed 'Component'. "
+        w += "Please update your code."
+        warnings.warn(w, DeprecationWarning, stacklevel=2)
 
-        Component.__init__(*args, **kwargs)
+    return Component(*args, **kwargs)
