@@ -7,7 +7,7 @@ A striplog is a sequence of intervals.
 :license: Apache 2.0
 """
 import re
-import StringIO
+from io import StringIO
 import csv
 import operator
 
@@ -196,7 +196,7 @@ class Striplog(object):
         text = re.sub(r'(\n+|\r\n|\r)', '\n', text.strip())
 
         as_strings = []
-        f = StringIO.StringIO(text)
+        f = StringIO(text)
         reader = csv.reader(f, delimiter=dlm, skipinitialspace=True)
         for row in reader:
             as_strings.append(row)

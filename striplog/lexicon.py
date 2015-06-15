@@ -6,7 +6,7 @@ A vocabulary for parsing lithologic or stratigraphic decriptions.
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
-
+from io import open
 import json
 import warnings
 import re

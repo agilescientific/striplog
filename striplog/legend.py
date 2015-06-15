@@ -6,7 +6,8 @@ Defines a legend for displaying components.
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
-import StringIO
+from builtins import object
+from io import StringIO
 import csv
 import warnings
 
@@ -207,14 +208,10 @@ class Legend(object):
     """
 
     def __init__(self, list_of_Decors):
-        """
-        This is not very elegant, but using csv, which is
-        convenient, requires the use of a file-like.
-        """
         self.table = [d.__dict__ for d in list_of_Decors]
-
         self.__list = list_of_Decors
-        self.__index = 0  # Set up iterable.
+        self.__index = 0
+        self._iter = iter(self.__list)  # Set up iterable.
 
     def __repr__(self):
         s = str(self)
@@ -243,14 +240,9 @@ class Legend(object):
         self.__list[key] = value
 
     def __iter__(self):
-        return iter(self.__list)
+        return self
 
-    def next(self):
-        """
-        Supports iterable.
-
-        __next__() in Python 3.
-        """
+    def __next__(self):
         try:
             result = self.__list[self.__index]
         except IndexError:
@@ -316,12 +308,12 @@ class Legend(object):
             - Edit the legend, call it `new_legend`.
             - `legend = Legend.from_csv(new_legend)`
         """
-        f = StringIO.StringIO(string)
+        f = StringIO(string)
         r = csv.DictReader(f, skipinitialspace=True)
         list_of_Decors = []
         for row in r:
             d, component = {}, {}
-            for k, v in row.iteritems():
+            for (k, v) in row.items():
                 if k[:4].lower() == 'component':
                     component[k[5:]] = v.lower()
                 else:
@@ -333,7 +325,7 @@ class Legend(object):
 
     def to_csv(self):
         """
-        Prints a legend as a CSV string.
+        Renders a legend as a CSV string.
 
         No arguments.
 

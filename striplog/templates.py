@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Reader for template strings.
@@ -11,10 +12,6 @@ def get_template(name):
     """
     Still unsure about best way to do this, hence cruft.
     """
-    # with open(name + '_template.txt') as f:
-    #     text = re.sub(r'\r\n', r'\n', f.read())
-    #     text = re.sub(r'\{([FISDE°].*?)\}', r'{{\1}}', text)
-    #     return text
     text = re.sub(r'\r\n', r'\n', name)
     text = re.sub(r'\{([FISDE°].*?)\}', r'{{\1}}', text)
     return text

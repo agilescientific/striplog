@@ -8,6 +8,7 @@ Defines intervals and rock for holding lithologies.
 """
 import time
 import re
+import warnings
 
 import las
 import templates
@@ -146,12 +147,19 @@ class Well(las.LASReader):
             try:
                 eref = float(self.parameters.EREF.data)
             except AttributeError:
-                print "There is no EREF"
+                with warnings.catch_warnings():
+                    warnings.simplefilter("always")
+                    w = "There is no EREF."
+                    warnings.warn(w)
+
         if self.parameters.PDAT.data == 'GL':
             try:
                 apd = float(self.parameters.APD.data)
             except AttributeError:
-                print "There is no APD"
+                with warnings.catch_warnings():
+                    warnings.simplefilter("always")
+                    w = "There is no APD."
+                    warnings.warn(w)
 
         time_now = time.strftime("%Y/%m/%d %H:%M", time.gmtime())
         template = templates.las
