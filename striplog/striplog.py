@@ -17,10 +17,10 @@ from matplotlib import pyplot as plt
 from matplotlib import patches
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
-from interval import Interval
-from legend import Legend
-import utils
-import templates
+from .interval import Interval
+from .legend import Legend
+from . import utils
+from . import templates
 
 
 class StriplogError(Exception):

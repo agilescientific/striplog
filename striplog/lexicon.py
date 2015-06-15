@@ -12,7 +12,7 @@ import warnings
 import re
 from itertools import islice
 
-import defaults
+from . import defaults
 
 SPECIAL = ['synonyms', 'parts_of_speech', 'abbreviations']
 

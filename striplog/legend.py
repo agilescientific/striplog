@@ -16,9 +16,9 @@ from matplotlib import pyplot as plt
 from matplotlib import patches
 from matplotlib.colors import rgb2hex
 
-from component import Component
+from .component import Component
 import utils
-from defaults import LEGEND
+from .defaults import LEGEND
 
 
 class LegendError(Exception):

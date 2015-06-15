@@ -12,7 +12,7 @@ import warnings
 import numbers
 from functools import total_ordering
 
-from component import Component
+from .component import Component
 
 
 class IntervalError(Exception):
