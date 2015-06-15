@@ -17,7 +17,7 @@ from matplotlib import patches
 from matplotlib.colors import rgb2hex
 
 from .component import Component
-import utils
+from . import utils
 from .defaults import LEGEND
 
 

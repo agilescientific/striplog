@@ -10,9 +10,9 @@ import time
 import re
 import warnings
 
-import las
-import templates
-from striplog import Striplog
+from . import las
+from . import templates
+from .striplog import Striplog
 
 
 class WellError(Exception):

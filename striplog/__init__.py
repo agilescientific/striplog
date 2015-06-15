@@ -5,13 +5,13 @@
 striplog
 ==================
 """
-from legend import Decor, Legend
-from interval import Interval
-from component import Component
-from rock import Rock  # Deprecated v 1.5
-from well import Well
-from striplog import Striplog
-from lexicon import Lexicon
+from .legend import Decor, Legend
+from .interval import Interval
+from .component import Component
+from .rock import Rock  # Deprecated v 1.5
+from .well import Well
+from .striplog import Striplog
+from .lexicon import Lexicon
 
 __all__ = ['Lexicon',
            'Component',
