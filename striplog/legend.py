@@ -129,9 +129,12 @@ class Decor(object):
         if not isinstance(other, self.__class__):
             return False
 
+        # Weed out empty elements
         s = {k: v for k, v in self.__dict__.items() if v}
         o = {k: v for k, v in other.__dict__.items() if v}
-        if not cmp(s, o):
+
+        # Compare
+        if s == o:
             return True
         else:
             return False
