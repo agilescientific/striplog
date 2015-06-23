@@ -610,6 +610,8 @@ class Striplog(object):
         If you pass a Component, then it will search the components, not the
         descriptions or summaries.
 
+        Case insensitive.
+
         Args:
             search_term (string or Component): The thing you want to search
                 for. Strings are treated as regular expressions.
@@ -620,7 +622,7 @@ class Striplog(object):
         for i, iv in enumerate(self):
             try:
                 search_text = iv.description or iv.primary.summary()
-                pattern = re.compile(search_term)
+                pattern = re.compile(search_term, flags=re.IGNORECASE)
                 if pattern.search(search_text):
                     hits.append(i)
             except TypeError:

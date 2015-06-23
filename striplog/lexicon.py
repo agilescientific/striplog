@@ -188,7 +188,7 @@ class Lexicon(object):
             chunk the abbreviation dicitonary.
             """
             it = iter(data)
-            for i in xrange(0, len(data), SIZE):
+            for i in range(0, len(data), SIZE):
                 yield {k: data[k] for k in islice(it, SIZE)}
 
         def cb(g):

@@ -7,7 +7,7 @@ Defines some default values for parsing cuttings descriptions.
 :license: Apache 2.0
 """
 
-LEGEND = """colour, width, rock lithology, rock colour, rock grainsize
+LEGEND = """colour, width, comp lithology, comp colour, comp grainsize
 #FFFFFF, 0, , ,
 #F7E9A6, 3, Sandstone, Grey, VF-F
 #FF99CC, 2, Anhydrite, ,

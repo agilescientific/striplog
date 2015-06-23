@@ -6,7 +6,7 @@ Defines a legend for displaying components.
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
-from builtins import object
+# from builtins import object
 from io import StringIO
 import csv
 import warnings
@@ -304,6 +304,15 @@ class Legend(object):
         """
         Read CSV text and generate a Legend.
 
+        In the first row, list the properties. Precede the properties of the
+        component with 'comp ' or 'component '. For example:
+
+        colour,  width, comp lithology, comp colour
+        #FFFFFF, 0, ,
+        #F7E9A6, 3, Sandstone, Grey
+        #FF99CC, 2, Anhydrite,
+        ... etc
+
         Note:
             To edit a legend, the easiest thing to do is probably this:
 
@@ -317,8 +326,9 @@ class Legend(object):
         for row in r:
             d, component = {}, {}
             for (k, v) in row.items():
-                if k[:4].lower() == 'component':
-                    component[k[5:]] = v.lower()
+                if k[:4].lower() == 'comp':
+                    prop = ' '.join(k.split()[1:])
+                    component[prop] = v.lower()
                 else:
                     d[k] = v.lower()
             d['component'] = Component(component)

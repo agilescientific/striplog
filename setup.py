@@ -4,6 +4,18 @@
 Python installation file.
 """
 from setuptools import setup
+import re
+
+verstr = 'unknown'
+VERSIONFILE = "striplog/_version.py"
+with open(VERSIONFILE, "r")as f:
+    verstrline = f.read().strip()
+    pattern = re.compile(r"__version__ = ['\"](.*)['\"]")
+    mo = pattern.search(verstrline)
+if mo:
+    verstr = mo.group(1)
+else:
+    raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
 
 REQUIREMENTS = ['numpy',
                 'pillow',
@@ -21,7 +33,7 @@ CLASSIFIERS = ['Development Status :: 4 - Beta',
                ]
 
 setup(name='striplog',
-      version='0.5.3',
+      version=verstr,
       description='Tools for making and managing well data.',
       url='http://github.com/agile-geoscience/striplog',
       author='Agile Geoscience',
