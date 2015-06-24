@@ -94,11 +94,10 @@ class Striplog(object):
     def __iter__(self):
         return iter(self.__list)
 
-    def next(self):  # __next__() in Python 3
+    def __next__(self):
         """
         Supports iterable.
 
-        __next__() in Python 3.
         """
         try:
             result = self.__list[self.__index]
@@ -107,6 +106,12 @@ class Striplog(object):
             raise StopIteration
         self.__index += 1
         return result
+
+    def next(self):
+        """
+        Retains Python 2 compatibility.
+        """
+        return self.__next__()
 
     def __contains__(self, item):
         for r in self.__list:
@@ -196,7 +201,10 @@ class Striplog(object):
         text = re.sub(r'(\n+|\r\n|\r)', '\n', text.strip())
 
         as_strings = []
-        f = StringIO(text)
+        try:
+            f = StringIO(text)  # Python 3
+        except TypeError:
+            f = StringIO(unicode(text))  # Python 2
         reader = csv.reader(f, delimiter=dlm, skipinitialspace=True)
         for row in reader:
             as_strings.append(row)

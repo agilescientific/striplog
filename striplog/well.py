@@ -79,7 +79,7 @@ class Well(las.LASReader):
         if other:
             f = re.MULTILINE
             pattern = re.compile(r'^(\~)(?=\w+?_Parameter)', flags=f)
-            chunks = filter(None, pattern.split(self.other))
+            chunks = [i for i in filter(None, pattern.split(self.other))]
 
             # This is gross but I can't see how else to get the tilde
             # back on the strings when I do the re.split().

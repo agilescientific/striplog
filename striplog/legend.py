@@ -7,7 +7,7 @@ Defines a legend for displaying components.
 :license: Apache 2.0
 """
 # from builtins import object
-from io import StringIO
+from io import StringIO, BytesIO
 import csv
 import warnings
 
@@ -254,6 +254,12 @@ class Legend(object):
         self.__index += 1
         return result
 
+    def next(self):
+        """
+        Retains Python 2 compatibility.
+        """
+        return self.__next__()
+
     def __len__(self):
         return len(self.__list)
 
@@ -320,7 +326,11 @@ class Legend(object):
             - Edit the legend, call it `new_legend`.
             - `legend = Legend.from_csv(new_legend)`
         """
-        f = StringIO(string)
+        try:
+            f = StringIO(string)  # Python 3
+        except TypeError:
+            f = StringIO(unicode(string))  # Python 2
+
         r = csv.DictReader(f, skipinitialspace=True)
         list_of_Decors = []
         for row in r:

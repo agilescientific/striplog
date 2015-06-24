@@ -353,9 +353,15 @@ class LASReader(object):
         delimiters = {'SPACE': ' ', 'TAB': '\t', 'COMMA': ','}
 
         opened_here = False
-        if isinstance(f, basestring):
-            opened_here = True
-            f = open(f, 'r')
+
+        try:
+            if isinstance(f, basestring):
+                opened_here = True
+                f = open(f, 'r')
+        except NameError:
+            if isinstance(f, str):
+                opened_here = True
+                f = open(f, 'r')
 
         self.wrap = False
 
