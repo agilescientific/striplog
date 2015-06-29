@@ -29,7 +29,7 @@ The code
    :maxdepth: 2
 
    lexicon
-   rock
+   component
    interval
    legend
    striplog

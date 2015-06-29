@@ -1,6 +1,6 @@
 Lexicon
 ========
 
-.. automodule:: lexicon 
+.. automodule:: .lexicon 
    :members:
 

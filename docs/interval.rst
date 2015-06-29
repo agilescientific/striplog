@@ -1,5 +1,5 @@
 Interval
 ========
 
-.. automodule:: interval 
+.. automodule:: .interval 
    :members:

@@ -1,0 +1,6 @@
+Rock
+====
+
+.. automodule:: .component 
+   :members:
+
