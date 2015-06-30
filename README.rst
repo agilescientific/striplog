@@ -28,7 +28,7 @@ Utilities for handling lithologic and stratigraphic 'interval' logs. Includes a 
 Docs
 ----
 
-* `Read The Docs <https://pythonhosted.org/striplog/>`_
+* `Read The Docs <https://striplog.readthedocs.org/>`_
 
 Dependencies
 ------------
