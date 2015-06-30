@@ -74,11 +74,6 @@ class Interval(object):
                     warnings.warn(w)
                 self.components = []
 
-        if self.components:
-            self.primary = self.components[0]
-        else:
-            self.primary = None
-
     def __repr__(self):
         s = str(self)
         return "Interval({0})".format(s)
@@ -129,6 +124,19 @@ class Interval(object):
             if self.thickness < other.thickness:
                 return True
         return False
+
+    @property
+    def primary(self):
+        """
+        Convenience function returning the first component.
+
+        Returns:
+            Component. The first one in the list of components.
+        """
+        if self.components:
+            return self.components[0]
+        else:
+            return None
 
     @property
     def thickness(self):

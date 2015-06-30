@@ -7,7 +7,7 @@ Defines a legend for displaying components.
 :license: Apache 2.0
 """
 # from builtins import object
-from io import StringIO, BytesIO
+from io import StringIO
 import csv
 import warnings
 
