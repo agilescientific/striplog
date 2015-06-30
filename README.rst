@@ -1,19 +1,23 @@
 striplog
 ========
 
-.. image:: https://pypip.in/version/striplog/badge.svg
-    :target: https://pypi.python.org/pypi/striplog/
-    :alt: Latest version
-    
-.. image:: https://pypip.in/status/striplog/badge.svg
+.. image:: https://img.shields.io/pypi/status/striplog.svg
     :target: https://pypi.python.org/pypi/striplog/
     :alt: Development status
 
-.. image:: https://www.codacy.com/project/badge/ad9af103cba14d33abd5b327727ff644 
+.. image:: https://img.shields.io/pypi/v/striplog.svg
+    :target: https://pypi.python.org/pypi/striplog/
+    :alt: Latest version
+    
+.. image:: https://img.shields.io/pypi/pyversions/striplog.svg
+    :target: https://pypi.python.org/pypi/striplog/
+    :alt: Python version
+    
+.. image:: https://img.shields.io/codacy/ad9af103cba14d33abd5b327727ff644.svg 
     :target: https://www.codacy.com/public/matt/striplog
     :alt: Code review
 
-.. image:: https://pypip.in/license/striplog/badge.svg
+.. image:: https://img.shields.io/pypi/l/striplog.svg
     :target: https://pypi.python.org/pypi/striplog/
     :alt: License
 
