@@ -113,6 +113,8 @@ class Interval(object):
 
     # Must supply __eq__ and one other rich comparison for
     # the total_ordering function to provide the others.
+    # Not sure if this should be comparing thicknesses, or
+    # depths, or...?
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             if self.thickness == other.thickness:

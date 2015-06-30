@@ -40,10 +40,41 @@ class Striplog(object):
         list_of_Intervals (list): A list of Interval objects.
         source (str): A source for the data. Default None.
     """
-    def __init__(self, list_of_Intervals, source=None):
+    def __init__(self, list_of_Intervals, source=None, order='auto'):
+
+        if order.lower()[0] == 'a':  # Auto
+            # Might as well be strict about it
+            if all([iv.base > iv.top for iv in list_of_Intervals]):
+                self.order = 'depth'
+            elif all([iv.base < iv.top for iv in list_of_Intervals]):
+                self.order = 'elevation'
+            else:
+                m = "Could not determine order from tops and bases."
+                raise StriplogError(m)
+
+        if order.lower()[0] == 'd':  # Depth
+            # Sanity check
+            fail = any([iv.base < iv.top for iv in list_of_Intervals])
+            if fail:
+                m = "Depth order specified but base above top."
+                raise StriplogError(m)
+            # Order force
+            list_of_Intervals.sort(key=operator.attrgetter('top'))
+            self.start = list_of_Intervals[0].top
+            self.stop = list_of_Intervals[-1].base
+
+        else:  # Elevation
+            fail = any([iv.base < iv.top for iv in list_of_Intervals])
+            if fail:
+                m = "Elevation order specified but base above top."
+                raise StriplogError(m)
+            # Order force
+            r = True
+            list_of_Intervals.sort(key=operator.attrgetter('top'), reverse=r)
+            self.start = list_of_Intervals[0].base
+            self.stop = list_of_Intervals[-1].top
+
         self.source = source
-        self.start = list_of_Intervals[0].top
-        self.stop = list_of_Intervals[-1].base
 
         self.__list = list_of_Intervals
         self.__index = 0  # Set up iterable.
@@ -120,9 +151,7 @@ class Striplog(object):
         return False
 
     def __reversed__(self):
-        # Not sure if this should return a Striplog or not.
-        # Maybe it's nonsensical to even allow the operation.
-        return self.__list[::-1]
+        return Striplog(self.__list[::-1])
 
     def __add__(self, other):
         if isinstance(other, self.__class__):
@@ -167,7 +196,8 @@ class Striplog(object):
                  dlm=',',
                  points=False,
                  abbreviations=False,
-                 complete=False):
+                 complete=False,
+                 order='auto'):
         """
         Convert a CSV string into a striplog. Expects 2 or 3 fields:
             top, description
@@ -198,6 +228,21 @@ class Striplog(object):
         Todo:
             Automatic abbreviation detection.
         """
+
+        # Decide on top-downness
+        # Striplog can be top-down (positive depth)
+        # or bottom-up (positive elevation)
+        # Do we want to handle negative elevation? Not yet...
+        if order.lower() == 'auto':
+            # Then sniff
+            pass
+        elif order.lower()[0] == 'd':
+            # Then DEPTH... force and correct if necessary
+            pass
+        else:
+            # For and correct if necessary
+            pass
+
         text = re.sub(r'(\n+|\r\n|\r)', '\n', text.strip())
 
         as_strings = []
@@ -637,6 +682,21 @@ class Striplog(object):
                 if search_term in iv.components:
                     hits.append(i)
         return self[hits]
+
+    def find_gaps(self):
+        """
+        Returns the indices of intervals with gaps after them.
+        """
+        hits = []
+        for i, iv in enumerate(self[:-1]):
+            if iv.base:
+                pass
+
+    def anneal(self):
+        """
+        Fill in empty intervals by growing from top and base.
+        """
+        pass
 
     @property
     def thickest(self):
