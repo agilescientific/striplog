@@ -42,6 +42,10 @@ class Striplog(object):
     """
     def __init__(self, list_of_Intervals, source=None, order='auto'):
 
+        if not list_of_Intervals:
+            m = "Cannot create an empty Striplog."
+            raise StriplogError(m)
+
         if order.lower()[0] == 'a':  # Auto
             # Might as well be strict about it
             if all([iv.base > iv.top for iv in list_of_Intervals]):
@@ -52,7 +56,8 @@ class Striplog(object):
                 m = "Could not determine order from tops and bases."
                 raise StriplogError(m)
 
-        if order.lower()[0] == 'd':  # Depth
+        if order.lower()[0] == 'd':
+            self.order = 'depth'
             # Sanity check
             fail = any([iv.base < iv.top for iv in list_of_Intervals])
             if fail:
@@ -63,7 +68,8 @@ class Striplog(object):
             self.start = list_of_Intervals[0].top
             self.stop = list_of_Intervals[-1].base
 
-        else:  # Elevation
+        else:
+            self.order = 'elevation'
             fail = any([iv.base < iv.top for iv in list_of_Intervals])
             if fail:
                 m = "Elevation order specified but base above top."
@@ -196,8 +202,7 @@ class Striplog(object):
                  dlm=',',
                  points=False,
                  abbreviations=False,
-                 complete=False,
-                 order='auto'):
+                 complete=False):
         """
         Convert a CSV string into a striplog. Expects 2 or 3 fields:
             top, description
@@ -228,20 +233,6 @@ class Striplog(object):
         Todo:
             Automatic abbreviation detection.
         """
-
-        # Decide on top-downness
-        # Striplog can be top-down (positive depth)
-        # or bottom-up (positive elevation)
-        # Do we want to handle negative elevation? Not yet...
-        if order.lower() == 'auto':
-            # Then sniff
-            pass
-        elif order.lower()[0] == 'd':
-            # Then DEPTH... force and correct if necessary
-            pass
-        else:
-            # For and correct if necessary
-            pass
 
         text = re.sub(r'(\n+|\r\n|\r)', '\n', text.strip())
 
@@ -686,11 +677,21 @@ class Striplog(object):
     def find_gaps(self):
         """
         Returns the indices of intervals with gaps after them.
+
+        Could do something similar to find overlaps.
         """
         hits = []
+
+        if self.order == 'depth':
+            one, two = 'base', 'top'
+        else:
+            one, two = 'top', 'base'
+
         for i, iv in enumerate(self[:-1]):
-            if iv.base:
-                pass
+            next_iv = self[i+1]
+            if getattr(iv, one) < getattr(next_iv, two):
+                # GAP
+                hits.append(i)
 
     def anneal(self):
         """
