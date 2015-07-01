@@ -11,14 +11,15 @@ def test_interval():
     lexicon = Lexicon.default()
     interval = Interval(20, 40, "Grey sandstone.", lexicon=lexicon)
     assert interval.primary.lithology == 'sandstone'
+    fmt = "{colour} {lithology}"
     answer = '20.00 m of grey sandstone'
-    assert interval.summary(fmt="{colour} {lithology}") == answer
+    assert interval.summary(fmt=fmt) == answer
 
     interval_2 = Interval(40, 65, "Red sandstone.", lexicon=lexicon)
     assert interval_2 != interval
     assert interval_2 > interval
-    answer = '25.00 m of red, sandstone'
-    assert max(interval, interval_2).summary() == answer
+    answer = '25.00 m of red sandstone'
+    assert max(interval, interval_2).summary(fmt=fmt) == answer
 
     iv = interval_2 + interval
     assert len(iv.components) == 2
