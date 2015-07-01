@@ -18,7 +18,7 @@ def hex_to_name(hexx):
     Returns:
         str: The name of the colour, or None if not found.
     """
-    for n, h in colors.cnames:
+    for n, h in colors.cnames.items():
         if h == hexx.upper():
             return n
     return None
@@ -34,7 +34,7 @@ def name_to_hex(name):
     Returns:
         str: The hex code for the colour.
     """
-    return colors.cnames[name].lower()
+    return colors.cnames[name.lower()]
 
 
 def rgb_to_hex(rgb):
