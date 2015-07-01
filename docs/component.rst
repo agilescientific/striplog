@@ -1,5 +1,5 @@
-Rock
-====
+Component
+=========
 
 .. automodule:: .component 
    :members:
