@@ -17,6 +17,10 @@ striplog
     :target: https://pypi.python.org/pypi/striplog/
     :alt: Python version
     
+.. image:: https://img.shields.io/coveralls/agile-geoscience/striplog.svg 
+    :target: https://coveralls.io/r/agile-geoscience/striplog
+    :alt: Coveralls coverage
+
 .. image:: https://img.shields.io/codacy/ad9af103cba14d33abd5b327727ff644.svg 
     :target: https://www.codacy.com/app/matt/striplog/dashboard
     :alt: Codacy code review
