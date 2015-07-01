@@ -1,6 +1,6 @@
 Component
 =========
 
-.. automodule:: .component 
+.. automodule:: striplog.component 
    :members:
 

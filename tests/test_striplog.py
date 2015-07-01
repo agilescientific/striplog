@@ -8,6 +8,7 @@ import numpy as np
 from striplog import Component
 from striplog import Interval
 from striplog import Legend
+from striplog import Lexicon
 from striplog import Striplog
 
 

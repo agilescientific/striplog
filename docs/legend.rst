@@ -1,6 +1,6 @@
 Legend
 ======
 
-.. automodule:: .legend
+.. automodule:: striplog.legend
    :members:
 

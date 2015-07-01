@@ -1,6 +1,10 @@
 striplog
 ========
 
+.. image:: https://img.shields.io/travis/agile-geoscience/striplog.svg
+    :target: https://travis-ci.org/agile-geoscience/striplog
+    :alt: Travis build status
+    
 .. image:: https://img.shields.io/pypi/status/striplog.svg
     :target: https://pypi.python.org/pypi/striplog/
     :alt: Development status
@@ -12,10 +16,6 @@ striplog
 .. image:: https://img.shields.io/pypi/pyversions/striplog.svg
     :target: https://pypi.python.org/pypi/striplog/
     :alt: Python version
-    
-.. image:: https://img.shields.io/travis/agile-geoscience/striplog.svg
-    :target: https://travis-ci.org/agile-geoscience/striplog
-    :alt: Travis build status
     
 .. image:: https://img.shields.io/codacy/ad9af103cba14d33abd5b327727ff644.svg 
     :target: https://www.codacy.com/app/matt/striplog/dashboard

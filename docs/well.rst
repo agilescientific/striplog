@@ -1,6 +1,6 @@
 Well
 ====
 
-.. automodule:: .well 
+.. automodule:: striplog.well 
    :members:
 
