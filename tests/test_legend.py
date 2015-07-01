@@ -2,9 +2,11 @@
 """
 Define a suite a tests for the Legend module.
 """
+import pytest
 
 from striplog import Legend
 from striplog import Component
+from striplog.legend import LegendError
 
 l = u"""colour, width, component lithology, component colour, component grainsize
 #FFFFFF, 0, , , 
@@ -35,7 +37,6 @@ r3 = {'colour': 'red',
       'grainsize': 'vf-f',
       'lithology': 'sandstone'}
 
-
 def test_legend():
 
     legend = Legend.from_csv(l)
@@ -53,3 +54,9 @@ def test_legend():
 
     colours = [d.colour for d in legend]
     assert len(colours) == 19
+
+def test_error():
+    legend = Legend.from_csv(l)
+    rock = Component(r)
+    with pytest.raises(LegendError):
+        legend + rock

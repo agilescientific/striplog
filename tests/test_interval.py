@@ -2,9 +2,17 @@
 """
 Define a suite a tests for the Interval module.
 """
+import pytest
 
 from striplog import Lexicon
 from striplog import Interval
+from striplog.interval import IntervalError
+
+def test_error():
+    lexicon = Lexicon.default()
+    interval = Interval(20, 40, "Grey sandstone.", lexicon=lexicon)
+    with pytest.raises(IntervalError):
+        interval + 'this will raise'
 
 def test_interval():
 

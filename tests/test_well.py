@@ -21,3 +21,4 @@ def test_well():
     well.add_striplog(striplog, "striplog")
     assert well.striplog.striplog.source == 'Image'
     assert well.striplog.striplog.start == 280.0
+    assert len(well.striplogs_to_las3()) == 14841

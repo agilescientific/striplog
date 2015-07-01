@@ -4,13 +4,18 @@ Define a suite a tests for the Striplog module.
 """
 
 import numpy as np
+import pytest
 
 from striplog import Component
 from striplog import Interval
 from striplog import Legend
 from striplog import Lexicon
 from striplog import Striplog
+from striplog.striplog import StriplogError
 
+def test_error():
+    with pytest.raises(StriplogError):
+        Striplog([])
 
 def test_striplog():
 
@@ -51,7 +56,11 @@ def test_from_image():
     assert np.floor(striplog.find('sandstone').cum) == 15
     assert striplog.depth(260).primary.lithology == 'siltstone'
     assert striplog.to_las3() is not ''
-    
+    assert striplog.to_log()[1][5] == 2.0
+    assert striplog.cum == 100.0
+    assert striplog.thickest.components[0].lithology == 'anhydrite'
+    #assert striplog.thinnest.components[0].lithology == 'anhydrite'
+
     rock = striplog.find('sandstone')[1].components[0]
     assert rock in striplog
 
