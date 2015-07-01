@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 """
-Define a suite a tests for the utils module.
+Define a suite a tests for the Component module.
 """
 
 from striplog import Component
