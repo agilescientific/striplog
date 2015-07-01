@@ -13,6 +13,10 @@ striplog
     :target: https://pypi.python.org/pypi/striplog/
     :alt: Python version
     
+.. image:: https://img.shields.io/travis/agile-geoscience/striplog.svg
+    :target: https://pypi.python.org/pypi/striplog/
+    :alt: Travis build status
+    
 .. image:: https://img.shields.io/codacy/ad9af103cba14d33abd5b327727ff644.svg 
     :target: https://www.codacy.com/public/matt/striplog
     :alt: Code review

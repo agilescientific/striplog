@@ -3,7 +3,7 @@
 Define a suite a tests for the utils module.
 """
 
-from striplog.utils import rgb_to_hex
+from ..striplog.utils import rgb_to_hex
 
 
 def test_tohex():
