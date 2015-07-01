@@ -49,6 +49,7 @@ class Striplog(object):
         if order.lower()[0] == 'a':  # Auto
             # Might as well be strict about it
             if all([iv.base > iv.top for iv in list_of_Intervals]):
+                order = 'depth'
                 self.order = 'depth'
             elif all([iv.base < iv.top for iv in list_of_Intervals]):
                 self.order = 'elevation'
@@ -70,15 +71,15 @@ class Striplog(object):
 
         else:
             self.order = 'elevation'
-            fail = any([iv.base < iv.top for iv in list_of_Intervals])
+            fail = any([iv.base > iv.top for iv in list_of_Intervals])
             if fail:
                 m = "Elevation order specified but base above top."
                 raise StriplogError(m)
             # Order force
             r = True
             list_of_Intervals.sort(key=operator.attrgetter('top'), reverse=r)
-            self.start = list_of_Intervals[0].base
-            self.stop = list_of_Intervals[-1].top
+            self.start = list_of_Intervals[-1].base
+            self.stop = list_of_Intervals[0].top
 
         self.source = source
 
