@@ -29,7 +29,9 @@ def test_striplog():
     iv3 = Interval(180, 160, components=[r1, r2])
     iv4 = Interval(200, 180, components=[r3, r2])
 
-    s = Striplog([iv1, iv2, iv3, iv4])
+    s1 = Striplog([iv1, iv2])
+    s2 = Striplog([iv3, iv4])
+    s = s1 + s2
     assert s.order == 'elevation'
     assert len(s) == 4
     assert s.start == 100
@@ -64,7 +66,7 @@ def test_from_image():
     rock = striplog.find('sandstone')[1].components[0]
     assert rock in striplog
 
-def from_csv():
+def test_from_csv():
     lexicon = Lexicon.default()
     csv_string = """  200.000,  230.329,  Anhydrite                                       
                       230.329,  233.269,  Grey vf-f sandstone                             
@@ -95,3 +97,13 @@ def from_csv():
                     """
     strip2 = Striplog.from_csv(csv_string, lexicon=lexicon)
     assert len(strip2.top) == 7
+
+def test_from_array():
+    lexicon = Lexicon.default()
+
+    a = [(100, 200, 'red sandstone'),
+         (200, 250, 'grey shale'),
+         (200, 250, 'red sandstone with shale stringers'),
+         ]
+    s = Striplog.from_array(a, lexicon=lexicon)
+    assert s.__str__() != ''

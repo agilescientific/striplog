@@ -8,7 +8,7 @@ from striplog import Legend
 from striplog import Component
 from striplog.legend import LegendError
 
-l = u"""colour, width, component lithology, component colour, component grainsize
+csv_text = u"""colour, width, component lithology, component colour, component grainsize
 #FFFFFF, 0, , , 
 #F7E9A6, 3, Sandstone, Grey, VF-F
 #FF99CC, 2, Anhydrite, , 
@@ -39,8 +39,11 @@ r3 = {'colour': 'red',
 
 def test_legend():
 
-    legend = Legend.from_csv(l)
+    legend = Legend.from_csv(csv_text)
     assert legend[1].colour == '#f7e9a6'
+    assert legend.max_width == 5
+    assert legend.__str__() != ''
+    assert legend.__repr__() != ''
 
     rock = Component(r)
     assert legend.get_colour(rock) == '#eeeeee'
@@ -55,8 +58,16 @@ def test_legend():
     colours = [d.colour for d in legend]
     assert len(colours) == 19
 
+    l = Legend.random([rock, rock3])
+    assert l != legend
+    assert getattr(l[-1], 'colour') != ''
+    assert l.to_csv() != ''
+
+    summed = legend + l
+    assert len(summed) == 21
+
 def test_error():
-    legend = Legend.from_csv(l)
+    legend = Legend.from_csv(csv_text)
     rock = Component(r)
     with pytest.raises(LegendError):
         legend + rock
