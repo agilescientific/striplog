@@ -1,6 +1,9 @@
 .DS_Store
 .ipynb*
 
+# Coverage
+*,cover
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

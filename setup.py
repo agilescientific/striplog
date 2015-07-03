@@ -14,6 +14,7 @@ with open(VERSIONFILE, "r")as f:
     mo = pattern.search(verstrline)
 if mo:
     verstr = mo.group(1)
+    print("Version "+verstr)
 else:
     raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
 
@@ -41,7 +42,7 @@ setup(name='striplog',
       license='Apache 2',
       packages=['striplog'],
       tests_require=['pytest'],
-      download_url='https://github.com/agile-geoscience/tarball/0.5.3',
+      download_url='https://github.com/agile-geoscience/tarball/'+verstr,
       install_requires=REQUIREMENTS,
       classifiers=CLASSIFIERS,
       zip_safe=False,
