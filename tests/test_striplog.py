@@ -13,15 +13,17 @@ from striplog import Lexicon
 from striplog import Striplog
 from striplog.striplog import StriplogError
 
+
 def test_error():
     with pytest.raises(StriplogError):
         Striplog([])
 
+
 def test_striplog():
 
-    r1 = Component({'lithology':'sand'})
-    r2 = Component({'lithology':'shale'})
-    r3 = Component({'lithology':'limestone'})
+    r1 = Component({'lithology': 'sand'})
+    r2 = Component({'lithology': 'shale'})
+    r3 = Component({'lithology': 'limestone'})
 
     # Bottom up: elevation order
     iv1 = Interval(120, 100, components=[r1])
@@ -49,6 +51,15 @@ def test_striplog():
     assert s.start == 80
     assert s.stop == 250
 
+    l = [iv.thickness for iv in s]
+    assert len(l) == 4
+
+    s[2] = Interval(180, 190, components=[r1, r2])
+    assert len(s.find_gaps()) == 2
+
+    assert s._Striplog__sort()  # Not used, should probably delete
+
+
 def test_from_image():
     legend = Legend.default()
     imgfile = "tutorial/M-MG-70_14.3_135.9.png"
@@ -60,45 +71,54 @@ def test_from_image():
     assert striplog.to_las3() is not ''
     assert striplog.to_log()[1][5] == 2.0
     assert striplog.cum == 100.0
-    
-    # Deprecated, since it's so easy to sort a striplog
-    #assert striplog.thickest.components[0].lithology == 'anhydrite'
-    #assert striplog.thinnest.components[0].lithology == 'anhydrite'
+    assert striplog.thickest(n=7)[1].primary.lithology == 'sandstone'
+    assert striplog.thinnest(n=7)[1].primary.lithology == 'siltstone'
+
+    indices = [2, 7, 20]
+    del striplog[indices]
+    assert len(striplog.find_gaps()) == len(indices)
+
+    striplog.prune(limit=1.0)
+    assert len(striplog) == 14
+    striplog.anneal()
+    assert not striplog.find_gaps()  # Should be None
 
     rock = striplog.find('sandstone')[1].components[0]
     assert rock in striplog
 
+
 def test_from_csv():
     lexicon = Lexicon.default()
-    csv_string = """  200.000,  230.329,  Anhydrite                                       
-                      230.329,  233.269,  Grey vf-f sandstone                             
-                      233.269,  234.700,  Anhydrite                                       
-                      234.700,  236.596,  Dolomite                                        
-                      236.596,  237.911,  Red siltstone                                   
-                      237.911,  238.723,  Anhydrite                                       
-                      238.723,  239.807,  Grey vf-f sandstone                             
-                      239.807,  240.774,  Red siltstone                                   
-                      240.774,  241.122,  Dolomite                                        
-                      241.122,  241.702,  Grey siltstone                                  
-                      241.702,  243.095,  Dolomite                                        
-                      243.095,  246.654,  Grey vf-f sandstone                             
-                      246.654,  247.234,  Dolomite                                        
-                      247.234,  255.435,  Grey vf-f sandstone                             
-                      255.435,  258.723,  Grey siltstone                                  
-                      258.723,  259.729,  Dolomite                                        
-                      259.729,  260.967,  Grey siltstone                                  
-                      260.967,  261.354,  Dolomite                                        
-                      261.354,  267.041,  Grey siltstone                                  
-                      267.041,  267.350,  Dolomite                                        
-                      267.350,  274.004,  Grey siltstone                                  
-                      274.004,  274.313,  Dolomite                                        
-                      274.313,  294.816,  Grey siltstone                                  
-                      294.816,  295.397,  Dolomite                                        
-                      295.397,  296.286,  Limestone                                       
-                      296.286,  300.000,  Volcanic                                        
+    csv_string = """  200.000,  230.329,  Anhydrite
+                      230.329,  233.269,  Grey vf-f sandstone
+                      233.269,  234.700,  Anhydrite
+                      234.700,  236.596,  Dolomite
+                      236.596,  237.911,  Red siltstone
+                      237.911,  238.723,  Anhydrite
+                      238.723,  239.807,  Grey vf-f sandstone
+                      239.807,  240.774,  Red siltstone
+                      240.774,  241.122,  Dolomite
+                      241.122,  241.702,  Grey siltstone
+                      241.702,  243.095,  Dolomite
+                      243.095,  246.654,  Grey vf-f sandstone
+                      246.654,  247.234,  Dolomite
+                      247.234,  255.435,  Grey vf-f sandstone
+                      255.435,  258.723,  Grey siltstone
+                      258.723,  259.729,  Dolomite
+                      259.729,  260.967,  Grey siltstone
+                      260.967,  261.354,  Dolomite
+                      261.354,  267.041,  Grey siltstone
+                      267.041,  267.350,  Dolomite
+                      267.350,  274.004,  Grey siltstone
+                      274.004,  274.313,  Dolomite
+                      274.313,  294.816,  Grey siltstone
+                      294.816,  295.397,  Dolomite
+                      295.397,  296.286,  Limestone
+                      296.286,  300.000,  Volcanic
                     """
     strip2 = Striplog.from_csv(csv_string, lexicon=lexicon)
     assert len(strip2.top) == 7
+
 
 def test_from_array():
     lexicon = Lexicon.default()
