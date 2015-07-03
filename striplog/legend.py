@@ -225,9 +225,7 @@ class Legend(object):
         return '\n'.join(s)
 
     def __getitem__(self, key):
-        if not key:
-            return
-        elif type(key) is slice:
+        if type(key) is slice:
             i = key.indices(len(self.__list))
             result = [self.__list[n] for n in range(*i)]
             return Legend(result)

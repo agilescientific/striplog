@@ -60,7 +60,9 @@ def test_from_image():
     assert striplog.to_las3() is not ''
     assert striplog.to_log()[1][5] == 2.0
     assert striplog.cum == 100.0
-    assert striplog.thickest.components[0].lithology == 'anhydrite'
+    
+    # Deprecated, since it's so easy to sort a striplog
+    #assert striplog.thickest.components[0].lithology == 'anhydrite'
     #assert striplog.thinnest.components[0].lithology == 'anhydrite'
 
     rock = striplog.find('sandstone')[1].components[0]

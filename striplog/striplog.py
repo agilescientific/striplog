@@ -57,6 +57,8 @@ class Striplog(object):
                 m = "Could not determine order from tops and bases."
                 raise StriplogError(m)
 
+        # Could tidy this up with a base class and inheritance;
+        # problem is cannot access self until initialized.
         if order.lower()[0] == 'd':
             self.order = 'depth'
             # Sanity check
@@ -98,9 +100,7 @@ class Striplog(object):
     # Could use collections but doing this with raw magics.
     # Set up Striplog as an array-like iterable.
     def __getitem__(self, key):
-        if not key:
-            return
-        elif type(key) is slice:
+        if type(key) is slice:
             i = key.indices(len(self.__list))
             result = [self.__list[n] for n in range(*i)]
             return Striplog(result)
@@ -112,11 +112,16 @@ class Striplog(object):
         else:
             return self.__list[key]
 
+    def __delitem__(self, key):
+        if type(key) is list:
+            for k in key:
+                del self.__list[k]
+        else:
+            del self.__list[key]
+        self.__set_start_stop()
+
     def __len__(self):
         return len(self.__list)
-
-    def __delitem__(self, key):
-        del self.__list[key]
 
     def __setitem__(self, key, value):
         if not key:
@@ -169,6 +174,31 @@ class Striplog(object):
             return Striplog(result)
         else:
             raise StriplogError("You can only add striplogs or intervals.")
+
+    def __set_start_stop(self):
+        """
+        Reset the start and stop
+        """
+        if self.order == 'depth':
+            self.start = self[0].top
+            self.stop = self[-1].base
+        else:
+            self.start = self[-1].base
+            self.stop = self[0].top
+
+    def __sort(self):
+        """
+        Sorts into 'natural' order: top-down for depth-ordered
+        striplogs; bottom-up for elevation-ordered.
+
+        Note the a striplog sorts with the built-in `sorted()`
+        by interval thickness, hence the need for this function.
+        """
+        if self.order == 'depth':
+            l = self.__list.sort(key=operator.attrgetter('top'))
+        else:
+            l = self.__list.sort(key=operator.attrgetter('top'), reverse=True)
+        return Striplog(l)
 
     @classmethod
     def __intervals_from_loglike(self, loglike, offset=2):
@@ -661,7 +691,7 @@ class Striplog(object):
             search_term (string or Component): The thing you want to search
                 for. Strings are treated as regular expressions.
         Returns:
-           Striplog: A striplog that contains only the 'hit' Intervals.
+            Striplog: A striplog that contains only the 'hit' Intervals.
         """
         hits = []
         for i, iv in enumerate(self):
@@ -675,13 +705,22 @@ class Striplog(object):
                     hits.append(i)
         return self[hits]
 
-    def find_gaps(self):
+    def find_gaps(self, index=False):
         """
-        Returns the indices of intervals with gaps after them.
+        Finds gaps in a striplog.
 
-        Could do something similar to find overlaps.
+        Args:
+            index (bool): If True, returns indices of intervals with
+            gaps after them.
+
+        Returns:
+            Striplog: A striplog of all the gaps. A sort of anti-striplog.
+
+        TODO:
+            Could do something similar to find overlaps.
         """
         hits = []
+        intervals = []
 
         if self.order == 'depth':
             one, two = 'base', 'top'
@@ -691,36 +730,94 @@ class Striplog(object):
         for i, iv in enumerate(self[:-1]):
             next_iv = self[i+1]
             if getattr(iv, one) < getattr(next_iv, two):
-                # GAP
                 hits.append(i)
+
+                top = getattr(iv, one)
+                base = getattr(next_iv, two)
+                iv_gap = Interval(top, base)
+                intervals.append(iv_gap)
+
+        if index:
+            return hits
+        else:
+            return Striplog(intervals)
+
+    def prune(self, limit=None, n=None, percentile=None):
+        """
+        Remove intervals below a certain limit thickness.
+
+        Args:
+            limit (float): Anything thinner than this will be pruned.
+            n (int): The n thinnest beds will be pruned.
+            percentile (float): The thinnest specified percentile will be
+                pruned.
+        """
+        if not (limit or n or percentile):
+            m = "You must provide a limit or n or percentile for pruning."
+            raise StriplogError(m)
+        if limit:
+            prune = [i for i, iv in enumerate(self) if iv.thickness < limit]
+        if n:
+            prune = self.thinnest(n=n)
+        if percentile:
+            n = np.floor(len(self)*percentile/100)
+            prune = self.thinnest(n=n)
+
+        del self[prune]  # In place delete
+        return self
 
     def anneal(self):
         """
         Fill in empty intervals by growing from top and base.
         """
-        pass
+        gaps = self.find_gaps(index=True)
+        for gap in gaps:
+            before = self[gap]
+            after = self[gap+1]
 
-    @property
-    def thickest(self):
-        """
-        Returns the thickest interval.
-        """
-        max_int, max_thick = None, 0
-        for i in self:
-            if i.thickness > max_thick:
-                max_int, max_thick = i, i.thickness
-        return max_int
+            if self.order == 'depth':
+                t = (after.top-before.base)/2
+                before.base += t
+                after.top -= t
+            else:
+                t = (after.base-before.top)/2
+                before.top += t
+                after.base -= t
 
-    @property
-    def thinnest(self):
+        # These were in-place operations so we don't return anything
+        return
+
+    def thickest(self, n=1, index=False):
         """
-        Returns the thinnest interval.
+        Returns the thickest interval(s) as a striplog.
+
+        Args:
+            n (int): The number of thickest intervals to return. Default: 1.
+            index (bool): If True, only the indices of the intervals are 
+                returned. You can use this to index into the striplog.
+
+        Returns:
+            Striplog: A striplog of all the gaps. A sort of anti-striplog.
         """
-        min_int, min_thick = None, 0
-        for i in self:
-            if i.thickness < min_thick:
-                min_int, min_thick = i, i.thickness
-        return min_int
+        s = sorted(range(len(self)), key=lambda k: self[k])
+        if index:
+            return s[:n]
+        else:
+            return self[:n].__sort()
+
+    def thinnest(self, n=1, index=False):
+        """
+        Returns the thinnest interval(s) as a striplog.
+
+        TODO:
+            If you ask for the thinnest bed and there's a tie, you will
+            get the last in the ordered list.
+        """
+        s = sorted(range(len(self)), key=lambda k: self[k])
+        if index:
+            return s[-n:]
+        else:
+            return self[-n:].__sort()            
 
     @property
     def cum(self):
