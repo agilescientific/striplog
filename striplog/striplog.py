@@ -113,8 +113,11 @@ class Striplog(object):
             return self.__list[key]
 
     def __delitem__(self, key):
-        if type(key) is list:
-            for k in key:
+        if (type(key) is list) or (type(key) is tuple):
+            # Have to compute what the indices *will* be as
+            # the initial ones are deleted.
+            indices = [x-i for i, x in enumerate(key)]
+            for k in indices:
                 del self.__list[k]
         else:
             del self.__list[key]
@@ -195,10 +198,10 @@ class Striplog(object):
         by interval thickness, hence the need for this function.
         """
         if self.order == 'depth':
-            l = self.__list.sort(key=operator.attrgetter('top'))
+            self.__list.sort(key=operator.attrgetter('top'))
         else:
-            l = self.__list.sort(key=operator.attrgetter('top'), reverse=True)
-        return Striplog(l)
+            self.__list.sort(key=operator.attrgetter('top'), reverse=True)
+        return self
 
     @classmethod
     def __intervals_from_loglike(self, loglike, offset=2):
@@ -737,10 +740,12 @@ class Striplog(object):
                 iv_gap = Interval(top, base)
                 intervals.append(iv_gap)
 
-        if index:
+        if index and hits:
             return hits
-        else:
+        elif intervals:
             return Striplog(intervals)
+        else:
+            return
 
     def prune(self, limit=None, n=None, percentile=None):
         """
@@ -758,10 +763,10 @@ class Striplog(object):
         if limit:
             prune = [i for i, iv in enumerate(self) if iv.thickness < limit]
         if n:
-            prune = self.thinnest(n=n)
+            prune = self.thinnest(n=n, index=True)
         if percentile:
             n = np.floor(len(self)*percentile/100)
-            prune = self.thinnest(n=n)
+            prune = self.thinnest(n=n, index=True)
 
         del self[prune]  # In place delete
         return self
@@ -771,6 +776,10 @@ class Striplog(object):
         Fill in empty intervals by growing from top and base.
         """
         gaps = self.find_gaps(index=True)
+
+        if not gaps:
+            return
+
         for gap in gaps:
             before = self[gap]
             after = self[gap+1]
@@ -793,17 +802,18 @@ class Striplog(object):
 
         Args:
             n (int): The number of thickest intervals to return. Default: 1.
-            index (bool): If True, only the indices of the intervals are 
+            index (bool): If True, only the indices of the intervals are
                 returned. You can use this to index into the striplog.
 
         Returns:
             Striplog: A striplog of all the gaps. A sort of anti-striplog.
         """
         s = sorted(range(len(self)), key=lambda k: self[k])
+        indices = s[-n:]
         if index:
-            return s[:n]
+            return indices
         else:
-            return self[:n].__sort()
+            return self[indices]
 
     def thinnest(self, n=1, index=False):
         """
@@ -814,10 +824,11 @@ class Striplog(object):
             get the last in the ordered list.
         """
         s = sorted(range(len(self)), key=lambda k: self[k])
+        indices = s[:n]
         if index:
-            return s[-n:]
+            return indices
         else:
-            return self[-n:].__sort()            
+            return self[indices]
 
     @property
     def cum(self):

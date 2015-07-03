@@ -8,7 +8,6 @@ Defines some default values for parsing cuttings descriptions.
 """
 
 LEGEND = """colour, width, comp lithology, comp colour, comp grainsize
-#FFFFFF, 0, , ,
 #F7E9A6, 3, Sandstone, Grey, VF-F
 #FF99CC, 2, Anhydrite, ,
 #DBD6BC, 3, Heterolithic, Grey,

@@ -51,6 +51,15 @@ class Component(object):
             s.append(t.format(key=key, value=self.__dict__[key]))
         return ', '.join(s)
 
+    def __bool__(self):
+        if not self.__dict__.keys():
+            return False
+        else:
+            return True
+
+    # For Python 2
+    __nonzero__ = __bool__
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
@@ -90,11 +99,11 @@ class Component(object):
             Component: A Component object, or None if there was no
                 must-have field.
         """
-        components = lexicon.get_component(text, first_only=first_only)
-        if required and required not in components:
+        component = lexicon.get_component(text, first_only=first_only)
+        if required and (required not in component):
             return None
         else:
-            return cls(components)
+            return cls(component)
 
     def summary(self, fmt=None, initial=True, default=''):
         """
@@ -146,7 +155,10 @@ class Component(object):
                 word = ''
             words.append(word)
 
-        summary = string.format(*words)
+        try:
+            summary = string.format(*words)
+        except KeyError as e:
+            raise ComponentError("No such attribute, "+str(e))
 
         if initial and summary:
             summary = summary[0].upper() + summary[1:]
