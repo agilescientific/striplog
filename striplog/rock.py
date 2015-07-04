@@ -8,7 +8,7 @@ Replaced by component.py. Kept this for graceful deprecation.
 """
 import warnings
 
-from striplog import Component
+from .component import Component
 
 
 def Rock(*args, **kwargs):

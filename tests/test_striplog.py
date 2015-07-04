@@ -80,6 +80,7 @@ def test_from_image():
 
     striplog.prune(limit=1.0)
     assert len(striplog) == 14
+
     striplog.anneal()
     assert not striplog.find_gaps()  # Should be None
 
