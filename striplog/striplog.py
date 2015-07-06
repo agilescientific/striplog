@@ -12,10 +12,8 @@ import csv
 import operator
 
 import numpy as np
+import matplotlib as mpl
 from PIL import Image
-from matplotlib import pyplot as plt
-from matplotlib import patches
-from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
 from .interval import Interval
 from .legend import Legend
@@ -593,7 +591,7 @@ class Striplog(object):
             else:
                 w = d
 
-            rect = patches.Rectangle(origin, w, thick, color=colour)
+            rect = mpl.patches.Rectangle(origin, w, thick, color=colour)
             ax.add_patch(rect)
 
         return ax
@@ -621,22 +619,18 @@ class Striplog(object):
         Returns:
             None: The plot is a side-effect.
         """
-        fig = plt.figure(figsize=(width, aspect*width))
-
-        # And a series of Rectangle patches for the striplog.
-        ax = fig.add_axes([0, 0, 1, 1])
-
         if not legend:
             # Build a random-coloured legend.
             comps = [i[0] for i in self.top if i[0]]
             legend = Legend.random(comps)
 
+        fig = mpl.pyplot.figure(figsize=(width, aspect*width))
+        ax = fig.add_axes([0, 0, 1, 1])
         self.plot_axis(ax=ax,
                        legend=legend,
                        ladder=ladder,
                        default_width=width,
                        match_only=match_only)
-
         ax.set_xlim([0, width])
         ax.set_ylim([self.stop, self.start])
         ax.set_xticks([])
@@ -644,11 +638,11 @@ class Striplog(object):
         if type(interval) is int:
             interval = (1, interval)
 
-        minorLocator = MultipleLocator(interval[0])
+        minorLocator = mpl.ticker.MultipleLocator(interval[0])
         ax.yaxis.set_minor_locator(minorLocator)
 
-        majorLocator = MultipleLocator(interval[1])
-        majorFormatter = FormatStrFormatter('%d')
+        majorLocator = mpl.ticker.MultipleLocator(interval[1])
+        majorFormatter = mpl.ticker.FormatStrFormatter('%d')
         ax.yaxis.set_major_locator(majorLocator)
         ax.yaxis.set_major_formatter(majorFormatter)
 
@@ -660,7 +654,7 @@ class Striplog(object):
 
         ax.patch.set_alpha(0)
 
-        plt.show()
+        mpl.pyplot.show()
 
         return None
 

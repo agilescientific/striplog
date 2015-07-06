@@ -5,7 +5,7 @@ Helper functions for the striplog package.
 
 """
 
-from matplotlib import colors
+from . import defaults
 
 
 def hex_to_name(hexx):
@@ -18,7 +18,7 @@ def hex_to_name(hexx):
     Returns:
         str: The name of the colour, or None if not found.
     """
-    for n, h in colors.cnames.items():
+    for n, h in defaults.COLOURS.items():
         if h == hexx.upper():
             return n
     return None
@@ -34,7 +34,7 @@ def name_to_hex(name):
     Returns:
         str: The hex code for the colour.
     """
-    return colors.cnames[name.lower()]
+    return defaults.COLOURS[name.lower()]
 
 
 def rgb_to_hex(rgb):
@@ -43,14 +43,19 @@ def rgb_to_hex(rgb):
     http://ageo.co/1CFxXpO
 
     Args:
-      rgb (tuple): A tuple or list of RGB values in the
-        range 0-255 (i.e. not 0 to 1).
+      rgb (tuple): A sequernce of RGB values in the
+        range 0-255 or 0-1.
 
     Returns:
       str: The hex code for the colour.
     """
-    h = '#%02x%02x%02x' % tuple(rgb)
-    return h.upper()
+    r, g, b = rgb[:3]
+    if 0 < r*g*b < 1:
+        rgb = tuple([int(round(val * 255)) for val in [r, g, b]])
+    else:
+        rgb = (r, g, b)
+    result = '#%02x%02x%02x' % rgb
+    return result.upper()
 
 
 def hex_to_rgb(hexx):

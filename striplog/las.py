@@ -30,9 +30,7 @@ and makes the data available as a Python object.
 
 # Python 2 & 3 compatibility
 from __future__ import print_function
-#from builtins import str
 
-# Carry on...
 import re
 import keyword
 
