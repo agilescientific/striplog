@@ -203,6 +203,27 @@ class Striplog(object):
         return self
 
     @classmethod
+    def __loglike_from_image(self, filename, offset):
+        """
+        Get a log-like stream of RGB values from an image.
+
+        Args:
+            filename (str): The filename of a PNG image.
+
+        Returns:
+            ndarray: A 2d array (a column of RGB triples) at the specified
+            offset.
+
+        TODO:
+            Generalize this to extract 'logs' from images in other ways, such
+            as giving the mean of a range of pixel columns, or an array of
+            columns. See also a similar routine in pythonanywhere/freqbot.
+        """
+        im = plt.imread(filename)
+        col = im.shape[1]/(100./offset)
+        return im[:, col, :3]
+
+    @classmethod
     def __intervals_from_loglike(self, loglike, offset=2):
         """
         Take a log-like stream of numbers or strings,
@@ -353,10 +374,7 @@ class Striplog(object):
         Returns:
             Striplog: The ``striplog`` object.
         """
-        im = plt.imread(filename)
-        # im = np.array(Image.open(filename))
-        col = im.shape[1]/(100./offset)
-        rgb = im[:, col, :3]
+        rgb = cls.__loglike_from_image(filename, offset)
         loglike = np.array([utils.rgb_to_hex(t) for t in rgb])
 
         # Get the pixels and colour values at 'tops' (i.e. changes).
