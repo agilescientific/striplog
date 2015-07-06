@@ -38,6 +38,8 @@ def test_striplog():
     assert len(s) == 4
     assert s.start == 100
     assert s.stop == 200
+    assert s.__repr__ is not ''
+    assert s.__str__ is not ''
 
     # Top down: depth order
     iv1 = Interval(80, 120, components=[r1])
