@@ -13,6 +13,32 @@ from striplog import Lexicon
 from striplog import Striplog
 from striplog.striplog import StriplogError
 
+las3 = """~Lithology_Parameter
+LITH .   Striplog         : Lithology source          {S}
+LITHD.   MD               : Lithology depth reference {S}
+
+~Lithology_Definition
+LITHT.M                   : Lithology top depth       {F}
+LITHB.M                   : Lithology base depth      {F}
+LITHD.                    : Lithology description     {S}
+
+~Lithology_Data | Lithology_Definition
+  280.000,  299.986,  "Red, siltstone"
+  299.986,  304.008,  "Grey, sandstone, vf-f"
+  304.008,  328.016,  "Red, siltstone"
+  328.016,  328.990,  "Limestone"
+  328.990,  330.007,  "Red, siltstone"
+  330.007,  333.987,  "Limestone"
+  333.987,  338.983,  "Red, siltstone"
+  338.983,  340.931,  "Limestone"
+  340.931,  345.927,  "Red, siltstone"
+  345.927,  346.944,  "Limestone"
+  346.944,  414.946,  "Red, siltstone"
+  414.946,  416.936,  "Grey, mudstone"
+  416.936,  422.440,  "Red, heterolithic"
+  422.440,  423.414,  "Grey, mudstone"
+ """
+
 
 def test_error():
     with pytest.raises(StriplogError):
@@ -38,8 +64,8 @@ def test_striplog():
     assert len(s) == 4
     assert s.start == 100
     assert s.stop == 200
-    assert s.__repr__ is not ''
-    assert s.__str__ is not ''
+    assert s.__repr__() is not ''
+    assert s.__str__() is not ''
 
     # Top down: depth order
     iv1 = Interval(80, 120, components=[r1])
@@ -121,6 +147,11 @@ def test_from_csv():
                     """
     strip2 = Striplog.from_csv(csv_string, lexicon=lexicon)
     assert len(strip2.top) == 7
+
+
+def test_from_las3():
+    s = Striplog.from_las3(las3)
+    assert len(s) == 14
 
 
 def test_from_array():

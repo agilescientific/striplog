@@ -6,16 +6,26 @@ import pytest
 
 from striplog import Lexicon
 from striplog import Interval
+from striplog import Component
 from striplog.interval import IntervalError
 
+r = {'colour': 'grey',
+     'grainsize': 'vf-f',
+     'lithology': 'sand'}
+
+
 def test_error():
+    """ Test the IntervalError.
+    """
     lexicon = Lexicon.default()
     interval = Interval(20, 40, "Grey sandstone.", lexicon=lexicon)
     with pytest.raises(IntervalError):
         interval + 'this will raise'
 
-def test_interval():
 
+def test_interval():
+    """ Test intervals.
+    """
     lexicon = Lexicon.default()
     interval = Interval(20, 40, "Grey sandstone.", lexicon=lexicon)
     assert interval.primary.lithology == 'sandstone'
@@ -35,3 +45,7 @@ def test_interval():
 
     iv = interval + 5
     assert iv.thickness == 25.0
+
+    rock = Component(r)
+    iv = interval + rock
+    assert len(iv.components) == 2

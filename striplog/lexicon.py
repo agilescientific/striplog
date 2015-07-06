@@ -69,14 +69,14 @@ class Lexicon(object):
         return cls(defaults.LEXICON)
 
     @classmethod
-    def from_json_file(cls, json_file):
+    def from_json_file(cls, filename):
         """
         Load a lexicon from a JSON file.
 
         Args:
-            json_file (str): The path to a JSON dump.
+            filename (str): The path to a JSON dump.
         """
-        with open('lexicon.json', 'r') as fp:
+        with open(filename, 'r') as fp:
             return cls(json.load(fp))
 
     def find_word_groups(self, text, category, proximity=2):
