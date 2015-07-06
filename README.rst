@@ -42,7 +42,6 @@ Dependencies
 ------------
 
 * `NumPy <http://www.numpy.org/>`_
-* `Pillow <https://pillow.readthedocs.org/>`_
 * `matplotlib <http://matplotlib.org/>`_
 
 Install

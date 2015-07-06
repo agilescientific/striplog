@@ -13,7 +13,8 @@ import operator
 
 import numpy as np
 import matplotlib as mpl
-from PIL import Image
+import matplotlib.pyplot as plt
+# from PIL import Image
 
 from .interval import Interval
 from .legend import Legend
@@ -352,7 +353,8 @@ class Striplog(object):
         Returns:
             Striplog: The ``striplog`` object.
         """
-        im = np.array(Image.open(filename))
+        im = plt.imread(filename)
+        # im = np.array(Image.open(filename))
         col = im.shape[1]/(100./offset)
         rgb = im[:, col, :3]
         loglike = np.array([utils.rgb_to_hex(t) for t in rgb])
@@ -624,7 +626,7 @@ class Striplog(object):
             comps = [i[0] for i in self.top if i[0]]
             legend = Legend.random(comps)
 
-        fig = mpl.pyplot.figure(figsize=(width, aspect*width))
+        fig = plt.figure(figsize=(width, aspect*width))
         ax = fig.add_axes([0, 0, 1, 1])
         self.plot_axis(ax=ax,
                        legend=legend,
@@ -654,7 +656,7 @@ class Striplog(object):
 
         ax.patch.set_alpha(0)
 
-        mpl.pyplot.show()
+        plt.show()
 
         return None
 

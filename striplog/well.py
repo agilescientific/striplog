@@ -143,23 +143,21 @@ class Well(las.LASReader):
                                     data=this_data) + '\n'
 
         eref, apd = -999.25, -999.25
-        if self.parameters.DREF.data == 'KB':
+        if self.parameters.DREF.data.upper() in ['KB', "KELLY BUSHING"]:
             try:
                 eref = float(self.parameters.EREF.data)
             except AttributeError:
                 with warnings.catch_warnings():
                     warnings.simplefilter("always")
-                    w = "There is no EREF."
-                    warnings.warn(w)
+                    warnings.warn("There is no EREF.")
 
-        if self.parameters.PDAT.data == 'GL':
+        if self.parameters.PDAT.data.upper() in ['GL', 'GROUND LEVEL']:
             try:
                 apd = float(self.parameters.APD.data)
             except AttributeError:
                 with warnings.catch_warnings():
                     warnings.simplefilter("always")
-                    w = "There is no APD."
-                    warnings.warn(w)
+                    warnings.warn("There is no APD.")
 
         time_now = time.strftime("%Y/%m/%d %H:%M", time.gmtime())
         template = templates.las

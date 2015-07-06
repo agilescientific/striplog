@@ -13,7 +13,8 @@ import warnings
 import random
 import math
 
-import matplotlib as mpl
+from matplotlib import patches
+import matplotlib.pyplot as plt
 
 from .component import Component
 from . import utils
@@ -177,25 +178,25 @@ class Decor(object):
 
         u = 1  # A bit arbitrary; some sort of scale
 
-        fig = mpl.pyplot.figure(figsize=(1, 1))
+        fig = plt.figure(figsize=(1, 1))
         ax = fig.add_subplot(111)
-        rect1 = mpl.patches.Rectangle((0, 0),
-                                      u, u,
-                                      color=self.colour)
+        rect1 = patches.Rectangle((0, 0),
+                                  u, u,
+                                  color=self.colour)
         ax.add_patch(rect1)
-        mpl.pyplot.text(1.2*u, 0.5*u,
-                        self.component.summary(),
-                        fontsize=max(u, 15),
-                        verticalalignment='center',
-                        horizontalalignment='left')
-        mpl.pyplot.xlim([0, u])
-        mpl.pyplot.ylim([0, u])
+        plt.text(1.2*u, 0.5*u,
+                 self.component.summary(),
+                 fontsize=max(u, 15),
+                 verticalalignment='center',
+                 horizontalalignment='left')
+        plt.xlim([0, u])
+        plt.ylim([0, u])
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
         ax.invert_yaxis()
 
-        mpl.pyplot.show()
+        plt.show()
 
 
 class Legend(object):

@@ -13,7 +13,6 @@ Requirements
 
 * `NumPy`, which handles some of the numerics.
 * `matplotlib`, a plotting library.
-* `pillow`, an image processing library (a version of PIL).
 
 Tutorials
 ---------
