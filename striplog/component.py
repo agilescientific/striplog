@@ -139,9 +139,8 @@ class Component(object):
                 flist.append(item)
             string = string.strip(', ')
         else:
-            fmt = re.sub(r'%%', '_percent_', fmt)
+            fmt = re.sub(r'  ', '_dblspc_', fmt)
             string = re.sub(r'\{(\w+)\}', '{}', fmt)
-            string = re.sub(r'_percent_', '%', string)
             flist = re.findall(r'\{(\w+)\}', fmt)
 
         words = []
@@ -162,5 +161,9 @@ class Component(object):
 
         if initial and summary:
             summary = summary[0].upper() + summary[1:]
+
+        # Tidy up double spaces
+        summary = re.sub(r'  ', ' ', summary)
+        summary = re.sub(r'_dblspc_', '  ', summary)
 
         return summary

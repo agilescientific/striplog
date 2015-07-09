@@ -99,7 +99,9 @@ def test_from_image():
     assert striplog.to_las3() is not ''
     assert striplog.to_log()[1][5] == 2.0
     assert striplog.cum == 100.0
+    assert striplog.thickest().primary.lithology == 'anhydrite'
     assert striplog.thickest(n=7)[1].primary.lithology == 'sandstone'
+    assert striplog.thinnest().primary.lithology == 'dolomite'
     assert striplog.thinnest(n=7)[1].primary.lithology == 'siltstone'
 
     indices = [2, 7, 20]

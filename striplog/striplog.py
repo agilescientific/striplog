@@ -827,7 +827,12 @@ class Striplog(object):
         if index:
             return indices
         else:
-            return self[indices]
+            if n == 1:
+                # Then return an inveral
+                i = indices[0]
+                return self[i]
+            else:
+                return self[indices]
 
     def thinnest(self, n=1, index=False):
         """
@@ -842,7 +847,11 @@ class Striplog(object):
         if index:
             return indices
         else:
-            return self[indices]
+            if n == 1:
+                i = indices[0]
+                return self[i]
+            else:
+                return self[indices]
 
     @property
     def cum(self):
