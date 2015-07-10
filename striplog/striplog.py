@@ -10,6 +10,7 @@ import re
 from io import StringIO
 import csv
 import operator
+from collections import Counter
 
 import numpy as np
 import matplotlib as mpl
@@ -678,9 +679,10 @@ class Striplog(object):
 
         return None
 
-    def depth(self, d):
+    def read_at(self, d):
         """
-        Get the interval at a particular depth.
+        Get the interval at a particular 'depth' (though this might be an
+            elevation or age or anything.
 
         Args:
             d (Number): The depth to query.
@@ -693,6 +695,8 @@ class Striplog(object):
             if iv.top <= d <= iv.base:
                 return iv
         return None
+
+    depth = read_at  # For backwards compatibility.
 
     def find(self, search_term):
         """
@@ -852,6 +856,47 @@ class Striplog(object):
                 return self[i]
             else:
                 return self[indices]
+
+    def histogram(self, interval=1.0, lumping=None, summary=False, sort=True):
+        """
+        Returns the data for a histogram. Does not plot anything.
+
+        Args:
+            interval (float): The sample interval; small numbers mean big bins.
+            lumping (str): If given, the bins will be lumped based on this
+                attribute of the primary components of the intervals encount-
+                ered.
+            summary (bool): If True, the summaries of the components are
+                returned as the bins. Otherwise, the default behaviour is to
+                return the Components themselves.
+            sort (bool): If True (default), the histogram is sorted by value,
+                starting with the largest.
+
+        Returns:
+            Tuple: A tuple of tuples of entities and counts.
+
+        TODO:
+            Deal with numeric properties, so I can histogram 'Vp' values, say.
+        """
+        d_list = np.arange(self.start, self.stop, interval)
+        raw_readings = []
+        for d in d_list:
+            if lumping:
+                x = self.read_at(d).primary[lumping]
+            else:
+                if summary:
+                    x = self.read_at(d).primary.summary()
+                else:
+                    x = self.read_at(d).primary            
+            raw_readings.append(x)
+        c = Counter(raw_readings)
+        entities, counts = tuple(c.keys()), tuple(c.values())
+
+        if sort:
+            z = zip(counts, entities)
+            counts, entities = zip(*sorted(z, reverse=True))
+         
+        return entities, counts
 
     @property
     def cum(self):

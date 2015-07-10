@@ -51,6 +51,12 @@ class Component(object):
             s.append(t.format(key=key, value=self.__dict__[key]))
         return ', '.join(s)
 
+    def __getitem__(self, key):
+        """
+        So we can get at attributes with variables.
+        """
+        return self.__dict__.get(key)
+
     def __bool__(self):
         if not self.__dict__.keys():
             return False
