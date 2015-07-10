@@ -83,6 +83,17 @@ class Component(object):
     def __hash__(self):
         return hash(frozenset(self.__dict__.keys()))
 
+    def _repr_html_(self):
+        """
+        IPython Notebook magic repr function.
+        """
+        rows = ''
+        s = '<tr><td><strong>{k}</strong></td><td>{v}</td></tr>'
+        for k, v in self.__dict__.items():
+            rows += s.format(k=k, v=v)
+        html = '<table>{}</table>'.format(rows)
+        return html
+
     @classmethod
     def from_text(cls, text, lexicon, required=None, first_only=True):
         """
