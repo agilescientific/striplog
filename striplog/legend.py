@@ -164,7 +164,7 @@ class Decor(object):
         """
         return utils.hex_to_rgb(self.colour)
 
-    def plot(self):
+    def plot(self, return_fig=False):
         """
         Make a simple plot of the Decor.
 
@@ -184,19 +184,28 @@ class Decor(object):
                                   u, u,
                                   color=self.colour)
         ax.add_patch(rect1)
-        plt.text(1.2*u, 0.5*u,
-                 self.component.summary(),
-                 fontsize=max(u, 15),
-                 verticalalignment='center',
-                 horizontalalignment='left')
-        plt.xlim([0, u])
-        plt.ylim([0, u])
+        ax.set_text(1.2*u, 0.5*u,
+                    self.component.summary(),
+                    fontsize=max(u, 15),
+                    verticalalignment='center',
+                    horizontalalignment='left')
+        ax.set_xlim([0, u])
+        ax.set_ylim([0, u])
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
         ax.invert_yaxis()
 
-        plt.show()
+        if return_fig:
+            # returns fig
+            r = fig
+
+        if not return_fig:
+            # do the plot as a side effect (default)
+            r = None
+            fig.show()
+
+        return r
 
 
 class Legend(object):
@@ -496,7 +505,7 @@ class Legend(object):
 
             return default
 
-    def plot(self):
+    def plot(self, return_fig=False):
         """
         Make a simple plot of the legend.
 
