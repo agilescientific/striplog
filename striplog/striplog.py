@@ -623,7 +623,8 @@ class Striplog(object):
              ladder=False,
              aspect=10,
              interval=(1, 10),
-             match_only=None):
+             match_only=None,
+             return_fig=False):
         """
         Hands-free plotting.
 
@@ -675,9 +676,16 @@ class Striplog(object):
 
         ax.patch.set_alpha(0)
 
-        plt.show()
+        if return_fig:
+            # returns fig
+            r = fig
 
-        return None
+        if not return_fig:
+            # do the plot as a side effect (default)
+            r = None
+            plt.show()
+
+        return r
 
     def read_at(self, d):
         """

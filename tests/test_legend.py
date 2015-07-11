@@ -32,7 +32,7 @@ def test_decor():
     rock = Component(r)
     rock3 = Component(r3)
 
-    d = Decor({'colour': 'red',
+    d = Decor({'colour': '##FF0000',
                'component': rock})
     d3 = Decor({'colour': 'green',
                'component': rock3})
@@ -40,6 +40,7 @@ def test_decor():
     l = d + d3
     assert isinstance(l, Legend)
     assert len(l) == 2
+    assert d.rgb == (255, 0, 0)
 
 
 def test_legend():
