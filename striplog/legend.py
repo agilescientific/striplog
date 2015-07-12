@@ -164,7 +164,7 @@ class Decor(object):
         """
         return utils.hex_to_rgb(self.colour)
 
-    def plot(self):
+    def plot(self, fmt=None):
         """
         Make a simple plot of the Decor.
 
@@ -176,21 +176,22 @@ class Decor(object):
         None. Instead the function creates a plot object as a side-effect.
         """
 
-        u = 1  # A bit arbitrary; some sort of scale
+        u = 4     # aspect ratio of decor plot
+        v = 0.25  # ratio of decor tile width
 
-        fig = plt.figure(figsize=(1, 1))
-        ax = fig.add_subplot(111)
+        fig = plt.figure(figsize=(u, 1))
+        ax = fig.add_axes([0.1*v, 0.1, 0.8*v, 0.8])
         rect1 = patches.Rectangle((0, 0),
-                                  u, u,
+                                  u*v, u*v,
                                   color=self.colour)
         ax.add_patch(rect1)
-        fig.text(1.2*u, 0.5*u,
-                self.component.summary(),
+        ax.text(1.0+0.1*v*u, u*v*0.5,
+                self.component.summary(fmt=fmt),
                 fontsize=max(u, 15),
                 verticalalignment='center',
                 horizontalalignment='left')
-        ax.set_xlim([0, u])
-        ax.set_ylim([0, u])
+        ax.set_xlim([0, u*v])
+        ax.set_ylim([0, u*v])
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
@@ -496,7 +497,7 @@ class Legend(object):
 
             return default
 
-    def plot(self, return_fig=False):
+    def plot(self, fmt=None):
         """
         Make a simple plot of the legend.
 
@@ -505,4 +506,4 @@ class Legend(object):
         TODO: Build a more attractive plot.
         """
         for d in self.__list:
-            d.plot()
+            d.plot(fmt=fmt)

@@ -1,6 +1,8 @@
 # -*- coding: utf 8 -*-
 """
-Define a suite a tests for the Legend module.
+Defines a suite a tests for images
+run with:
+py.test --mpl-generate-path=tests/generated
 """
 import pytest
 
@@ -8,8 +10,8 @@ from striplog import Striplog
 from striplog import Legend, Component, Decor
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='five_thickest_ax.png')
+@pytest.mark.mpl_image_compare(baseline_dir='baseline',
+                               filename='striplog_test_image.png')
 def test_striplog_plot():
     """
     Tests mpl image of striplog
@@ -24,7 +26,7 @@ def test_striplog_plot():
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
+@pytest.mark.mpl_image_compare(baseline_dir='baseline',
                                filename='decor_test.png')
 def test_decor_plot():
     """
@@ -41,5 +43,6 @@ def test_decor_plot():
          'width': 3}
 
     decor = Decor(d)
-    fig = decor.plot()
+    print (decor.component.summary())
+    fig = decor.plot(fmt="{lithology} {colour} {grainsize}")
     return fig

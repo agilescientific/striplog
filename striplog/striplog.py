@@ -619,7 +619,7 @@ class Striplog(object):
 
     def plot(self,
              legend=None,
-             width=1,
+             width=1.5,
              ladder=False,
              aspect=10,
              interval=(1, 10),
@@ -646,7 +646,7 @@ class Striplog(object):
             legend = Legend.random(comps)
 
         fig = plt.figure(figsize=(width, aspect*width))
-        ax = fig.add_axes([0, 0, 1, 1])
+        ax = fig.add_axes([0.35, 0.05, 0.6, 0.95])
         self.plot_axis(ax=ax,
                        legend=legend,
                        ladder=ladder,
