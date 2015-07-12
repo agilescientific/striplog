@@ -1,9 +1,5 @@
 # -*- coding: utf 8 -*-
 
-import numpy as np
-from scipy.interpolate import spline, bisplev, lagrange
-import matplotlib.pyplot as plt
-
 from striplog import Decor
 from striplog import Component
 from striplog import Striplog
