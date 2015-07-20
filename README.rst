@@ -48,3 +48,8 @@ Install
 -------
 
 * ``pip install striplog``
+
+SciPy 2015
+----------
+
+`Here's a presentation about Striplog. <https://docs.google.com/presentation/d/16HJsJJQylb2_8D2NS1p2cjp1yzslqUl_51BN16J5Y2k/edit?usp=sharing>`_
