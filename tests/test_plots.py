@@ -1,17 +1,20 @@
 # -*- coding: utf 8 -*-
 """
-Defines a suite a tests for images
-run with:
-py.test --mpl-generate-path=tests/generated
-"""
-import pytest
+Defines a suite a tests for images run with:
 
+    py.test --mpl-generate-path=tests/generated
+
+https://pypi.python.org/pypi/pytest-mpl/0.3
+"""
 from striplog import Striplog
 from striplog import Legend, Component, Decor
 
+import pytest
+import matplotlib
+matplotlib.use('Agg')
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline',
-                               filename='striplog_test_image.png')
+
+@pytest.mark.mpl_image_compare
 def test_striplog_plot():
     """
     Tests mpl image of striplog
@@ -26,8 +29,7 @@ def test_striplog_plot():
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline',
-                               filename='decor_test.png')
+@pytest.mark.mpl_image_compare
 def test_decor_plot():
     """
     Tests mpl image of decor
@@ -43,6 +45,6 @@ def test_decor_plot():
          'width': 3}
 
     decor = Decor(d)
-    print (decor.component.summary())
+    print(decor.component.summary())
     fig = decor.plot(fmt="{lithology} {colour} {grainsize}")
     return fig
