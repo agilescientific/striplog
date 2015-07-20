@@ -2,7 +2,7 @@
 """
 Defines a suite a tests for images run with:
 
-    py.test --mpl-generate-path=tests/generated
+    py.test --mpl
 
 https://pypi.python.org/pypi/pytest-mpl/0.3
 """
