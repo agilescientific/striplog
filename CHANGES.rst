@@ -1,12 +1,11 @@
 Changelog
 =========
 
-0.5.6 (in progress)
--------------------
+0.5.6
+-----
 
-- Histograms
-- Plot tests
-- Fixed point data bug
+- Histograms (buggy)
+- Plot tests working
 
 0.5.0 to 0.5.5
 --------------
