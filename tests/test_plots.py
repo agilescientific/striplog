@@ -10,8 +10,6 @@ from striplog import Striplog
 from striplog import Legend, Component, Decor
 
 import pytest
-import matplotlib
-matplotlib.use('Agg')
 
 
 @pytest.mark.mpl_image_compare
