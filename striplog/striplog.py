@@ -598,7 +598,7 @@ class Striplog(object):
                 want to compare when plotting.
 
         Returns:
-            axis: The matplotlib axis.
+            axis: The matplotlib.pyplot axis.
         """
         for i in self.__list:
             origin = (0, i.top)
@@ -638,7 +638,7 @@ class Striplog(object):
                 want to compare when plotting.
 
         Returns:
-            None: The plot is a side-effect.
+            figure: The matplotlib.pyplot figure.
         """
         if not legend:
             # Build a random-coloured legend.
@@ -885,7 +885,7 @@ class Striplog(object):
                 if summary:
                     x = self.read_at(d).primary.summary()
                 else:
-                    x = self.read_at(d).primary            
+                    x = self.read_at(d).primary
             raw_readings.append(x)
         c = Counter(raw_readings)
         entities, counts = tuple(c.keys()), tuple(c.values())
@@ -893,7 +893,7 @@ class Striplog(object):
         if sort:
             z = zip(counts, entities)
             counts, entities = zip(*sorted(z, reverse=True))
-         
+
         return entities, counts
 
     @property
