@@ -497,13 +497,42 @@ class Legend(object):
 
             return default
 
-    def plot(self, fmt=None):
-        """
-        Make a simple plot of the legend.
+    def plot(self, ncols=1, fmt=None):
 
-        Simply calls Decor.plot() on all of its members.
-
-        TODO: Build a more attractive plot.
         """
-        for d in self.__list:
-            d.plot(fmt=fmt)
+        Make a simple plot of the Legend.
+
+        params:
+        :ncols : number of columns (default is 1)
+        :fmt: text formating for the decor description
+
+        Returns:
+        figure object
+        """
+
+        u = 4     # aspect ratio of decor plot
+        v = 0.25  # ratio of decor tile width
+        nrows = 10
+
+        fig, axs = plt.subplots(nrows, ncols, figsize=(u * ncols, nrows))
+
+        for ax, d in zip(axs.flat, self.__list):
+            rect = patches.Rectangle((0.05, 0.05),  # hack so it draws edges
+                                     u * v, u * v,
+                                     facecolor=d.colour,
+                                     edgecolor='k')
+            ax.add_patch(rect)
+            ax.text(1.0 + 0.15 * v * u, 0.5,
+                    d.component.summary(fmt=fmt),
+                    fontsize=max(u, 13),
+                    verticalalignment='center',
+                    horizontalalignment='left')
+            ax.set_xlim([0, u * v])
+            ax.set_ylim([0, u * v])
+            ax.axis('equal')
+
+        # turn unused axes off
+        for ax in axs.flat[::-1]:
+            ax.set_axis_off()
+
+        return fig
