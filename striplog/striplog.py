@@ -888,13 +888,13 @@ class Striplog(object):
                     x = self.read_at(d).primary
             raw_readings.append(x)
         c = Counter(raw_readings)
-        entities, counts = tuple(c.keys()), tuple(c.values())
+        ents, counts = tuple(c.keys()), tuple(c.values())
 
         if sort:
-            z = zip(counts, entities)
-            counts, entities = zip(*sorted(z, reverse=True))
+            z = zip(counts, ents)
+            counts, ents = zip(*sorted(z, key=lambda t: t[0], reverse=True))
 
-        return entities, counts
+        return ents, counts
 
     @property
     def cum(self):

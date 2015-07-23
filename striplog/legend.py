@@ -164,7 +164,7 @@ class Decor(object):
         """
         return utils.hex_to_rgb(self.colour)
 
-    def plot(self, fmt=None):
+    def plot(self, fmt=None, fig=None, ax=None):
         """
         Make a simple plot of the Decor.
 
@@ -179,8 +179,18 @@ class Decor(object):
         u = 4     # aspect ratio of decor plot
         v = 0.25  # ratio of decor tile width
 
-        fig = plt.figure(figsize=(u, 1))
-        ax = fig.add_axes([0.1*v, 0.1, 0.8*v, 0.8])
+        r = None
+
+        if fig is None:
+            fig = plt.figure(figsize=(u, 1))
+        else:
+            r = fig
+
+        if ax is None:
+            ax = fig.add_axes([0.1*v, 0.1, 0.8*v, 0.8])
+        else:
+            r = ax
+
         rect1 = patches.Rectangle((0, 0),
                                   u*v, u*v,
                                   color=self.colour)
@@ -197,7 +207,7 @@ class Decor(object):
         ax.get_yaxis().set_visible(False)
         ax.invert_yaxis()
 
-        return fig
+        return r
 
 
 class Legend(object):
@@ -497,17 +507,30 @@ class Legend(object):
 
             return default
 
-    def plot(self, ncols=1, fmt=None):
+    def plot(self, fmt=None):
+        """
+        Make a simple plot of the legend.
+
+        Simply calls Decor.plot() on all of its members.
+
+        TODO: Build a more attractive plot.
+        """
+        for d in self.__list:
+            d.plot(fmt=fmt)
+
+        return None
+
+    def fancy_plot(self, ncols=1, fmt=None):
 
         """
         Make a simple plot of the Legend.
 
-        params:
-        :ncols : number of columns (default is 1)
-        :fmt: text formating for the decor description
+        Args:
+            ncols (int): Number of columns (default is 1).
+            fmt (str): Text formatting for the decor description.
 
         Returns:
-        figure object
+            figure: matplotlib figure object
         """
 
         u = 4     # aspect ratio of decor plot

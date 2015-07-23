@@ -39,6 +39,34 @@ LITHD.                    : Lithology description     {S}
   422.440,  423.414,  "Grey, mudstone"
  """
 
+csv_string = """  200.000,  230.329,  Anhydrite
+                  230.329,  233.269,  Grey vf-f sandstone
+                  233.269,  234.700,  Anhydrite
+                  234.700,  236.596,  Dolomite
+                  236.596,  237.911,  Red siltstone
+                  237.911,  238.723,  Anhydrite
+                  238.723,  239.807,  Grey vf-f sandstone
+                  239.807,  240.774,  Red siltstone
+                  240.774,  241.122,  Dolomite
+                  241.122,  241.702,  Grey siltstone
+                  241.702,  243.095,  Dolomite
+                  243.095,  246.654,  Grey vf-f sandstone
+                  246.654,  247.234,  Dolomite
+                  247.234,  255.435,  Grey vf-f sandstone
+                  255.435,  258.723,  Grey siltstone
+                  258.723,  259.729,  Dolomite
+                  259.729,  260.967,  Grey siltstone
+                  260.967,  261.354,  Dolomite
+                  261.354,  267.041,  Grey siltstone
+                  267.041,  267.350,  Dolomite
+                  267.350,  274.004,  Grey siltstone
+                  274.004,  274.313,  Dolomite
+                  274.313,  294.816,  Grey siltstone
+                  294.816,  295.397,  Dolomite
+                  295.397,  296.286,  Limestone
+                  296.286,  300.000,  Volcanic
+                  """
+
 
 def test_error():
     with pytest.raises(StriplogError):
@@ -46,7 +74,6 @@ def test_error():
 
 
 def test_striplog():
-
     r1 = Component({'lithology': 'sand'})
     r2 = Component({'lithology': 'shale'})
     r3 = Component({'lithology': 'limestone'})
@@ -120,33 +147,6 @@ def test_from_image():
 
 def test_from_csv():
     lexicon = Lexicon.default()
-    csv_string = """  200.000,  230.329,  Anhydrite
-                      230.329,  233.269,  Grey vf-f sandstone
-                      233.269,  234.700,  Anhydrite
-                      234.700,  236.596,  Dolomite
-                      236.596,  237.911,  Red siltstone
-                      237.911,  238.723,  Anhydrite
-                      238.723,  239.807,  Grey vf-f sandstone
-                      239.807,  240.774,  Red siltstone
-                      240.774,  241.122,  Dolomite
-                      241.122,  241.702,  Grey siltstone
-                      241.702,  243.095,  Dolomite
-                      243.095,  246.654,  Grey vf-f sandstone
-                      246.654,  247.234,  Dolomite
-                      247.234,  255.435,  Grey vf-f sandstone
-                      255.435,  258.723,  Grey siltstone
-                      258.723,  259.729,  Dolomite
-                      259.729,  260.967,  Grey siltstone
-                      260.967,  261.354,  Dolomite
-                      261.354,  267.041,  Grey siltstone
-                      267.041,  267.350,  Dolomite
-                      267.350,  274.004,  Grey siltstone
-                      274.004,  274.313,  Dolomite
-                      274.313,  294.816,  Grey siltstone
-                      294.816,  295.397,  Dolomite
-                      295.397,  296.286,  Limestone
-                      296.286,  300.000,  Volcanic
-                    """
     strip2 = Striplog.from_csv(csv_string, lexicon=lexicon)
     assert len(strip2.top) == 7
 
@@ -165,3 +165,10 @@ def test_from_array():
          ]
     s = Striplog.from_array(a, lexicon=lexicon)
     assert s.__str__() != ''
+
+
+def test_histogram():
+    lexicon = Lexicon.default()
+    striplog = Striplog.from_las3(las3, lexicon=lexicon)
+    comps, counts = striplog.histogram()
+    assert counts == (124, 6, 6, 5, 3)

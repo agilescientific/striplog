@@ -9,11 +9,12 @@ https://pypi.python.org/pypi/pytest-mpl/0.3
 from striplog import Striplog
 from striplog import Legend, Component, Decor
 
+import matplotlib.pyplot as plt
 import pytest
 
 args = {'tolerance': 10,
-        'savefig_kwargs': {'dpi':100},
-       }
+        'savefig_kwargs': {'dpi': 100},
+        }
 
 
 @pytest.mark.mpl_image_compare(**args)
@@ -47,6 +48,7 @@ def test_decor_plot():
          'width': 3}
 
     decor = Decor(d)
-    print(decor.component.summary())
-    fig = decor.plot(fmt="{lithology} {colour} {grainsize}")
+
+    fig = plt.figure(figsize=(4, 1))
+    fig = decor.plot(fmt="{lithology} {colour} {grainsize}", fig=fig)
     return fig
