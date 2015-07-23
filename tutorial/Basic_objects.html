@@ -189,34 +189,44 @@ div#notebook {
 <p>A <code>striplog</code> depends on a hierarchy of objects. This notebook shows the objects and their basic functionality.</p>
 <ul>
 <li><a href="#Lexicon">Lexicon</a>: A dictionary containing the words and word categories to use for rock descriptions.</li>
-<li><a href="#Rock">Rock</a>: A set of attributes. </li>
-<li><a href="#Decor">Decor</a>: One element from a legend — describes how to display a Rock.</li>
-<li><a href="#Legend">Legend</a>: A set of Decors — describes how to display a set of Rocks or a Striplog.</li>
-<li><a href="#Interval">Interval</a>: One element from a Striplog — consists of a top, base, a description, a Rock, and a source.</li>
+<li><a href="#Component">Component</a>: A set of attributes. </li>
+<li><a href="#Interval">Interval</a>: One element from a Striplog — consists of a top, base, a description, one or more Components, and a source.</li>
 </ul>
 <p>Striplogs (a set of <code>Interval</code>s) are described in <a href="Striplog_object.ipynb">a separate notebook</a>.</p>
+<p>Decors and Legends are also described in <a href="Display_objects.ipynb">another notebook</a>.</p>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="To-do">To do<a class="anchor-link" href="#To-do">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The text <code>description</code> should probably be an object of its own, subclassing <code>str</code>. This would allow it to hold a provenance, and some of the language functions currently awkwardly held in <code>Interval</code>, such as <code>__split_description()</code> and <code>__parse_description()</code>.</p>
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="kn">import</span> <span class="nn">striplog</span>
+<span class="n">striplog</span><span class="o">.</span><span class="n">__version__</span>
+</pre></div>
 
 </div>
 </div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&apos;0.5.6&apos;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
@@ -238,7 +248,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Lexicon</span>
@@ -274,7 +284,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">lexicon</span> <span class="o">=</span> <span class="n">Lexicon</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
@@ -289,11 +299,11 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[2]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&apos;colour&apos;: [&apos;red(?:dish)?&apos;, &apos;gray(?:ish)?&apos;, &apos;grey(?:ish)?&apos;, &apos;black(?:ish)?&apos;, &apos;whit(?:e|ish)&apos;, &apos;blu(?:e|ish)&apos;, &apos;purpl(?:e|ish)&apos;, &apos;yellow(?:ish)?&apos;, &apos;green(?:ish)?&apos;, &apos;brown(?:ish)?&apos;, &apos;light&apos;, &apos;dark&apos;, &apos;sandy&apos;], &apos;parts_of_speech&apos;: {&apos;subordinate&apos;: [&apos;amount&apos;], &apos;adjective&apos;: [&apos;colour&apos;, &apos;grainsize&apos;], &apos;noun&apos;: [&apos;lithology&apos;]}, &apos;grainsize&apos;: [&apos;vf(?:-)?&apos;, &apos;f(?:-)?&apos;, &apos;m(?:-)?&apos;, &apos;c(?:-)?&apos;, &apos;vc&apos;, &apos;very fine(?: to)?&apos;, &apos;fine(?: to)?&apos;, &apos;medium(?: to)?&apos;, &apos;coarse(?: to)?&apos;, &apos;very coarse&apos;, &apos;v fine(?: to)?&apos;, &apos;med(?: to)?&apos;, &apos;med.(?: to)?&apos;, &apos;v coarse&apos;, &apos;grains?&apos;, &apos;granules?&apos;, &apos;pebbles?&apos;, &apos;cobbles?&apos;, &apos;boulders?&apos;], &apos;lithology&apos;: [&apos;overburden&apos;, &apos;sandstone&apos;, &apos;siltstone&apos;, &apos;shale&apos;, &apos;mudstone&apos;, &apos;limestone&apos;, &apos;dolomite&apos;, &apos;salt&apos;, &apos;halite&apos;, &apos;anhydrite&apos;, &apos;gypsum&apos;, &apos;sylvite&apos;, &apos;clay&apos;, &apos;mud&apos;, &apos;silt&apos;, &apos;sand&apos;, &apos;gravel&apos;, &apos;boulders&apos;], &apos;synonyms&apos;: {&apos;Overburden&apos;: [&apos;Drift&apos;], &apos;Anhydrite&apos;: [&apos;Gypsum&apos;], &apos;Salt&apos;: [&apos;Halite&apos;, &apos;Sylvite&apos;]}, &apos;abbreviations&apos;: {&apos;assoc&apos;: &apos;associated&apos;, &apos;hi&apos;: &apos;high&apos;, &apos;Vad&apos;: &apos;vadose&apos;, &apos;hd&apos;: &apos;hard&apos;, &apos;ves&apos;: &apos;vesicular&apos;, &apos;apr&apos;: &apos;apparent&apos;, &apos;gywk&apos;: &apos;graywacke&apos;, &apos;Var&apos;: &apos;variation&apos;, &apos;foram&apos;: &apos;foraminiferal&apos;, &apos;prly&apos;: &apos;pearly&apos;, &apos;drsy&apos;: &apos;drusy&apos;, &apos;app&apos;: &apos;appear&apos;, &apos;hvy&apos;: &apos;heavy&apos;, &apos;Anthr&apos;: &apos;anthracite&apos;, &apos;IAB&apos;: &apos;initial air blow&apos;, &apos;OCM&apos;: &apos;oil cut mud&apos;, &apos;Fac&apos;: &apos;facet&apos;, &apos;Gal&apos;: &apos;galeolaria*&apos;, &apos;Brac&apos;: &apos;brachiopod&apos;, &apos;rsns&apos;: &apos;resinous&apos;, &apos;Brach&apos;: &apos;brachiopod&apos;, &apos;Jasp&apos;: &apos;jasper&apos;, &apos;Lstr&apos;: &apos;lustre&apos;, &apos;Gab&apos;: &apos;gabbro&apos;, &apos;Vn&apos;: &apos;vein&apos;, &apos;cmt&apos;: &apos;cemented&apos;, &apos;Typ&apos;: &apos;type&apos;, &apos;Pyr&apos;: &apos;pyrite&apos;, &apos;micr&apos;: &apos;micritic&apos;, &apos;Stromlt&apos;: &apos;stromatolite&apos;, &apos;Clus&apos;: &apos;cluster&apos;, &apos;sft&apos;: &apos;soft&apos;, &apos;mass&apos;: &apos;massive&apos;, &apos;crinal&apos;: &apos;crinoidal&apos;, &apos;Crin&apos;: &apos;crinoidal&apos;, &apos;vi&apos;: &apos;violet&apos;, &apos;Ceph&apos;: &apos;cephalopod&apos;, &apos;mica&apos;: &apos;micaeous&apos;, &apos;SNP&apos;: &apos;sidewall neutron porosity log&apos;, &apos;est&apos;: &apos;estimated&apos;, &apos;wthd&apos;: &apos;weathered&apos;, &apos;sil&apos;: &apos;siliceous&apos;, &apos;sim&apos;: &apos;similar&apos;, &apos;brt&apos;: &apos;bright&apos;, &apos;bo&apos;: &apos;bophaceous&apos;, &apos;sid&apos;: &apos;sideritic&apos;, &apos;brn&apos;: &apos;brown&apos;, &apos;FAB&apos;: &apos;fair air blow&apos;, &apos;ex&apos;: &apos;excellent&apos;, &apos;Hyde&apos;: &apos;hydrocarbon&apos;, &apos;brk&apos;: &apos;brackish&apos;, &apos;bri&apos;: &apos;bright&apos;, &apos;syn&apos;: &apos;syntaxial&apos;, &apos;ctc&apos;: &apos;contact&apos;, &apos;tgh&apos;: &apos;tough&apos;, &apos;a.a.&apos;: &apos;same as above sample&apos;, &apos;ctd&apos;: &apos;coated&apos;, &apos;intr&apos;: &apos;intrusionive&apos;, &apos;resd&apos;: &apos;residual&apos;, &apos;intv&apos;: &apos;interval&apos;, &apos;fnt&apos;: &apos;faintly&apos;, &apos;Mag&apos;: &apos;magnetite&apos;, &apos;calc&apos;: &apos;calcitareous&apos;, &apos;bl&apos;: &apos;bluish&apos;, &apos;Cbl&apos;: &apos;cobble&apos;, &apos;bf&apos;: &apos;buff&apos;, &apos;Microstyl&apos;: &apos;microstylolite&apos;, &apos;bd&apos;: &apos;bed&apos;, &apos;l&apos;: &apos;lower&apos;, &apos;Wl&apos;: &apos;well&apos;, &apos;V.op&apos;: &apos;valve open&apos;, &apos;ps&apos;: &apos;pseudo-&apos;, &apos;aglm&apos;: &apos;agglomerate&apos;, &apos;Biot&apos;: &apos;biotite&apos;, &apos;vert&apos;: &apos;vertical&apos;, &apos;rhb&apos;: &apos;rhombic&apos;, &apos;phyl&apos;: &apos;phyllitic&apos;, &apos;Bioh&apos;: &apos;bioherm&apos;, &apos;Mtrx&apos;: &apos;matrix&apos;, &apos;onc&apos;: &apos;oncolites&apos;, &apos;skel&apos;: &apos;skeletal&apos;, &apos;slily&apos;: &apos;slightly&apos;, &apos;crpld&apos;: &apos;crumpled&apos;, &apos;Slick slick&apos;: &apos;slickenside&apos;, &apos;Pisol&apos;: &apos;pisolite&apos;, &apos;struc&apos;: &apos;structure&apos;, &apos;Mol&apos;: &apos;mollusca&apos;, &apos;lmpy&apos;: &apos;lumpy&apos;, &apos;AOF&apos;: &apos;absolute open flow&apos;, &apos;hor&apos;: &apos;horizontal&apos;, &apos;Gast&apos;: &apos;gastropod&apos;, &apos;WAB&apos;: &apos;weak air blow&apos;, &apos;micropor&apos;: &apos;microporosity&apos;, &apos;Perm&apos;: &apos;permeability&apos;, &apos;lge&apos;: &apos;large&apos;, &apos;tns&apos;: &apos;tension&apos;, &apos;blsh&apos;: &apos;bluish&apos;, &apos;Biosp&apos;: &apos;biosparite&apos;, &apos;Fau&apos;: &apos;fauna&apos;, &apos;gyp&apos;: &apos;gypsumiferous&apos;, &apos;fib&apos;: &apos;fibrous&apos;, &apos;sps&apos;: &apos;sparsly&apos;, &apos;TSTM&apos;: &apos;too small to measure&apos;, &apos;Biomi&apos;: &apos;biomicrite&apos;, &apos;spl&apos;: &apos;sample&apos;, &apos;w/&apos;: &apos;with&apos;, &apos;pisol&apos;: &apos;pisolitic&apos;, &apos;sph&apos;: &apos;spherules&apos;, &apos;pel&apos;: &apos;pellet&apos;, &apos;fis&apos;: &apos;fissile&apos;, &apos;Bdeye&apos;: &apos;birdseye&apos;, &apos;intxln&apos;: &apos;intercrystalline&apos;, &apos;Frac&apos;: &apos;fracture&apos;, &apos;aft&apos;: &apos;after&apos;, &apos;glas&apos;: &apos;glassy&apos;, &apos;glau&apos;: &apos;glauconitic&apos;, &apos;Zr&apos;: &apos;zircon&apos;, &apos;Scaph&apos;: &apos;scaphopod&apos;, &apos;Flo&apos;: &apos;flora&apos;, &apos;r.f.p&apos;: &apos;rounded frosted pitted&apos;, &apos;chit&apos;: &apos;chitinous&apos;, &apos;Flk&apos;: &apos;flake&apos;, &apos;strgr&apos;: &apos;stringer&apos;, &apos;Zn&apos;: &apos;zone&apos;, &apos;ox&apos;: &apos;oxidized&apos;, &apos;Uc&apos;: &apos;underclay&apos;, &apos;trnsl&apos;: &apos;translucent&apos;, &apos;IP&apos;: &apos;initial production&apos;, &apos;vgt&apos;: &apos;varigated&apos;, &apos;In&apos;: &apos;inch&apos;, &apos;Prod&apos;: &apos;production&apos;, &apos;bent&apos;: &apos;bentonitic&apos;, &apos;o&apos;: &apos;oil&apos;, &apos;nod&apos;: &apos;nodule&apos;, &apos;magnt&apos;: &apos;magnetite&apos;, &apos;qtz&apos;: &apos;quartz&apos;, &apos;crnk&apos;: &apos;crinkled&apos;, &apos;elg&apos;: &apos;elongate&apos;, &apos;intpt&apos;: &apos;interpretation&apos;, &apos;rdsh&apos;: &apos;redish&apos;, &apos;pk&apos;: &apos;pink&apos;, &apos;biocl&apos;: &apos;bioclastic&apos;, &apos;Microfos&apos;: &apos;microfossilferous&apos;, &apos;litt&apos;: &apos;littoral&apos;, &apos;tab&apos;: &apos;tabular&apos;, &apos;dkr&apos;: &apos;darker&apos;, &apos;Conc&apos;: &apos;concretion&apos;, &apos;volc&apos;: &apos;volcanics&apos;, &apos;pkish&apos;: &apos;pinkish&apos;, &apos;Cono&apos;: &apos;conodont&apos;, &apos;eux&apos;: &apos;euxinic&apos;, &apos;Psool&apos;: &apos;pseudo oolite&apos;, &apos;carb&apos;: &apos;carbonaceous&apos;, &apos;piso&apos;: &apos;pisolitic&apos;, &apos;Lat&apos;: &apos;laterite&apos;, &apos;Pybit&apos;: &apos;pyrobitumen&apos;, &apos;Cont&apos;: &apos;content&apos;, &apos;bldr&apos;: &apos;boulder&apos;, &apos;clas&apos;: &apos;clastic&apos;, &apos;prob&apos;: &apos;probably&apos;, &apos;pyrbit&apos;: &apos;pyrobitumen&apos;, &apos;uni&apos;: &apos;uniform&apos;, &apos;prom&apos;: &apos;prominently&apos;, &apos;Ctc&apos;: &apos;contact&apos;, &apos;fltg&apos;: &apos;floating&apos;, &apos;/&apos;: &apos;with&apos;, &apos;intrapar&apos;: &apos;intraparticle&apos;, &apos;circ&apos;: &apos;circulation&apos;, &apos;lit&apos;: &apos;lithic&apos;, &apos;sml&apos;: &apos;small&apos;, &apos;lim&apos;: &apos;itic&apos;, &apos;rexl&apos;: &apos;recrystallization&apos;, &apos;min&apos;: &apos;mineralized&apos;, &apos;qtzc&apos;: &apos;quartzitic&apos;, &apos;Wd&apos;: &apos;wood&apos;, &apos;spic&apos;: &apos;spicular&apos;, &apos;lig&apos;: &apos;lignitic&apos;, &apos;mic&apos;: &apos;micro&apos;, &apos;spsly&apos;: &apos;sparsly&apos;, &apos;N&apos;: &apos;Neutron&apos;, &apos;orsh&apos;: &apos;orangish&apos;, &apos;Len&apos;: &apos;lens&apos;, &apos;Microspr&apos;: &apos;microspar&apos;, &apos;Alg&apos;: &apos;algal&apos;, &apos;Diagn&apos;: &apos;diagenesis&apos;, &apos;Rhb&apos;: &apos;rhomb&apos;, &apos;Chal&apos;: &apos;chalcedony&apos;, &apos;sp&apos;: &apos;spotty&apos;, &apos;musc&apos;: &apos;muscovite&apos;, &apos;CN&apos;: &apos;compensated neutron&apos;, &apos;pch&apos;: &apos;patchy&apos;, &apos;Onc&apos;: &apos;oncolite&apos;, &apos;imp&apos;: &apos;impression&apos;, &apos;phen&apos;: &apos;phenocrysts&apos;, &apos;Dol&apos;: &apos;dolomite&apos;, &apos;bld&apos;: &apos;bladed&apos;, &apos;intgn&apos;: &apos;inter grown&apos;, &apos;fluor&apos;: &apos;fluoresceincent&apos;, &apos;op&apos;: &apos;open&apos;, &apos;Foram&apos;: &apos;foraminifera&apos;, &apos;brit&apos;: &apos;brittle&apos;, &apos;MCW&apos;: &apos;mud cut water&apos;, &apos;Surf&apos;: &apos;surface&apos;, &apos;Cl&apos;: &apos;clay&apos;, &apos;MCO&apos;: &apos;mud cut oil&apos;, &apos;Smwt&apos;: &apos;somewhat&apos;, &apos;Strk&apos;: &apos;streak&apos;, &apos;Gns&apos;: &apos;gneiss&apos;, &apos;Bdg&apos;: &apos;bedding&apos;, &apos;p.d&apos;: &apos;pressure deformation&apos;, &apos;fnly&apos;: &apos;finly&apos;, &apos;Anhy&apos;: &apos;anhydrite&apos;, &apos;Schm&apos;: &apos;schist&apos;, &apos;Lam&apos;: &apos;laminations&apos;, &apos;Pend&apos;: &apos;pendularous&apos;, &apos;Pbl&apos;: &apos;pebble&apos;, &apos;Ltl&apos;: &apos;little&apos;, &apos;sept&apos;: &apos;septate&apos;, &apos;Unconf&apos;: &apos;unconformity&apos;, &apos;Bot&apos;: &apos;botryoid&apos;, &apos;Asph&apos;: &apos;assemblage&apos;, &apos;cl&apos;: &apos;clastic&apos;, &apos;LSD&apos;: &apos;legal subdivision&apos;, &apos;Pent&apos;: &apos;pentamerus*&apos;, &apos;recem&apos;: &apos;recemented&apos;, &apos;cb&apos;: &apos;carbonized&apos;, &apos;MLL&apos;: &apos;microlaterolog&apos;, &apos;dess&apos;: &apos;dessiccation&apos;, &apos;Btm&apos;: &apos;bottom&apos;, &apos;stn&apos;: &apos;staining&apos;, &apos;qtzs&apos;: &apos;quartzose&apos;, &apos;gen&apos;: &apos;generally&apos;, &apos;GTS&apos;: &apos;gas to surface&apos;, &apos;Novac&apos;: &apos;novaculite&apos;, &apos;coln&apos;: &apos;colonial&apos;, &apos;intst&apos;: &apos;intersticitial&apos;, &apos;Stach&apos;: &apos;stachyodes*&apos;, &apos;Fluor&apos;: &apos;fluoresceince&apos;, &apos;t.b.&apos;: &apos;thin-bedded&apos;, &apos;hrtl&apos;: &apos;horizontal&apos;, &apos;acic&apos;: &apos;acicular&apos;, &apos;n.v.p.&apos;: &apos;no visible porosity&apos;, &apos;cly&apos;: &apos;clayey&apos;, &apos;Endo&apos;: &apos;endothyra*&apos;, &apos;consol&apos;: &apos;consolidated&apos;, &apos;Chk&apos;: &apos;chalk&apos;, &apos;diagn&apos;: &apos;diagenesisetic&apos;, &apos;med&apos;: &apos;medium&apos;, &apos;rad&apos;: &apos;radiating&apos;, &apos;Belm&apos;: &apos;belemnites*&apos;, &apos;sat&apos;: &apos;saturated&apos;, &apos;bur&apos;: &apos;burrowed&apos;, &apos;SIP&apos;: &apos;shut in pressure&apos;, &apos;BHFP&apos;: &apos;bottom hole flow pressure&apos;, &apos;conch&apos;: &apos;conchoidal&apos;, &apos;ML&apos;: &apos;microlog, minilog&apos;, &apos;cln&apos;: &apos;clean&apos;, &apos;m&apos;: &apos;medium&apos;, &apos;Plag&apos;: &apos;plagioclase&apos;, &apos;Girv&apos;: &apos;girvanella*&apos;, &apos;dissem&apos;: &apos;disseminated&apos;, &apos;shy&apos;: &apos;shaly&apos;, &apos;vn&apos;: &apos;vein&apos;, &apos;comp&apos;: &apos;completion&apos;, &apos;prphy&apos;: &apos;porphyry&apos;, &apos;authg&apos;: &apos;authigenic&apos;, &apos;arg&apos;: &apos;argillaceous&apos;, &apos;wxy&apos;: &apos;waxy&apos;, &apos;ark&apos;: &apos;arkosic&apos;, &apos;SW&apos;: &apos;salt water&apos;, &apos;Mn&apos;: &apos;manganese&apos;, &apos;Stri&apos;: &apos;striae&apos;, &apos;hem&apos;: &apos;hematitic&apos;, &apos;aprox&apos;: &apos;approximately&apos;, &apos;mrly&apos;: &apos;marly&apos;, &apos;Cav&apos;: &apos;cavernous&apos;, &apos;Sil&apos;: &apos;silica&apos;, &apos;insl&apos;: &apos;insoluble&apos;, &apos;Ech&apos;: &apos;echinoid&apos;, &apos;mos&apos;: &apos;mosaic&apos;, &apos;Sid&apos;: &apos;siderite&apos;, &apos;Repl&apos;: &apos;replaced&apos;, &apos;wvy&apos;: &apos;wavy&apos;, &apos;hex&apos;: &apos;hexagonal&apos;, &apos;md&apos;: &apos;muddy&apos;, &apos;sd&apos;: &apos;sand (1/16-2 mm)&apos;, &apos;brak&apos;: &apos;brackish&apos;, &apos;blk&apos;: &apos;black&apos;, &apos;Cal&apos;: &apos;caliper&apos;, &apos;Pap&apos;: &apos;paper&apos;, &apos;ptch&apos;: &apos;patches&apos;, &apos;Par&apos;: &apos;particle&apos;, &apos;rthy&apos;: &apos;earthy&apos;, &apos;Tex&apos;: &apos;texture&apos;, &apos;Sedm&apos;: &apos;sediment&apos;, &apos;Radax&apos;: &apos;radiaxial&apos;, &apos;mtx&apos;: &apos;matrix&apos;, &apos;Chtz&apos;: &apos;chitinozoa&apos;, &apos;num&apos;: &apos;numerous&apos;, &apos;varic&apos;: &apos;varicolored&apos;, &apos;crpxln&apos;: &apos;crystocrystalline&apos;, &apos;Satm sat&apos;: &apos;saturation&apos;, &apos;FIt&apos;: &apos;fault&apos;, &apos;ea&apos;: &apos;earthy&apos;, &apos;magn&apos;: &apos;magnetic&apos;, &apos;detr&apos;: &apos;detrital&apos;, &apos;Chara&apos;: &apos;charophytes&apos;, &apos;strg&apos;: &apos;stringer&apos;, &apos;Casph&apos;: &apos;calcisphaera*&apos;, &apos;Sphal&apos;: &apos;sphalerite&apos;, &apos;PD&apos;: &apos;per day&apos;, &apos;jt&apos;: &apos;jointing&apos;, &apos;Para&apos;: &apos;paraparchites*&apos;, &apos;Phlog&apos;: &apos;phloaopite&apos;, &apos;PB&apos;: &apos;plugged back&apos;, &apos;PL&apos;: &apos;proximity log&apos;, &apos;dend&apos;: &apos;dendritic&apos;, &apos;PH&apos;: &apos;per hour&apos;, &apos;Pt&apos;: &apos;part&apos;, &apos;Clcrd&apos;: &apos;calcirudite&apos;, &apos;vps&apos;: &apos;very poor samples&apos;, &apos;Chlor&apos;: &apos;chlorite&apos;, &apos;kao&apos;: &apos;kaolin&apos;, &apos;pos&apos;: &apos;possibility&apos;, &apos;por&apos;: &apos;poroussity&apos;, &apos;Bit&apos;: &apos;bitumen&apos;, &apos;mrlst&apos;: &apos;marlstone&apos;, &apos;n/s&apos;: &apos;no show&apos;, &apos;Glob&apos;: &apos;globigerina*&apos;, &apos;cp&apos;: &apos;compare&apos;, &apos;x&apos;: &apos;cross&apos;, &apos;Exv&apos;: &apos;extrusive rock&apos;, &apos;argl&apos;: &apos;argillate&apos;, &apos;irr&apos;: &apos;irregular&apos;, &apos;OWDD&apos;: &apos;oil well drilled deeper&apos;, &apos;pt&apos;: &apos;partly&apos;, &apos;drlr&apos;: &apos;driller&apos;, &apos;Gyp&apos;: &apos;gypsumiferous&apos;, &apos;OWWO&apos;: &apos;old well worked over&apos;, &apos;tstg&apos;: &apos;testing&apos;, &apos;W.R.&apos;: &apos;washed residue&apos;, &apos;pol&apos;: &apos;polished&apos;, &apos;Spr&apos;: &apos;spore&apos;, &apos;Spl&apos;: &apos;sampole&apos;, &apos;Spo&apos;: &apos;spore&apos;, &apos;Macrofos&apos;: &apos;macrofossil&apos;, &apos;gran&apos;: &apos;granular&apos;, &apos;Spk&apos;: &apos;speck&apos;, &apos;gvl&apos;: &apos;gravel&apos;, &apos;pl&apos;: &apos;plant&apos;, &apos;Spg&apos;: &apos;sponge&apos;, &apos;Pst&apos;: &apos;pumice-stone&apos;, &apos;cntr&apos;: &apos;centered&apos;, &apos;brd&apos;: &apos;bored&apos;, &apos;oomol&apos;: &apos;oomoldic&apos;, &apos;grad&apos;: &apos;grading&apos;, &apos;gl&apos;: &apos;glassy&apos;, &apos;gn&apos;: &apos;green&apos;, &apos;gd&apos;: &apos;good&apos;, &apos;mky&apos;: &apos;milky&apos;, &apos;Solen&apos;: &apos;solenopora*&apos;, &apos;ga&apos;: &apos;gauged&apos;, &apos;w/o&apos;: &apos;without w/o&apos;, &apos;drlg&apos;: &apos;drilling&apos;, &apos;clus&apos;: &apos;cluster&apos;, &apos;Char&apos;: &apos;charophyte&apos;, &apos;loc&apos;: &apos;location&apos;, &apos;gy&apos;: &apos;gray&apos;, &apos;Rf&apos;: &apos;reef&apos;, &apos;gt&apos;: &apos;gritty&apos;, &apos;orth&apos;: &apos;orthoclase&apos;, &apos;s&amp;p&apos;: &apos;salt &amp; pepper&apos;, &apos;gr&apos;: &apos;grained&apos;, &apos;phos&apos;: &apos;phosphatic&apos;, &apos;Nod&apos;: &apos;nodules&apos;, &apos;Qtz&apos;: &apos;quartz&apos;, &apos;Incl&apos;: &apos;inclusion&apos;, &apos;dd&apos;: &apos;dead&apos;, &apos;xlam&apos;: &apos;cross-laminated&apos;, &apos;rnd&apos;: &apos;rounded&apos;, &apos;c&apos;: &apos;coarsely&apos;, &apos;s &amp; p&apos;: &apos;salt and pepper&apos;, &apos;Rud&apos;: &apos;rudist&apos;, &apos;dk&apos;: &apos;darker&apos;, &apos;psdo&apos;: &apos;pseudo&apos;, &apos;dism&apos;: &apos;disseminated&apos;, &apos;k&apos;: &apos;permeabilityable&apos;, &apos;sli&apos;: &apos;slightly&apos;, &apos;ang&apos;: &apos;angular&apos;, &apos;euhd&apos;: &apos;euhedral&apos;, &apos;conspic&apos;: &apos;conspicuous&apos;, &apos;var&apos;: &apos;variable&apos;, &apos;Tril&apos;: &apos;trilobite&apos;, &apos;KB&apos;: &apos;kelly bushing&apos;, &apos;vcol&apos;: &apos;varicolored&apos;, &apos;IES&apos;: &apos;induction electric&apos;, &apos;Foss&apos;: &apos;fossiliferous&apos;, &apos;bu&apos;: &apos;buff&apos;, &apos;dist&apos;: &apos;distillate&apos;, &apos;wthrd&apos;: &apos;weathered&apos;, &apos;BW&apos;: &apos;barrels of water&apos;, &apos;bit&apos;: &apos;bitumeninous&apos;, &apos;GOR&apos;: &apos;gas-to-oil ratio&apos;, &apos;Ptg&apos;: &apos;parting&apos;, &apos;Lim&apos;: &apos;limonite&apos;, &apos;vrtb&apos;: &apos;vertebrate&apos;, &apos;Spic&apos;: &apos;spicule&apos;, &apos;exp&apos;: &apos;exposed&apos;, &apos;exv&apos;: &apos;extrusive&apos;, &apos;Bdst&apos;: &apos;boundstone&apos;, &apos;Port por&apos;: &apos;porosity&apos;, &apos;Lig&apos;: &apos;lignite&apos;, &apos;Tub&apos;: &apos;tube&apos;, &apos;intbd&apos;: &apos;interbedded&apos;, &apos;vrtl&apos;: &apos;vertical&apos;, &apos;Sphaer&apos;: &apos;sphaerocodium*&apos;, &apos;mod&apos;: &apos;moderate&apos;, &apos;trip&apos;: &apos;tripolic&apos;, &apos;Deb&apos;: &apos;debris&apos;, &apos;typ&apos;: &apos;typical&apos;, &apos;BHT&apos;: &apos;bottom hole temperature&apos;, &apos;euhed&apos;: &apos;euhedral&apos;, &apos;sln&apos;: &apos;solution&apos;, &apos;psool&apos;: &apos;pseudo oolitic&apos;, &apos;BHP&apos;: &apos;bottom hole pressure&apos;, &apos;MCFG&apos;: &apos;thousand cubic feet of gas&apos;, &apos;Bm&apos;: &apos;basement&apos;, &apos;cotg&apos;: &apos;coateding&apos;, &apos;sed&apos;: &apos;sedimentary&apos;, &apos;Brec&apos;: &apos;breccia&apos;, &apos;sec&apos;: &apos;secondary&apos;, &apos;orng&apos;: &apos;orange&apos;, &apos;Spher&apos;: &apos;spherule&apos;, &apos;Bld&apos;: &apos;boulder&apos;, &apos;Kao&apos;: &apos;kaolin&apos;, &apos;intlam&apos;: &apos;interlaminated&apos;, &apos;Mbl&apos;: &apos;marble&apos;, &apos;Db&apos;: &apos;diabase&apos;, &apos;Deer&apos;: &apos;decrease&apos;, &apos;grysh&apos;: &apos;greyish&apos;, &apos;Pol&apos;: &apos;polish&apos;, &apos;Lut&apos;: &apos;lutite&apos;, &apos;altg&apos;: &apos;alternating&apos;, &apos;fspr&apos;: &apos;feldsparathic&apos;, &apos;blksh&apos;: &apos;blackish&apos;, &apos;sol&apos;: &apos;solitary&apos;, &apos;Tent&apos;: &apos;tentaculites*&apos;, &apos;DI&apos;: &apos;dual induction log&apos;, &apos;chty&apos;: &apos;cherty&apos;, &apos;anhed&apos;: &apos;anhedral&apos;, &apos;pkr&apos;: &apos;packer&apos;, &apos;rndd&apos;: &apos;rounded&apos;, &apos;Shlt por&apos;: &apos;shelter porosity&apos;, &apos;G&amp;OCM&apos;: &apos;gas and oil cut mud&apos;, &apos;x-strat&apos;: &apos;cross-stratified&apos;, &apos;sbang&apos;: &apos;subangular&apos;, &apos;DF&apos;: &apos;derrick floor&apos;, &apos;cbl&apos;: &apos;cobble (64-256 mm)&apos;, &apos;Bur&apos;: &apos;burrow&apos;, &apos;v&apos;: &apos;very&apos;, &apos;Dist&apos;: &apos;distillate&apos;, &apos;bdd&apos;: &apos;bedded&apos;, &apos;corln&apos;: &apos;coralline&apos;, &apos;bdg&apos;: &apos;bedding&apos;, &apos;asph&apos;: &apos;asphaltic&apos;, &apos;Pelec&apos;: &apos;pelecypod&apos;, &apos;prim&apos;: &apos;primary&apos;, &apos;gry&apos;: &apos;greyish&apos;, &apos;surf&apos;: &apos;surface&apos;, &apos;thru&apos;: &apos;throughout&apos;, &apos;swbd&apos;: &apos;swabbed&apos;, &apos;grd&apos;: &apos;graded&apos;, &apos;stri&apos;: &apos;striated&apos;, &apos;strk&apos;: &apos;streaked&apos;, &apos;Str&apos;: &apos;structure&apos;, &apos;micgr&apos;: &apos;micrograined&apos;, &apos;uncons.&apos;: &apos;unconsolidated&apos;, &apos;anhy&apos;: &apos;anhydritic&apos;, &apos;rhmb&apos;: &apos;rhombic&apos;, &apos;mol&apos;: &apos;moldic&apos;, &apos;str&apos;: &apos;streak&apos;, &apos;gnsh&apos;: &apos;greenish&apos;, &apos;org&apos;: &apos;organic&apos;, &apos;&amp;&apos;: &apos;and&apos;, &apos;intclas&apos;: &apos;intraclastic&apos;, &apos;exclas&apos;: &apos;extraclastic&apos;, &apos;BOPD&apos;: &apos;barrels of oil per day&apos;, &apos;med.&apos;: &apos;medium&apos;, &apos;DL&apos;: &apos;density log&apos;, &apos;g&apos;: &apos;good&apos;, &apos;mot&apos;: &apos;mottled&apos;, &apos;fuc&apos;: &apos;fucoidal&apos;, &apos;DLL&apos;: &apos;dual laterolog&apos;, &apos;BOPH&apos;: &apos;barrels of oil per hour&apos;, &apos;evap&apos;: &apos;evapourititic&apos;, &apos;gns&apos;: &apos;gneiss&apos;, &apos;Chaet&apos;: &apos;chaetetes*&apos;, &apos;Shw&apos;: &apos;show&apos;, &apos;sa-c&apos;: &apos;salt castic&apos;, &apos;Fe&apos;: &apos;iron-ferruginous&apos;, &apos;up&apos;: &apos;upper&apos;, &apos;Iran&apos;: &apos;granule&apos;, &apos;Fm&apos;: &apos;formation&apos;, &apos;Fp&apos;: &apos;flowing pressure&apos;, &apos;Spfool&apos;: &apos;superficial olite&apos;, &apos;sbrndd&apos;: &apos;sub rounded&apos;, &apos;Ft&apos;: &apos;foot&apos;, &apos;Shl&apos;: &apos;shell&apos;, &apos;Ark&apos;: &apos;arkose&apos;, &apos;apprx&apos;: &apos;approximate&apos;, &apos;ss&apos;: &apos;sandstone&apos;, &apos;metaph&apos;: &apos;metamorphosed&apos;, &apos;Clcar&apos;: &apos;calcarenite&apos;, &apos;S.W.&apos;: &apos;salt water&apos;, &apos;Volc&apos;: &apos;volcanic&apos;, &apos;msm&apos;: &apos;metasomatic&apos;, &apos;pet&apos;: &apos;petroleumiferous&apos;, &apos;olv&apos;: &apos;olive&apos;, &apos;rr&apos;: &apos;rare&apos;, &apos;Piso&apos;: &apos;pisoid&apos;, &apos;xl&apos;: &apos;crystalline&apos;, &apos;Fvst&apos;: &apos;favosites*&apos;, &apos;Dia&apos;: &apos;diameter&apos;, &apos;Evap&apos;: &apos;evapourite&apos;, &apos;lithgr&apos;: &apos;lithographic&apos;, &apos;hom&apos;: &apos;homogeneous&apos;, &apos;SI&apos;: &apos;shut in&apos;, &apos;Syring&apos;: &apos;syringopora*&apos;, &apos;SO&apos;: &apos;show of oil&apos;, &apos;grapst&apos;: &apos;grapestone&apos;, &apos;PPM&apos;: &apos;parts per million&apos;, &apos;calctc&apos;: &apos;calcitic&apos;, &apos;men&apos;: &apos;meniscus&apos;, &apos;Mat&apos;: &apos;material&apos;, &apos;t.s.&apos;: &apos;thin section&apos;, &apos;Poln&apos;: &apos;pollen&apos;, &apos;fros&apos;: &apos;frosted&apos;, &apos;SP&apos;: &apos;spontaneous potential&apos;, &apos;ab&apos;: &apos;above&apos;, &apos;ovgth&apos;: &apos;overgrowth&apos;, &apos;len&apos;: &apos;lentilcular&apos;, &apos;Sh&apos;: &apos;shale&apos;, &apos;slb&apos;: &apos;slabby&apos;, &apos;Rad&apos;: &apos;radial&apos;, &apos;Sl&apos;: &apos;slate&apos;, &apos;dtrl&apos;: &apos;detritalus&apos;, &apos;Cht&apos;: &apos;chert&apos;, &apos;vug&apos;: &apos;vugular&apos;, &apos;Sa&apos;: &apos;salt&apos;, &apos;bulb&apos;: &apos;bulbous&apos;, &apos;microxln&apos;: &apos;microcrystalline&apos;, &apos;Sd&apos;: &apos;sand&apos;, &apos;(W)&apos;: &apos;wildcat&apos;, &apos;Rec&apos;: &apos;recovery&apos;, &apos;DIL&apos;: &apos;dual induction laterolog&apos;, &apos;Clslt&apos;: &apos;calcisiltite&apos;, &apos;rmn&apos;: &apos;remainant&apos;, &apos;cvg&apos;: &apos;cavings&apos;, &apos;pyr&apos;: &apos;pyritized&apos;, &apos;Splin&apos;: &apos;splintery&apos;, &apos;irid&apos;: &apos;iridescent&apos;, &apos;abv&apos;: &apos;above&apos;, &apos;Sst&apos;: &apos;sandstone&apos;, &apos;HO&apos;: &apos;heavy oil&apos;, &apos;Exclas&apos;: &apos;extraclast&apos;, &apos;mnrl&apos;: &apos;mineralized&apos;, &apos;Xl&apos;: &apos;crystal&apos;, &apos;chk&apos;: &apos;chalky&apos;, &apos;hydc&apos;: &apos;hydrocarbon&apos;, &apos;devit&apos;: &apos;devitrified&apos;, &apos;OC&apos;: &apos;oil cut&apos;, &apos;bdeye&apos;: &apos;birdseye&apos;, &apos;frag&apos;: &apos;fragmental&apos;, &apos;Cub&apos;: &apos;cube&apos;, &apos;amor&apos;: &apos;amorphous&apos;, &apos;frac&apos;: &apos;fractured&apos;, &apos;FDL&apos;: &apos;formation density log&apos;, &apos;ahd&apos;: &apos;anhedral&apos;, &apos;intfrag&apos;: &apos;interfragmental&apos;, &apos;srtg&apos;: &apos;Sorteding&apos;, &apos;hetr&apos;: &apos;heterogeneous&apos;, &apos;embd&apos;: &apos;embedded&apos;, &apos;choc&apos;: &apos;chocolate&apos;, &apos;sel&apos;: &apos;selenite&apos;, &apos;cntrt&apos;: &apos;contorted&apos;, &apos;BHSIP&apos;: &apos;bottom hole shut in pressure&apos;, &apos;Musc&apos;: &apos;muscovite&apos;, &apos;Orth&apos;: &apos;orthoclase&apos;, &apos;Milid&apos;: &apos;miliolid&apos;, &apos;posa&apos;: &apos;possible&apos;, &apos;Oo&apos;: &apos;ooid&apos;, &apos;gil&apos;: &apos;gilsonite&apos;, &apos;Lyr&apos;: &apos;layer&apos;, &apos;imbd&apos;: &apos;imbedded&apos;, &apos;meta&apos;: &apos;metamorphic&apos;, &apos;rng&apos;: &apos;range&apos;, &apos;or&apos;: &apos;orangish&apos;, &apos;sks&apos;: &apos;slickensided&apos;, &apos;GCM&apos;: &apos;gas cut mud&apos;, &apos;cov&apos;: &apos;covered&apos;, &apos;Tf&apos;: &apos;tuffaceous&apos;, &apos;Intclas&apos;: &apos;intraclast&apos;, &apos;vrvd&apos;: &apos;varved&apos;, &apos;coq&apos;: &apos;coquina&apos;, &apos;col&apos;: &apos;colored&apos;, &apos;max&apos;: &apos;maximum&apos;, &apos;GCW&apos;: &apos;gas cut water&apos;, &apos;bioturb&apos;: &apos;bioturbated&apos;, &apos;Micropor&apos;: &apos;micropore&apos;, &apos;mas&apos;: &apos;massive&apos;, &apos;oo&apos;: &apos;ooidal&apos;, &apos;grdg&apos;: &apos;grading&apos;, &apos;fenst&apos;: &apos;fenestral&apos;, &apos;SAB&apos;: &apos;strong air blow&apos;, &apos;crbnt&apos;: &apos;carbonate&apos;, &apos;Bd&apos;: &apos;bed&apos;, &apos;conc&apos;: &apos;concretionary&apos;, &apos;com&apos;: &apos;common&apos;, &apos;Ivan&apos;: &apos;ivanovia*&apos;, &apos;Chit&apos;: &apos;chitinous&apos;, &apos;pred&apos;: &apos;predominantly&apos;, &apos;frmwk&apos;: &apos;framework&apos;, &apos;repl&apos;: &apos;replacement&apos;, &apos;sqz&apos;: &apos;squeezed&apos;, &apos;cons&apos;: &apos;considerable&apos;, &apos;Bnd&apos;: &apos;band&apos;, &apos;clyst&apos;: &apos;claystone&apos;, &apos;pres&apos;: &apos;preservation&apos;, &apos;Grst&apos;: &apos;grainstone&apos;, &apos;pap&apos;: &apos;papery&apos;, &apos;ls&apos;: &apos;limestone&apos;, &apos;lt&apos;: &apos;lighter&apos;, &apos;Pel&apos;: &apos;pellet&apos;, &apos;Equiv&apos;: &apos;equivalent&apos;, &apos;Invtb&apos;: &apos;invertebrate&apos;, &apos;Bent&apos;: &apos;bentonite&apos;, &apos;Pet&apos;: &apos;petroleum&apos;, &apos;Mbr&apos;: &apos;member&apos;, &apos;Slt&apos;: &apos;silt&apos;, &apos;lg&apos;: &apos;long&apos;, &apos;blky&apos;: &apos;blocky&apos;, &apos;W&apos;: &apos;west&apos;, &apos;bnd&apos;: &apos;banded&apos;, &apos;biost&apos;: &apos;biostromal&apos;, &apos;sdy&apos;: &apos;sandy&apos;, &apos;Grv&apos;: &apos;gravel&apos;, &apos;Grt&apos;: &apos;granite&apos;, &apos;Fspr&apos;: &apos;feldspar&apos;, &apos;lchd&apos;: &apos;leached&apos;, &apos;Oyst&apos;: &apos;oyster&apos;, &apos;D &amp; A&apos;: &apos;dry and abandoned&apos;, &apos;Coq&apos;: &apos;coquina&apos;, &apos;grnt&apos;: &apos;granite&apos;, &apos;vit&apos;: &apos;vitreous&apos;, &apos;Col&apos;: &apos;color&apos;, &apos;cht&apos;: &apos;chert&apos;, &apos;intxl&apos;: &apos;intercrystalline&apos;, &apos;grnl&apos;: &apos;granule (2-4 mm)&apos;, &apos;contam&apos;: &apos;contaminated&apos;, &apos;n.s.&apos;: &apos;no sample&apos;, &apos;w&apos;: &apos;well&apos;, &apos;Oomol&apos;: &apos;oomold&apos;, &apos;sltst&apos;: &apos;siltstone&apos;, &apos;Plt&apos;: &apos;plant&apos;, &apos;Vug&apos;: &apos;vug&apos;, &apos;fos&apos;: &apos;fossiliferous&apos;, &apos;dru&apos;: &apos;drusy&apos;, &apos;Peld&apos;: &apos;pelletoid&apos;, &apos;xbd&apos;: &apos;cross-bedded&apos;, &apos;thk&apos;: &apos;thick&apos;, &apos;Sel&apos;: &apos;selenite&apos;, &apos;Vnlet&apos;: &apos;veinlet&apos;, &apos;thn&apos;: &apos;thin&apos;, &apos;fol&apos;: &apos;foliated&apos;, &apos;Gt&apos;: &apos;grit&apos;, &apos;crd&apos;: &apos;cored&apos;, &apos;Gr&apos;: &apos;grains&apos;, &apos;brec&apos;: &apos;brecciated&apos;, &apos;GL&apos;: &apos;guard log&apos;, &apos;bas&apos;: &apos;basaltic&apos;, &apos;bar&apos;: &apos;baritic&apos;, &apos;Orbit&apos;: &apos;Orbitolina&apos;, &apos;rug&apos;: &apos;rugosa&apos;, &apos;Clclt&apos;: &apos;calcilutite&apos;, &apos;Jt&apos;: &apos;joint&apos;, &apos;perm&apos;: &apos;permeability&apos;, &apos;lrg&apos;: &apos;larger&apos;, &apos;yel&apos;: &apos;yellow&apos;, &apos;Frag&apos;: &apos;fragment&apos;, &apos;phr&apos;: &apos;phreatic&apos;, &apos;perf&apos;: &apos;perforated&apos;, &apos;Biost&apos;: &apos;biostrom&apos;, &apos;sh&apos;: &apos;shale&apos;, &apos;freq&apos;: &apos;frequent&apos;, &apos;Ig&apos;: &apos;igneous rock&apos;, &apos;sl&apos;: &apos;slightly&apos;, &apos;sm&apos;: &apos;smooth&apos;, &apos;rexlzd&apos;: &apos;recrystallized&apos;, &apos;sa&apos;: &apos;salt&apos;, &apos;sb&apos;: &apos;sub&apos;, &apos;sc&apos;: &apos;scales&apos;, &apos;zeo&apos;: &apos;zeolite&apos;, &apos;cren&apos;: &apos;crenulated&apos;, &apos;sz&apos;: &apos;size&apos;, &apos;dol&apos;: &apos;dolomitic&apos;, &apos;Contam&apos;: &apos;contamination&apos;, &apos;purp&apos;: &apos;purple&apos;, &apos;chlor&apos;: &apos;chlorite&apos;, &apos;Cyp&apos;: &apos;cypridopsis*&apos;, &apos;spr&apos;: &apos;sparry&apos;, &apos;porcel&apos;: &apos;porcelaneous&apos;, &apos;su&apos;: &apos;sulphurous&apos;, &apos;dns&apos;: &apos;denser&apos;, &apos;Hem&apos;: &apos;hematite&apos;, &apos;wtr cush&apos;: &apos;water cushion&apos;, &apos;stal&apos;: &apos;stalactitic&apos;, &apos;SGCM&apos;: &apos;slight gas cut mud&apos;, &apos;styl&apos;: &apos;stylotitic&apos;, &apos;pyrcl&apos;: &apos;pyroclastic&apos;, &apos;frs&apos;: &apos;fresh&apos;, &apos;mdy&apos;: &apos;muddy&apos;, &apos;Bry&apos;: &apos;bryozoa&apos;, &apos;OWPB&apos;: &apos;oil well plugged back&apos;, &apos;sptd&apos;: &apos;spottedy&apos;, &apos;fl&apos;: &apos;filled&apos;, &apos;fr&apos;: &apos;fair&apos;, &apos;fri&apos;: &apos;friable&apos;, &apos;fibr&apos;: &apos;fibrous&apos;, &apos;Het&apos;: &apos;Heterostegina&apos;, &apos;chky&apos;: &apos;chalky&apos;, &apos;mnr&apos;: &apos;minor&apos;, &apos;frg&apos;: &apos;fringing&apos;, &apos;r&apos;: &apos;rare&apos;, &apos;SGCW&apos;: &apos;slight gas cut water&apos;, &apos;BO&apos;: &apos;barrels of oil&apos;, &apos;grnt.w&apos;: &apos;granite wash&apos;, &apos;Trip&apos;: &apos;tripoli&apos;, &apos;boudg&apos;: &apos;boudinage&apos;, &apos;stmg&apos;: &apos;streaming&apos;, &apos;cncn&apos;: &apos;concentric&apos;, &apos;des&apos;: &apos;descript&apos;, &apos;Fus&apos;: &apos;fusulinid&apos;, &apos;n&apos;: &apos;no, none, non&apos;, &apos;csg&apos;: &apos;casing&apos;, &apos;cche&apos;: &apos;caliche&apos;, &apos;Av&apos;: &apos;average&apos;, &apos;x-lam&apos;: &apos;cross-laminated&apos;, &apos;och&apos;: &apos;ochre&apos;, &apos;ES&apos;: &apos;electric&apos;, &apos;xbdg&apos;: &apos;cross-bedding&apos;, &apos;deb&apos;: &apos;debris&apos;, &apos;Fuc&apos;: &apos;fucoid&apos;, &apos;LL&apos;: &apos;laterolog&apos;, &apos;Intst&apos;: &apos;intersticies&apos;, &apos;occ&apos;: &apos;occasional&apos;, &apos;Cvg&apos;: &apos;caving&apos;, &apos;Fe-st&apos;: &apos;ironstone&apos;, &apos;Ls&apos;: &apos;limestone&apos;, &apos;Scs&apos;: &apos;scarce&apos;, &apos;amm&apos;: &apos;ammonite&apos;, &apos;psi&apos;: &apos;pounds per square inch&apos;, &apos;intrlam&apos;: &apos;interlaminated&apos;, &apos;amb&apos;: &apos;amber&apos;, &apos;Allo&apos;: &apos;allochem&apos;, &apos;decr&apos;: &apos;decreasing&apos;, &apos;clr&apos;: &apos;clear&apos;, &apos;flky&apos;: &apos;flaky&apos;, &apos;Imp&apos;: &apos;impression&apos;, &apos;bcm&apos;: &apos;becoming&apos;, &apos;amt&apos;: &apos;amount&apos;, &apos;f&apos;: &apos;finely&apos;, &apos;Brk&apos;: &apos;break&apos;, &apos;Grap&apos;: &apos;graptolite&apos;, &apos;abd&apos;: &apos;abundant&apos;, &apos;Bor&apos;: &apos;bored&apos;, &apos;trnsp&apos;: &apos;transparent&apos;, &apos;rec&apos;: &apos;recovered&apos;, &apos;E&apos;: &apos;east&apos;, &apos;Tas&apos;: &apos;tasmanites*&apos;, &apos;abs&apos;: &apos;absent&apos;, &apos;Phyl&apos;: &apos;phyllite&apos;, &apos;abt&apos;: &apos;about&apos;, &apos;Ost&apos;: &apos;ostracod&apos;, &apos;cpct&apos;: &apos;compact&apos;, &apos;res&apos;: &apos;residuual&apos;, &apos;Aglm&apos;: &apos;agglomerate&apos;, &apos;rep&apos;: &apos;replacedment&apos;, &apos;hornbd&apos;: &apos;hornblend&apos;, &apos;lstr&apos;: &apos;lustre&apos;, &apos;lent&apos;: &apos;lenticular&apos;, &apos;sacc&apos;: &apos;saccharoidal&apos;, &apos;od&apos;: &apos;odor&apos;, &apos;Gil&apos;: &apos;gilsonite&apos;, &apos;spty&apos;: &apos;spottedy&apos;, &apos;tex&apos;: &apos;texture&apos;, &apos;rbl&apos;: &apos;rubblbly&apos;, &apos;poly&apos;: &apos;polygonal&apos;, &apos;shad&apos;: &apos;shadow&apos;, &apos;LL8&apos;: &apos;laterolog-8&apos;, &apos;u&apos;: &apos;upper&apos;, &apos;ter&apos;: &apos;terriginous&apos;, &apos;ferr&apos;: &apos;ferruginous&apos;, &apos;extr&apos;: &apos;extremely&apos;, &apos;Microol&apos;: &apos;micro-oolite&apos;, &apos;cotd&apos;: &apos;coateding&apos;, &apos;dom&apos;: &apos;dominant&apos;, &apos;G&apos;: &apos;gas&apos;, &apos;gty&apos;: &apos;gravity&apos;, &apos;F.Q.G.&apos;: &apos;frosted quartz  grains&apos;, &apos;Mdst&apos;: &apos;mudstone&apos;, &apos;OFM&apos;: &apos;oil flecked mud&apos;, &apos;gsy&apos;: &apos;grasy&apos;, &apos;venn&apos;: &apos;vermillon&apos;, &apos;Min&apos;: &apos;mineral&apos;, &apos;Rpl&apos;: &apos;ripple&apos;, &apos;Calc&apos;: &apos;calcite&apos;, &apos;Mic&apos;: &apos;micaceous&apos;, &apos;Mid&apos;: &apos;middle&apos;, &apos;Intr&apos;: &apos;intrusive&apos;, &apos;Bubl&apos;: &apos;bubble&apos;, &apos;lmn&apos;: &apos;limonitic&apos;, &apos;incr&apos;: &apos;increasing&apos;, &apos;SOCM&apos;: &apos;slight oil cut mud&apos;, &apos;stromlt&apos;: &apos;stromatolite&apos;, &apos;lmy&apos;: &apos;limy&apos;, &apos;plas&apos;: &apos;plastic&apos;, &apos;Pkst&apos;: &apos;packstone&apos;, &apos;GIP&apos;: &apos;good initial puff&apos;, &apos;SOCW&apos;: &apos;slight oil cut water&apos;, &apos;uncons&apos;: &apos;unconsolidated&apos;, &apos;intgran&apos;: &apos;intergranular&apos;, &apos;sch&apos;: &apos;schist&apos;, &apos;Euryamph&apos;: &apos;euryamphipora*&apos;, &apos;@&apos;: &apos;at&apos;, &apos;Clvg&apos;: &apos;cleavage&apos;, &apos;Tham&apos;: &apos;thamnopora*&apos;, &apos;wh&apos;: &apos;white&apos;, &apos;wi&apos;: &apos;with&apos;, &apos;intcl&apos;: &apos;intraclasts&apos;, &apos;wk&apos;: &apos;weak&apos;, &apos;Intvl&apos;: &apos;interval&apos;, &apos;wg&apos;: &apos;vuggy&apos;, &apos;G.W.&apos;: &apos;granite wash&apos;, &apos;spkld&apos;: &apos;speckled&apos;, &apos;Cmt&apos;: &apos;cement&apos;, &apos;Meta&apos;: &apos;metamorphic rock&apos;, &apos;Stn&apos;: &apos;stain&apos;, &apos;glos&apos;: &apos;glossy&apos;, &apos;Agg&apos;: &apos;aggregate&apos;, &apos;DST&apos;: &apos;drill stem test&apos;, &apos;sphal&apos;: &apos;sphalerite&apos;, &apos;unident&apos;: &apos;unidentifiable&apos;, &apos;slky&apos;: &apos;silky&apos;, &apos;aph&apos;: &apos;aphanitic&apos;, &apos;zn&apos;: &apos;zone&apos;, &apos;splty&apos;: &apos;splintery&apos;, &apos;T.D.&apos;: &apos;total depth&apos;, &apos;p&apos;: &apos;poorly&apos;, &apos;Strom&apos;: &apos;stromatoporoid&apos;, &apos;OSR&apos;: &apos;oil source rock&apos;, &apos;Fe-mag&apos;: &apos;ferro-magnesian&apos;, &quot;&apos;&apos; or do&quot;: &apos;ditto&apos;, &apos;fau&apos;: &apos;fauna&apos;, &apos;Fen&apos;: &apos;fenestra&apos;, &apos;sy-Ca&apos;: &apos;sparry calcite&apos;, &apos;Strat&apos;: &apos;strata&apos;, &apos;incl&apos;: &apos;inclusion&apos;, &apos;FTAB&apos;: &apos;faint air blow&apos;, &apos;lith&apos;: &apos;lithographic&apos;, &apos;tt&apos;: &apos;tightly&apos;, &apos;fac&apos;: &apos;faceted&apos;, &apos;hkl&apos;: &apos;hackly&apos;, &apos;aren&apos;: &apos;arenaceous&apos;, &apos;sblit&apos;: &apos;sublithic&apos;, &apos;Phos&apos;: &apos;phosphate&apos;, &apos;tub&apos;: &apos;tubular&apos;, &apos;O&amp;G&apos;: &apos;oil and gas&apos;, &apos;WIP&apos;: &apos;weak initial puff&apos;, &apos;MMCFG&apos;: &apos;million cubic feet of gas&apos;, &apos;slt&apos;: &apos;silt&apos;, &apos;vis&apos;: &apos;visible&apos;, &apos;ool&apos;: &apos;oolitic&apos;, &apos;oom&apos;: &apos;oomoldic&apos;, &apos;undly&apos;: &apos;underlying&apos;, &apos;Pch&apos;: &apos;patch&apos;, &apos;cgl&apos;: &apos;conglomerate&apos;, &apos;₵&apos;: &apos;core&apos;, &apos;ooc&apos;: &apos;oocastic&apos;, &apos;Inoc&apos;: &apos;inoceramus*&apos;, &apos;contm&apos;: &apos;contaminated&apos;, &apos;qtzt&apos;: &apos;quartzite&apos;, &apos;pris&apos;: &apos;prismatic&apos;, &apos;V.P.S.&apos;: &apos;very poor sample V.P.S.&apos;, &apos;(D)&apos;: &apos;development&apos;, &apos;Scol&apos;: &apos;scolecodonts&apos;, &apos;OTS&apos;: &apos;oil to surface&apos;, &apos;mrl&apos;: &apos;marly&apos;, &apos;mott&apos;: &apos;mottled&apos;, &apos;Glos&apos;: &apos;gloss&apos;, &apos;chal&apos;: &apos;chalcedony&apos;, &apos;C&apos;: &apos;coal&apos;, &apos;OTD&apos;: &apos;old total depth&apos;, &apos;Rbl&apos;: &apos;rubble&apos;, &apos;gept&apos;: &apos;geopetal&apos;, &apos;Cor&apos;: &apos;coral&apos;, &apos;Glauc&apos;: &apos;glauconite&apos;, &apos;RT&apos;: &apos;rotary table&apos;, &apos;intpar&apos;: &apos;interparticle&apos;, &apos;S&apos;: &apos;sonic, acoustilog&apos;, &apos;fld&apos;: &apos;feldsparthic&apos;, &apos;flg&apos;: &apos;flaggy&apos;, &apos;Rk&apos;: &apos;rock&apos;, &apos;BWPH&apos;: &apos;barrels of water per hour&apos;, &apos;intercal&apos;: &apos;intercalated&apos;, &apos;sug&apos;: &apos;sugary&apos;, &apos;BWPD&apos;: &apos;barrels of water per day&apos;, &apos;suc&apos;: &apos;sucrosic&apos;, &apos;Micr&apos;: &apos;micrite&apos;, &apos;flk&apos;: &apos;flake&apos;, &apos;flt&apos;: &apos;faulted&apos;, &apos;S.W.C.&apos;: &apos;sidewall core&apos;, &apos;Slst&apos;: &apos;siltstone&apos;, &apos;xln&apos;: &apos;crystalline&apos;, &apos;Rem&apos;: &apos;remains&apos;, &apos;lse&apos;: &apos;loose&apos;, &apos;fls&apos;: &apos;flesh&apos;, &apos;tuf&apos;: &apos;tuffaceous&apos;, &apos;intstl&apos;: &apos;interstitial&apos;, &apos;pit&apos;: &apos;pitted&apos;, &apos;s&apos;: &apos;small&apos;, &apos;plag&apos;: &apos;plagioclase&apos;, &apos;Bas&apos;: &apos;basalt&apos;, &apos;elong&apos;: &apos;elongate&apos;, &apos;SO&amp;G&apos;: &apos;show of oil and gas&apos;, &apos;rf&apos;: &apos;reefoid&apos;, &apos;ck&apos;: &apos;choke&apos;, &apos;rd&apos;: &apos;rounded&apos;, &apos;indst&apos;: &apos;indistinct&apos;, &apos;volat&apos;: &apos;volatile&apos;, &apos;Stylio&apos;: &apos;styliolina*&apos;, &apos;SSO&apos;: &apos;slight show of oil&apos;, &apos;SO&amp;W&apos;: &apos;show of oil and water&apos;, &apos;WCM&apos;: &apos;water cut mud&apos;, &apos;eqnt&apos;: &apos;equant&apos;, &apos;mnut&apos;: &apos;minute&apos;, &apos;Qtzt&apos;: &apos;quartzite&apos;, &apos;Ctgs&apos;: &apos;cuttings&apos;, &apos;BHCS&apos;: &apos;bore hole compensated sonic&apos;, &apos;ti&apos;: &apos;tight&apos;, &apos;Ren&apos;: &apos;renalcis*&apos;, &apos;lac&apos;: &apos;lacustrine&apos;, &apos;mag&apos;: &apos;magnetic&apos;, &apos;lam&apos;: &apos;laminated&apos;, &apos;fl/&apos;: &apos;flowing&apos;, &apos;GAP&apos;: &apos;good air blow&apos;, &apos;srt&apos;: &apos;sorting&apos;, &apos;mar&apos;: &apos;maroon&apos;, &apos;lav&apos;: &apos;lavender&apos;, &apos;mat&apos;: &apos;material, matter&apos;, &apos;Clcsp&apos;: &apos;calcisphere&apos;, &apos;ap&apos;: &apos;appears&apos;, &apos;Res&apos;: &apos;residue&apos;, &apos;Elev&apos;: &apos;elevation&apos;, &apos;Wtr&apos;: &apos;water&apos;, &apos;Amph&apos;: &apos;amphipora*&apos;, &apos;flor&apos;: &apos;fluorescence&apos;, &apos;Hal&apos;: &apos;halitiferous&apos;, &apos;olvn&apos;: &apos;olivine&apos;, &apos;Lith&apos;: &apos;lithology&apos;, &apos;p.p.&apos;: &apos;pin-poin&apos;, &apos;crm&apos;: &apos;cream&apos;, &apos;Gwke&apos;: &apos;graywacke&apos;, &apos;I.P.&apos;: &apos;in part&apos;, &apos;marn&apos;: &apos;marine&apos;, &apos;dolst&apos;: &apos;dolostone&apos;, &apos;p-p&apos;: &apos;pin point&apos;, &apos;spec&apos;: &apos;speckled&apos;, &apos;Wkst&apos;: &apos;wackestone&apos;, &apos;crs&apos;: &apos;coarse&apos;, &apos;crpxl&apos;: &apos;cryptocrystalline&apos;, &apos;Arag&apos;: &apos;aragonite&apos;, &apos;Frg&apos;: &apos;fringe&apos;, &apos;ireg&apos;: &apos;irregular&apos;, &apos;coqid&apos;: &apos;coquinaoid&apos;, &apos;spher&apos;: &apos;spherulitic&apos;, &apos;abnt&apos;: &apos;abundant&apos;, &apos;Circ&apos;: &apos;circulate&apos;, &apos;ind&apos;: &apos;indurated&apos;, &apos;Tp&apos;: &apos;top&apos;, &apos;Tr&apos;: &apos;trace&apos;, &apos;alg&apos;: &apos;algal&apos;, &apos;ptg&apos;: &apos;parting&apos;, &apos;yelsh&apos;: &apos;ish&apos;, &apos;nac&apos;: &apos;nacerous&apos;, &apos;Gran&apos;: &apos;granule&apos;, &apos;ig&apos;: &apos;igneous&apos;, &apos;Plcy&apos;: &apos;palecypod&apos;, &apos;cub&apos;: &apos;cubic&apos;, &apos;alt&apos;: &apos;altering&apos;, &apos;Sol&apos;: &apos;Soution&apos;, &apos;fen&apos;: &apos;fenestraal&apos;, &apos;Clst&apos;: &apos;claystone&apos;, &apos;biot&apos;: &apos;biotite&apos;, &apos;O&amp;SW&apos;: &apos;oil and salt water&apos;, &apos;tr&apos;: &apos;trace&apos;, &apos;Assem&apos;: &apos;Assem&apos;, &apos;Su&apos;: &apos;sulphur&apos;, &apos;pbl&apos;: &apos;pebble (4-64 mm)&apos;, &apos;Moll&apos;: &apos;mollusc&apos;, &apos;plty&apos;: &apos;platy&apos;, &apos;Ool&apos;: &apos;oolite&apos;, &apos;bioh&apos;: &apos;biohermal&apos;, &apos;tn&apos;: &apos;tan&apos;, &apos;Cgl&apos;: &apos;conglomerate&apos;, &apos;Mrl&apos;: &apos;marl&apos;, &apos;Ooc&apos;: &apos;oolicast&apos;, &apos;scat&apos;: &apos;scattered&apos;, &apos;wtr&apos;: &apos;water&apos;, &apos;cotd gn&apos;: &apos;coated grains&apos;, &apos;Glas&apos;: &apos;glass&apos;, &apos;Styl&apos;: &apos;stylolite&apos;, &apos;strat&apos;: &apos;strataified&apos;, &apos;Pyrxn&apos;: &apos;pyroxene&apos;, &apos;x-bd&apos;: &apos;cross-bedded&apos;, &apos;depau&apos;: &apos;depauperate&apos;, &apos;peld&apos;: &apos;pelletoidal&apos;, &apos;slty&apos;: &apos;silty&apos;, &apos;bot&apos;: &apos;botryoidal&apos;, &apos;O str&apos;: &apos;Ostracod&apos;, &apos;O-Qtz&apos;: &apos;orthoquartzite&apos;, &apos;intgwn&apos;: &apos;intergrown&apos;, &apos;GR&apos;: &apos;gamma ray&apos;, &apos;bor&apos;: &apos;boreding&apos;, &apos;deer&apos;: &apos;decreasing&apos;, &apos;brhg&apos;: &apos;branching&apos;, &apos;Descr&apos;: &apos;description&apos;}, &apos;amount&apos;: [&apos;streaks?&apos;, &apos;veins?&apos;, &apos;stringers?&apos;, &apos;interbed(?:s|ded)?&apos;, &apos;blotch(?:es)?&apos;, &apos;bands?&apos;, &apos;fragments?&apos;, &apos;impurit(?:y|ies)&apos;, &apos;minor&apos;, &apos;some&apos;, &apos;abundant&apos;, &apos;rare&apos;, &apos;flakes?&apos;, &apos;[-\\.\\d]+%&apos;]}</pre>
+<pre>{&apos;lithology&apos;: [&apos;overburden&apos;, &apos;sandstone&apos;, &apos;siltstone&apos;, &apos;shale&apos;, &apos;mudstone&apos;, &apos;limestone&apos;, &apos;dolomite&apos;, &apos;salt&apos;, &apos;halite&apos;, &apos;anhydrite&apos;, &apos;gypsum&apos;, &apos;sylvite&apos;, &apos;clay&apos;, &apos;mud&apos;, &apos;silt&apos;, &apos;sand&apos;, &apos;gravel&apos;, &apos;boulders&apos;], &apos;grainsize&apos;: [&apos;vf(?:-)?&apos;, &apos;f(?:-)?&apos;, &apos;m(?:-)?&apos;, &apos;c(?:-)?&apos;, &apos;vc&apos;, &apos;very fine(?: to)?&apos;, &apos;fine(?: to)?&apos;, &apos;medium(?: to)?&apos;, &apos;coarse(?: to)?&apos;, &apos;very coarse&apos;, &apos;v fine(?: to)?&apos;, &apos;med(?: to)?&apos;, &apos;med.(?: to)?&apos;, &apos;v coarse&apos;, &apos;grains?&apos;, &apos;granules?&apos;, &apos;pebbles?&apos;, &apos;cobbles?&apos;, &apos;boulders?&apos;], &apos;colour&apos;: [&apos;red(?:dish)?&apos;, &apos;gray(?:ish)?&apos;, &apos;grey(?:ish)?&apos;, &apos;black(?:ish)?&apos;, &apos;whit(?:e|ish)&apos;, &apos;blu(?:e|ish)&apos;, &apos;purpl(?:e|ish)&apos;, &apos;yellow(?:ish)?&apos;, &apos;green(?:ish)?&apos;, &apos;brown(?:ish)?&apos;, &apos;light&apos;, &apos;dark&apos;, &apos;sandy&apos;], &apos;abbreviations&apos;: {&apos;Rpl&apos;: &apos;ripple&apos;, &apos;ox&apos;: &apos;oxidized&apos;, &apos;Macrofos&apos;: &apos;macrofossil&apos;, &apos;or&apos;: &apos;orangish&apos;, &apos;op&apos;: &apos;open&apos;, &apos;mrl&apos;: &apos;marly&apos;, &apos;Peld&apos;: &apos;pelletoid&apos;, &apos;hornbd&apos;: &apos;hornblend&apos;, &apos;Deer&apos;: &apos;decrease&apos;, &apos;euhed&apos;: &apos;euhedral&apos;, &apos;oo&apos;: &apos;ooidal&apos;, &apos;mtx&apos;: &apos;matrix&apos;, &apos;prly&apos;: &apos;pearly&apos;, &apos;magn&apos;: &apos;magnetic&apos;, &apos;Scs&apos;: &apos;scarce&apos;, &apos;sa-c&apos;: &apos;salt castic&apos;, &apos;gil&apos;: &apos;gilsonite&apos;, &apos;Repl&apos;: &apos;replaced&apos;, &apos;deer&apos;: &apos;decreasing&apos;, &apos;min&apos;: &apos;mineralized&apos;, &apos;mic&apos;: &apos;micro&apos;, &apos;r&apos;: &apos;rare&apos;, &apos;s&amp;p&apos;: &apos;salt &amp; pepper&apos;, &apos;sat&apos;: &apos;saturated&apos;, &apos;ptg&apos;: &apos;parting&apos;, &apos;Lut&apos;: &apos;lutite&apos;, &apos;contm&apos;: &apos;contaminated&apos;, &apos;fl&apos;: &apos;filled&apos;, &apos;pres&apos;: &apos;preservation&apos;, &apos;apr&apos;: &apos;apparent&apos;, &apos;bcm&apos;: &apos;becoming&apos;, &apos;app&apos;: &apos;appear&apos;, &apos;Brk&apos;: &apos;break&apos;, &apos;V.op&apos;: &apos;valve open&apos;, &apos;apprx&apos;: &apos;approximate&apos;, &apos;pk&apos;: &apos;pink&apos;, &apos;FDL&apos;: &apos;formation density log&apos;, &apos;PPM&apos;: &apos;parts per million&apos;, &apos;GAP&apos;: &apos;good air blow&apos;, &apos;pred&apos;: &apos;predominantly&apos;, &apos;OC&apos;: &apos;oil cut&apos;, &apos;O&amp;SW&apos;: &apos;oil and salt water&apos;, &apos;Tent&apos;: &apos;tentaculites*&apos;, &apos;flky&apos;: &apos;flaky&apos;, &apos;aph&apos;: &apos;aphanitic&apos;, &apos;thk&apos;: &apos;thick&apos;, &apos;dist&apos;: &apos;distillate&apos;, &apos;DLL&apos;: &apos;dual laterolog&apos;, &apos;ireg&apos;: &apos;irregular&apos;, &apos;zeo&apos;: &apos;zeolite&apos;, &apos;fen&apos;: &apos;fenestraal&apos;, &apos;Len&apos;: &apos;lens&apos;, &apos;bioh&apos;: &apos;biohermal&apos;, &apos;Frg&apos;: &apos;fringe&apos;, &apos;biot&apos;: &apos;biotite&apos;, &apos;intrlam&apos;: &apos;interlaminated&apos;, &apos;dism&apos;: &apos;disseminated&apos;, &apos;Stach&apos;: &apos;stachyodes*&apos;, &apos;fluor&apos;: &apos;fluoresceincent&apos;, &apos;Ren&apos;: &apos;renalcis*&apos;, &apos;OCM&apos;: &apos;oil cut mud&apos;, &apos;lrg&apos;: &apos;larger&apos;, &apos;sil&apos;: &apos;siliceous&apos;, &apos;med.&apos;: &apos;medium&apos;, &apos;Bry&apos;: &apos;bryozoa&apos;, &apos;Tub&apos;: &apos;tube&apos;, &apos;abt&apos;: &apos;about&apos;, &apos;Oyst&apos;: &apos;oyster&apos;, &apos;abv&apos;: &apos;above&apos;, &apos;sid&apos;: &apos;sideritic&apos;, &apos;Nod&apos;: &apos;nodules&apos;, &apos;Rec&apos;: &apos;recovery&apos;, &apos;rf&apos;: &apos;reefoid&apos;, &apos;abs&apos;: &apos;absent&apos;, &apos;BHSIP&apos;: &apos;bottom hole shut in pressure&apos;, &apos;TSTM&apos;: &apos;too small to measure&apos;, &apos;fnt&apos;: &apos;faintly&apos;, &apos;abd&apos;: &apos;abundant&apos;, &apos;t.s.&apos;: &apos;thin section&apos;, &apos;rr&apos;: &apos;rare&apos;, &apos;pap&apos;: &apos;papery&apos;, &apos;Res&apos;: &apos;residue&apos;, &apos;Elev&apos;: &apos;elevation&apos;, &apos;imp&apos;: &apos;impression&apos;, &apos;rad&apos;: &apos;radiating&apos;, &apos;syn&apos;: &apos;syntaxial&apos;, &apos;hkl&apos;: &apos;hackly&apos;, &apos;xln&apos;: &apos;crystalline&apos;, &apos;m&apos;: &apos;medium&apos;, &apos;elg&apos;: &apos;elongate&apos;, &apos;chit&apos;: &apos;chitinous&apos;, &apos;SO&amp;W&apos;: &apos;show of oil and water&apos;, &apos;poly&apos;: &apos;polygonal&apos;, &apos;intrapar&apos;: &apos;intraparticle&apos;, &apos;Wkst&apos;: &apos;wackestone&apos;, &apos;Contam&apos;: &apos;contamination&apos;, &apos;SNP&apos;: &apos;sidewall neutron porosity log&apos;, &apos;od&apos;: &apos;odor&apos;, &apos;phr&apos;: &apos;phreatic&apos;, &apos;brn&apos;: &apos;brown&apos;, &apos;Musc&apos;: &apos;muscovite&apos;, &apos;spr&apos;: &apos;sparry&apos;, &apos;sps&apos;: &apos;sparsly&apos;, &apos;rng&apos;: &apos;range&apos;, &apos;purp&apos;: &apos;purple&apos;, &apos;IP&apos;: &apos;initial production&apos;, &apos;detr&apos;: &apos;detrital&apos;, &apos;fibr&apos;: &apos;fibrous&apos;, &apos;prom&apos;: &apos;prominently&apos;, &apos;Rbl&apos;: &apos;rubble&apos;, &apos;spl&apos;: &apos;sample&apos;, &apos;Spfool&apos;: &apos;superficial olite&apos;, &apos;sph&apos;: &apos;spherules&apos;, &apos;WAB&apos;: &apos;weak air blow&apos;, &apos;Rk&apos;: &apos;rock&apos;, &apos;psdo&apos;: &apos;pseudo&apos;, &apos;bd&apos;: &apos;bed&apos;, &apos;AOF&apos;: &apos;absolute open flow&apos;, &apos;Rf&apos;: &apos;reef&apos;, &apos;Calc&apos;: &apos;calcite&apos;, &apos;In&apos;: &apos;inch&apos;, &apos;xbdg&apos;: &apos;cross-bedding&apos;, &apos;srtg&apos;: &apos;Sorteding&apos;, &apos;Ig&apos;: &apos;igneous rock&apos;, &apos;Spic&apos;: &apos;spicule&apos;, &apos;spher&apos;: &apos;spherulitic&apos;, &apos;Min&apos;: &apos;mineral&apos;, &apos;mnr&apos;: &apos;minor&apos;, &apos;Mid&apos;: &apos;middle&apos;, &apos;Mic&apos;: &apos;micaceous&apos;, &apos;Microspr&apos;: &apos;microspar&apos;, &apos;contam&apos;: &apos;contaminated&apos;, &apos;Alg&apos;: &apos;algal&apos;, &apos;Evap&apos;: &apos;evapourite&apos;, &apos;cl&apos;: &apos;clastic&apos;, &apos;gvl&apos;: &apos;gravel&apos;, &apos;LL&apos;: &apos;laterolog&apos;, &apos;Ls&apos;: &apos;limestone&apos;, &apos;Vnlet&apos;: &apos;veinlet&apos;, &apos;med&apos;: &apos;medium&apos;, &apos;intcl&apos;: &apos;intraclasts&apos;, &apos;men&apos;: &apos;meniscus&apos;, &apos;cren&apos;: &apos;crenulated&apos;, &apos;Hal&apos;: &apos;halitiferous&apos;, &apos;Uc&apos;: &apos;underclay&apos;, &apos;chty&apos;: &apos;cherty&apos;, &apos;thn&apos;: &apos;thin&apos;, &apos;Fspr&apos;: &apos;feldspar&apos;, &apos;Microol&apos;: &apos;micro-oolite&apos;, &apos;oom&apos;: &apos;oomoldic&apos;, &apos;Moll&apos;: &apos;mollusc&apos;, &apos;xbd&apos;: &apos;cross-bedded&apos;, &apos;bor&apos;: &apos;boreding&apos;, &apos;rndd&apos;: &apos;rounded&apos;, &apos;Intr&apos;: &apos;intrusive&apos;, &apos;S&apos;: &apos;sonic, acoustilog&apos;, &apos;blsh&apos;: &apos;bluish&apos;, &apos;boudg&apos;: &apos;boudinage&apos;, &apos;SGCW&apos;: &apos;slight gas cut water&apos;, &apos;Jasp&apos;: &apos;jasper&apos;, &apos;ctc&apos;: &apos;contact&apos;, &apos;ctd&apos;: &apos;coated&apos;, &apos;Port por&apos;: &apos;porosity&apos;, &apos;Assem&apos;: &apos;Assem&apos;, &apos;SO&amp;G&apos;: &apos;show of oil and gas&apos;, &apos;fis&apos;: &apos;fissile&apos;, &apos;ex&apos;: &apos;excellent&apos;, &apos;rec&apos;: &apos;recovered&apos;, &apos;olv&apos;: &apos;olive&apos;, &apos;n.v.p.&apos;: &apos;no visible porosity&apos;, &apos;pyrcl&apos;: &apos;pyroclastic&apos;, &apos;SI&apos;: &apos;shut in&apos;, &apos;aprox&apos;: &apos;approximately&apos;, &apos;fib&apos;: &apos;fibrous&apos;, &apos;Satm sat&apos;: &apos;saturation&apos;, &apos;sft&apos;: &apos;soft&apos;, &apos;W.R.&apos;: &apos;washed residue&apos;, &apos;dru&apos;: &apos;drusy&apos;, &apos;volc&apos;: &apos;volcanics&apos;, &apos;Stylio&apos;: &apos;styliolina*&apos;, &apos;mat&apos;: &apos;material, matter&apos;, &apos;Gr&apos;: &apos;grains&apos;, &apos;Gyp&apos;: &apos;gypsumiferous&apos;, &apos;aft&apos;: &apos;after&apos;, &apos;Rad&apos;: &apos;radial&apos;, &apos;Gt&apos;: &apos;grit&apos;, &apos;Grap&apos;: &apos;graptolite&apos;, &apos;micgr&apos;: &apos;micrograined&apos;, &apos;pel&apos;: &apos;pellet&apos;, &apos;x-strat&apos;: &apos;cross-stratified&apos;, &apos;Wtr&apos;: &apos;water&apos;, &apos;sml&apos;: &apos;small&apos;, &apos;frg&apos;: &apos;fringing&apos;, &apos;lchd&apos;: &apos;leached&apos;, &apos;pet&apos;: &apos;petroleumiferous&apos;, &apos;Clslt&apos;: &apos;calcisiltite&apos;, &apos;fri&apos;: &apos;friable&apos;, &apos;devit&apos;: &apos;devitrified&apos;, &apos;vert&apos;: &apos;vertical&apos;, &apos;Clcsp&apos;: &apos;calcisphere&apos;, &apos;C&apos;: &apos;coal&apos;, &apos;Clus&apos;: &apos;cluster&apos;, &apos;qtz&apos;: &apos;quartz&apos;, &apos;GR&apos;: &apos;gamma ray&apos;, &apos;bas&apos;: &apos;basaltic&apos;, &apos;vug&apos;: &apos;vugular&apos;, &apos;stn&apos;: &apos;staining&apos;, &apos;hor&apos;: &apos;horizontal&apos;, &apos;Allo&apos;: &apos;allochem&apos;, &apos;Clcrd&apos;: &apos;calcirudite&apos;, &apos;litt&apos;: &apos;littoral&apos;, &apos;s&apos;: &apos;small&apos;, &apos;aglm&apos;: &apos;agglomerate&apos;, &apos;Clst&apos;: &apos;claystone&apos;, &apos;lith&apos;: &apos;lithographic&apos;, &apos;intclas&apos;: &apos;intraclastic&apos;, &apos;Piso&apos;: &apos;pisoid&apos;, &apos;rmn&apos;: &apos;remainant&apos;, &apos;str&apos;: &apos;streak&apos;, &apos;GTS&apos;: &apos;gas to surface&apos;, &apos;OWWO&apos;: &apos;old well worked over&apos;, &apos;PL&apos;: &apos;proximity log&apos;, &apos;c&apos;: &apos;coarsely&apos;, &apos;GL&apos;: &apos;guard log&apos;, &apos;Dist&apos;: &apos;distillate&apos;, &apos;ls&apos;: &apos;limestone&apos;, &apos;grdg&apos;: &apos;grading&apos;, &apos;Clclt&apos;: &apos;calcilutite&apos;, &apos;lt&apos;: &apos;lighter&apos;, &apos;cmt&apos;: &apos;cemented&apos;, &apos;up&apos;: &apos;upper&apos;, &apos;slily&apos;: &apos;slightly&apos;, &apos;fenst&apos;: &apos;fenestral&apos;, &apos;Bioh&apos;: &apos;bioherm&apos;, &apos;brec&apos;: &apos;brecciated&apos;, &apos;gen&apos;: &apos;generally&apos;, &apos;Biot&apos;: &apos;biotite&apos;, &apos;sltst&apos;: &apos;siltstone&apos;, &apos;lg&apos;: &apos;long&apos;, &apos;Arag&apos;: &apos;aragonite&apos;, &apos;suc&apos;: &apos;sucrosic&apos;, &apos;Dol&apos;: &apos;dolomite&apos;, &apos;Girv&apos;: &apos;girvanella*&apos;, &apos;dtrl&apos;: &apos;detritalus&apos;, &apos;crm&apos;: &apos;cream&apos;, &apos;glos&apos;: &apos;glossy&apos;, &apos;Casph&apos;: &apos;calcisphaera*&apos;, &apos;wthrd&apos;: &apos;weathered&apos;, &apos;Mrl&apos;: &apos;marl&apos;, &apos;Oomol&apos;: &apos;oomold&apos;, &apos;Plag&apos;: &apos;plagioclase&apos;, &apos;Pybit&apos;: &apos;pyrobitumen&apos;, &apos;Fluor&apos;: &apos;fluoresceince&apos;, &apos;Iran&apos;: &apos;granule&apos;, &apos;Cub&apos;: &apos;cube&apos;, &apos;Bnd&apos;: &apos;band&apos;, &apos;G&amp;OCM&apos;: &apos;gas and oil cut mud&apos;, &apos;Mat&apos;: &apos;material&apos;, &apos;cht&apos;: &apos;chert&apos;, &apos;dess&apos;: &apos;dessiccation&apos;, &apos;w/&apos;: &apos;with&apos;, &apos;elong&apos;: &apos;elongate&apos;, &apos;embd&apos;: &apos;embedded&apos;, &apos;rsns&apos;: &apos;resinous&apos;, &apos;Glauc&apos;: &apos;glauconite&apos;, &apos;chlor&apos;: &apos;chlorite&apos;, &apos;stal&apos;: &apos;stalactitic&apos;, &apos;chk&apos;: &apos;chalky&apos;, &apos;depau&apos;: &apos;depauperate&apos;, &apos;Perm&apos;: &apos;permeability&apos;, &apos;cotg&apos;: &apos;coateding&apos;, &apos;BHT&apos;: &apos;bottom hole temperature&apos;, &apos;BHP&apos;: &apos;bottom hole pressure&apos;, &apos;Rhb&apos;: &apos;rhomb&apos;, &apos;v&apos;: &apos;very&apos;, &apos;altg&apos;: &apos;alternating&apos;, &apos;qtzc&apos;: &apos;quartzitic&apos;, &apos;mrly&apos;: &apos;marly&apos;, &apos;len&apos;: &apos;lentilcular&apos;, &apos;fr&apos;: &apos;fair&apos;, &apos;choc&apos;: &apos;chocolate&apos;, &apos;p.d&apos;: &apos;pressure deformation&apos;, &apos;f&apos;: &apos;finely&apos;, &apos;s &amp; p&apos;: &apos;salt and pepper&apos;, &apos;Foram&apos;: &apos;foraminifera&apos;, &apos;kao&apos;: &apos;kaolin&apos;, &apos;MCFG&apos;: &apos;thousand cubic feet of gas&apos;, &apos;wg&apos;: &apos;vuggy&apos;, &apos;wk&apos;: &apos;weak&apos;, &apos;bent&apos;: &apos;bentonitic&apos;, &apos;wi&apos;: &apos;with&apos;, &apos;hom&apos;: &apos;homogeneous&apos;, &apos;Fen&apos;: &apos;fenestra&apos;, &apos;brt&apos;: &apos;bright&apos;, &apos;brk&apos;: &apos;brackish&apos;, &apos;bri&apos;: &apos;bright&apos;, &apos;splty&apos;: &apos;splintery&apos;, &apos;cntrt&apos;: &apos;contorted&apos;, &apos;uncons.&apos;: &apos;unconsolidated&apos;, &apos;conspic&apos;: &apos;conspicuous&apos;, &apos;Tas&apos;: &apos;tasmanites*&apos;, &apos;brd&apos;: &apos;bored&apos;, &apos;Intvl&apos;: &apos;interval&apos;, &apos;Scaph&apos;: &apos;scaphopod&apos;, &apos;musc&apos;: &apos;muscovite&apos;, &apos;Crin&apos;: &apos;crinoidal&apos;, &apos;deb&apos;: &apos;debris&apos;, &apos;yel&apos;: &apos;yellow&apos;, &apos;exp&apos;: &apos;exposed&apos;, &apos;crpxln&apos;: &apos;crystocrystalline&apos;, &apos;Var&apos;: &apos;variation&apos;, &apos;WCM&apos;: &apos;water cut mud&apos;, &apos;Para&apos;: &apos;paraparchites*&apos;, &apos;ti&apos;: &apos;tight&apos;, &apos;Phos&apos;: &apos;phosphate&apos;, &apos;des&apos;: &apos;descript&apos;, &apos;aren&apos;: &apos;arenaceous&apos;, &apos;Vad&apos;: &apos;vadose&apos;, &apos;&amp;&apos;: &apos;and&apos;, &apos;biost&apos;: &apos;biostromal&apos;, &apos;Pelec&apos;: &apos;pelecypod&apos;, &apos;amm&apos;: &apos;ammonite&apos;, &apos;bld&apos;: &apos;bladed&apos;, &apos;magnt&apos;: &apos;magnetite&apos;, &apos;Bas&apos;: &apos;basalt&apos;, &apos;blk&apos;: &apos;black&apos;, &apos;Gns&apos;: &apos;gneiss&apos;, &apos;calc&apos;: &apos;calcitareous&apos;, &apos;Su&apos;: &apos;sulphur&apos;, &apos;Cl&apos;: &apos;clay&apos;, &apos;Phyl&apos;: &apos;phyllite&apos;, &apos;cche&apos;: &apos;caliche&apos;, &apos;sept&apos;: &apos;septate&apos;, &apos;dend&apos;: &apos;dendritic&apos;, &apos;mag&apos;: &apos;magnetic&apos;, &apos;zn&apos;: &apos;zone&apos;, &apos;calctc&apos;: &apos;calcitic&apos;, &apos;pkish&apos;: &apos;pinkish&apos;, &apos;FIt&apos;: &apos;fault&apos;, &apos;x-bd&apos;: &apos;cross-bedded&apos;, &apos;Novac&apos;: &apos;novaculite&apos;, &apos;Spr&apos;: &apos;spore&apos;, &apos;Gil&apos;: &apos;gilsonite&apos;, &apos;hetr&apos;: &apos;heterogeneous&apos;, &apos;DIL&apos;: &apos;dual induction laterolog&apos;, &apos;Poln&apos;: &apos;pollen&apos;, &apos;OWDD&apos;: &apos;oil well drilled deeper&apos;, &apos;CN&apos;: &apos;compensated neutron&apos;, &apos;Spg&apos;: &apos;sponge&apos;, &apos;intpt&apos;: &apos;interpretation&apos;, &apos;Spl&apos;: &apos;sampole&apos;, &apos;Oo&apos;: &apos;ooid&apos;, &apos;psool&apos;: &apos;pseudo oolitic&apos;, &apos;IAB&apos;: &apos;initial air blow&apos;, &apos;Spk&apos;: &apos;speck&apos;, &apos;bioturb&apos;: &apos;bioturbated&apos;, &apos;GOR&apos;: &apos;gas-to-oil ratio&apos;, &apos;Dia&apos;: &apos;diameter&apos;, &apos;intxln&apos;: &apos;intercrystalline&apos;, &apos;Shlt por&apos;: &apos;shelter porosity&apos;, &apos;WIP&apos;: &apos;weak initial puff&apos;, &apos;fol&apos;: &apos;foliated&apos;, &apos;lse&apos;: &apos;loose&apos;, &apos;chal&apos;: &apos;chalcedony&apos;, &apos;fos&apos;: &apos;fossiliferous&apos;, &apos;shy&apos;: &apos;shaly&apos;, &apos;mnut&apos;: &apos;minute&apos;, &apos;hi&apos;: &apos;high&apos;, &apos;Bent&apos;: &apos;bentonite&apos;, &apos;amb&apos;: &apos;amber&apos;, &apos;imbd&apos;: &apos;imbedded&apos;, &apos;Tham&apos;: &apos;thamnopora*&apos;, &apos;nac&apos;: &apos;nacerous&apos;, &apos;Zr&apos;: &apos;zircon&apos;, &apos;Ctgs&apos;: &apos;cuttings&apos;, &apos;Strk&apos;: &apos;streak&apos;, &apos;MMCFG&apos;: &apos;million cubic feet of gas&apos;, &apos;freq&apos;: &apos;frequent&apos;, &apos;t.b.&apos;: &apos;thin-bedded&apos;, &apos;rexlzd&apos;: &apos;recrystallized&apos;, &apos;Clvg&apos;: &apos;cleavage&apos;, &apos;Pst&apos;: &apos;pumice-stone&apos;, &apos;perf&apos;: &apos;perforated&apos;, &apos;Gran&apos;: &apos;granule&apos;, &apos;fnly&apos;: &apos;finly&apos;, &apos;perm&apos;: &apos;permeability&apos;, &apos;DL&apos;: &apos;density log&apos;, &apos;pbl&apos;: &apos;pebble (4-64 mm)&apos;, &apos;Zn&apos;: &apos;zone&apos;, &apos;SIP&apos;: &apos;shut in pressure&apos;, &apos;slky&apos;: &apos;silky&apos;, &apos;clr&apos;: &apos;clear&apos;, &apos;wthd&apos;: &apos;weathered&apos;, &apos;tr&apos;: &apos;trace&apos;, &apos;cly&apos;: &apos;clayey&apos;, &apos;microxln&apos;: &apos;microcrystalline&apos;, &apos;sim&apos;: &apos;similar&apos;, &apos;tt&apos;: &apos;tightly&apos;, &apos;stmg&apos;: &apos;streaming&apos;, &apos;Inoc&apos;: &apos;inoceramus*&apos;, &apos;tn&apos;: &apos;tan&apos;, &apos;Shw&apos;: &apos;show&apos;, &apos;vrvd&apos;: &apos;varved&apos;, &apos;Chara&apos;: &apos;charophytes&apos;, &apos;sphal&apos;: &apos;sphalerite&apos;, &apos;cln&apos;: &apos;clean&apos;, &apos;Bubl&apos;: &apos;bubble&apos;, &apos;Kao&apos;: &apos;kaolin&apos;, &apos;pisol&apos;: &apos;pisolitic&apos;, &apos;Biost&apos;: &apos;biostrom&apos;, &apos;org&apos;: &apos;organic&apos;, &apos;lav&apos;: &apos;lavender&apos;, &apos;Bot&apos;: &apos;botryoid&apos;, &apos;Scol&apos;: &apos;scolecodonts&apos;, &apos;Bor&apos;: &apos;bored&apos;, &apos;cp&apos;: &apos;compare&apos;, &apos;l&apos;: &apos;lower&apos;, &apos;lac&apos;: &apos;lacustrine&apos;, &apos;ck&apos;: &apos;choke&apos;, &apos;asph&apos;: &apos;asphaltic&apos;, &apos;Ctc&apos;: &apos;contact&apos;, &apos;lam&apos;: &apos;laminated&apos;, &apos;wvy&apos;: &apos;wavy&apos;, &apos;Fvst&apos;: &apos;favosites*&apos;, &apos;OWPB&apos;: &apos;oil well plugged back&apos;, &apos;Intst&apos;: &apos;intersticies&apos;, &apos;grnt&apos;: &apos;granite&apos;, &apos;SOCM&apos;: &apos;slight oil cut mud&apos;, &apos;rdsh&apos;: &apos;redish&apos;, &apos;plag&apos;: &apos;plagioclase&apos;, &apos;rd&apos;: &apos;rounded&apos;, &apos;Lyr&apos;: &apos;layer&apos;, &apos;Orth&apos;: &apos;orthoclase&apos;, &apos;Exv&apos;: &apos;extrusive rock&apos;, &apos;intercal&apos;: &apos;intercalated&apos;, &apos;skel&apos;: &apos;skeletal&apos;, &apos;mass&apos;: &apos;massive&apos;, &apos;Euryamph&apos;: &apos;euryamphipora*&apos;, &apos;Syring&apos;: &apos;syringopora*&apos;, &apos;Fus&apos;: &apos;fusulinid&apos;, &apos;pris&apos;: &apos;prismatic&apos;, &apos;piso&apos;: &apos;pisolitic&apos;, &apos;Microstyl&apos;: &apos;microstylolite&apos;, &apos;plas&apos;: &apos;plastic&apos;, &apos;grnl&apos;: &apos;granule (2-4 mm)&apos;, &apos;Sil&apos;: &apos;silica&apos;, &apos;intbd&apos;: &apos;interbedded&apos;, &apos;marn&apos;: &apos;marine&apos;, &apos;rhmb&apos;: &apos;rhombic&apos;, &apos;Tr&apos;: &apos;trace&apos;, &apos;biocl&apos;: &apos;bioclastic&apos;, &apos;mrlst&apos;: &apos;marlstone&apos;, &apos;fac&apos;: &apos;faceted&apos;, &apos;cb&apos;: &apos;carbonized&apos;, &apos;vit&apos;: &apos;vitreous&apos;, &apos;brhg&apos;: &apos;branching&apos;, &apos;vis&apos;: &apos;visible&apos;, &apos;thru&apos;: &apos;throughout&apos;, &apos;crbnt&apos;: &apos;carbonate&apos;, &apos;fau&apos;: &apos;fauna&apos;, &apos;Tf&apos;: &apos;tuffaceous&apos;, &apos;mdy&apos;: &apos;muddy&apos;, &apos;Qtz&apos;: &apos;quartz&apos;, &apos;(D)&apos;: &apos;development&apos;, &apos;bulb&apos;: &apos;bulbous&apos;, &apos;fros&apos;: &apos;frosted&apos;, &apos;mnrl&apos;: &apos;mineralized&apos;, &apos;W&apos;: &apos;west&apos;, &apos;sm&apos;: &apos;smooth&apos;, &apos;ang&apos;: &apos;angular&apos;, &apos;Asph&apos;: &apos;assemblage&apos;, &apos;anhy&apos;: &apos;anhydritic&apos;, &apos;rexl&apos;: &apos;recrystallization&apos;, &apos;incl&apos;: &apos;inclusion&apos;, &apos;Qtzt&apos;: &apos;quartzite&apos;, &apos;Str&apos;: &apos;structure&apos;, &apos;cpct&apos;: &apos;compact&apos;, &apos;ig&apos;: &apos;igneous&apos;, &apos;ferr&apos;: &apos;ferruginous&apos;, &apos;o&apos;: &apos;oil&apos;, &apos;Fm&apos;: &apos;formation&apos;, &apos;tuf&apos;: &apos;tuffaceous&apos;, &apos;Ivan&apos;: &apos;ivanovia*&apos;, &apos;drlg&apos;: &apos;drilling&apos;, &apos;tub&apos;: &apos;tubular&apos;, &apos;Cmt&apos;: &apos;cement&apos;, &apos;Fe&apos;: &apos;iron-ferruginous&apos;, &apos;w&apos;: &apos;well&apos;, &apos;undly&apos;: &apos;underlying&apos;, &apos;flor&apos;: &apos;fluorescence&apos;, &apos;grd&apos;: &apos;graded&apos;, &apos;drlr&apos;: &apos;driller&apos;, &apos;prim&apos;: &apos;primary&apos;, &apos;cbl&apos;: &apos;cobble (64-256 mm)&apos;, &apos;gry&apos;: &apos;greyish&apos;, &apos;Glas&apos;: &apos;glass&apos;, &apos;bot&apos;: &apos;botryoidal&apos;, &apos;Ft&apos;: &apos;foot&apos;, &apos;frmwk&apos;: &apos;framework&apos;, &apos;Fp&apos;: &apos;flowing pressure&apos;, &apos;res&apos;: &apos;residuual&apos;, &apos;rep&apos;: &apos;replacedment&apos;, &apos;sed&apos;: &apos;sedimentary&apos;, &apos;peld&apos;: &apos;pelletoidal&apos;, &apos;slb&apos;: &apos;slabby&apos;, &apos;Splin&apos;: &apos;splintery&apos;, &apos;MCW&apos;: &apos;mud cut water&apos;, &apos;clas&apos;: &apos;clastic&apos;, &apos;sli&apos;: &apos;slightly&apos;, &apos;sln&apos;: &apos;solution&apos;, &apos;sblit&apos;: &apos;sublithic&apos;, &apos;F.Q.G.&apos;: &apos;frosted quartz  grains&apos;, &apos;Ech&apos;: &apos;echinoid&apos;, &apos;sy-Ca&apos;: &apos;sparry calcite&apos;, &apos;cntr&apos;: &apos;centered&apos;, &apos;MCO&apos;: &apos;mud cut oil&apos;, &apos;Pbl&apos;: &apos;pebble&apos;, &apos;metaph&apos;: &apos;metamorphosed&apos;, &apos;O str&apos;: &apos;Ostracod&apos;, &apos;clus&apos;: &apos;cluster&apos;, &apos;O-Qtz&apos;: &apos;orthoquartzite&apos;, &apos;micr&apos;: &apos;micritic&apos;, &apos;loc&apos;: &apos;location&apos;, &apos;Meta&apos;: &apos;metamorphic rock&apos;, &apos;bdeye&apos;: &apos;birdseye&apos;, &apos;u&apos;: &apos;upper&apos;, &apos;Mdst&apos;: &apos;mudstone&apos;, &apos;indst&apos;: &apos;indistinct&apos;, &apos;wtr&apos;: &apos;water&apos;, &apos;Amph&apos;: &apos;amphipora*&apos;, &apos;rbl&apos;: &apos;rubblbly&apos;, &apos;carb&apos;: &apos;carbonaceous&apos;, &apos;n.s.&apos;: &apos;no sample&apos;, &apos;Aglm&apos;: &apos;agglomerate&apos;, &apos;amor&apos;: &apos;amorphous&apos;, &apos;fld&apos;: &apos;feldsparthic&apos;, &apos;flg&apos;: &apos;flaggy&apos;, &apos;lent&apos;: &apos;lenticular&apos;, &apos;pl&apos;: &apos;plant&apos;, &apos;gyp&apos;: &apos;gypsumiferous&apos;, &apos;Brac&apos;: &apos;brachiopod&apos;, &apos;Circ&apos;: &apos;circulate&apos;, &apos;flk&apos;: &apos;flake&apos;, &apos;gns&apos;: &apos;gneiss&apos;, &apos;flt&apos;: &apos;faulted&apos;, &apos;pt&apos;: &apos;partly&apos;, &apos;ps&apos;: &apos;pseudo-&apos;, &apos;fls&apos;: &apos;flesh&apos;, &apos;pyrbit&apos;: &apos;pyrobitumen&apos;, &apos;Solen&apos;: &apos;solenopora*&apos;, &apos;Hem&apos;: &apos;hematite&apos;, &apos;sks&apos;: &apos;slickensided&apos;, &apos;hem&apos;: &apos;hematitic&apos;, &apos;DST&apos;: &apos;drill stem test&apos;, &apos;Gab&apos;: &apos;gabbro&apos;, &apos;SOCW&apos;: &apos;slight oil cut water&apos;, &apos;intgwn&apos;: &apos;intergrown&apos;, &apos;Col&apos;: &apos;color&apos;, &apos;LSD&apos;: &apos;legal subdivision&apos;, &apos;hex&apos;: &apos;hexagonal&apos;, &apos;irr&apos;: &apos;irregular&apos;, &apos;Belm&apos;: &apos;belemnites*&apos;, &apos;sbang&apos;: &apos;subangular&apos;, &apos;pch&apos;: &apos;patchy&apos;, &apos;PD&apos;: &apos;per day&apos;, &apos;PB&apos;: &apos;plugged back&apos;, &apos;lim&apos;: &apos;itic&apos;, &apos;Deb&apos;: &apos;debris&apos;, &apos;num&apos;: &apos;numerous&apos;, &apos;conch&apos;: &apos;conchoidal&apos;, &apos;srt&apos;: &apos;sorting&apos;, &apos;lmy&apos;: &apos;limy&apos;, &apos;PH&apos;: &apos;per hour&apos;, &apos;fuc&apos;: &apos;fucoidal&apos;, &apos;sacc&apos;: &apos;saccharoidal&apos;, &apos;Biosp&apos;: &apos;biosparite&apos;, &apos;incr&apos;: &apos;increasing&apos;, &apos;plty&apos;: &apos;platy&apos;, &apos;lmn&apos;: &apos;limonitic&apos;, &apos;OSR&apos;: &apos;oil source rock&apos;, &apos;Unconf&apos;: &apos;unconformity&apos;, &apos;assoc&apos;: &apos;associated&apos;, &apos;I.P.&apos;: &apos;in part&apos;, &apos;Pyr&apos;: &apos;pyrite&apos;, &apos;HO&apos;: &apos;heavy oil&apos;, &apos;₵&apos;: &apos;core&apos;, &apos;IES&apos;: &apos;induction electric&apos;, &apos;sug&apos;: &apos;sugary&apos;, &apos;Typ&apos;: &apos;type&apos;, &apos;Pt&apos;: &apos;part&apos;, &apos;orth&apos;: &apos;orthoclase&apos;, &apos;SSO&apos;: &apos;slight show of oil&apos;, &apos;Gal&apos;: &apos;galeolaria*&apos;, &apos;intfrag&apos;: &apos;interfragmental&apos;, &apos;Tp&apos;: &apos;top&apos;, &apos;Sid&apos;: &apos;siderite&apos;, &apos;strk&apos;: &apos;streaked&apos;, &apos;Spo&apos;: &apos;spore&apos;, &apos;stri&apos;: &apos;striated&apos;, &apos;Pend&apos;: &apos;pendularous&apos;, &apos;strg&apos;: &apos;stringer&apos;, &apos;irid&apos;: &apos;iridescent&apos;, &apos;(W)&apos;: &apos;wildcat&apos;, &apos;FAB&apos;: &apos;fair air blow&apos;, &apos;gran&apos;: &apos;granular&apos;, &apos;Intclas&apos;: &apos;intraclast&apos;, &apos;Pent&apos;: &apos;pentamerus*&apos;, &apos;grad&apos;: &apos;grading&apos;, &apos;strat&apos;: &apos;strataified&apos;, &apos;SAB&apos;: &apos;strong air blow&apos;, &apos;Shl&apos;: &apos;shell&apos;, &apos;Lstr&apos;: &apos;lustre&apos;, &apos;brit&apos;: &apos;brittle&apos;, &apos;ark&apos;: &apos;arkosic&apos;, &apos;dd&apos;: &apos;dead&apos;, &apos;bur&apos;: &apos;burrowed&apos;, &apos;shad&apos;: &apos;shadow&apos;, &apos;arg&apos;: &apos;argillaceous&apos;, &apos;mky&apos;: &apos;milky&apos;, &apos;grapst&apos;: &apos;grapestone&apos;, &apos;Mol&apos;: &apos;mollusca&apos;, &apos;bdd&apos;: &apos;bedded&apos;, &apos;bdg&apos;: &apos;bedding&apos;, &apos;Hyde&apos;: &apos;hydrocarbon&apos;, &apos;Cav&apos;: &apos;cavernous&apos;, &apos;rnd&apos;: &apos;rounded&apos;, &apos;swbd&apos;: &apos;swabbed&apos;, &apos;cvg&apos;: &apos;cavings&apos;, &apos;crnk&apos;: &apos;crinkled&apos;, &apos;sch&apos;: &apos;schist&apos;, &apos;ss&apos;: &apos;sandstone&apos;, &apos;T.D.&apos;: &apos;total depth&apos;, &apos;BHFP&apos;: &apos;bottom hole flow pressure&apos;, &apos;dkr&apos;: &apos;darker&apos;, &apos;Cal&apos;: &apos;caliper&apos;, &apos;Bd&apos;: &apos;bed&apos;, &apos;Ltl&apos;: &apos;little&apos;, &apos;styl&apos;: &apos;stylotitic&apos;, &apos;Spher&apos;: &apos;spherule&apos;, &apos;ool&apos;: &apos;oolitic&apos;, &apos;GCW&apos;: &apos;gas cut water&apos;, &apos;GIP&apos;: &apos;good initial puff&apos;, &apos;Rem&apos;: &apos;remains&apos;, &apos;onc&apos;: &apos;oncolites&apos;, &apos;Cht&apos;: &apos;chert&apos;, &apos;mar&apos;: &apos;maroon&apos;, &apos;Surf&apos;: &apos;surface&apos;, &apos;Sst&apos;: &apos;sandstone&apos;, &apos;BW&apos;: &apos;barrels of water&apos;, &apos;clyst&apos;: &apos;claystone&apos;, &apos;Anhy&apos;: &apos;anhydrite&apos;, &apos;Chk&apos;: &apos;chalk&apos;, &apos;GCM&apos;: &apos;gas cut mud&apos;, &apos;Bur&apos;: &apos;burrow&apos;, &apos;Bm&apos;: &apos;basement&apos;, &apos;Stn&apos;: &apos;stain&apos;, &apos;Lat&apos;: &apos;laterite&apos;, &apos;volat&apos;: &apos;volatile&apos;, &apos;sol&apos;: &apos;solitary&apos;, &apos;Ooc&apos;: &apos;oolicast&apos;, &apos;Chit&apos;: &apos;chitinous&apos;, &apos;intr&apos;: &apos;intrusionive&apos;, &apos;Micropor&apos;: &apos;micropore&apos;, &apos;Styl&apos;: &apos;stylolite&apos;, &apos;tstg&apos;: &apos;testing&apos;, &apos;@&apos;: &apos;at&apos;, &apos;Pch&apos;: &apos;patch&apos;, &apos;vcol&apos;: &apos;varicolored&apos;, &apos;chky&apos;: &apos;chalky&apos;, &apos;cncn&apos;: &apos;concentric&apos;, &apos;prphy&apos;: &apos;porphyry&apos;, &apos;Ptg&apos;: &apos;parting&apos;, &apos;Prod&apos;: &apos;production&apos;, &apos;RT&apos;: &apos;rotary table&apos;, &apos;p&apos;: &apos;poorly&apos;, &apos;intxl&apos;: &apos;intercrystalline&apos;, &apos;lig&apos;: &apos;lignitic&apos;, &apos;consol&apos;: &apos;consolidated&apos;, &apos;grnt.w&apos;: &apos;granite wash&apos;, &apos;gept&apos;: &apos;geopetal&apos;, &apos;lit&apos;: &apos;lithic&apos;, &apos;uni&apos;: &apos;uniform&apos;, &apos;Slst&apos;: &apos;siltstone&apos;, &apos;eux&apos;: &apos;euxinic&apos;, &apos;cov&apos;: &apos;covered&apos;, &apos;coq&apos;: &apos;coquina&apos;, &apos;KB&apos;: &apos;kelly bushing&apos;, &apos;rhb&apos;: &apos;rhombic&apos;, &apos;Plcy&apos;: &apos;palecypod&apos;, &apos;Fac&apos;: &apos;facet&apos;, &apos;Ool&apos;: &apos;oolite&apos;, &apos;Stri&apos;: &apos;striae&apos;, &apos;Invtb&apos;: &apos;invertebrate&apos;, &apos;qtzt&apos;: &apos;quartzite&apos;, &apos;com&apos;: &apos;common&apos;, &apos;col&apos;: &apos;colored&apos;, &apos;orsh&apos;: &apos;orangish&apos;, &apos;Fau&apos;: &apos;fauna&apos;, &apos;ahd&apos;: &apos;anhedral&apos;, &apos;Vn&apos;: &apos;vein&apos;, &apos;intst&apos;: &apos;intersticitial&apos;, &apos;crpxl&apos;: &apos;cryptocrystalline&apos;, &apos;Bld&apos;: &apos;boulder&apos;, &apos;olvn&apos;: &apos;olivine&apos;, &apos;lmpy&apos;: &apos;lumpy&apos;, &apos;tab&apos;: &apos;tabular&apos;, &apos;Tex&apos;: &apos;texture&apos;, &apos;bu&apos;: &apos;buff&apos;, &apos;intgn&apos;: &apos;inter grown&apos;, &apos;uncons&apos;: &apos;unconsolidated&apos;, &apos;tgh&apos;: &apos;tough&apos;, &apos;bl&apos;: &apos;bluish&apos;, &apos;qtzs&apos;: &apos;quartzose&apos;, &apos;bo&apos;: &apos;bophaceous&apos;, &apos;Rud&apos;: &apos;rudist&apos;, &apos;Microfos&apos;: &apos;microfossilferous&apos;, &apos;hd&apos;: &apos;hard&apos;, &apos;bf&apos;: &apos;buff&apos;, &apos;vi&apos;: &apos;violet&apos;, &apos;ves&apos;: &apos;vesicular&apos;, &apos;ea&apos;: &apos;earthy&apos;, &apos;sbrndd&apos;: &apos;sub rounded&apos;, &apos;csg&apos;: &apos;casing&apos;, &apos;extr&apos;: &apos;extremely&apos;, &apos;Cbl&apos;: &apos;cobble&apos;, &apos;blky&apos;: &apos;blocky&apos;, &apos;ptch&apos;: &apos;patches&apos;, &apos;Sel&apos;: &apos;selenite&apos;, &apos;Psool&apos;: &apos;pseudo oolite&apos;, &apos;psi&apos;: &apos;pounds per square inch&apos;, &apos;Grv&apos;: &apos;gravel&apos;, &apos;G&apos;: &apos;gas&apos;, &apos;Grt&apos;: &apos;granite&apos;, &apos;Chtz&apos;: &apos;chitinozoa&apos;, &apos;BOPH&apos;: &apos;barrels of oil per hour&apos;, &apos;dns&apos;: &apos;denser&apos;, &apos;hvy&apos;: &apos;heavy&apos;, &apos;och&apos;: &apos;ochre&apos;, &apos;Wd&apos;: &apos;wood&apos;, &apos;Foss&apos;: &apos;fossiliferous&apos;, &apos;BOPD&apos;: &apos;barrels of oil per day&apos;, &apos;occ&apos;: &apos;occasional&apos;, &apos;Wl&apos;: &apos;well&apos;, &apos;Micr&apos;: &apos;micrite&apos;, &apos;Slt&apos;: &apos;silt&apos;, &apos;k&apos;: &apos;permeabilityable&apos;, &apos;Slick slick&apos;: &apos;slickenside&apos;, &apos;Gwke&apos;: &apos;graywacke&apos;, &apos;repl&apos;: &apos;replacement&apos;, &apos;Exclas&apos;: &apos;extraclast&apos;, &apos;Mbr&apos;: &apos;member&apos;, &apos;wh&apos;: &apos;white&apos;, &apos;Onc&apos;: &apos;oncolite&apos;, &apos;Sphaer&apos;: &apos;sphaerocodium*&apos;, &apos;Pkst&apos;: &apos;packstone&apos;, &apos;BO&apos;: &apos;barrels of oil&apos;, &apos;bit&apos;: &apos;bitumeninous&apos;, &apos;dissem&apos;: &apos;disseminated&apos;, &apos;scat&apos;: &apos;scattered&apos;, &apos;Smwt&apos;: &apos;somewhat&apos;, &apos;authg&apos;: &apos;authigenic&apos;, &apos;amt&apos;: &apos;amount&apos;, &apos;ES&apos;: &apos;electric&apos;, &apos;Strat&apos;: &apos;strata&apos;, &apos;Mbl&apos;: &apos;marble&apos;, &apos;BWPD&apos;: &apos;barrels of water per day&apos;, &apos;sdy&apos;: &apos;sandy&apos;, &apos;coln&apos;: &apos;colonial&apos;, &apos;Ceph&apos;: &apos;cephalopod&apos;, &apos;resd&apos;: &apos;residual&apos;, &apos;MLL&apos;: &apos;microlaterolog&apos;, &apos;glau&apos;: &apos;glauconitic&apos;, &apos;gty&apos;: &apos;gravity&apos;, &apos;BWPH&apos;: &apos;barrels of water per hour&apos;, &apos;frac&apos;: &apos;fractured&apos;, &apos;dolst&apos;: &apos;dolostone&apos;, &apos;frag&apos;: &apos;fragmental&apos;, &apos;xlam&apos;: &apos;cross-laminated&apos;, &apos;intpar&apos;: &apos;interparticle&apos;, &apos;glas&apos;: &apos;glassy&apos;, &apos;Av&apos;: &apos;average&apos;, &apos;Imp&apos;: &apos;impression&apos;, &apos;gnsh&apos;: &apos;greenish&apos;, &apos;Phlog&apos;: &apos;phloaopite&apos;, &apos;FTAB&apos;: &apos;faint air blow&apos;, &apos;oomol&apos;: &apos;oomoldic&apos;, &apos;Pisol&apos;: &apos;pisolite&apos;, &apos;N&apos;: &apos;Neutron&apos;, &apos;fl/&apos;: &apos;flowing&apos;, &apos;S.W.C.&apos;: &apos;sidewall core&apos;, &apos;Het&apos;: &apos;Heterostegina&apos;, &apos;gr&apos;: &apos;grained&apos;, &apos;gywk&apos;: &apos;graywacke&apos;, &apos;mas&apos;: &apos;massive&apos;, &apos;gt&apos;: &apos;gritty&apos;, &apos;struc&apos;: &apos;structure&apos;, &apos;gy&apos;: &apos;gray&apos;, &apos;max&apos;: &apos;maximum&apos;, &apos;Fe-mag&apos;: &apos;ferro-magnesian&apos;, &apos;Fuc&apos;: &apos;fucoid&apos;, &apos;ga&apos;: &apos;gauged&apos;, &apos;n&apos;: &apos;no, none, non&apos;, &apos;Agg&apos;: &apos;aggregate&apos;, &apos;coqid&apos;: &apos;coquinaoid&apos;, &apos;gd&apos;: &apos;good&apos;, &apos;decr&apos;: &apos;decreasing&apos;, &apos;Equiv&apos;: &apos;equivalent&apos;, &apos;pkr&apos;: &apos;packer&apos;, &apos;gn&apos;: &apos;green&apos;, &apos;gl&apos;: &apos;glassy&apos;, &apos;Xl&apos;: &apos;crystal&apos;, &apos;r.f.p&apos;: &apos;rounded frosted pitted&apos;, &apos;meta&apos;: &apos;metamorphic&apos;, &apos;Pol&apos;: &apos;polish&apos;, &apos;sel&apos;: &apos;selenite&apos;, &apos;crpld&apos;: &apos;crumpled&apos;, &apos;sec&apos;: &apos;secondary&apos;, &apos;intlam&apos;: &apos;interlaminated&apos;, &apos;cotd gn&apos;: &apos;coated grains&apos;, &apos;Frac&apos;: &apos;fracture&apos;, &apos;bldr&apos;: &apos;boulder&apos;, &apos;Frag&apos;: &apos;fragment&apos;, &apos;g&apos;: &apos;good&apos;, &apos;foram&apos;: &apos;foraminiferal&apos;, &apos;x-lam&apos;: &apos;cross-laminated&apos;, &apos;intgran&apos;: &apos;intergranular&apos;, &apos;Diagn&apos;: &apos;diagenesis&apos;, &apos;phen&apos;: &apos;phenocrysts&apos;, &apos;varic&apos;: &apos;varicolored&apos;, &apos;conc&apos;: &apos;concretionary&apos;, &apos;spec&apos;: &apos;speckled&apos;, &apos;Brach&apos;: &apos;brachiopod&apos;, &apos;G.W.&apos;: &apos;granite wash&apos;, &apos;n/s&apos;: &apos;no show&apos;, &apos;Pap&apos;: &apos;paper&apos;, &apos;Par&apos;: &apos;particle&apos;, &apos;cons&apos;: &apos;considerable&apos;, &apos;SO&apos;: &apos;show of oil&apos;, &apos;Vug&apos;: &apos;vug&apos;, &apos;pyr&apos;: &apos;pyritized&apos;, &apos;Ark&apos;: &apos;arkose&apos;, &apos;diagn&apos;: &apos;diagenesisetic&apos;, &apos;exv&apos;: &apos;extrusive&apos;, &apos;frs&apos;: &apos;fresh&apos;, &apos;surf&apos;: &apos;surface&apos;, &apos;sqz&apos;: &apos;squeezed&apos;, &apos;typ&apos;: &apos;typical&apos;, &apos;mot&apos;: &apos;mottled&apos;, &apos;venn&apos;: &apos;vermillon&apos;, &apos;SW&apos;: &apos;salt water&apos;, &apos;O&amp;G&apos;: &apos;oil and gas&apos;, &apos;trnsp&apos;: &apos;transparent&apos;, &apos;Bdg&apos;: &apos;bedding&apos;, &apos;SP&apos;: &apos;spontaneous potential&apos;, &apos;yelsh&apos;: &apos;ish&apos;, &apos;Sl&apos;: &apos;slate&apos;, &apos;brak&apos;: &apos;brackish&apos;, &apos;Cvg&apos;: &apos;caving&apos;, &apos;Grst&apos;: &apos;grainstone&apos;, &apos;Sh&apos;: &apos;shale&apos;, &apos;LL8&apos;: &apos;laterolog-8&apos;, &apos;Mtrx&apos;: &apos;matrix&apos;, &apos;Sd&apos;: &apos;sand&apos;, &apos;nod&apos;: &apos;nodule&apos;, &apos;circ&apos;: &apos;circulation&apos;, &apos;Sa&apos;: &apos;salt&apos;, &apos;Lam&apos;: &apos;laminations&apos;, &apos;wxy&apos;: &apos;waxy&apos;, &apos;unident&apos;: &apos;unidentifiable&apos;, &apos;Jt&apos;: &apos;joint&apos;, &apos;ab&apos;: &apos;above&apos;, &apos;acic&apos;: &apos;acicular&apos;, &apos;E&apos;: &apos;east&apos;, &apos;lithgr&apos;: &apos;lithographic&apos;, &apos;p-p&apos;: &apos;pin point&apos;, &apos;est&apos;: &apos;estimated&apos;, &apos;p.p.&apos;: &apos;pin-poin&apos;, &apos;prob&apos;: &apos;probably&apos;, &apos;wtr cush&apos;: &apos;water cushion&apos;, &apos;Cgl&apos;: &apos;conglomerate&apos;, &apos;Anthr&apos;: &apos;anthracite&apos;, &apos;Ost&apos;: &apos;ostracod&apos;, &apos;porcel&apos;: &apos;porcelaneous&apos;, &apos;Stromlt&apos;: &apos;stromatolite&apos;, &apos;msm&apos;: &apos;metasomatic&apos;, &apos;Fe-st&apos;: &apos;ironstone&apos;, &apos;orng&apos;: &apos;orange&apos;, &apos;intstl&apos;: &apos;interstitial&apos;, &apos;Schm&apos;: &apos;schist&apos;, &apos;cgl&apos;: &apos;conglomerate&apos;, &apos;Cyp&apos;: &apos;cypridopsis*&apos;, &apos;xl&apos;: &apos;crystalline&apos;, &apos;Glob&apos;: &apos;globigerina*&apos;, &apos;Clcar&apos;: &apos;calcarenite&apos;, &apos;w/o&apos;: &apos;without w/o&apos;, &apos;gsy&apos;: &apos;grasy&apos;, &apos;Flo&apos;: &apos;flora&apos;, &apos;rthy&apos;: &apos;earthy&apos;, &apos;Milid&apos;: &apos;miliolid&apos;, &apos;lge&apos;: &apos;large&apos;, &apos;Flk&apos;: &apos;flake&apos;, &apos;Db&apos;: &apos;diabase&apos;, &apos;eqnt&apos;: &apos;equant&apos;, &apos;hrtl&apos;: &apos;horizontal&apos;, &apos;strgr&apos;: &apos;stringer&apos;, &apos;Incl&apos;: &apos;inclusion&apos;, &apos;slt&apos;: &apos;silt&apos;, &apos;pit&apos;: &apos;pitted&apos;, &apos;vgt&apos;: &apos;varigated&apos;, &apos;SGCM&apos;: &apos;slight gas cut mud&apos;, &apos;trnsl&apos;: &apos;translucent&apos;, &apos;DI&apos;: &apos;dual induction log&apos;, &apos;Lim&apos;: &apos;limonite&apos;, &apos;cotd&apos;: &apos;coateding&apos;, &apos;D &amp; A&apos;: &apos;dry and abandoned&apos;, &apos;DF&apos;: &apos;derrick floor&apos;, &apos;Lig&apos;: &apos;lignite&apos;, &apos;mott&apos;: &apos;mottled&apos;, &apos;Lith&apos;: &apos;lithology&apos;, &apos;Mag&apos;: &apos;magnetite&apos;, &apos;blksh&apos;: &apos;blackish&apos;, &apos;phos&apos;: &apos;phosphatic&apos;, &apos;cub&apos;: &apos;cubic&apos;, &apos;bnd&apos;: &apos;banded&apos;, &apos;Coq&apos;: &apos;coquina&apos;, &apos;recem&apos;: &apos;recemented&apos;, &apos;alt&apos;: &apos;altering&apos;, &apos;Cor&apos;: &apos;coral&apos;, &apos;BHCS&apos;: &apos;bore hole compensated sonic&apos;, &apos;spkld&apos;: &apos;speckled&apos;, &apos;Bdst&apos;: &apos;boundstone&apos;, &apos;Char&apos;: &apos;charophyte&apos;, &apos;pol&apos;: &apos;polished&apos;, &apos;crs&apos;: &apos;coarse&apos;, &apos;Brec&apos;: &apos;breccia&apos;, &apos;pos&apos;: &apos;possibility&apos;, &apos;Chal&apos;: &apos;chalcedony&apos;, &apos;alg&apos;: &apos;algal&apos;, &quot;&apos;&apos; or do&quot;: &apos;ditto&apos;, &apos;Gast&apos;: &apos;gastropod&apos;, &apos;Glos&apos;: &apos;gloss&apos;, &apos;lstr&apos;: &apos;lustre&apos;, &apos;mica&apos;: &apos;micaeous&apos;, &apos;sl&apos;: &apos;slightly&apos;, &apos;grysh&apos;: &apos;greyish&apos;, &apos;comp&apos;: &apos;completion&apos;, &apos;sh&apos;: &apos;shale&apos;, &apos;sd&apos;: &apos;sand (1/16-2 mm)&apos;, &apos;sc&apos;: &apos;scales&apos;, &apos;sb&apos;: &apos;sub&apos;, &apos;sa&apos;: &apos;salt&apos;, &apos;Plt&apos;: &apos;plant&apos;, &apos;S.W.&apos;: &apos;salt water&apos;, &apos;Orbit&apos;: &apos;Orbitolina&apos;, &apos;fspr&apos;: &apos;feldsparathic&apos;, &apos;jt&apos;: &apos;jointing&apos;, &apos;sz&apos;: &apos;size&apos;, &apos;su&apos;: &apos;sulphurous&apos;, &apos;spsly&apos;: &apos;sparsly&apos;, &apos;sp&apos;: &apos;spotty&apos;, &apos;ovgth&apos;: &apos;overgrowth&apos;, &apos;hydc&apos;: &apos;hydrocarbon&apos;, &apos;drsy&apos;: &apos;drusy&apos;, &apos;Pel&apos;: &apos;pellet&apos;, &apos;OFM&apos;: &apos;oil flecked mud&apos;, &apos;Pet&apos;: &apos;petroleum&apos;, &apos;crinal&apos;: &apos;crinoidal&apos;, &apos;vps&apos;: &apos;very poor samples&apos;, &apos;stromlt&apos;: &apos;stromatolite&apos;, &apos;phyl&apos;: &apos;phyllitic&apos;, &apos;V.P.S.&apos;: &apos;very poor sample V.P.S.&apos;, &apos;ter&apos;: &apos;terriginous&apos;, &apos;intv&apos;: &apos;interval&apos;, &apos;Endo&apos;: &apos;endothyra*&apos;, &apos;tex&apos;: &apos;texture&apos;, &apos;argl&apos;: &apos;argillate&apos;, &apos;vn&apos;: &apos;vein&apos;, &apos;md&apos;: &apos;muddy&apos;, &apos;vrtb&apos;: &apos;vertebrate&apos;, &apos;vrtl&apos;: &apos;vertical&apos;, &apos;rug&apos;: &apos;rugosa&apos;, &apos;Strom&apos;: &apos;stromatoporoid&apos;, &apos;x&apos;: &apos;cross&apos;, &apos;insl&apos;: &apos;insoluble&apos;, &apos;Chaet&apos;: &apos;chaetetes*&apos;, &apos;Tril&apos;: &apos;trilobite&apos;, &apos;Bit&apos;: &apos;bitumen&apos;, &apos;spic&apos;: &apos;spicular&apos;, &apos;Trip&apos;: &apos;tripoli&apos;, &apos;tns&apos;: &apos;tension&apos;, &apos;fltg&apos;: &apos;floating&apos;, &apos;evap&apos;: &apos;evapourititic&apos;, &apos;micropor&apos;: &apos;microporosity&apos;, &apos;slty&apos;: &apos;silty&apos;, &apos;ind&apos;: &apos;indurated&apos;, &apos;Sedm&apos;: &apos;sediment&apos;, &apos;OTD&apos;: &apos;old total depth&apos;, &apos;dk&apos;: &apos;darker&apos;, &apos;Cono&apos;: &apos;conodont&apos;, &apos;mos&apos;: &apos;mosaic&apos;, &apos;euhd&apos;: &apos;euhedral&apos;, &apos;exclas&apos;: &apos;extraclastic&apos;, &apos;sptd&apos;: &apos;spottedy&apos;, &apos;crd&apos;: &apos;cored&apos;, &apos;corln&apos;: &apos;coralline&apos;, &apos;Bdeye&apos;: &apos;birdseye&apos;, &apos;ooc&apos;: &apos;oocastic&apos;, &apos;Pyrxn&apos;: &apos;pyroxene&apos;, &apos;Conc&apos;: &apos;concretion&apos;, &apos;mod&apos;: &apos;moderate&apos;, &apos;spty&apos;: &apos;spottedy&apos;, &apos;OTS&apos;: &apos;oil to surface&apos;, &apos;Cont&apos;: &apos;content&apos;, &apos;Btm&apos;: &apos;bottom&apos;, &apos;Volc&apos;: &apos;volcanic&apos;, &apos;mol&apos;: &apos;moldic&apos;, &apos;ML&apos;: &apos;microlog, minilog&apos;, &apos;ap&apos;: &apos;appears&apos;, &apos;bar&apos;: &apos;baritic&apos;, &apos;Biomi&apos;: &apos;biomicrite&apos;, &apos;abnt&apos;: &apos;abundant&apos;, &apos;anhed&apos;: &apos;anhedral&apos;, &apos;trip&apos;: &apos;tripolic&apos;, &apos;Sol&apos;: &apos;Soution&apos;, &apos;Descr&apos;: &apos;description&apos;, &apos;var&apos;: &apos;variable&apos;, &apos;por&apos;: &apos;poroussity&apos;, &apos;/&apos;: &apos;with&apos;, &apos;posa&apos;: &apos;possible&apos;, &apos;a.a.&apos;: &apos;same as above sample&apos;, &apos;Chlor&apos;: &apos;chlorite&apos;, &apos;Radax&apos;: &apos;radiaxial&apos;, &apos;dol&apos;: &apos;dolomitic&apos;, &apos;dom&apos;: &apos;dominant&apos;, &apos;Sphal&apos;: &apos;sphalerite&apos;, &apos;Mn&apos;: &apos;manganese&apos;}, &apos;parts_of_speech&apos;: {&apos;noun&apos;: [&apos;lithology&apos;], &apos;adjective&apos;: [&apos;colour&apos;, &apos;grainsize&apos;], &apos;subordinate&apos;: [&apos;amount&apos;]}, &apos;synonyms&apos;: {&apos;Salt&apos;: [&apos;Halite&apos;, &apos;Sylvite&apos;], &apos;Anhydrite&apos;: [&apos;Gypsum&apos;], &apos;Overburden&apos;: [&apos;Drift&apos;]}, &apos;amount&apos;: [&apos;streaks?&apos;, &apos;veins?&apos;, &apos;stringers?&apos;, &apos;interbed(?:s|ded)?&apos;, &apos;blotch(?:es)?&apos;, &apos;bands?&apos;, &apos;fragments?&apos;, &apos;impurit(?:y|ies)&apos;, &apos;minor&apos;, &apos;some&apos;, &apos;abundant&apos;, &apos;rare&apos;, &apos;flakes?&apos;, &apos;[-\\.\\d]+%&apos;]}</pre>
 </div>
 
 </div>
@@ -304,37 +314,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="kn">import</span> <span class="nn">striplog</span>
-<span class="n">striplog</span><span class="o">.</span><span class="n">__version__</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[3]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;5.0.6&apos;</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">lexicon</span><span class="o">.</span><span class="n">synonyms</span>
@@ -348,7 +328,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[4]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[13]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -375,7 +355,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">lexicon</span><span class="o">.</span><span class="n">find_synonym</span><span class="p">(</span><span class="s">&#39;Halite&#39;</span><span class="p">)</span>
@@ -389,7 +369,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -404,23 +384,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">s</span> <span class="o">=</span> <span class="s">&quot;lt gn ss w/ sp gy sh&quot;</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">lexicon</span><span class="o">.</span><span class="n">expand_abbreviations</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">s</span> <span class="o">=</span> <span class="s">&quot;grysh gn ss w/ sp gy sh&quot;</span>
+<span class="n">lexicon</span><span class="o">.</span><span class="n">expand_abbreviations</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -431,11 +399,11 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[7]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[15]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&apos;lighter green sandstone with spotty gray shale&apos;</pre>
+<pre>&apos;greyish green sandstone with spotty gray shale&apos;</pre>
 </div>
 
 </div>
@@ -474,7 +442,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Component</span>
@@ -487,7 +455,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="n">Component</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
@@ -540,7 +508,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">r</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;colour&#39;</span><span class="p">:</span> <span class="s">&#39;grey&#39;</span><span class="p">,</span>
@@ -558,40 +526,10 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[18]:</div>
 
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Component(&quot;colour&quot;:&quot;grey&quot;, &quot;grainsize&quot;:&quot;vf-f&quot;, &quot;lithology&quot;:&quot;sand&quot;)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="nb">type</span><span class="p">(</span><span class="n">rock</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>striplog.component.Component</pre>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>lithology</strong></td><td>sand</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr></table>
 </div>
 
 </div>
@@ -612,7 +550,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">rock</span><span class="o">.</span><span class="n">colour</span>
@@ -626,7 +564,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[19]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -651,7 +589,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">rock</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
@@ -665,11 +603,11 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[13]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&apos;Grey, vf-f, sand&apos;</pre>
+<pre>&apos;Grey, sand, vf-f&apos;</pre>
 </div>
 
 </div>
@@ -690,7 +628,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">rock</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s">&quot;My rock: {lithology} ({colour}, {GRAINSIZE})&quot;</span><span class="p">)</span>
@@ -704,7 +642,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[21]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -729,7 +667,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">rock2</span> <span class="o">=</span> <span class="n">Component</span><span class="p">({</span><span class="s">&#39;grainsize&#39;</span><span class="p">:</span> <span class="s">&#39;VF-F&#39;</span><span class="p">,</span>
@@ -746,43 +684,11 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[15]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[22]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
 <pre>True</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">rock3</span> <span class="o">=</span> <span class="n">Component</span><span class="p">({</span><span class="s">&#39;grainsize&#39;</span><span class="p">:</span> <span class="s">&#39;Coarse&#39;</span><span class="p">,</span>
-              <span class="s">&#39;colour&#39;</span><span class="p">:</span> <span class="s">&#39;Grey&#39;</span><span class="p">,</span>
-              <span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;Sand&#39;</span><span class="p">})</span>
-<span class="n">rock</span> <span class="o">==</span> <span class="n">rock3</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[16]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>False</pre>
 </div>
 
 </div>
@@ -796,40 +702,14 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In order to create a Rock object from text, we need a lexicon to compare the text against. The lexicon describes the language we want to extract, and what it means. More on lexicons later.</p>
+<p>In order to create a Component object from text, we need a lexicon to compare the text against. The lexicon describes the language we want to extract, and what it means.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Lexicon</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">lexicon</span> <span class="o">=</span> <span class="n">Lexicon</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">rock3</span> <span class="o">=</span> <span class="n">Component</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="s">&#39;Grey fine sandstone.&#39;</span><span class="p">,</span> <span class="n">lexicon</span><span class="p">)</span>
@@ -844,11 +724,10 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[19]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[23]:</div>
 
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Component(&quot;colour&quot;:&quot;grey&quot;, &quot;grainsize&quot;:&quot;fine&quot;, &quot;lithology&quot;:&quot;sandstone&quot;)</pre>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>grainsize</strong></td><td>fine</td></tr></table>
 </div>
 
 </div>
@@ -859,7 +738,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">rock4</span> <span class="o">=</span> <span class="n">Component</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="s">&#39;Grey, sandstone, vf-f &#39;</span><span class="p">,</span> <span class="n">lexicon</span><span class="p">)</span>
@@ -874,11 +753,10 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[24]:</div>
 
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Component(&quot;colour&quot;:&quot;grey&quot;, &quot;grainsize&quot;:&quot;vf-f&quot;, &quot;lithology&quot;:&quot;sandstone&quot;)</pre>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr></table>
 </div>
 
 </div>
@@ -901,1498 +779,21 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Decor">Decor<a class="anchor-link" href="#Decor">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Decor</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
-</pre></div>
+<h2 id="Interval">Interval<a class="anchor-link" href="#Interval">&#182;</a></h2><p>Intervals are where it gets interesting. An interval can have:</p>
+<ul>
+<li>a top</li>
+<li>a base</li>
+<li>a description (in natural language)</li>
+<li>a list of <code>Component</code>s</li>
+</ul>
+<p>Intervals don't have a 'way up', it's implied by the order of <code>top</code> and <code>base</code>.</p>
 
 </div>
 </div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>A Decor attaches a display style to a Rock.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="n">Decor</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-    A single display style. A Decor describes how to display a given set
-    of Component properties.
-
-    In general, you will not usually use a Decor on its own. Instead, you
-    will want to use a Legend, which is just a list of Decors, and leave
-    the Decors to the Legend.
-
-    Args:
-      params (dict): The parameters you want in the Decor. There must be a
-        Component to attach the decoration to, and at least 1 other attribute.
-        It&apos;s completely up to you, but you probably want at least a colour
-        (hex names like #AAA or #d3d3d3, or matplotlib&apos;s English-language
-        names listed at http://ageo.co/modelrcolour are acceptable.
-
-        The only other parameter the class recognizes for now is &apos;width&apos;,
-        which is the width of the striplog element.
-
-    Example:
-      my_rock = Component({ ... })
-      d = {&apos;component&apos;: my_rock, &apos;colour&apos;: &apos;red&apos;}
-      my_decor = Decor(d)
-    
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Like <code>Rock</code>s, we instantiate <code>Decor</code>s with a <code>dict</code> of properties:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;color&#39;</span><span class="p">:</span> <span class="s">&#39;#86F0B6&#39;</span><span class="p">,</span>
-     <span class="s">&#39;component&#39;</span><span class="p">:</span> <span class="n">rock</span><span class="p">,</span>
-     <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
-<span class="n">decor</span> <span class="o">=</span> <span class="n">Decor</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-<span class="n">decor</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[23]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Decor(component=&apos;&quot;colour&quot;:&quot;grey&quot;, &quot;grainsize&quot;:&quot;vf-f&quot;, &quot;lithology&quot;:&quot;sand&quot;&apos;, colour=&apos;#86f0b6&apos;, width=&apos;3.0&apos;)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>You can access its attributes. It has two ways to understand colour:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">decor</span><span class="o">.</span><span class="n">colour</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[24]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;#86f0b6&apos;</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[25]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">decor</span><span class="o">.</span><span class="n">rgb</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[25]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(134, 240, 182)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">decor</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr />
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Legend">Legend<a class="anchor-link" href="#Legend">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Legend</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">Legend</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-    A look-up table to assist in the conversion of Components to
-    a plot colour.
-
-    Args:
-        list_of_Decors (list): The decors to collect into a legend. In
-            general, you will want to leave legend building to the constructor
-            class methods, &#96;Legend.default()&#96;, and &#96;Legend.from_csv(string)&#96;.
-            We can add others over time, such as &#96;from_xls&#96; and so on.
-    
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We'll define a legend in a CSV file. I can't think of a better way for now. It would be easy to make a web form to facilitate this with, for example, a colour picker. It may not be worth it, though; I imagine one would create one and then leave it alone most of the time.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">l</span> <span class="o">=</span> <span class="s">u&quot;&quot;&quot;colour, width, component lithology, component colour, component grainsize</span>
-<span class="s">#FFFFFF, 0, , , </span>
-<span class="s">#F7E9A6, 3, Sandstone, Grey, VF-F</span>
-<span class="s">#FF99CC, 2, Anhydrite, , </span>
-<span class="s">#DBD6BC, 3, Heterolithic, Grey, </span>
-<span class="s">#FF4C4A, 2, Volcanic, , </span>
-<span class="s">#86F0B6, 5, Conglomerate, , </span>
-<span class="s">#FF96F6, 2, Halite, , </span>
-<span class="s">#F2FF42, 4, Sandstone, Grey, F-M</span>
-<span class="s">#DBC9BC, 3, Heterolithic, Red, </span>
-<span class="s">#A68374, 2, Siltstone, Grey, </span>
-<span class="s">#A657FA, 3, Dolomite, , </span>
-<span class="s">#FFD073, 4, Sandstone, Red, C-M</span>
-<span class="s">#A6D1FF, 3, Limestone, , </span>
-<span class="s">#FFDBBA, 3, Sandstone, Red, VF-F</span>
-<span class="s">#FFE040, 4, Sandstone, Grey, C-M</span>
-<span class="s">#A1655A, 2, Siltstone, Red, </span>
-<span class="s">#363434, 1, Coal, , </span>
-<span class="s">#664A4A, 1, Mudstone, Red, </span>
-<span class="s">#666666, 1, Mudstone, Grey, &quot;&quot;&quot;</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">legend</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-<span class="n">legend</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[29]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Legend(component=&apos;&apos;, colour=&apos;#ffffff&apos;, width=&apos;0.0&apos;
-component=&apos;&quot;colour&quot;:&quot;grey&quot;, &quot;grainsize&quot;:&quot;vf-f&quot;, &quot;lithology&quot;:&quot;sandstone&quot;&apos;, colour=&apos;#f7e9a6&apos;, width=&apos;3.0&apos;
-component=&apos;&quot;lithology&quot;:&quot;anhydrite&quot;&apos;, colour=&apos;#ff99cc&apos;, width=&apos;2.0&apos;
-component=&apos;&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;heterolithic&quot;&apos;, colour=&apos;#dbd6bc&apos;, width=&apos;3.0&apos;
-component=&apos;&quot;lithology&quot;:&quot;volcanic&quot;&apos;, colour=&apos;#ff4c4a&apos;, width=&apos;2.0&apos;)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">legend</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">legend</span><span class="o">.</span><span class="n">to_csv</span><span class="p">())</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>colour,width,component colour,component grainsize,component lithology
-#ffffff,0.0,,,,
-#f7e9a6,3.0,grey,vf-f,sandstone,
-#ff99cc,2.0,,,anhydrite,
-#dbd6bc,3.0,grey,,heterolithic,
-#ff4c4a,2.0,,,volcanic,
-#86f0b6,5.0,,,conglomerate,
-#ff96f6,2.0,,,halite,
-#f2ff42,4.0,grey,f-m,sandstone,
-#dbc9bc,3.0,red,,heterolithic,
-#a68374,2.0,grey,,siltstone,
-#a657fa,3.0,,,dolomite,
-#ffd073,4.0,red,c-m,sandstone,
-#a6d1ff,3.0,,,limestone,
-#ffdbba,3.0,red,vf-f,sandstone,
-#ffe040,4.0,grey,c-m,sandstone,
-#a1655a,2.0,red,,siltstone,
-#363434,1.0,,,coal,
-#664a4a,1.0,red,,mudstone,
-#666666,1.0,grey,,mudstone,
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In fact, this is the default legend.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">Legend</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[31]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Legend(component=&apos;&apos;, colour=&apos;#ffffff&apos;, width=&apos;0.0&apos;
-component=&apos;&quot;colour&quot;:&quot;grey&quot;, &quot;grainsize&quot;:&quot;vf-f&quot;, &quot;lithology&quot;:&quot;sandstone&quot;&apos;, colour=&apos;#f7e9a6&apos;, width=&apos;3.0&apos;
-component=&apos;&quot;lithology&quot;:&quot;anhydrite&quot;&apos;, colour=&apos;#ff99cc&apos;, width=&apos;2.0&apos;
-component=&apos;&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;heterolithic&quot;&apos;, colour=&apos;#dbd6bc&apos;, width=&apos;3.0&apos;
-component=&apos;&quot;lithology&quot;:&quot;volcanic&quot;&apos;, colour=&apos;#ff4c4a&apos;, width=&apos;2.0&apos;
-component=&apos;&quot;lithology&quot;:&quot;conglomerate&quot;&apos;, colour=&apos;#86f0b6&apos;, width=&apos;5.0&apos;
-component=&apos;&quot;lithology&quot;:&quot;halite&quot;&apos;, colour=&apos;#ff96f6&apos;, width=&apos;2.0&apos;
-component=&apos;&quot;colour&quot;:&quot;grey&quot;, &quot;grainsize&quot;:&quot;f-m&quot;, &quot;lithology&quot;:&quot;sandstone&quot;&apos;, colour=&apos;#f2ff42&apos;, width=&apos;4.0&apos;
-component=&apos;&quot;colour&quot;:&quot;red&quot;, &quot;lithology&quot;:&quot;heterolithic&quot;&apos;, colour=&apos;#dbc9bc&apos;, width=&apos;3.0&apos;
-component=&apos;&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;siltstone&quot;&apos;, colour=&apos;#a68374&apos;, width=&apos;2.0&apos;
-component=&apos;&quot;lithology&quot;:&quot;dolomite&quot;&apos;, colour=&apos;#a657fa&apos;, width=&apos;3.0&apos;
-component=&apos;&quot;colour&quot;:&quot;red&quot;, &quot;grainsize&quot;:&quot;c-m&quot;, &quot;lithology&quot;:&quot;sandstone&quot;&apos;, colour=&apos;#ffd073&apos;, width=&apos;4.0&apos;
-component=&apos;&quot;lithology&quot;:&quot;limestone&quot;&apos;, colour=&apos;#a6d1ff&apos;, width=&apos;3.0&apos;
-component=&apos;&quot;colour&quot;:&quot;red&quot;, &quot;grainsize&quot;:&quot;vf-f&quot;, &quot;lithology&quot;:&quot;sandstone&quot;&apos;, colour=&apos;#ffdbba&apos;, width=&apos;3.0&apos;
-component=&apos;&quot;colour&quot;:&quot;grey&quot;, &quot;grainsize&quot;:&quot;c-m&quot;, &quot;lithology&quot;:&quot;sandstone&quot;&apos;, colour=&apos;#ffe040&apos;, width=&apos;4.0&apos;
-component=&apos;&quot;colour&quot;:&quot;red&quot;, &quot;lithology&quot;:&quot;siltstone&quot;&apos;, colour=&apos;#a1655a&apos;, width=&apos;2.0&apos;
-component=&apos;&quot;lithology&quot;:&quot;coal&quot;&apos;, colour=&apos;#363434&apos;, width=&apos;1.0&apos;
-component=&apos;&quot;colour&quot;:&quot;red&quot;, &quot;lithology&quot;:&quot;mudstone&quot;&apos;, colour=&apos;#664a4a&apos;, width=&apos;1.0&apos;
-component=&apos;&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;mudstone&quot;&apos;, colour=&apos;#666666&apos;, width=&apos;1.0&apos;)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can ask the Legend what colour to use for a given Rock object:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">legend</span><span class="o">.</span><span class="n">get_colour</span><span class="p">(</span><span class="n">rock</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[32]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;#eeeeee&apos;</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">rock3</span> <span class="o">=</span> <span class="n">Component</span><span class="p">({</span><span class="s">&#39;colour&#39;</span><span class="p">:</span> <span class="s">&#39;red&#39;</span><span class="p">,</span>
-           <span class="s">&#39;grainsize&#39;</span><span class="p">:</span> <span class="s">&#39;vf-f&#39;</span><span class="p">,</span>
-           <span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;sandstone&#39;</span><span class="p">})</span>
-<span class="n">legend</span><span class="o">.</span><span class="n">get_colour</span><span class="p">(</span><span class="n">rock3</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[33]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;#ffdbba&apos;</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Sometimes we also want to use a width for a given lithology:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">legend</span><span class="o">.</span><span class="n">get_width</span><span class="p">(</span><span class="n">rock3</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[34]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>3.0</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can also ask the legend which Rock is represented by a particular colour. (I doubt you'd ever really need to do this, but I had to implement this to allow you to make a <code>Striplog</code> from an image: it looks up the rocks to use by colour.)</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">legend</span><span class="o">.</span><span class="n">get_component</span><span class="p">(</span><span class="s">&#39;#f7e9a6&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[35]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Component(&quot;grainsize&quot;:&quot;vf-f&quot;, &quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>Legend</code> behaves more or less like a list, so we can index into it:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">legend</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[36]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Legend(component=&apos;&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;heterolithic&quot;&apos;, colour=&apos;#dbd6bc&apos;, width=&apos;3.0&apos;
-component=&apos;&quot;lithology&quot;:&quot;volcanic&quot;&apos;, colour=&apos;#ff4c4a&apos;, width=&apos;2.0&apos;)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>Legend</code>s can plot themselves.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">legend</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAYAAABxLuKEAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
-AAALEgAACxIB0t1+/AAAAM1JREFUeJzt2zEKAjEUANF88f5Xjo2dzloouCzvlQmBMBBS/dl7L17d
-/n2BsxImCBOECcIEYcL9aHNmLv+X773n3fphmOfB39/mJGbeNllreUpJmCBMECYIE4QJwgRhgjBB
-mCBMECYIE4QJwgRhgjBBmCBMECYIE4QJwgRhgjBBmCBMECYIE4QJwgRhgjBBmCBMECYIE4QJwgRh
-gjBBmCBMECYIE4QJwgRhgjBBmCBMECYIE4QJH8eLj0Zwr2yuPFf9DU8pCBOECcIEYcIDJBINjiG6
-CEYAAAAASUVORK5CYII=
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO0AAABGCAYAAAAglhOiAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
-AAALEgAACxIB0t1+/AAACR1JREFUeJztnX+wVVUVxz9fJQN/NIgooWUyRanQFAIOZQKOTUVGqCWJ
-OQoalZBR4wxUJsjYUKZDMypK/kCk+BGMyA8dSeAJozKh4g/8BWH5IIUQCBEVAnyrP/Y+cN559913
-Lz3gbWZ9Zu7M3Wevvc86557v2Wutc+demRmO46TDEYfaAcdxqsNF6ziJ4aJ1nMRw0TpOYrhoHScx
-XLSOkxitynVKOuyfB5mZDrUPjlMNZUULsGPjtIPhxyGhTYfLDrULjlM1Hh47TmK4aB0nMVy0jpMY
-LlrHSQwXreMkhovWcRLDRes4ieGidZzEcNE6TmK4aB0nMVy0jpMYLlrHSQwXreMkhovWcRLDRes4
-ieGidZzEcNE6TmK4aB0nMVy0jpMYLtoKkTRf0soy/XdI2irpI7E9QNJrkv4r6Y0y4yqyc/YfSV0l
-1UnqXaH9SZJulPSpA+3b/uCirZxpQFdJZxQ7JB0JfBd40Mx2x/YU4HngPODCUhNWauccdE4CRgMu
-2sSZB3wADCrRdx7hg54e2ycDxwHTzWyZmb3YyJwdK7RrNiS1OdD7OIxokT+v66KtEDN7H5gPfK9E
-96XARqBG0mBgbdw+N4Zlo4sDot26puzKIekSSWskfSCpRlK3OM+VOZtaSbdKukHSm8C2uP0ISb+Q
-9LqknZJWS7oiN26YpO2Sjinss2/cx+er8LOtpHslvSVph6S1ku7O9Z8uaYakdZLel/SypBGSlLPJ
-9ttH0qzo2z8kXVNif8Mk/UvSe5LmEW6ORZurJb0az90mSUsknSnpNCBLgx6P+6zLjeskaY6kbZLe
-lTRP0qcLc9dJ+qmkcZLelrQxpk9HFexOjce9JR73Akmfbep8umirYzrQWdJZ2YaYw14MzLTwZ78P
-xzbAdUAv4L4Sc1VqVxJJPYAZwLOEsHoe8JfYnf+ReQMuA84FfgwMjNtvB64HJgLfBB4CJkm6IPZP
-BbKwP88QYIWZvVSpr8B44MvAz4CvAb8C6nL9JwOrgeFAP+AeYCwwqsRc9xDSiQuBJcAEST2zTkkD
-gDsI5+Mi4CVgUn6CmNveBTwAfAO4CngK+BiwHvh+NB1G+Fx6xXEfBRYDnwN+AAwGOgFLJR1f8PM6
-4ONxrluAHwEjcj60A54EOse+gcAxwCJJrUsc916a/LFypx4LgHcIK+tzcdvXgbbE0NjMNkt6Ifat
-NrOnS01UqV0ZRgGvmFkWrj8WbyA3F+xEEO63zGwXgKTPEAR8pZn9OdrVSOoIjAEeMbNtkh4kiPSB
-OO5Ywo2mlJjK0ROYYGazctumZm/MrAaoifsQsIxwAQ8FfleYa5qZjYu2S4H+0adnYv/1wKNmNjy2
-F0o6kSCyjLOBlWaWP1fzszeSshvSq4XPZQjwSaCzmdVG2+XAPwnCy/v6hpldlfPhnOjnLXHbz4E2
-wPlm9k6c6ymglnATuZNG8JW2CuJFP5t9qxWEcLnWzP7W2DgFWuVezZEr9SR3oUWKbQiCXZwJNnI+
-YaWbm/eLIJwv5vy7DzhXUqfYHki40Vf7txMvACMlXVMq/JPUWtJYSa8DO4FdwG+A0yQVr9HH9h6Y
-2R5gDXBKnKcV0A2YWxjzUKH9PNBN0nhJvYthaxnOJkQZtTkf3iKs0l9pzM/Ia8Ancu2vAouA7bnz
-/x5hMehRzgkXbfVMB06V1CuGMQMIYWo5xhAuxOx1QzP40QHYVNhWbGdsLLTbE0LfbQW/7o/bsxxw
-KWEVGRzbQ4A52cpQBT8B5hAqsqsk/V1SvjZwMyGcnEgIj3sQRCugGCoW9707Z5Md19sFm3ptM1sc
-j6U38DiwKeacRzdxHB1peC6z+ds14ecu6h9Le8INfzf1P4O+1Bd3Azw8rp4lhA9uEOEOfyz7qsaN
-8UdCjpWxoRn8+DehYp3nxEZsi3+k9h9gDyHPrGtoHsRvZiZpEvBDSVOBcwg5YFWY2TZCPjciFrBG
-AlMlvWhmq4BLgNvM7NZsjKT+1e4H2Ax8SMPzUmxjZlOAKZJOAL4D/AHYDvyyzPzrgS4ltncAtlTp
-6xbgZeCmEn3byw30lbZKzOxDYCbhQhtEyHvKFmXMbIOZPZd7NYdonyHkc3m+XeHYGsKK1LbgV/ba
-nbOdTLjz3wu8CSz8f5yO52ok4do7PW5uTVhlgL3Pry+l4c2m5JS5ufewr0iV52Iawcy2mNndhKJQ
-9gw+86W4yi8HuscKc+brKcCX4vhqWAx0JVw/xfO/ptxAX2n3j+nAtYTqZFWPaSpB0mSgj5l1KmN2
-M7Bc0gyCsM5gX7Elv3o2yJ/NbLWkicAMSb8HVhAu0C6EIsvQnO0GSQuAC4BxsUKe9/VGYLSZNboA
-SHqSUAt4hSCyoYT8LSvyLASGx5x2K6GKfFQp30tNX7AbB8yWdCchJO9DKBbm/RkLHE8I/zcT8uDe
-7CuwrQN2AIMlbQd2m9mzhPM8CnhU4fFcHSH12USIpqphPHA5oQB4O2EV7xD9fcLMGk25fKXdD2LR
-qTY2GwuNK/1v31J2R1M6d8r7sIKw0ncnFFouArJnlu825Uesrt4EXAE8Qshn+xEu5CJZYef+Rnwt
-5pBFlhHy4lmEx1LtgH5mtj72Xws8AUwgFL9WAr8t4XupYzHqr7Zz4nz9CeflC8DVhbFPA2cSHvss
-IFR+x5jZbXGOnYQbS3dCOrQ8bt9FKCCtin5OJlwHfSvI84t+biE8SlpFCM3/SrgRHweU/ZKNCjfO
-+p2SHe7/T9sS/1Ra0lrg12b2pyrHXU74WmQnM1vblH0V884EOphZnxJ9S4FFZlYqN3MOAB4etzBi
-jnQkTRe3kHQXIbTcCpxFeEb5cHMJNhaNehBW8QbfBIuPKbpQJmd0mh8XbQsjPvcrW/LP0Y4QUp5A
-yM1mEIo8zcW8OPcEM5td7IyFn/bNuD+nAly0CWNmpb4H3ZzzlyuEOYcIL0Q5TmK4aB0nMVy0jpMY
-LlrHSQwXreMkhovWcRLDRes4ieGidZzEcNE6TmK4aB0nMVy0jpMYLlrHSQwXreMkhovWcRLDRes4
-ieGidZzEcNE6TmK4aB0nMVy0jpMYTf6E6kH05ZDQEn9C1XHKUVa0juO0PDw8dpzEcNE6TmK4aB0n
-MVy0jpMYLlrHSYz/AWuQ4vWVIkqpAAAAAElFTkSuQmCC
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJoAAABGCAYAAAA0A41DAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
-AAALEgAACxIB0t1+/AAABSpJREFUeJzt3VuIVVUcx/Hvz2taUWSZIKTgS6X0YKZGvWjRhW5aKZoR
-00MX9MUuBNEFi3oIQu1RyTQfTCqkIINSa8i0ciYfjJRyQsvUTLtohanhv4e9jp22Zy5nGNeM4+8D
-w8xee6211x5+rLX3HvYZRQRmp1qf7h6AnRkcNMvCQbMsHDTLwkGzLBw0y6JfWzsl9fpnHxGh7h7D
-maDNoAHEouYc4+gWemhcdw/hjOGl07Jw0CwLB82ycNAsCwfNsnDQLAsHzbJw0CwLB82ycNAsCwfN
-snDQLAsHzbJw0CwLB82ycNAsCwfNsnDQLAsHzbJw0DpJ0g5JxyWN6mT7RklvdfW4qvpvlrS0A/Ua
-0nkMTttDJc2TNKIrx+OgdYKkq4ERwGFgZie7ifR1qnS0//eAiRTnAjAUeJbi/LqMg9Y5M4EWYAWd
-D1q3vuYnqa+k/hFxICI2xckfK9Wl43PQ6iSpLzAdWJW+LpN0RdX+ylI0RtIaSX9K2iZpaqmrKKrr
-Hkktkg5Kel/S8Kq+NtVa/iQtk7S5anuMpA2SDkvaKun2Vto0SZoi6WuKGWxC9dIpaSSwJTX5OJUf
-r+rjAkmLJf2UjrVB0viO/N4ctPpNolheVgFrgYPUntVWAO8AU4DtwMrqEFHMGBOA2cAjwIPAWGBx
-VZ1XgbslnX2ikXQOcBewJG0PAj4ABqdxvAAsAC4pjSeAkcBLwIvATcCOUp09wKz082yKJXViOs7A
-dL6TgcfTee0H1kq6uMb5/0+7LxDbSWYCuyNiE4Ck1cAM4MlSvfkRsSzV2QzsA24FFlXVORe4JSIO
-pnrDgAWSBkbEEWAlMB+YBixLbaYD/SmCDHA/cBFwVUTsSf3sBD4tjUfAEOC6iNhyolD/rZARcVTS
-V2lza+Uck3uB0cDlEfFdarsW+AZ4DHii5m8r8YxWB0kDgDspZqqKVcCIdINQ7cPKDxHxK/AzMLxU
-p6kSsmRb+j48tTsEvA00VNVpAN6NiN/S9niguRKy1G5jOl7Zj9Uhq9P1wJfATkn9JPWjCO8nQLuv
-/HtGq8/NwHnAOknnp7LPgSMUM91nVXV/L7U9CpxVKqtVh1K9JUBjun7qC1ybxlExjNqhqlW2r0ZZ
-R11IsYweq7Gvpb3GDlp9Ktdiq2rsmyZpblcfMCLWS9pOsUT2AXZTNVsCe4FLazRt97qpTr8AzcDD
-NfYdaa+xg9ZB6YL8Nopro8Wl3WMprqUm19FlPc/QXgPmpDbLS48imoBZkoZHxO401msorts6c8xa
-syrAOuAGYFdE7K9j7ICDVo87gEHAKxHRVL1D0kbgKYoZb30r7cvPpVSjrDWvU9wp9gHKjzuWAk8D
-qyXNo7j7fB440Mox2/MDxaOPBkl/AMciohlYTjGbNUp6meKOdQjFNeLeiFjYVqe+Gei4GcC35ZAB
-RMQ/wJvAVGAAtWeOcllrT+5PKouIfcAXwIaIaCntOwzcCPxFcZf6DPAo8H2pr7b+UnCiPCL+Bh4A
-rgQa03FJd8GTgDXAcxSPVBYCoyp12qK2/s+ApOjtn492OnwQn6QhwC5gTkS0+/fLnshLZw+WHs6O
-BuYCh4A3undEneeg9WzjgI+AncB9aVk7LTloPVhENNJLrqN7xUlYz+egWRYOmmXhoFkWDppl4aBZ
-Fg6aZeGgWRYOmmXhoFkWDppl4aBZFg6aZeGgWRYOmmXhoFkWDppl4aBZFg6aZdHu63YZx9ItTofX
-7XqDNoNm1lW8dFoWDppl4aBZFg6aZeGgWRb/Am1xXkWv58M8AAAAAElFTkSuQmCC
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAI4AAABGCAYAAAAaRqzRAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
-AAALEgAACxIB0t1+/AAABI9JREFUeJzt3F2IVGUcx/HvTwt8IyrBoqS6SCjrQoLE3kQDyzIKtTKj
-F6i7oLropi4spSgqIgil8qaEak3Swpe0F8syyiVQKrDwpgUXzMKXsK1czX8X50yNpz2zO/+NXZTf
-B5aZOc8z/3lm+c1znmdgjiICs3aNGO4B2InJwbEUB8dSHBxLcXAsxcGxlFNaNUo66ffqEaHhHsOJ
-qGVwAOKmG4diHMNC698f7iGcsHyqshQHx1IcHEtxcCzFwbEUB8dSHBxLcXAsxcGxFAfHUhwcS3Fw
-LMXBsRQHx1IcHEtxcCzFwbEUB8dSHBxLcXAGSNI6Sd+2aF8q6YCkU/upM0PSMUmT//9R9k9Sl6Tn
-BlvHwRm4t4BLJV1cbZA0ErgVWB0RR4Z8ZO25BXhpsEUcnIFbC/wOLOyjbSYwAegY0hElRMQ3EdE9
-2DoOzgBFRA+wDljQR/MdwF7gE0nXSuqU9IeknyQtkzS2VW1JIyU9JmmXpD8l7Zb0WlP7HEkfSdor
-6VdJX0maVamxWNIvkqZI2iapR9J2SVdX+nVJer5ybLqkTyUdknSwvD+l1ZgdnPZ0AJMkXdY4UK5p
-5gGrgMnAJuDn8tgTwJ3AO/3UfRVYDKwE5gCPAKOb2i8A1gN3l3W/BDZKurJSZwywAngZmA8cBtZI
-aq4V5V9j/DOAzWXfe4Dbgc+Bc1sNuN8f5NlxNgEHKWaY7eWx64HTKUK1CPgRuDnKK1ZJ2g+8LWla
-RGyrFpR0EXAf8FBELG1qWtW4ExHLmvqPAD4DLgHupwhRw2jg4YjYUvbdA+wApgMf1LynZ4AdETG7
-6diH9f+CgmecNkREL7CG4lPZsADoKkMxFXg3jr/M2RrgKHBVTdmZ5e3rda8raaKkFZK6gSNAL3Ad
-MKnStbcRmtL35W2fs0d5Cp1KMUu1xcFpXwdwnqRpkkZR7FJWlm1nU6x1/hERfwH7gDNr6o0HeiLi
-t74ayxlmLTCNYkabAVwObARGVbofqrx2b3m32q/hDEDAnpr2Wj5VtW8LRTgWUnySx/HvbmoPcFZz
-53KrPh7YX1NvHzBW0ria8FwITAFmR8Q/pxBJYwbxHhoOAMeAc9p9omecNpUzyCrgNorw7IyI78rm
-TmBuOUs0zKP4gH5RU3JzeXtvTXtjYduYPZB0PvWnvgErd4qdFIvitnjGyekAHgTmAo83HX+KYjH6
-nqRXgInAs8CmiOjsq1BE7JK0HHhB0gRgK8Vie35ELAR+ALrL9kXAaRQ7sG6K00y7qs95FPhY0kZg
-OcV3VVcAX0fEhroinnESyoVwV/mwo+n4TuAGii8DVwNPAm9SfKt8XInK4weAJcBdwAbgRaCnrHmY
-YtY6SrGtXwI8TbGzaq4T/Ldun8OvvJetwCyKrfwbFOu1a4DdrYqo1XWOJcXJfn0cX1gpxzOOpTg4
-luLgWIqDYykOjqU4OJbi4FiKg2MpDo6lODiW4uBYioNjKQ6OpTg4luLgWIqDYykOjqU4OJbi4FiK
-g2MpDo6lODiW0u/PY4ZwLMPCP4/JaRkcszo+VVmKg2MpDo6lODiW4uBYyt+cbyR0MLWXmAAAAABJ
-RU5ErkJggg==
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALoAAABGCAYAAAB7Xo6TAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
-AAALEgAACxIB0t1+/AAABthJREFUeJztnXmIVWUYh5+fWZm0UeZYtu9URFS2R1bmHi22J22UJNEf
-g9oiUhNGJKIVbRSVtlpSEaaVymhqWmoLRJFliW1aOZq5NGY1b398363T8c69c828Ot/7wDBzzre9
-997nnPOed+BcmRmO09ppU+0AHGdz4KI7SeCiO0ngojtJ4KI7SeCiO0nQtlSjpFZfezQzVTsG5/+n
-pOgA96x8Y3PEURWG7tq72iE4mwlPXZwkcNGdJHDRnSRw0Z0kcNGdJHDRnSRw0Z0kcNGdJHDRnSRw
-0Z0kcNGdJHDRnSRw0Z0kcNGdJHDRnSRw0Z0kcNGdJHDRnSRw0Z0kcNE3Akn9JE2T9LOkdZI+lzRK
-0p5VimespPnVWPv/QtIASedtqvlc9AqRNAp4CfgS6A+cA9wHnA08XMXQWtsTGwYAm0z0sk8BcP5B
-0rlALXCdmY3NNM2S9DhB+mqxxT+2Q1I7M1tXyZBNtbaf0SujFvggJzkAZtZkZpMBJHWQ9LSkBklr
-JU2XdFy2v6TFkkZKqpX0naQVksZJ2iXX72hJcyQ1SvpEUm9J70saUypQScdIqo/rr5D0nKSOmfb9
-JTVJulTSGEmrJH0rqX9sHyppiaSfJN0rSbn5j5I0KY5bJWm8pJpMe9c4f3dJEyStBh6MbYMkzZe0
-UtIPsf2gzNi3gWOBq+McTZKuyrRfL+nTmDYuljSk1HsBLnqLkbQtcDLwVgu6v0Y4uw8CLiW8z9Oz
-HyYh1bgEOBO4HrgV6Avck1mzPTAZ2B64DLgbGA3sQ4lURdIewNtAO+By4GbgDGBqfB1ZRgDfAxcA
-s4Cxkh4GjgGuAe4HbomxFuY/GJgNbAdcGfsdCbxeJJwngY+Ac+PfAHsT0rzz42vfBpgjaefYPhBY
-AEwCToo/b8S1hwCPAK8CfYBHgeGSbmru/QBPXSphd4Jw35TqJKkncApwhpnNivumAYuBIcCNha7A
-euB8M2uK/Y4gCF340K4FdgOONbOlsc9XwNwysQ4CmoAeZrYmjlsIvAf0A17M9K03s2GxzzzgIqAb
-cLiFb4mYEm8KLyDcmwDcCSwBepnZH3Hsx8ACSb3NLPvUq/Fmdmc2ODOrzbxfbYB64EdCTv6smX0m
-aS2wzMzmZfruHNcebmbDC/HHE8IwSY9YM99s4Wf0yil303cC8GNBcgAz+xWYCJyWm2d6QfLIZ0BH
-SdvE7S7A+wXJ41zzCVKUi2FKQfI4bh7hYDs117c+02c1sAyYkRPmK6BzZrsb4aqFpLaS2sa5FwPH
-5+aflA9O0kmSpkpqAP4A1gI7AoeUeV0nA+2BlwvrxrWnAzWEK0VRXPSWsxz4Ddi3TL89CbLk+Ylw
-ds6yMre9nnCm3z5ud2pmrmL7snSi+MHQ0hiK7WuX2e5ASLXW534OZEPZ/hWHpH2BKYQDfQDh6tcl
-xtaO0nSIvz/NrTstzrdPcwM9dWkhZva7pNlAT+COEl2XAh2L7K8hHCyVsBQ4rMj+YvPnx9UU2V8D
-bIp6+3JCjvxEkbaG3Hb+CtgT2AE4z8waIVwV2PAALMaK+LsPxQ/kL5ob6KJXxv3ABElXmdkz2YaY
-a3Yn5MF1kk7P5OjtCR/OKxWuNx+4QtJeZrYkznUC5UWfCwyUtGMmR+8C7Ae8U2EMxagHjjKzDzdi
-7A6E+4c/M/suYUMX18e+Wd4FGoHOZvZmJYu66BVgZhMljQaelHQqMAFYAxxOuMlcZGb9JM0BXpJ0
-G+EsNJiQjozMTNeSGvEYYBgwUdJdhPy0jpC6NJUYN5pQuZgsaQSwE3Av8DHlD7aWxFUHzJM0KcbY
-QMjhuwFjzWxGibH1hCrLGElPEao1gwjpUnbtBUAPSd0J7+EiM1shqQ54QNJ+hCpRG+BQoKuZXdjc
-op6jV4iZDSaUDA8Bnifkm7XAVIJcEMpmUwlXgPGEy/dZZrYoO1VzS2TWaiRc6hsJFY87CJWblcCq
-3JjsuAZC2XIdMA54CJgBnFOokpSIobl92fkXEkp+vwKPEUp/dXG9haXmMrNPCOXIEwnlyMuAi4Ff
-cv3vJtycjydcofrG8SMJuX0vwg3xC4QS6swicf+NSn3PqCRr7c9H39q+CEDSAcDnwA1m9nS149la
-8NRlC0fS7YSa9deEis/thApFpfl+0rjoWz5NhJRlL0J5cyYwOFsjd8rjom/hmNkIwr/pnf+A34w6
-SeCiO0ngojtJ4KI7SeCiO0ngojtJ4KI7SeCiO0ngojtJ4KI7SeCiO0ngojtJ4KI7SeCiO0ngojtJ
-4KI7SeCiO0ngojtJ4KI7SVD2cRebMZaqsLU97sLZOEqK7jitBU9dnCRw0Z0kcNGdJHDRnSRw0Z0k
-+AsTpvwqDv7t5AAAAABJRU5ErkJggg==
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHsAAABGCAYAAADsI+sMAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
-AAALEgAACxIB0t1+/AAAA0JJREFUeJztnE9oVFcUh79fVVAXSomFumjxT2k3brrptovuXDQgbTYu
-BKFFRNKCFkrBNkRpNVkrbgyRQheVbkoRoYVSuihqUAShZKFkoWTRNqFdRJqmOS7eSzKZZN5knGEG
-cn7f5s09991zL3zv3pn3uG8UEZgcvNDrAZjuYdmJsOxEWHYiLDsRlp2IrVWVkjb9fVlEqNdj6BaV
-sgHi8lw3xtETdHJnr4fQVbyMJ8KyE2HZibDsRFh2Iiw7EZadCMtOhGUnwrITYdmJsOxEWHYiLDsR
-lp0Iy06EZSfCshNh2Ymw7A0iaUjSHw3qxiXdaSHXPkmLkg7XxKYkjdSUByQda2/Uq2m64dCsomq3
-bbs7cfuBv2rKA0AfcK3NvMtYdmtUbTtua0tyRNxvp/1G8DLeYSTtlTQm6aGkOUmTks5J2tak3ZSk
-0fLzOHAEeLtc7hclfV5zbr+kCUlPJU1Luiip6cT1zG4RSVtYO4vFyjLeB8wCZ4A/gTeAIeAl4ERF
-6qjJMQy8AuwGTpaxx2X/A8A3wBXgU+A14CuKiftJ1dgtuzX6gP8a1E0ARMQD4PRSUNJvwBxwVdKp
-iFho1klEPJI0CygibtfkEjAKXIuIU2X4J0n/ApckfRkRs43yWnZr/A28UxcT8AXwMiwL+Qj4ENgH
-bC/PC+BV4FEb/b9OMeOv1y3bP5f9HAJ+bdTYsltjISLu1gclzVDKBj4GRoALwC8US/pbwCVWxD8v
-e8rjjXXqguJCaIhld573gesRcXYpIOlQh3LPlMcPgHvr1E9VNbbszrMdmK+LHX2OPPPAjrrYJPAE
-2B8RV1tNaNmdY+kX+o/AoKRbFN/PR4GDLbRf4nfgXUn9FIKfRMS0pNPA15J2ATcpLooDFA9l3ouI
-p406sOyNU3trVFU3THGbdb4sfwcMAt+v06aqfBl4ExgDXqS4fRuOiG8l/QN8BhwH/gceAj+wdkVZ
-har+B01SbPb3szO9jO8naImw7ERYdiIsOxGWnQjLToRlJ8KyE2HZibDsRFh2Iiw7EZadCMtOhGUn
-wrITYdmJsOxEWHYiLDsRlp0Iy05E063EXRxLT8i0lbhSttlceBlPhGUnwrITYdmJsOxEPAPXna+L
-kU95YwAAAABJRU5ErkJggg==
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-RK5CYII=
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-RU5ErkJggg==
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJMAAABGCAYAAADIFqaJAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
-AAALEgAACxIB0t1+/AAABLZJREFUeJzt3FuIVVUcx/HvL61Ekm6mUVEP9SBBD2ZkN4uCTIoiKrTL
-Q5eHqKeiLIIKLYMuFhRGhYGlkngp6KELZY5ZmmllD9EFxFBBM51EDcVM59/D3ke323POzORfB4bf
-Bzazb2vtdc78zl7rLDhbEYFZhmP6ugHWfzhMlsZhsjQOk6VxmCyNw2RpBrY7KKnfzxtEhPq6Df1F
-2zABzJmw52i0o0/cOe+4vm5Cv+JuztI4TJbGYbI0DpOlcZgsjcNkaRwmS+MwWRqHydI4TJbGYbI0
-DpOlcZgsjcNkaRwmS+MwWRqHydI4TJbGYbI0DlMPSZosqatc9knaKmmlpOckDf8f9a2VNPVItLXF
-9b6UtKCyPVbSQ5nX6PYHBXaQ7cB15fqJwCjgQeB+SeMiYlUv6opyOVoeAP6tbI8FbgVey7qAw9Q7
-eyNiZWV7oaQ3ga+AuZJGRERXH7WtrYj47Uhfw93cYYqI7cDjwHnAtQCShkqaKalT0k5JiyWN6q4u
-SeMl/SRpt6T1ZRc6oHL8nrKbHVl2W7sk/SjpQklDymtul7RG0u21uvd3c5ImA48A51S67hmVc8dI
-WlK2vVPSdEkndNd+hynHEmAvMLrc/pAiWI8CEyje58WSzm1VgaSxwFzge+AmYBowEXi9yekzgfeA
-WwAB7wOzgfXlvhXALElnVspUu9W3gTnAJuCScplStuNy4AtgI0U3+DBwPfBOd2+Cu7kEEbFbUicw
-XNI44DLgqoj4GkBSB7AWeIxi7NLMs8DiiLi33P5cEsDzkqZExMbKuVMjYnZZt4CPgY6IeLrc9x1w
-G3Aj8FZZZv8vlyNig6RNwD+1bhvgBWBpRNzR2CFpA7BI0vkR8Uur98F3pjyNf9bFwOZGkAAiYhfw
-EXBF04JFVzYSWFA7NJ/if3Rpbf+iyvqa8m9H5Xo7gC3AGb16AdJgirvUAkkDGwuwjGLwflG78g5T
-AkmDgFOBP4HTgc1NTtsMnNKiiqHAsWX5qsZ2vdy2yvqeJvsa+we1bnVTJwMDgDfK8o1lN0Uvdla7
-wu7mclxN8V4up/hkD2tyznDgrxblOyk++fVyjfmrrQlt7IltFOOqScAnTY7/0a6w70yHSdJJwIvA
-aoqB60pgmKQxlXMGAzcAS5vVERH7gB+A8bVD44EuipAervqc1iF3rojYCXwLjIiIVU2WtmHynal3
-BkoaTTE+GsKBSctBwLgoHl38maRvgHmSnqC4q0wEjgeqM971R/lMKsvOAOYBF1AMyqfXBt89Va9f
-tX2/UnxhuBv4GdgSEesopjkWSeoCPgD+Bs6m+Eb3ZESsbnVBh6nngmLWe3m5voPibjQLmBYR1XHS
-zcArwKsUQVsBXBMRv9fqO7ARsbCcG3oKuItivPQyRcjq7WjWtu721Wfc51N0zy8BpwHvAvdFxDJJ
-VwLPlK9tALAO+JRDx3QHUbvngEuK/v58Jj/sK4/HTJbGYbI0DpOlcZgsjcNkaRwmS+MwWRqHydI4
-TJbGYbI0DpOlcZgsjcNkaRwmS+MwWRqHydI4TJbGYbI0DpOlcZgsjcNkaRwmS9PtT52OYlv6hH/q
-lKdtmMx6w92cpXGYLI3DZGkcJkvjMFma/wAaMEihhWoTbQAAAABJRU5ErkJggg==
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-gyBz/g88L4t58dcUKAAAAABJRU5ErkJggg==
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJ0AAABGCAYAAADW35Y6AAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
-AAALEgAACxIB0t1+/AAABNtJREFUeJzt3VuoVFUcx/Hvr6yOXSikOoGRISVUQj2YCD10rOjim9mF
-MqIrdYhC0QoLSrAgJUsKIkGqBzFLumDYxTyRmKGGihZdtNQyy/KCqV3Q8N/DWmPjOGfOnOisI/r7
-wDB79l5rz//M/Fhr7w17jiICs5KO6u0C7Mjj0FlxDp0V59BZcQ6dFefQWXF9Gm2UdNhfT4kI9XYN
-R5qGoQOYterwzd3NFzpvvcHTqxXn0FlxDp0V59BZcQ6dFefQWXEOnRXn0FlxDp0V59BZcQ6dFefQ
-WXEOnRXn0FlxDp0V59BZcQ6dFefQWXEOnRXn0DVJ0kRJWzrZ1iZpn6TzS9dVj6RBud6Te7uWehy6
-7unsLqXlwDBgXcFaGhkEPAYckqHr8m4wO0Dd28ciYhewrHAtzTgkb3fzSPc/qDe95tdjJE2VtE3S
-Fknj87Y7Ja2XtF3SDEnH1ezvLEmzc7/fJb0vaVBNmwmSvpX0p6TNkt6T1CqpDZibm63Pdayr6neR
-pI683+2SZko6vWr72bnP9ZKmS9ohaWOerlVTw2BJ8yTtzI/XJbV29Xk5dD1rHHA8cCMwC5gi6Tng
-FuA+4NG8PKbSQVI/4BPgXOAe4AbgBGCBpJbc5lZgAvA0cCXQDqzN7ZYD4/PuRpKm/ZG532nAx0AL
-cBNwP3Ap8KGkY2pqnwLsBEYBM0nT9XVVdZ4DLAaOBUYDtwEXAO909aF4eu1ZayKiHUBSBylAo4EB
-EbE7r28jhWJy7jMW6AtcHhE7cpvFwAbgDuAFYCgwPyJerHqvtyoLktbkxZUR8UNVm3HAPuCqqvdf
-CywhhWt2VduFEfFgXu6QdDVwLTAnr3sc+Am4JiL+zvtaDXwtaUREvNvZh+KRrmd1VBYi/eTpOmB5
-5QvPvgP6V72+AlgA7JLUR1IfYDewAhiS26wERuQpb6iko5uspxLW/e8fEctIgb6kpu38mtdfAWfW
-1Pk2QFWdG/JjCA04dD1rR83rvXXW7SFNdxWnkqbjvXlb5dHGv1/6S8AjpJFzCbBZ0iRJXX2fZwC/
-1Fn/K9Cvi9rr1flwTY17gIEcGM6DeHo99GwDvgAm1dm2C/aPmtOAaZL6k44LnwR+BKY32PfPQL0D
-/Vbgs/9Q55vAjDrbtjbq6NCV1cyvEVWO/b6MiL+63GHEJmCypNuB8/LqPfm5pab5UqBd0olVx3QX
-AwNIJy/d0QEMjogV3ezn0HXTsZJGcfD1r2avh6mJts+QRq6PJD1POlhvJZ1lLoqI2ZKmk0aapcBv
-wHDS2e5DeR/f5Od7Jb0G/BERn+d9twMfSJoMnAQ8BawG3mjyb6iYCCyTNA94mTS69Scd670SEQs7
-6+jQNS9IX9KcOusvo7lRLOq0O2BdRGyTNIw0XT4LnEKaFhcBq3KzT4G7SZdUWkiXS+6KiLl5H9/n
-a4IPkC6LbAQGRsRWScOBqcCrpBFxHjC2cgZaVVPD2iNiba7zCdKU3hfYRDoJWtvoQ1Cj/yMhKQ73
-36fzjyKW57NXK86hs+IcOivOobPiHDorzqGz4hw6K86hs+IcOivOobPiHDorzqGz4hw6K86hs+Ic
-OivOobPiHDorzqGz4hw6K86hs+IcOivOobPiurwFsWAtvcK3IJbXMHRmPcHTqxXn0FlxDp0V59BZ
-cQ6dFfcPYlJEGX/dpFcAAAAASUVORK5CYII=
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-Bjq7MLYAAAAASUVORK5CYII=
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPIAAABGCAYAAAD2M8nHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
-AAALEgAACxIB0t1+/AAACSJJREFUeJztnXuwVVUdxz9fIcVHjTyUzDKYIvHRg0DHMoEZe0BEpSZk
-OYgalFAZU0Fl8RgbklRqVJRUFC3sFhMiyYg8rjCgM4iPfMZLeaSUIiFCQhe7v/5Ya8O++5577jlw
-8XrX/D4zZ+5Z799eZ3/3+q3funOOzAzHcdo2h7W2AY7jHDwuZMdJABey4ySAC9lxEsCF7DgJ4EJ2
-nARoX65QUvJnU2am1rbBcQ6WskIGsI393wYzWgd1W9raJjhOi+CuteMkgAvZcRLAhew4CeBCdpwE
-cCE7TgK4kB0nAVzIjpMALmTHSQAXsuMkgAvZcRLAhew4CeBCdpwEcCE7TgK4kB0nAVzIjpMALmTH
-SQAXsuMkgAvZcRLAhew4CeBCPgAkXSCpVtJ2SXskrZF0vaQTWts2pzIknS6pXlLfCusfL2mipA8e
-atsOBBdylUi6HvgTsB64GPgc8BvgXGBaK5rmHFqOB8YD70ghN/stms5+JA0GxgCXmdnMXNFySbcS
-RN3mkHSkme1ubTvaCO/Ir0/2Fbk6xgCPF0QMgJnVm9mD5RpLmilplaRBkp6X9B9J8yV1lNRT0lJJ
-u2Kdjx6IgZIulLRO0pvR/e8VXchLcnU2SrpO0i8kvQTsiPmHSfqJpPW5LcOwXLtRknZKOrowZv84
-RsU2SzpW0u2SXpa0W9Km+DDMyntKqpG0Oc7Ts5KulKRcnWzcfpJmR9tekHRFifFGSfpHnN95QKNt
-kKTL4+fypqSt8fM4VVI34OlY7aE4Zn2uXXdJcyXtkPSGpHmSPlTou17S9yVNlvSqpFck3STp8EK9
-k+J1b4vXvUDSR5qbTxdyhUh6F/ApYMFBdGPAScBE4GfAyNjnHUANMAv4GsFTqjkAG/vEdo8BXwXm
-EbYB2dh5O74BnAN8BxgS828ErgKmA18E7gXukDQols8C2kUb81xKeMA9U4W5U4FPAz8APk+Yj/pc
-+fuANcBoYCBwGzAJGFeir9uAJwnXvBSYJumMrFDSV4CbCPNxHvAMYc7J1ekL3ALcBQwALgMeBt4D
-bAG+GauOAs6KLyQdASwBTga+BQwHugPLJHUs2PlD4L2xr2uBbwNX5mzoBKwAesSyIcDRwGJJHUpc
-9z7cta6czsARwOaD6ENAJ+AsM9sAIOljwI+BYWb2h5gnYL6kk81sTRX9jwOeM7OLYnphfABNKWGH
-AV8ys7o45ocJor4kswOojQG8CcB8M9sh6S8E4d4V2x0DnE9pgZXjDGCamc3O5c3K3phZLVAbxxDw
-COGmHgFcU+jrHjObHOsuAwZHm1bF8quAB8xsdEwvknQcQXgZZwJPm1l+rv6avZGUPaSeN7NHc3Uu
-BT4A9DCzjbHuSuBFghjztm4ws8tyNpwd7bw25o0BjgTONbPXY18PAxsJD5abaQJfkaun2Z/RkdRO
-UvvsVSjekIk48kL8W1si78QqbTuD3M0XKaYhXMOSTMSRcwkr4n0F22uBT+Rc2hnAOZK6x/QQwoJw
-T5W2/g0YK+mKUq6jpA6SJklaD+wB6oBfAt0kFe/bhfsuzOwtYB1x7uI19ALuK7S5t5B+Euglaaqk
-vkWXtwxnEryRjTkbXias5p9pys7I34H359KfBRYDO3Pzvwt4AuhTzggXcuVsA/5LcI2bYwnhxqsD
-6tTwiOP1Qt26EvlZXll3qgRdga2FvGI645VCugvBbd5Bznbgzpif7SmXEVab4TF9KTA3W0Gq4LvA
-XEIkeLWktZKG5sqnEFzR6QTXug9ByKLxvBTH3purk13Xq4U6DdJmtiReS1/gIWBr3MMe1cx1nEDj
-ucz679SMnXU0vJYuwNBof/4z6E9DwTfCXesKMbO90c0ZQLj5yjESOCaXXpt7fyijnv8iHJPkOa6J
-ukXP4t/AW4R9a33j6uGBYGYm6Q5gpKRZwNmEOakKM9tB2B9eGYNkY4FZkp4ys9XAhcANZnZd1kbh
-1KBaXgP+R+N5KaYxs7uBuyV1Bi4gHCvuBH5apv8twGkl8rsSHv7VsA14Fri6RNnOcg19Ra6O3wJ9
-8pHcDIWI7wAAM1trZk/kXrtyVQ/lL1yuIuwP83y5wra1hJXr2ILt2Wtvru5MwgpxO/ASsOhgjI5B
-srGE+7FnzO7Afs8ESe2Ar1PZ/O2rE13tLBCW5/wy9mwzs1sJgadTYnZTXtJKoHeMbGe2nkgIYq6o
-wNY8S4DTCfvw4vyvK9fQV+QqMLP7JU0FZsRAxTzCHqYnIVD0Is1HtQ9oRZY0E+hnZt3LVJsCrJRU
-QxDbKewP6ORX2UY2mNkaSdOBGkm/Bh4n3LSnEQI5I3J1/ylpATAImGxmDcQlaSIw3syaXCgkrQDm
-AM8RhDeCMJdZIGkRMDrukbcToteHl7K9VPeFepOBOZJuJrjz/YAvFOyZBHQkbB1eI+yr+7I/iLcZ
-2A0Ml7QT2GtmjxHmeRzwgKTxhHmeQPBgfleBrXmmEv7JqFbSjYTVvmu0d7mZNXmS4StylZjZjwj7
-mB6EKOtCQrRxEdDo/LLYnNIrSiV5R1F6L5a37XHgIqA3IZhzXs6mN5oZjxjVvRoYBswn7I8HEm7u
-Ilnw6M4SZUfReE9a5BHCPns24YisEzDQzLbE8u8Bywn/LTeDcI77qxK2NzV3+VV5buxvMGFePg5c
-Xmj7KHAq4QhqASHiPMHMboh97CE8bHoTjrhWxvw6QpBqdbRzJiHK3L+CuEHRzm2EY63VBLf+QcLD
-+d3AU+U6UuFh2rBQstR/H7mt/NC5pE3Az83s91W2uxi4G+huZpta0J4/A13NrF+JsmXAYjMrtddz
-DgHuWrcB4p6rHfDHCureQvAOtgOfJJyh3t9SIo6BqT6E1X5oifL2BHe8yT2o0/K4kNsA8Vyy7PFD
-jk4Ed7QzYa9XQwgktRTzYt/TzGxOsTAGl7q04HhOBbiQE8PMGq2SLdx/uWCb00p4sMtxEsCF7DgJ
-4EJ2nARwITtOAriQHScBXMiOkwAuZMdJABey4ySAC9lxEsCF7DgJ4EJ2nARwITtOAriQHScBXMiO
-kwAuZMdJABey4ySAC9lxEsCF7DgJ4EJ2nARo9utw30ZbWoW28nW4jlOOskJ2HKdt4K614ySAC9lx
-EsCF7DgJ4EJ2nARwITtOAvwfBZXP9qq9c3IAAAAASUVORK5CYII=
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABGCAYAAAAUwxD7AAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
-AAALEgAACxIB0t1+/AAAAydJREFUeJztnMuLFFcUh7/fkKAGhGBEHQw+EElcOwz4QlACAyIEREQI
-LtxEN8LgCK4UdDmMunHjAxRxoRtDmEWiRBeOD9T8AYpIVEQdXxsVX3hcVA0241DdnRmnPfL7Nk3f
-e6rq0F+fe+s2t1oRgclLW6sTMKPDApNjgcmxwORYYHIsMDnfVHVK+urXGBGhVucwGioFAnR2dIxH
-Hi3hyrVrrU5h1HgITY4FJscCk2OBybHA5FhgciwwORaYHAtMjgUmxwKTY4HJscDkWGByLDA5Fpgc
-C0yOBSbHApNjgf8DSWsknZX0TNIrSdcl9UlqH+PrHJF0tSrGAptEUh9wArgJ/Ab8AuwFVgL7P8Ml
-K3cG1t2VZj4iaTXQDWyMiCM1XeclHaCQOeaXrep0BTZHN/DvMHkARMT7iPgbQNJUSUclPZb0QtI5
-SQtr4yVtkDQg6Ymkp+WQvHD4eethgQ0i6VtgEfBXA+F/UFTjVmAdxed8TtK8mpg5wDFgLbAeuEtR
-yXObyctDaOP8AEwA7lQFSeoCFgPLI+J82XYW+A/YBmwCiIhdNce0Af8AnRTz6u5Gk3IFNk+9xw06
-gYdD8gAi4iXQDywdapO0QNIpSQ+Ad8Ab4CdgfjPJuAIb5wnwGphVJ64deDRC+yAwBUDSZOA0cJ9i
-Xr1dnvsQMLGZpCywQSLiraQLQBewoyL0PjBthPbpFF8CKObSmcDKiLgxFCDp+2bz8hDaHPuADkkb
-hndIaivnv8vANEnLavq+A1YBA2XTpPL1TU3MYmD2CNf0OnCsiIh+SXuAw5KWAH8Cz4GfKW5ObkXE
-GkkXgROStgNPgR6KG6De8lSXyuMOSuoFfgR2Avf4dN3ndeBYEhE9FEuD+cBxirmsGzgDbC7Dfi3f
-7wNOUlTRioi4VZ5jkGL5MINiybEF+J3i153aigvqVKCq/idGUnztzwdmf8DTFZgcC0yOBSbHApNj
-gcmxwORYYHIsMDkWmBwLTI4FJscCk2OBybHA5FhgciwwORaYHAtMjgUmxwKTY4HJscDk1N1WOI65
-tITs2worBZovHw+hybHA5FhgciwwORaYnA+0Sq2fHXVdFQAAAABJRU5ErkJggg==
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
-</div>
-
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr />
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Interval">Interval<a class="anchor-link" href="#Interval">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Interval</span>
@@ -2433,12 +834,100 @@ e21DYmaebpkVOSRmBQ6JWYFDYlbgkJgV/AeUMzJptCq0YgAAAABJRU5ErkJggg==
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I might make an <code>Interval</code> explicitly from a Component...</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">interval</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="s">&quot;Grey sandstone.&quot;</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">=</span><span class="n">lexicon</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">Interval</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">rock</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[26]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Interval(top: 10.0, base: 20.0, description: &apos;&apos;, components: [Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sand&quot;, &quot;grainsize&quot;:&quot;vf-f&quot;)])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>... or I might pass a description and a <code>lexicon</code> and Striplog will parse the description and attempt to extract structured <code>Component</code> objects from it.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">Interval</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="s">&quot;Grey sandstone with shale flakes.&quot;</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">=</span><span class="n">lexicon</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[27]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Interval(top: 20.0, base: 40.0, description: &apos;Grey sandstone with shale flakes.&apos;, components: [Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;)])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Notice I only got one <code>Component</code>, even though the description contains a subordinate lithology. This is the default behaviour, we have to ask for more components:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">interval</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="s">&quot;Grey sandstone with black shale flakes.&quot;</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">=</span><span class="n">lexicon</span><span class="p">,</span> <span class="n">max_component</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">interval</span>
 </pre></div>
 
@@ -2450,11 +939,11 @@ e21DYmaebpkVOSRmBQ6JWYFDYlbgkJgV/AeUMzJptCq0YgAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[39]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[28]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Interval(top: 20.0, base: 40.0, description: &apos;Grey sandstone.&apos;, components: [Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;)])</pre>
+<pre>Interval(top: 20.0, base: 40.0, description: &apos;Grey sandstone with black shale flakes.&apos;, components: [Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;), Component(&quot;lithology&quot;:&quot;shale&quot;, &quot;colour&quot;:&quot;black&quot;, &quot;amount&quot;:&quot;flakes&quot;)])</pre>
 </div>
 
 </div>
@@ -2475,7 +964,7 @@ e21DYmaebpkVOSRmBQ6JWYFDYlbgkJgV/AeUMzJptCq0YgAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">interval</span><span class="o">.</span><span class="n">primary</span>
@@ -2489,11 +978,10 @@ e21DYmaebpkVOSRmBQ6JWYFDYlbgkJgV/AeUMzJptCq0YgAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[40]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[29]:</div>
 
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;)</pre>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table>
 </div>
 
 </div>
@@ -2514,10 +1002,10 @@ e21DYmaebpkVOSRmBQ6JWYFDYlbgkJgV/AeUMzJptCq0YgAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">interval</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s">&quot;{colour} {lithology}&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">interval</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s">&quot;{colour} {lithology} {amount}&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -2528,11 +1016,11 @@ e21DYmaebpkVOSRmBQ6JWYFDYlbgkJgV/AeUMzJptCq0YgAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[41]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[30]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&apos;20.00 m of grey sandstone&apos;</pre>
+<pre>&apos;20.00 m of grey sandstone  with black shale flakes&apos;</pre>
 </div>
 
 </div>
@@ -2553,7 +1041,7 @@ e21DYmaebpkVOSRmBQ6JWYFDYlbgkJgV/AeUMzJptCq0YgAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">interval_2</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="s">&quot;Red sandstone.&quot;</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">=</span><span class="n">lexicon</span><span class="p">)</span>
@@ -2564,9 +1052,20 @@ e21DYmaebpkVOSRmBQ6JWYFDYlbgkJgV/AeUMzJptCq0YgAAAABJRU5ErkJggg==
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Technical aside:</strong> The <code>Interval</code> class is a <code>functools.total_ordering</code>, so providing <code>__eq__</code> and one other comparison (such as <code>__lt__</code>) in the class definition means that instances of the class have implicit order. So you can use <code>sorted</code> on a Striplog, for example.</p>
+<p>It wasn't clear to me whether this should compare tops (say), so that '&gt;' might mean 'deeper', or if it should be keyed on thickness. I chose the latter, and implemented other comparisons instead.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="n">interval_2</span> <span class="o">==</span> <span class="n">interval</span><span class="p">)</span>
@@ -2586,7 +1085,7 @@ e21DYmaebpkVOSRmBQ6JWYFDYlbgkJgV/AeUMzJptCq0YgAAAABJRU5ErkJggg==
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>False
 True
-25.00 m of red, sandstone
+25.00 m of sandstone, red
 </pre>
 </div>
 </div>
@@ -2607,7 +1106,7 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">interval_2</span> <span class="o">+</span> <span class="n">interval</span>
@@ -2621,11 +1120,11 @@ True
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[44]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[33]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Interval(top: 20.0, base: 65.0, description: &apos;55.6% Red sandstone with 44.4% Grey sandstone&apos;, components: [Component(&quot;colour&quot;:&quot;red&quot;, &quot;lithology&quot;:&quot;sandstone&quot;), Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;)])</pre>
+<pre>Interval(top: 20.0, base: 65.0, description: &apos;55.6% Red sandstone with 44.4% Grey sandstone with black shale flakes&apos;, components: [Component(&quot;lithology&quot;:&quot;sandstone&quot;, &quot;colour&quot;:&quot;red&quot;), Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;), Component(&quot;lithology&quot;:&quot;shale&quot;, &quot;colour&quot;:&quot;black&quot;, &quot;amount&quot;:&quot;flakes&quot;)])</pre>
 </div>
 
 </div>
@@ -2646,7 +1145,7 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">interval</span> <span class="o">+</span> <span class="mi">5</span>
@@ -2660,11 +1159,11 @@ True
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[45]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[34]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Interval(top: 20.0, base: 45.0, description: &apos;Grey sandstone.&apos;, components: [Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;)])</pre>
+<pre>Interval(top: 20.0, base: 45.0, description: &apos;Grey sandstone with black shale flakes.&apos;, components: [Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;), Component(&quot;lithology&quot;:&quot;shale&quot;, &quot;colour&quot;:&quot;black&quot;, &quot;amount&quot;:&quot;flakes&quot;)])</pre>
 </div>
 
 </div>
@@ -2685,7 +1184,7 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">interval</span> <span class="o">+</span> <span class="n">rock3</span>
@@ -2699,11 +1198,11 @@ True
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[46]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[35]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Interval(top: 20.0, base: 40.0, description: &apos;Grey sandstone. with Vf-f, red, sandstone&apos;, components: [Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;), Component(&quot;grainsize&quot;:&quot;vf-f&quot;, &quot;colour&quot;:&quot;red&quot;, &quot;lithology&quot;:&quot;sandstone&quot;)])</pre>
+<pre>Interval(top: 20.0, base: 40.0, description: &apos;Grey sandstone with black shale flakes. with Grey, sandstone, fine&apos;, components: [Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;), Component(&quot;lithology&quot;:&quot;shale&quot;, &quot;colour&quot;:&quot;black&quot;, &quot;amount&quot;:&quot;flakes&quot;), Component(&quot;colour&quot;:&quot;grey&quot;, &quot;lithology&quot;:&quot;sandstone&quot;, &quot;grainsize&quot;:&quot;fine&quot;)])</pre>
 </div>
 
 </div>
