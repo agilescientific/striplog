@@ -204,7 +204,6 @@ class Decor(object):
         ax.set_ylim([0, u*v])
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
-        ax.get_yaxis().set_visible(False)
         ax.invert_yaxis()
 
         return r
