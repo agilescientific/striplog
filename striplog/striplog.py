@@ -15,9 +15,9 @@ from collections import Counter
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-# from PIL import Image
 
 from .interval import Interval
+from .component import Component
 from .legend import Legend
 from . import utils
 from . import templates
@@ -225,7 +225,7 @@ class Striplog(object):
         return im[:, col, :3]
 
     @classmethod
-    def __intervals_from_loglike(self, loglike, offset=2):
+    def __tops_from_loglike(self, loglike, offset=0):
         """
         Take a log-like stream of numbers or strings,
         and return two arrays: one of the tops (changes), and one of the
@@ -234,7 +234,7 @@ class Striplog(object):
         Args:
             loglike (array-like): The input stream of loglike data.
             offset (int): Offset (down) from top at which to get lithology,
-            to be sure of getting 'clean' pixels.
+                to be sure of getting 'clean' pixels.
 
         Returns:
             ndarray: Two arrays, tops and values.
@@ -249,6 +249,26 @@ class Striplog(object):
         values = loglike[tops + offset]
 
         return tops, values
+
+    @classmethod
+    def __intervals_from_tops(self, tops, values, basis, components):
+        """
+        Take a sequence of tops in an arbitrary dimension, and provide a list
+        of intervals from which a striplog can be made.
+        """
+        # Scale tops to actual depths.
+        length = float(basis.size)
+        start, stop = basis[0], basis[-1]
+        tops = [start + (p/length) * (stop-start) for p in tops]
+        bases = tops[1:] + [stop]
+
+        list_of_Intervals = []
+        for i, t in enumerate(tops):
+            component = components[values[i]]
+            interval = Interval(t, bases[i], components=[component])
+            list_of_Intervals.append(interval)
+
+        return list_of_Intervals
 
     @classmethod
     def from_csv(cls, text,
@@ -379,21 +399,23 @@ class Striplog(object):
         loglike = np.array([utils.rgb_to_hex(t) for t in rgb])
 
         # Get the pixels and colour values at 'tops' (i.e. changes).
-        pixels, hexes = cls.__intervals_from_loglike(loglike,
-                                                     offset=pixel_offset)
-
-        # Scale pixel values to actual depths.
-        length = float(loglike.size)
-        tops = [start + (p/length) * (stop-start) for p in pixels]
-        bases = tops[1:] + [stop]
+        tops, hexes = cls.__tops_from_loglike(loglike,
+                                              offset=pixel_offset)
+        hexes_reduced = list(set(hexes))
 
         # Get the components corresponding to the colours.
-        comps = [legend.get_component(h, tolerance=tolerance) for h in hexes]
+        components = [legend.get_component(h, tolerance=tolerance)
+                      for h in hexes_reduced]
 
-        list_of_Intervals = []
-        for i, t in enumerate(tops):
-            interval = Interval(t, bases[i], components=[comps[i]])
-            list_of_Intervals.append(interval)
+        # Turn them into integers.
+        values = [hexes_reduced.index(i) for i in hexes]
+
+        basis = np.linspace(start, stop, loglike.size)
+
+        list_of_Intervals = cls.__intervals_from_tops(tops,
+                                                      values,
+                                                      basis,
+                                                      components)
 
         return cls(list_of_Intervals, source="Image")
 
@@ -421,7 +443,7 @@ class Striplog(object):
 
         Returns:
             Striplog: The ``striplog`` object.
-         """
+        """
         csv_text = ''
         for interval in a:
             interval = [str(i) for i in interval]
@@ -436,6 +458,40 @@ class Striplog(object):
                             source=source,
                             points=points,
                             abbreviations=abbreviations)
+
+    @classmethod
+    def from_log(cls, a,
+                 basis,
+                 components=None,
+                 legend=None,
+                 source='Log'):
+        """
+        Turn a 1D array of integers into a striplog, given a Legend or a
+            sequence of Components.
+
+        Args:
+            a (array-like): A 1D array or a list of integers.
+            components (sequence): A list or tuple of Components.
+            legend (Legend): A legend.
+
+        Returns:
+            Striplog: The ``striplog`` object.
+        """
+        if not components:
+            if not legend:
+                m = 'You must provide a legend or list of components'
+                raise StriplogError(m)
+            else:
+                components = [decor.component for decor in legend]
+
+        tops, values = cls.__tops_from_loglike(a)
+
+        list_of_Intervals = cls.__intervals_from_tops(tops,
+                                                      values,
+                                                      basis,
+                                                      components)
+
+        return cls(list_of_Intervals, source=source)
 
     @classmethod
     def from_las3(cls, string, lexicon=None,
@@ -531,7 +587,13 @@ class Striplog(object):
                                         source=source,
                                         data=data)
 
-    def to_log(self, step=1.0, start=None, stop=None, legend=None):
+    def to_log(self,
+               step=1.0,
+               start=None,
+               stop=None,
+               legend=None,
+               match_only=None,
+               return_table=False):
         """
         Return a fully sampled log from a striplog. Useful for crossplotting
         with log data, for example.
@@ -547,9 +609,14 @@ class Striplog(object):
                 provide one. Otherwise the codes come from the log, using
                 integers in the other they are encountered. If you use a
                 legend, they are assigned in the order of the legend.
+            match_only (list): If you only want to match some attributes of
+                the Components (e.g. lithology), provide a list of those
+                you want to match.
+            return_table (bool)
 
         Returns:
-            ndarray: Two ndarrays in a tuple, (depth, logdata).
+            ndarray: Two ndarrays in a tuple, (depth, logdata). Logdata
+                has type numpy.int.
         """
         # Make the preparations.
         if not start:
@@ -558,25 +625,38 @@ class Striplog(object):
         if not stop:
             stop = self.stop
 
-        pts = np.floor((stop - start)/step)
-        stop = self.start + step * pts
-        depth = np.linspace(start, stop, pts+1)
-        result = np.zeros_like(depth)
+        pts = np.ceil((stop - start)/step) + 1
+        stop = np.round(start + step*(pts-1), 5)
+        depth = np.linspace(start, stop, pts)
+        result = np.zeros_like(depth, dtype=np.int)
 
         # Make a look-up table for the log values.
         if legend:
-            table = {j.component: i+1 for i, j in enumerate(legend)}
+            table = [j.component for j in legend]
         else:
-            table = {j[0]: i+1 for i, j in enumerate(self.top)}
+            table = [j[0] for j in self.top]
+        table.insert(0, Component({}))
 
         # Assign the values from the lookup table.
         for i in self:
+            c = i.primary
+            if match_only:
+                c = Component({k: getattr(c, k, None)
+                               for k in match_only})
+
+            try:
+                key = table.index(c)
+            except ValueError:
+                key = 0
+
             top_index = np.ceil((i.top-start)/step)
             base_index = np.ceil((i.base-start)/step)+1
-            key = table.get(i.primary) or 0
             result[top_index:base_index] = key
 
-        return depth, result
+        if return_table:
+            return depth, result, table
+        else:
+            return depth, result
 
     def plot_axis(self,
                   ax,
@@ -918,6 +998,13 @@ class Striplog(object):
         Returns the mean thickness of all filled intervals.
         """
         return self.cum / len(self)
+
+    @property
+    def unique(self):
+        """
+        Returns the list of compenents in the striplog.
+        """
+        return [i[0] for i in self.top]
 
     @property
     def top(self):

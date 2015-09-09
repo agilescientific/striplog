@@ -428,7 +428,7 @@ class Legend(object):
         if c:
             if match_only:
                 # Filter the component only those attributes
-                c = Component({k: getattr(c, k) for k in match_only})
+                c = Component({k: getattr(c, k, None) for k in match_only})
             for decor in self.__list:
                 if c == decor.component:
                     return decor.colour
@@ -450,7 +450,7 @@ class Legend(object):
         if c:
             if match_only:
                 # Filter the component only those attributes
-                c = Component({k: getattr(c, k) for k in match_only})
+                c = Component({k: getattr(c, k, None) for k in match_only})
             for decor in self.__list:
                 if c == decor.component:
                     return decor.width
