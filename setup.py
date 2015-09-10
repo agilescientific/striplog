@@ -22,6 +22,15 @@ REQUIREMENTS = ['numpy',
                 'matplotlib'
                 ]
 
+TEST_REQUIREMENTS = ['pytest',
+                     'coveralls',
+                     'pytest-cov',
+                     'pytest-mpl'
+                     ]
+
+# Test command is:
+# py.test --mpl --cov striplog
+
 CLASSIFIERS = ['Development Status :: 4 - Beta',
                'Intended Audience :: Science/Research',
                'Natural Language :: English',
@@ -41,8 +50,8 @@ setup(name='striplog',
       author_email='hello@agilegeoscience.com',
       license='Apache 2',
       packages=['striplog'],
-      tests_require=['pytest',
-                     'pytest-mpl'],
+      tests_require=TEST_REQUIREMENTS,
+      test_suite='run_tests',
       download_url='https://github.com/agile-geoscience/tarball/'+verstr,
       install_requires=REQUIREMENTS,
       classifiers=CLASSIFIERS,
