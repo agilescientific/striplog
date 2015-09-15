@@ -31,6 +31,7 @@ and makes the data available as a Python object.
 # Python 2 & 3 compatibility
 from __future__ import print_function
 
+import codecs
 import re
 import keyword
 
@@ -355,11 +356,17 @@ class LASReader(object):
         try:
             if isinstance(f, basestring):
                 opened_here = True
-                f = open(f, 'r')
+                f = codecs.open(f,
+                                mode='r',
+                                encoding='utf-8',
+                                errors='replace')
         except NameError:
             if isinstance(f, str):
                 opened_here = True
-                f = open(f, 'r')
+                f = codecs.open(f,
+                                mode='r',
+                                encoding='utf-8',
+                                errors='replace')
 
         self.wrap = False
 
