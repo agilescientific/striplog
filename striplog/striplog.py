@@ -243,7 +243,7 @@ class Striplog(object):
         all_edges = loglike[1:] == loglike[:-1]
         edges = all_edges[1:] & (all_edges[:-1] == 0)
 
-        tops = np.where(edges)[0]
+        tops = np.where(edges)[0] + 1
         tops = np.append(0, tops)
 
         values = loglike[tops + offset]
@@ -259,7 +259,7 @@ class Striplog(object):
         # Scale tops to actual depths.
         length = float(basis.size)
         start, stop = basis[0], basis[-1]
-        tops = [start + (p/length) * (stop-start) for p in tops]
+        tops = [start + (p/(length-1)) * (stop-start) for p in tops]
         bases = tops[1:] + [stop]
 
         list_of_Intervals = []
@@ -591,9 +591,10 @@ class Striplog(object):
                step=1.0,
                start=None,
                stop=None,
+               basis=None,
                legend=None,
                match_only=None,
-               return_table=False):
+               return_meta=False):
         """
         Return a fully sampled log from a striplog. Useful for crossplotting
         with log data, for example.
@@ -612,23 +613,24 @@ class Striplog(object):
             match_only (list): If you only want to match some attributes of
                 the Components (e.g. lithology), provide a list of those
                 you want to match.
-            return_table (bool)
+            return_meta (bool): Also return the depth basis (np.linspace),
+                and the component table.
 
         Returns:
             ndarray: Two ndarrays in a tuple, (depth, logdata). Logdata
                 has type numpy.int.
         """
         # Make the preparations.
-        if not start:
-            start = self.start
+        if basis is not None:
+            start, stop = basis[0], basis[-1]
+            step = basis[1] - start
+        else:
+            start = start or self.start
+            stop = stop or self.stop
+            pts = np.ceil((stop - start)/step) + 1
+            basis = np.linspace(start, stop, pts)
 
-        if not stop:
-            stop = self.stop
-
-        pts = np.ceil((stop - start)/step) + 1
-        stop = np.round(start + step*(pts-1), 5)
-        depth = np.linspace(start, stop, pts)
-        result = np.zeros_like(depth, dtype=np.int)
+        result = np.zeros_like(basis, dtype=np.int)
 
         # Make a look-up table for the log values.
         if legend:
@@ -653,10 +655,10 @@ class Striplog(object):
             base_index = np.ceil((i.base-start)/step)+1
             result[top_index:base_index] = key
 
-        if return_table:
-            return depth, result, table
+        if return_meta:
+            return result, basis, table
         else:
-            return depth, result
+            return result
 
     def plot_axis(self,
                   ax,
@@ -702,7 +704,7 @@ class Striplog(object):
              width=1.5,
              ladder=False,
              aspect=10,
-             interval=(1, 10),
+             ticks=(1, 10),
              match_only=None):
         """
         Hands-free plotting.
@@ -712,7 +714,7 @@ class Striplog(object):
             width (int): The width of the plot, in inches. Default 1.
             ladder (bool): Whether to use widths or not. Default False.
             aspect (int): The aspect ratio of the plot. Default 10.
-            interval (int or tuple): The (minor,major) tick interval for depth.
+            ticks (int or tuple): The (minor,major) tick interval for depth.
                 Only the major interval is labeled. Default (1,10).
             match_only (list): A list of strings matching the attributes you
                 want to compare when plotting.
@@ -736,13 +738,13 @@ class Striplog(object):
         ax.set_ylim([self.stop, self.start])
         ax.set_xticks([])
 
-        if type(interval) is int:
-            interval = (1, interval)
+        if type(ticks) is int:
+            ticks = (1, ticks)
 
-        minorLocator = mpl.ticker.MultipleLocator(interval[0])
+        minorLocator = mpl.ticker.MultipleLocator(ticks[0])
         ax.yaxis.set_minor_locator(minorLocator)
 
-        majorLocator = mpl.ticker.MultipleLocator(interval[1])
+        majorLocator = mpl.ticker.MultipleLocator(ticks[1])
         majorFormatter = mpl.ticker.FormatStrFormatter('%d')
         ax.yaxis.set_major_locator(majorLocator)
         ax.yaxis.set_major_formatter(majorFormatter)

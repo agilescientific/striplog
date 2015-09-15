@@ -124,7 +124,7 @@ def test_from_image():
     assert np.floor(striplog.find('sandstone').cum) == 15
     assert striplog.depth(260).primary.lithology == 'siltstone'
     assert striplog.to_las3() is not ''
-    assert striplog.to_log()[1][5] == 2.0
+    assert striplog.to_log()[5] == 2.0
     assert striplog.cum == 100.0
     assert striplog.thickest().primary.lithology == 'anhydrite'
     assert striplog.thickest(n=7)[1].primary.lithology == 'sandstone'
