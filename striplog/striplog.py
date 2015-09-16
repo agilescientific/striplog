@@ -594,6 +594,7 @@ class Striplog(object):
                basis=None,
                legend=None,
                match_only=None,
+               undefined=0,
                return_meta=False):
         """
         Return a fully sampled log from a striplog. Useful for crossplotting
@@ -631,6 +632,8 @@ class Striplog(object):
             basis = np.linspace(start, stop, pts)
 
         result = np.zeros_like(basis, dtype=np.int)
+        if undefined == np.nan:
+            result[:] = np.nan
 
         # Make a look-up table for the log values.
         if legend:
@@ -649,7 +652,7 @@ class Striplog(object):
             try:
                 key = table.index(c)
             except ValueError:
-                key = 0
+                key = undefined
 
             top_index = np.ceil((i.top-start)/step)
             base_index = np.ceil((i.base-start)/step)+1
