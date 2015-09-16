@@ -157,7 +157,14 @@ class LASSection(object):
         Helper function to add attributes.
         """
         self.items[item.name] = item
-        self.names.append(item.name)
+
+        # Deal with duplicates.
+        if item.name in self.names:
+            n = self.names.count(item.name) + 1
+            self.names.append(item.name+'[{}]'.format(n))
+        else:
+            self.names.append(item.name)
+
         if is_identifier(item.name) and not hasattr(self, item.name):
             setattr(self, item.name, item)
 
@@ -448,8 +455,7 @@ class LASReader(object):
         # to read the data into an array.  For wrapped rows, we use the
         # function __read_wrapped() defined elsewhere in this module.
         # The data type is determined by the items from the '~Curves' section.
-        unique = list(set(self.curves.names))
-        dt = np.dtype([(name, float) for name in unique])
+        dt = np.dtype([(name, float) for name in self.curves.names])
         if self.wrap:
             a = self.__read_wrapped_data(f, dt)
         else:
