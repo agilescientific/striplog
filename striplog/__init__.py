@@ -8,7 +8,6 @@ striplog
 from .legend import Decor, Legend
 from .interval import Interval
 from .component import Component
-from .well import Well
 from .striplog import Striplog
 from .lexicon import Lexicon
 
@@ -17,7 +16,6 @@ __all__ = ['Lexicon',
            'Decor',
            'Legend',
            'Interval',
-           'Well',
            'Striplog']
 
 

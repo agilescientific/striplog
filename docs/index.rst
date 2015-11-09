@@ -20,7 +20,6 @@ Tutorials
 * :download:`The basic objects.<../tutorial/Basic_objects.html>`
 * :download:`The striplog object.<../tutorial/Striplog_object.html>`
 * :download:`The striplog object.<../tutorial/Display_objects.html>`
-* :download:`The well object.<../tutorial/Well_object.html>`
 
 The code
 --------
@@ -33,7 +32,6 @@ The code
    interval
    legend
    striplog
-   well
 
 Indices and tables
 ------------------
