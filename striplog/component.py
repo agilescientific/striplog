@@ -6,7 +6,9 @@ Defines components for holding properties of rocks or samples or whatevers.
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
+from numbers import Number
 import re
+import json
 
 
 class ComponentError(Exception):
@@ -38,18 +40,23 @@ class Component(object):
     def __init__(self, properties):
         for k, v in properties.items():
             if k and v:
-                setattr(self, k.lower(), v.lower())
+                try:
+                    setattr(self, k.lower(), v.lower())
+                except AttributeError:
+                    # Probably v is a number or 'other'.
+                    setattr(self, k.lower(), v)
 
     def __repr__(self):
         s = str(self)
         return "Component({0})".format(s)
 
     def __str__(self):
-        s = []
-        for key in self.__dict__:
-            t = '"{key}":"{value}"'
-            s.append(t.format(key=key, value=self.__dict__[key]))
-        return ', '.join(s)
+        # s = []
+        # for key in self.__dict__:
+        #     t = '"{key}":"{value}"'
+        #     s.append(t.format(key=key, value=self.__dict__[key]))
+        # return ', '.join(s)
+        return json.dumps(self.__dict__)
 
     def __getitem__(self, key):
         """
@@ -149,38 +156,44 @@ class Component(object):
         if default and not self.__dict__:
             return default
 
-        if not fmt:
-            string, flist = '', []
-            for item in self.__dict__:
-                string += '{}, '
-                flist.append(item)
-            string = string.strip(', ')
-        else:
-            fmt = re.sub(r'  ', '_dblspc_', fmt)
-            string = re.sub(r'\{(\w+)\}', '{}', fmt)
-            flist = re.findall(r'\{(\w+)\}', fmt)
+        items = self.__dict__.copy()
 
-        words = []
-        for key in flist:
-            word = self.__dict__.get(key.lower())
-            if word and key[0].isupper():
-                word = word.capitalize()
-            if word and key.isupper():
-                word = word.upper()
-            if not word:
-                word = ''
-            words.append(word)
+        def callback(m):
+            """
+            Callback function for re.sub() below.
+            """
+            fmtd = m.group(1)
+            key = m.group(1).lower()
+            code = m.group(2)
+
+            item = items.get(key)
+
+            if not isinstance(item, Number):
+                try:
+                    if item and fmtd[0].isupper():
+                        item = item.capitalize()
+                    if item and fmtd.isupper():
+                        item = item.upper()
+                    if not item:
+                        item = ''
+                except AttributeError:
+                    # Probably have a list or similar.
+                    item = str(item)
+
+            items[key] = item
+            return "{{{0}:{1}}}".format(key, code)
+
+        if fmt:
+            string = re.sub(r'\{(\w+)(?:\:)?(.*?)\}', callback, fmt)
+        else:
+            string = '{' + '}, {'.join(list(items.keys())) + '}'
 
         try:
-            summary = string.format(*words)
+            summary = string.format(**items)
         except KeyError as e:
-            raise ComponentError("No such attribute, "+str(e))
+            raise ComponentError("Error building summary, "+str(e))
 
         if initial and summary:
             summary = summary[0].upper() + summary[1:]
-
-        # Tidy up double spaces
-        summary = re.sub(r'  ', ' ', summary)
-        summary = re.sub(r'_dblspc_', '  ', summary)
 
         return summary
