@@ -6,9 +6,12 @@ Defines components for holding properties of rocks or samples or whatevers.
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
+from collections.abc import MutableMapping
 from numbers import Number
 import re
 import json
+
+from .utils import CustomFormatter
 
 
 class ComponentError(Exception):
@@ -18,7 +21,7 @@ class ComponentError(Exception):
     pass
 
 
-class Component(object):
+class Component(MutableMapping):
     """
     Initialize with a dictionary of properties. You can use any
     properties you want e.g.:
@@ -29,43 +32,41 @@ class Component(object):
         - modifier, e.g. 'rippled'
         - quantity, e.g. '35%', or 'stringers'
         - description, e.g. from cuttings
-
-    You can include as many other things as you want, e.g.
-
-        - porosity
-        - cementation
-        - lithology code
     """
 
-    def __init__(self, properties):
-        for k, v in properties.items():
-            if k and v:
-                try:
-                    setattr(self, k.lower(), v.lower())
-                except AttributeError:
-                    # Probably v is a number or 'other'.
-                    setattr(self, k.lower(), v)
+    def __init__(self, *args, **kwargs):
+        self.data = dict()
+        self.update(dict(*args, **kwargs))
 
     def __repr__(self):
         s = str(self)
         return "Component({0})".format(s)
 
     def __str__(self):
-        # s = []
-        # for key in self.__dict__:
-        #     t = '"{key}":"{value}"'
-        #     s.append(t.format(key=key, value=self.__dict__[key]))
-        # return ', '.join(s)
-        return json.dumps(self.__dict__)
+        return self.data.__str__()
 
     def __getitem__(self, key):
         """
         So we can get at attributes with variables.
         """
-        return self.__dict__.get(key)
+        return self.data.get(key)
+
+    def __len__(self):
+        return len(self.data)
+
+    def __iter__(self):
+        return iter(self.data)
+
+    def __setitem__(self, key, value):
+        self.data[key] = value
+        return
+
+    def __delitem__(self, key):
+        del self.data[key]
+        return
 
     def __bool__(self):
-        if not self.__dict__.keys():
+        if not self.data.keys():
             return False
         else:
             return True
@@ -77,11 +78,11 @@ class Component(object):
         if not isinstance(other, self.__class__):
             return False
 
-        # Weed out empty elements
-        s = {k: v for k, v in self.__dict__.items() if v}
-        o = {k: v for k, v in other.__dict__.items() if v}
+        # Weed out empty elements and case-desensitize.
+        s = {k.lower(): v.lower() for k, v in self.data.items() if v}
+        o = {k.lower(): v.lower() for k, v in other.data.items() if v}
 
-        # Compare
+        # Compare.
         if s == o:
             return True
         else:
@@ -94,18 +95,21 @@ class Component(object):
     # becomes unhashable. All this does is hash the frozenset of the
     # keys. (You can only hash immutables.)
     def __hash__(self):
-        return hash(frozenset(self.__dict__.keys()))
+        return hash(frozenset(self.data.keys()))
 
     def _repr_html_(self):
         """
-        IPython Notebook magic repr function.
+        Jupyter Notebook magic repr function.
         """
         rows = ''
         s = '<tr><td><strong>{k}</strong></td><td>{v}</td></tr>'
-        for k, v in self.__dict__.items():
+        for k, v in self.data.items():
             rows += s.format(k=k, v=v)
         html = '<table>{}</table>'.format(rows)
         return html
+
+    def json(self):
+        return json.dumps(self.data)
 
     @classmethod
     def from_text(cls, text, lexicon, required=None, first_only=True):
@@ -153,47 +157,17 @@ class Component(object):
 
             r.summary()  -->  'Red, vf-f, sandstone'
         """
-        if default and not self.__dict__:
+        if default and not self.data:
             return default
 
-        items = self.__dict__.copy()
-
-        def callback(m):
-            """
-            Callback function for re.sub() below.
-            """
-            fmtd = m.group(1)
-            key = m.group(1).lower()
-            code = m.group(2)
-
-            item = items.get(key)
-
-            if not isinstance(item, Number):
-                try:
-                    if item and fmtd[0].isupper():
-                        item = item.capitalize()
-                    if item and fmtd.isupper():
-                        item = item.upper()
-                    if not item:
-                        item = ''
-                except AttributeError:
-                    # Probably have a list or similar.
-                    item = str(item)
-
-            items[key] = item
-            return "{{{0}:{1}}}".format(key, code)
-
-        if fmt:
-            string = re.sub(r'\{(\w+)(?:\:)?(.*?)\}', callback, fmt)
-        else:
-            string = '{' + '}, {'.join(list(items.keys())) + '}'
+        f = fmt or '{' + '}, {'.join(list(self.data.keys())) + '}'
 
         try:
-            summary = string.format(**items)
+            summary = CustomFormatter().format(f, **self.data)
         except KeyError as e:
             raise ComponentError("Error building summary, "+str(e))
 
-        if initial and summary:
+        if summary and initial and not fmt:
             summary = summary[0].upper() + summary[1:]
 
         return summary

@@ -398,7 +398,7 @@ class Legend(object):
             for item in header:
                 result += str(row.__dict__.get(item, '')) + ','
             for item in component_header:
-                result += str(row.component.__dict__.get(item, '')) + ','
+                result += str(row.component.data.get(item, '')) + ','
             result += '\n'
 
         return result

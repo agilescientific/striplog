@@ -4,8 +4,47 @@
 Helper functions for the striplog package.
 
 """
+from string import Formatter
+
+import numpy as np
 
 from . import defaults
+
+
+class CustomFormatter(Formatter):
+
+    def __init__(self):
+        super(CustomFormatter, self).__init__()
+        self.last_index = 0
+
+    def get_value(self, key, args, kwargs):
+        if key == '':
+            key = self.last_index
+            self.last_index += 1
+        return super(CustomFormatter, self).get_value(key, args, kwargs)
+
+    def parse(self, format_string):
+        # We'll leave this alone.
+        return super(CustomFormatter, self).parse(format_string)
+
+    def convert_field(self, value, conversion):
+        try:  # If the normal behaviour works, do it.
+            s = super(CustomFormatter, self)
+            return s.convert_field(value, conversion)
+        except ValueError:
+            funcs = {'s': str,    # Default.
+                     'r': repr,   # Default.
+                     'a': ascii,  # Default.
+                     'u': str.upper,
+                     'l': str.lower,
+                     'c': str.capitalize,
+                     't': str.title,
+                     'm': np.mean,
+                     'µ': np.mean,
+                     '+': np.sum,
+                     'x': np.product,
+                     }
+            return funcs.get(conversion)(value)
 
 
 def hex_to_name(hexx):
