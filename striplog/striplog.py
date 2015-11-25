@@ -11,6 +11,7 @@ from io import StringIO
 import csv
 import operator
 from collections import Counter
+from functools import reduce
 
 import numpy as np
 import matplotlib as mpl
@@ -194,14 +195,56 @@ class Striplog(object):
         Sorts into 'natural' order: top-down for depth-ordered
         striplogs; bottom-up for elevation-ordered.
 
-        Note the a striplog sorts with the built-in `sorted()`
-        by interval thickness, hence the need for this function.
+        Sorts in place.
         """
-        if self.order == 'depth':
-            self.__list.sort(key=operator.attrgetter('top'))
-        else:
-            self.__list.sort(key=operator.attrgetter('top'), reverse=True)
-        return self
+        self.__list.sort(key=operator.attrgetter('top'))
+        return
+
+    def __intersect(self):
+        """
+        Makes a striplog of all intersections.
+
+        """
+        pass
+
+    def __merge(self):
+        """
+        Forces the striplog to be 1D by merging all overlaps.
+
+        """
+        pass
+
+    def __strict(self):
+        """
+        Checks if striplog is monotonically increasing in depth.
+
+        """
+        def conc(a, b):
+            return a + b
+
+        boundaries = np.array(reduce(conc, [[i.top, i.base] for i in self]))
+
+        return all(np.diff(boundaries) >= 0)
+
+    def __no_overlaps(self):
+        """
+        Checks no overlaps.
+
+        """
+        pass
+
+    def __assert_way_up(self):
+        """
+        Checks the ways up of Intervals are consistent with each other and
+        with what the striplog thinks it is.
+        """
+        op = {'depth': operator.lt,
+              'elevation': operator.gt,
+              }
+        if any([op[self.order](iv.base, iv.top) for iv in self.__list]):
+            m = "Intervals inconsistent with each other or striplog order."
+            raise StriplogError(m)
+        return
 
     @classmethod
     def __loglike_from_image(self, filename, offset):
@@ -277,7 +320,10 @@ class Striplog(object):
                  dlm=',',
                  points=False,
                  abbreviations=False,
-                 complete=False):
+                 complete=False,
+                 order='depth',
+                 columns=None,
+                 ):
         """
         Convert a CSV string into a striplog. Expects 2 or 3 fields:
             top, description
@@ -294,6 +340,7 @@ class Striplog(object):
                 description. Default: False.
             complete (bool): Whether to make 'blank' intervals, or just leave
                 gaps. Default: False.
+            columns (tuple or list): The names of the columns.
 
         Returns:
             Striplog: A ``striplog`` object.
@@ -320,7 +367,13 @@ class Striplog(object):
         for row in reader:
             as_strings.append(row)
 
-        result = {'tops': [], 'bases': [], 'descrs': []}
+        if not columns:
+            if order[0].lower() == 'e':
+                columns = ('bases', 'tops', 'descrs')
+            else:
+                columns = ('tops', 'bases', 'descrs')
+
+        result = {k: [] for k in columns}
 
         for i, row in enumerate(as_strings):
             if len(row) == 2:
@@ -593,6 +646,7 @@ class Striplog(object):
                stop=None,
                basis=None,
                legend=None,
+               legend_field=None,
                match_only=None,
                undefined=0,
                return_meta=False):
@@ -609,8 +663,10 @@ class Striplog(object):
                 of the LAS file. Default: The stop depth of the striplog.
             legend (Legend): If you want the codes to come from a legend,
                 provide one. Otherwise the codes come from the log, using
-                integers in the other they are encountered. If you use a
-                legend, they are assigned in the order of the legend.
+                integers in the order of prevalence. If you use a legend,
+                they are assigned in the order of the legend.
+            legend_field (str): If you want to get a log representing one of
+                the fields in the legend, such as 'width' or 'grainsize'.
             match_only (list): If you only want to match some attributes of
                 the Components (e.g. lithology), provide a list of those
                 you want to match.
@@ -632,6 +688,8 @@ class Striplog(object):
             basis = np.linspace(start, stop, pts)
 
         result = np.zeros_like(basis, dtype=np.int)
+        print(result)
+        print(result.shape)
         if undefined == np.nan:
             result[:] = np.nan
 
@@ -649,13 +707,20 @@ class Striplog(object):
                 c = Component({k: getattr(c, k, None)
                                for k in match_only})
 
-            try:
-                key = table.index(c)
-            except ValueError:
-                key = undefined
+            if legend and legend_field:
+                try:
+                    key = legend.getattr(c, legend_field)
+                except ValueError:
+                    key = undefined
+            else:
+                try:
+                    key = table.index(c)
+                except ValueError:
+                    key = undefined
 
             top_index = np.ceil((i.top-start)/step)
-            base_index = np.ceil((i.base-start)/step)+1
+            base_index = np.ceil((i.base-start)/step)
+            print(top_index, base_index)
             result[top_index:base_index] = key
 
         if return_meta:
@@ -732,16 +797,28 @@ class Striplog(object):
 
         fig = plt.figure(figsize=(width, aspect*width))
         ax = fig.add_axes([0.35, 0.05, 0.6, 0.95])
-        self.plot_axis(ax=ax,
-                       legend=legend,
-                       ladder=ladder,
-                       default_width=width,
-                       match_only=match_only)
+        ax = self.plot_axis(ax=ax,
+                            legend=legend,
+                            ladder=ladder,
+                            default_width=width,
+                            match_only=match_only)
         ax.set_xlim([0, width])
-        ax.set_ylim([self.stop, self.start])
+
+        # Rely on interval order.
+        lower, upper = self[-1].base, self[0].top
+
+        # Rely on start and stop being set.
+        # if self.order == 'depth':
+        #     upper, lower = self[0].top, self[-1].base
+        # else:
+        #     upper, lower = self.stop, self.start
+
+        ax.set_ylim([lower, upper])
         ax.set_xticks([])
 
-        if type(ticks) is int:
+        try:
+            ticks = tuple(ticks)
+        except TypeError:
             ticks = (1, ticks)
 
         minorLocator = mpl.ticker.MultipleLocator(ticks[0])
@@ -775,7 +852,7 @@ class Striplog(object):
                 the depth is outside the striplog's range.
         """
         for iv in self:
-            if iv.top <= d <= iv.base:
+            if iv.spans(d):
                 return iv
         return None
 
@@ -905,17 +982,14 @@ class Striplog(object):
             n (int): The number of thickest intervals to return. Default: 1.
             index (bool): If True, only the indices of the intervals are
                 returned. You can use this to index into the striplog.
-
-        Returns:
-            Striplog: A striplog of all the gaps. A sort of anti-striplog.
         """
-        s = sorted(range(len(self)), key=lambda k: self[k])
+        s = sorted(range(len(self)), key=lambda k: self[k].thickness)
         indices = s[-n:]
         if index:
             return indices
         else:
             if n == 1:
-                # Then return an inveral
+                # Then return an interval
                 i = indices[0]
                 return self[i]
             else:
@@ -929,7 +1003,7 @@ class Striplog(object):
             If you ask for the thinnest bed and there's a tie, you will
             get the last in the ordered list.
         """
-        s = sorted(range(len(self)), key=lambda k: self[k])
+        s = sorted(range(len(self)), key=lambda k: self[k].thickness)
         indices = s[:n]
         if index:
             return indices
@@ -980,6 +1054,25 @@ class Striplog(object):
             counts, ents = zip(*sorted(z, key=lambda t: t[0], reverse=True))
 
         return ents, counts
+
+    def invert(self, copy=False):
+        """
+        Inverts the striplog, changing its order and the order of its contents.
+        """
+        if copy:
+            print('inverting copy')
+            new_intervals = []
+            for i in self:
+                new_intervals.append(i.invert(copy=True))
+            return Striplog(new_intervals)  # Should get order automatically.
+        else:
+            print('inverting in place')
+            for i in self:
+                i.invert()
+            self.__sort()
+            o = self.order
+            self.order = {'depth': 'elevation', 'elevation': 'depth'}[o]
+            return
 
     @property
     def cum(self):

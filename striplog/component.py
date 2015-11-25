@@ -79,8 +79,12 @@ class Component(MutableMapping):
             return False
 
         # Weed out empty elements and case-desensitize.
-        s = {k.lower(): v.lower() for k, v in self.data.items() if v}
-        o = {k.lower(): v.lower() for k, v in other.data.items() if v}
+        try:
+            s = {k.lower(): v.lower() for k, v in self.data.items() if v}
+            o = {k.lower(): v.lower() for k, v in other.data.items() if v}
+        except AttributeError:  # Dealing with numbers.
+            s = {k.lower(): v for k, v in self.data.items() if v}
+            o = {k.lower(): v for k, v in other.data.items() if v}
 
         # Compare.
         if s == o:

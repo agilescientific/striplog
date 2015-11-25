@@ -5,6 +5,7 @@ Helper functions for the striplog package.
 
 """
 from string import Formatter
+from functools import partial
 
 import numpy as np
 
@@ -45,6 +46,14 @@ class CustomFormatter(Formatter):
                      'x': np.product,
                      }
             return funcs.get(conversion)(value)
+
+
+class partialmethod(partial):
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        return partial(self.func, instance,
+                       *(self.args or ()), **(self.keywords or {}))
 
 
 def hex_to_name(hexx):
@@ -112,3 +121,32 @@ def hex_to_rgb(hexx):
     l = len(h)
 
     return tuple(int(h[i:i+l//3], 16) for i in range(0, l, l//3))
+
+
+def hex_is_dark(hexx, percent=50):
+    """
+    Function to decide if a hex colour is dark.
+
+    Args:
+        hexx (str): A hexadecimal colour, starting with '#'.
+
+    Returns:
+        bool: The colour's brightness is less than the given percent.
+    """
+    r, g, b = hex_to_rgb(hexx)
+    luma = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 2.55  # per ITU-R BT.709
+
+    return (luma < percent)
+
+
+def text_colour_for_hex(hexx, percent=50, dark='#000000', light='#FFFFFF'):
+    """
+    Function to decide what colour to use for a given hex colour.
+
+    Args:
+        hexx (str): A hexadecimal colour, starting with '#'.
+
+    Returns:
+        bool: The colour's brightness is less than the given percent.
+    """
+    return light if hex_is_dark(hexx, percent=percent) else dark

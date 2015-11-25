@@ -52,8 +52,16 @@ class Decor(object):
       d = {'component': my_rock, 'colour': 'red'}
       my_decor = Decor(d)
     """
-    def __init__(self, params):
-        for k, v in params.items():
+    def __init__(self, *params, **kwargs):
+        """
+        Supports the passing in of a single dictionary, or the passing of
+        keyword arguments.
+
+        Possibly a bad idea; review later.
+        """
+        for p in params:
+            params = p
+        for k, v in kwargs.items() or params.items():
             k = k.lower().replace(' ', '_')
             try:
                 v = v.lower()
@@ -106,15 +114,12 @@ class Decor(object):
             self.colour = None
 
     def __repr__(self):
-        s = str(self)
+        s = repr(self.__dict__)
         return "Decor({0})".format(s)
 
     def __str__(self):
-        s = []
-        for key in self.__dict__:
-            t = "{key}='{value}'"
-            s.append(t.format(key=key, value=self.__dict__[key]))
-        return ', '.join(s)
+        s = str(self.__dict__)
+        return "Decor({0})".format(s)
 
     def __add__(self, other):
         if isinstance(other, self.__class__):
@@ -148,6 +153,25 @@ class Decor(object):
     # keys. (You can only hash immutables.)
     def __hash__(self):
         return hash(frozenset(self.__dict__.keys()))
+
+    def _repr_html_(self):
+        """
+        Jupyter Notebook magic repr function.
+        """
+        rows, c = '', ''
+        s = '<tr><td><strong>{k}</strong></td><td style="{stl}">{v}</td></tr>'
+        for k, v in self.__dict__.items():
+
+            if k == 'colour':
+                c = utils.text_colour_for_hex(v)
+                style = 'color:{}; background-color:{}'.format(c, v)
+            else:
+                style = 'color:black; background-color:white'
+
+            v = v._repr_html_() if k == 'component' else v
+            rows += s.format(k=k, v=v, stl=style)
+        html = '<table>{}</table>'.format(rows)
+        return html
 
     @classmethod
     def random(cls, component):
@@ -228,8 +252,8 @@ class Legend(object):
         self._iter = iter(self.__list)  # Set up iterable.
 
     def __repr__(self):
-        s = str(self)
-        return "Legend({0})".format(s)
+        s = [repr(d) for d in self.__list]
+        return "Legend({0})".format('\n'.join(s))
 
     def __str__(self):
         s = [str(d) for d in self.__list]
@@ -349,7 +373,10 @@ class Legend(object):
                     prop = ' '.join(k.split()[1:])
                     component[prop] = v.lower()
                 else:
-                    d[k] = v.lower()
+                    try:
+                        d[k] = float(v)
+                    except ValueError:
+                        d[k] = v.lower()
             d['component'] = Component(component)
             list_of_Decors.append(Decor(d))
 
@@ -412,9 +439,36 @@ class Legend(object):
         maximum = max([row.width for row in self.__list])
         return maximum or 0
 
+    def getattr(self, c, attr, default=None, match_only=None):
+        """
+        Get the attribute of a component.
+
+        Args:
+           c (component): The component to look up.
+           attr (str): The attribute to get.
+           default (str): What to return in the event of no match.
+           match_only (list of str): The component attributes to include in the
+               comparison. Default: All of them.
+
+        Returns:
+           obj. The specified attribute of the matching Decor in the Legend.
+        """
+        if c:
+            if match_only:
+                # Filter the component only those attributes
+                c = Component({k: getattr(c, k, None) for k in match_only})
+            for decor in self.__list:
+                if c == decor.component:
+                    return getattr(decor, attr)
+        return default
+
     def get_colour(self, c, default='#eeeeee', match_only=None):
         """
-        Get the display colour of a component.
+        Get the display colour of a component. Wraps `getattr()`.
+
+        Development note:
+            Cannot define this as a `partial()` because I want
+            to maintain the order of arguments in `getattr()`.
 
         Args:
            c (component): The component to look up.
@@ -425,21 +479,21 @@ class Legend(object):
         Returns:
            str. The hex string of the matching Decor in the Legend.
         """
-        if c:
-            if match_only:
-                # Filter the component only those attributes
-                c = Component({k: getattr(c, k, None) for k in match_only})
-            for decor in self.__list:
-                if c == decor.component:
-                    return decor.colour
-        return default
+        return self.getattr(c=c,
+                            attr='colour',
+                            default=default,
+                            match_only=match_only)
 
     def get_width(self, c, default=0, match_only=None):
         """
-        Get the display width of a component.
+        Get the display width of a component. Wraps `getattr()`.
+
+        Development note:
+            Cannot define this as a `partial()` because I want
+            to maintain the order of arguments in `getattr()`.
 
         Args:
-           c (component): The component to look up.
+        c (component): The component to look up.
            default (float): The width to return in the event of no match.
            match_only (list of str): The component attributes to include in the
                comparison. Default: All of them.
@@ -447,14 +501,10 @@ class Legend(object):
         Returns:
            float. The width of the matching Decor in the Legend.
         """
-        if c:
-            if match_only:
-                # Filter the component only those attributes
-                c = Component({k: getattr(c, k, None) for k in match_only})
-            for decor in self.__list:
-                if c == decor.component:
-                    return decor.width
-        return default
+        return self.getattr(c=c,
+                            attr='width',
+                            default=default,
+                            match_only=match_only)
 
     def get_component(self, colour, tolerance=0, default=None):
         """
