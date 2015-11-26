@@ -17,7 +17,6 @@ except:  # Python 2
     from utils import partialmethod
 
 from .component import Component
-from .striplog import Striplog
 
 
 class IntervalError(Exception):
@@ -96,13 +95,6 @@ class Interval(object):
             Or 'proportion'? ...Could be specified by lexicon??
         """
 
-        # Just in case it's a list of legal things:
-        try:
-            for i in other:
-                self += i
-        except IntervalError:
-            raise
-
         if isinstance(other, self.__class__):
             return self.union(other)
 
@@ -131,6 +123,25 @@ class Interval(object):
             if self.order == 'elevation':
                 return self.top < other.top
             return self.top > other.top
+
+    def _repr_html_(self):
+        """
+        Jupyter Notebook magic repr function.
+        """
+        items = ['top', 'description', 'summary', 'primary', 'base']
+        rows = ''
+        row = '<tr>{row1}<td><strong>{e}</strong></td><td>{v}</td></tr>'
+        style = 'width:2em; background-color:#DDDDDD'
+        extra = '<td style="{}" rowspan="{}"></td>'
+        for i, e in enumerate(items):
+            row1 = extra.format(style, len(items)) if not i else ''
+            v = getattr(self, e)
+            v = v._repr_html_() if e == 'primary' else v
+            v = self.summary() if e == 'summary' else v
+            rows += row.format(row1=row1, e=e, v=v)
+
+        html = '<table>{}</table>'.format(rows)
+        return html
 
     @property
     def primary(self):
@@ -280,8 +291,8 @@ class Interval(object):
         total = thin.thickness + thick.thickness
         prop = 100 * thick.thickness / total
 
-        d1 = thick.description.strip(' .,') or thick.summary
-        d2 = thin.description.strip(' .,') or thin.summary
+        d1 = thick.description.strip(' .,') or thick.summary()
+        d2 = thin.description.strip(' .,') or thin.summary()
         if d1:
             d = '{:.1f}% {} with {:.1f}% {}'.format(prop, d1, 100-prop, d2)
         else:
@@ -375,6 +386,7 @@ class Interval(object):
         else:
             result = [lower, middle, upper]
 
+        from .striplog import Striplog  # Import here to avoid circular ref
         if self.order == 'depth':
             return Striplog(result[::-1])
         else:
