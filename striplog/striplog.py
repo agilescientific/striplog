@@ -688,8 +688,6 @@ class Striplog(object):
             basis = np.linspace(start, stop, pts)
 
         result = np.zeros_like(basis, dtype=np.int)
-        print(result)
-        print(result.shape)
         if undefined == np.nan:
             result[:] = np.nan
 
@@ -720,7 +718,6 @@ class Striplog(object):
 
             top_index = np.ceil((i.top-start)/step)
             base_index = np.ceil((i.base-start)/step)
-            print(top_index, base_index)
             result[top_index:base_index] = key
 
         if return_meta:
@@ -773,7 +770,8 @@ class Striplog(object):
              ladder=False,
              aspect=10,
              ticks=(1, 10),
-             match_only=None):
+             match_only=None,
+             return_fig=False):
         """
         Hands-free plotting.
 
@@ -807,12 +805,6 @@ class Striplog(object):
         # Rely on interval order.
         lower, upper = self[-1].base, self[0].top
 
-        # Rely on start and stop being set.
-        # if self.order == 'depth':
-        #     upper, lower = self[0].top, self[-1].base
-        # else:
-        #     upper, lower = self.stop, self.start
-
         ax.set_ylim([lower, upper])
         ax.set_xticks([])
 
@@ -837,7 +829,8 @@ class Striplog(object):
 
         ax.patch.set_alpha(0)
 
-        return fig
+        if return_fig:
+            return fig
 
     def read_at(self, d):
         """

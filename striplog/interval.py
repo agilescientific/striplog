@@ -136,7 +136,7 @@ class Interval(object):
         for i, e in enumerate(items):
             row1 = extra.format(style, len(items)) if not i else ''
             v = getattr(self, e)
-            v = v._repr_html_() if e == 'primary' else v
+            v = v._repr_html_() if (v and (e == 'primary')) else v
             v = self.summary() if e == 'summary' else v
             rows += row.format(row1=row1, e=e, v=v)
 

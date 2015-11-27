@@ -326,14 +326,22 @@ class Legend(object):
         return cls.from_csv(LEGEND)
 
     @classmethod
-    def random(cls, list_of_Components):
+    def random(cls, components):
         """
         Generate a random legend for a given list of components.
+
+        If you pass a Striplog, it will use the primary components.
 
         Returns:
             Legend: A legend with random colours.
         """
-        list_of_Decors = [Decor.random(r) for r in list_of_Components]
+        try:  # Treating as a Striplog.
+            list_of_Decors = [Decor.random(c)
+                              for c
+                              in [i[0] for i in components.top if i[0]]
+                              ]
+        except:  # It's a list of Components.
+            list_of_Decors = [Decor.random(c) for c in components]
         return cls(list_of_Decors)
 
     @classmethod
