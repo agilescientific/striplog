@@ -737,7 +737,7 @@ class Striplog(object):
 
             try:
                 result[top_index:base_index] = key
-            except:
+            except:  # Have a list or array or something.
                 result[top_index:base_index] = key[0]
 
         if return_meta:
