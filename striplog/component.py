@@ -21,7 +21,7 @@ class ComponentError(Exception):
     pass
 
 
-class Component(MutableMapping):
+class Component(object):
     """
     Initialize with a dictionary of properties. You can use any
     properties you want e.g.:
@@ -34,39 +34,40 @@ class Component(MutableMapping):
         - description, e.g. from cuttings
     """
 
-    def __init__(self, *args, **kwargs):
-        self.data = dict()
-        self.update(dict(*args, **kwargs))
+    def __init__(self, properties):
+        for k, v in properties.items():
+            if k and v:
+                setattr(self, k, v)
 
     def __repr__(self):
         s = str(self)
         return "Component({0})".format(s)
 
     def __str__(self):
-        return self.data.__str__()
+        return self.__dict__.__str__()
 
     def __getitem__(self, key):
         """
         So we can get at attributes with variables.
         """
-        return self.data.get(key)
+        return self.__dict__.get(key)
 
     def __len__(self):
-        return len(self.data)
+        return len(self.__dict__)
 
     def __iter__(self):
-        return iter(self.data)
+        return iter(self.__dict__)
 
     def __setitem__(self, key, value):
-        self.data[key] = value
+        self.__dict__[key] = value
         return
 
     def __delitem__(self, key):
-        del self.data[key]
+        del self.__dict__[key]
         return
 
     def __bool__(self):
-        if not self.data.keys():
+        if not self.__dict__.keys():
             return False
         else:
             return True
@@ -80,11 +81,11 @@ class Component(MutableMapping):
 
         # Weed out empty elements and case-desensitize.
         try:
-            s = {k.lower(): v.lower() for k, v in self.data.items() if v}
-            o = {k.lower(): v.lower() for k, v in other.data.items() if v}
+            s = {k.lower(): v.lower() for k, v in self.__dict__.items() if v}
+            o = {k.lower(): v.lower() for k, v in other.__dict__.items() if v}
         except AttributeError:  # Dealing with numbers.
-            s = {k.lower(): v for k, v in self.data.items() if v}
-            o = {k.lower(): v for k, v in other.data.items() if v}
+            s = {k.lower(): v for k, v in self.__dict__.items() if v}
+            o = {k.lower(): v for k, v in other.__dict__.items() if v}
 
         # Compare.
         if s == o:
@@ -99,7 +100,7 @@ class Component(MutableMapping):
     # becomes unhashable. All this does is hash the frozenset of the
     # keys. (You can only hash immutables.)
     def __hash__(self):
-        return hash(frozenset(self.data.keys()))
+        return hash(frozenset(self.__dict__.keys()))
 
     def _repr_html_(self):
         """
@@ -107,13 +108,13 @@ class Component(MutableMapping):
         """
         rows = ''
         s = '<tr><td><strong>{k}</strong></td><td>{v}</td></tr>'
-        for k, v in self.data.items():
+        for k, v in self.__dict__.items():
             rows += s.format(k=k, v=v)
         html = '<table>{}</table>'.format(rows)
         return html
 
     def json(self):
-        return json.dumps(self.data)
+        return json.dumps(self.__dict__)
 
     @classmethod
     def from_text(cls, text, lexicon, required=None, first_only=True):
@@ -161,13 +162,13 @@ class Component(MutableMapping):
 
             r.summary()  -->  'Red, vf-f, sandstone'
         """
-        if default and not self.data:
+        if default and not self.__dict__:
             return default
 
-        f = fmt or '{' + '}, {'.join(list(self.data.keys())) + '}'
+        f = fmt or '{' + '}, {'.join(list(self.__dict__.keys())) + '}'
 
         try:
-            summary = CustomFormatter().format(f, **self.data)
+            summary = CustomFormatter().format(f, **self.__dict__)
         except KeyError as e:
             raise ComponentError("Error building summary, "+str(e))
 
