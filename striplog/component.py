@@ -79,13 +79,21 @@ class Component(object):
         if not isinstance(other, self.__class__):
             return False
 
+        ds = self.__dict__.items()
+        do = other.__dict__.items()
+
+        try:
+            strobj = basestring  # Fails in Python 3
+        except:
+            strobj = str
+
         # Weed out empty elements and case-desensitize.
         try:
-            s = {k.lower(): v.lower() for k, v in self.__dict__.items() if v}
-            o = {k.lower(): v.lower() for k, v in other.__dict__.items() if v}
-        except AttributeError:  # Dealing with numbers.
-            s = {k.lower(): v for k, v in self.__dict__.items() if v}
-            o = {k.lower(): v for k, v in other.__dict__.items() if v}
+            s = {k.lower(): v.lower() for k, v in ds if v}
+            o = {k.lower(): v.lower() for k, v in do if v}
+        except (AttributeError, ValueError):  # Dealing with numbers.
+            s = {k.lower(): v for k, v in ds if isinstance(v, strobj)}
+            o = {k.lower(): v for k, v in do if isinstance(v, strobj)}
 
         # Compare.
         if s == o:

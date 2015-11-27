@@ -645,6 +645,8 @@ class Striplog(object):
                start=None,
                stop=None,
                basis=None,
+               field=None,
+               field_function=None,
                legend=None,
                legend_field=None,
                match_only=None,
@@ -677,6 +679,9 @@ class Striplog(object):
             ndarray: Two ndarrays in a tuple, (depth, logdata). Logdata
                 has type numpy.int.
         """
+        def null(x):
+            return x
+
         # Make the preparations.
         if basis is not None:
             start, stop = basis[0], basis[-1]
@@ -687,7 +692,11 @@ class Striplog(object):
             pts = np.ceil((stop - start)/step) + 1
             basis = np.linspace(start, stop, pts)
 
-        result = np.zeros_like(basis, dtype=np.int)
+        if field:
+            result = np.zeros_like(basis)
+        else:
+            result = np.zeros_like(basis, dtype=np.int)
+
         if undefined == np.nan:
             result[:] = np.nan
 
@@ -698,7 +707,7 @@ class Striplog(object):
             table = [j[0] for j in self.top]
         table.insert(0, Component({}))
 
-        # Assign the values from the lookup table.
+        # Assign the values.
         for i in self:
             c = i.primary
             if match_only:
@@ -706,11 +715,18 @@ class Striplog(object):
                                for k in match_only})
 
             if legend and legend_field:
+                # Use the legend field.
                 try:
                     key = legend.getattr(c, legend_field)
                 except ValueError:
                     key = undefined
-            else:
+            elif field:  # Get data directly from that field in the components.
+                f = field_function or null
+                try:
+                    key = f(getattr(c, field))
+                except ValueError:
+                    key = undefined
+            else:  # Use the lookup table.
                 try:
                     key = table.index(c)
                 except ValueError:
@@ -718,7 +734,11 @@ class Striplog(object):
 
             top_index = np.ceil((i.top-start)/step)
             base_index = np.ceil((i.base-start)/step)
-            result[top_index:base_index] = key
+
+            try:
+                result[top_index:base_index] = key
+            except:
+                result[top_index:base_index] = key[0]
 
         if return_meta:
             return result, basis, table
