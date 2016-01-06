@@ -110,6 +110,12 @@ class Component(object):
     def __hash__(self):
         return hash(frozenset(self.__dict__.keys()))
 
+    def keys(self):
+        """
+        Needed for double-star behaviour, along with __getitem__().
+        """
+        return self.__dict__.keys()
+
     def _repr_html_(self):
         """
         Jupyter Notebook magic repr function.
