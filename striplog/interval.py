@@ -38,6 +38,8 @@ class Interval(object):
     Args:
         top (float): Required top depth. Required.
         base (float): Base depth. Optional.
+        description (str): Textual description.
+        type (str): Base depth. Optional.
         lexicon (dict): A lexicon. See documentation. Optional unless you only
             provide descriptions, because it's needed to extract components.
         max_component (int): The number of components to extract. Default 1.
@@ -46,16 +48,21 @@ class Interval(object):
     """
     def __init__(self, top, base=None,
                  description='',
+                 style=None,
                  lexicon=None,
                  components=None,
                  max_component=1,
                  abbreviations=False):
+
+        if style is not None:
+            self.style = style.lower()
 
         self.top = float(top)
         if base is not None:
             self.base = float(base)
         else:
             self.base = self.top
+            self.style = 'point'
 
         self.description = str(description)
 
@@ -128,7 +135,7 @@ class Interval(object):
         """
         Jupyter Notebook magic repr function.
         """
-        items = ['top', 'description', 'summary', 'primary', 'base']
+        items = ['top', 'primary', 'summary', 'description', 'base']
         rows = ''
         row = '<tr>{row1}<td><strong>{e}</strong></td><td>{v}</td></tr>'
         style = 'width:2em; background-color:#DDDDDD'
