@@ -42,7 +42,10 @@ class CustomFormatter(Formatter):
                      't': str.title,
                      'm': np.mean,
                      'µ': np.mean,
+                     'v': np.var,
+                     'd': np.std,
                      '+': np.sum,
+                     '∑': np.sum,
                      'x': np.product,
                      }
             return funcs.get(conversion)(value)
