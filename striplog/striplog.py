@@ -69,8 +69,6 @@ class Striplog(object):
                 raise StriplogError(m)
             # Order force
             list_of_Intervals.sort(key=operator.attrgetter('top'))
-            self.start = list_of_Intervals[0].top
-            self.stop = list_of_Intervals[-1].base
 
         else:
             self.order = 'elevation'
@@ -81,8 +79,6 @@ class Striplog(object):
             # Order force
             r = True
             list_of_Intervals.sort(key=operator.attrgetter('top'), reverse=r)
-            self.start = list_of_Intervals[-1].base
-            self.stop = list_of_Intervals[0].top
 
         self.source = source
 
@@ -122,7 +118,6 @@ class Striplog(object):
                 del self.__list[k]
         else:
             del self.__list[key]
-        self.__set_start_stop()
 
     def __len__(self):
         return len(self.__list)
@@ -179,16 +174,30 @@ class Striplog(object):
         else:
             raise StriplogError("You can only add striplogs or intervals.")
 
-    def __set_start_stop(self):
-        """
-        Reset the start and stop
-        """
+    # def __set_start_stop(self):
+    #     """
+    #     Reset the start and stop
+    #     """
+    #     if self.order == 'depth':
+    #         self.start = self[0].top
+    #         self.stop = self[-1].base
+    #     else:
+    #         self.start = self[-1].base
+    #         self.stop = self[0].top
+
+    @property
+    def start(self):
         if self.order == 'depth':
-            self.start = self[0].top
-            self.stop = self[-1].base
+            return self[0].top
         else:
-            self.start = self[-1].base
-            self.stop = self[0].top
+            return self[-1].base
+
+    @property
+    def stop(self):
+        if self.order == 'depth':
+            return self[0].top
+        else:
+            return self[-1].base
 
     def __sort(self):
         """
