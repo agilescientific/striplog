@@ -242,7 +242,12 @@ class Interval(object):
         """
         s = [r.summary(fmt=fmt, initial=initial) for r in self.components]
         summary = " with ".join(s)
-        return "{0:.2f} m of {1}".format(self.thickness, summary)
+        if summary:
+            return "{0:.2f} m of {1}".format(self.thickness, summary)
+        elif self.description:
+            return "{0:.2f} m of {1}".format(self.thickness, self.description)
+        else:
+            return None
 
     def invert(self, copy=False):
         """
