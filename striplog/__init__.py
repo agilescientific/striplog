@@ -5,22 +5,27 @@
 striplog
 ==================
 """
-from .legend import Decor, Legend
-from .interval import Interval
-from .component import Component
-from .striplog import Striplog
 from .lexicon import Lexicon
+from .component import Component
+from .legend import Decor, Legend
+from .position import Position
+from .interval import Interval
+from .striplog import Striplog
 
 __all__ = ['Lexicon',
            'Component',
            'Decor',
            'Legend',
+           'Position',
            'Interval',
            'Striplog']
 
 
-__version__ = "unknown"
+__version__ = None
+
 try:
     from ._version import __version__
 except ImportError:
     pass
+
+__version__ = __version__ or "unknown"

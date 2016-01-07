@@ -39,12 +39,12 @@ class Component(object):
             if k and v:
                 setattr(self, k, v)
 
+    def __str__(self):
+        return self.__dict__.__str__()
+
     def __repr__(self):
         s = str(self)
         return "Component({0})".format(s)
-
-    def __str__(self):
-        return self.__dict__.__str__()
 
     def __getitem__(self, key):
         """

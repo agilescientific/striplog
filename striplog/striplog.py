@@ -10,6 +10,7 @@ import re
 from io import StringIO
 import csv
 import operator
+import warnings
 from collections import Counter
 from functools import reduce
 
@@ -87,7 +88,7 @@ class Striplog(object):
 
     def __repr__(self):
         l = len(self.__list)
-        details = "start={start}, stop={stop}".format(**self.__dict__)
+        details = "start={}, stop={}".format(self.start, self.stop)
         return "Striplog({0} Intervals, {1})".format(l, details)
 
     def __str__(self):
@@ -174,30 +175,19 @@ class Striplog(object):
         else:
             raise StriplogError("You can only add striplogs or intervals.")
 
-    # def __set_start_stop(self):
-    #     """
-    #     Reset the start and stop
-    #     """
-    #     if self.order == 'depth':
-    #         self.start = self[0].top
-    #         self.stop = self[-1].base
-    #     else:
-    #         self.start = self[-1].base
-    #         self.stop = self[0].top
-
     @property
     def start(self):
         if self.order == 'depth':
-            return self[0].top
+            return self[0].top.z
         else:
-            return self[-1].base
+            return self[-1].base.z
 
     @property
     def stop(self):
         if self.order == 'depth':
-            return self[0].top
+            return self[-1].base.z
         else:
-            return self[-1].base
+            return self[0].top.z
 
     def __sort(self):
         """
@@ -231,9 +221,10 @@ class Striplog(object):
         def conc(a, b):
             return a + b
 
-        boundaries = np.array(reduce(conc, [[i.top, i.base] for i in self]))
+        # Check boundaries, b
+        b = np.array(reduce(conc, [[i.top.z, i.base.z] for i in self]))
 
-        return all(np.diff(boundaries) >= 0)
+        return all(np.diff(b) >= 0)
 
     def __no_overlaps(self):
         """
@@ -250,7 +241,7 @@ class Striplog(object):
         op = {'depth': operator.lt,
               'elevation': operator.gt,
               }
-        if any([op[self.order](iv.base, iv.top) for iv in self.__list]):
+        if any([op[self.order](iv.base.z, iv.top.z) for iv in self.__list]):
             m = "Intervals inconsistent with each other or striplog order."
             raise StriplogError(m)
         return
@@ -620,8 +611,8 @@ class Striplog(object):
                 text = i.primary.summary()
             else:
                 text = ''
-            data += '{0:9.3f}'.format(i.top)
-            data += '{0}{1:9.3f}'.format(dlm, i.base)
+            data += '{0:9.3f}'.format(i.top.z)
+            data += '{0}{1:9.3f}'.format(dlm, i.base.z)
             data += '{0}  {1:48s}'.format(dlm, '"'+text+'"')
             data += '\n'
 
@@ -713,7 +704,7 @@ class Striplog(object):
         if legend:
             table = [j.component for j in legend]
         else:
-            table = [j[0] for j in self.top]
+            table = [j[0] for j in self.unique]
         table.insert(0, Component({}))
 
         # Assign the values.
@@ -741,8 +732,8 @@ class Striplog(object):
                 except ValueError:
                     key = undefined
 
-            top_index = np.ceil((i.top-start)/step)
-            base_index = np.ceil((i.base-start)/step)
+            top_index = np.ceil((i.top.z-start)/step)
+            base_index = np.ceil((i.base.z-start)/step)
 
             try:
                 result[top_index:base_index] = key
@@ -777,9 +768,9 @@ class Striplog(object):
             axis: The matplotlib.pyplot axis.
         """
         for i in self.__list:
-            origin = (0, i.top)
+            origin = (0, i.top.z)
             colour = legend.get_colour(i.primary, match_only=match_only)
-            thick = i.base - i.top
+            thick = i.base.z - i.top.z
             d = default_width
 
             if ladder:
@@ -819,8 +810,7 @@ class Striplog(object):
         """
         if not legend:
             # Build a random-coloured legend.
-            comps = [i[0] for i in self.top if i[0]]
-            legend = Legend.random(comps)
+            legend = Legend.random(self.components)
 
         fig = plt.figure(figsize=(width, aspect*width))
         ax = fig.add_axes([0.35, 0.05, 0.6, 0.95])
@@ -832,7 +822,7 @@ class Striplog(object):
         ax.set_xlim([0, width])
 
         # Rely on interval order.
-        lower, upper = self[-1].base, self[0].top
+        lower, upper = self[-1].base.z, self[0].top.z
 
         ax.set_ylim([lower, upper])
         ax.set_xticks([])
@@ -878,7 +868,13 @@ class Striplog(object):
                 return iv
         return None
 
-    depth = read_at  # For backwards compatibility.
+    def depth(self, d):
+        # For backwards compatibility.
+        with warnings.catch_warnings():
+            warnings.simplefilter("always")
+            w = "depth() is deprecated; please use read_at()"
+            warnings.warn(w)
+        return self.read_at(d)
 
     def find(self, search_term):
         """
@@ -974,6 +970,10 @@ class Striplog(object):
     def anneal(self):
         """
         Fill in empty intervals by growing from top and base.
+
+        Note that this operation happens in-place and destroys any information
+        about the Position (e.g. metadata associated with the top or base). See
+        issue #54.
         """
         gaps = self.find_gaps(index=True)
 
@@ -985,13 +985,13 @@ class Striplog(object):
             after = self[gap+1]
 
             if self.order == 'depth':
-                t = (after.top-before.base)/2
-                before.base += t
-                after.top -= t
+                t = (after.top.z-before.base.z)/2
+                before.base = before.base.z + t
+                after.top = after.top.z - t
             else:
                 t = (after.base-before.top)/2
-                before.top += t
-                after.base -= t
+                before.top = before.top.z + t
+                after.base = after.base.z - t
 
         # These were in-place operations so we don't return anything
         return
@@ -1120,14 +1120,14 @@ class Striplog(object):
         return self.cum / len(self)
 
     @property
-    def unique(self):
+    def components(self):
         """
         Returns the list of compenents in the striplog.
         """
-        return [i[0] for i in self.top]
+        return [i[0] for i in self.unique if i[0]]
 
     @property
-    def top(self):
+    def unique(self):
         """
         Summarize a Striplog with some statistics.
         """
@@ -1137,3 +1137,12 @@ class Striplog(object):
             table[iv.primary] += iv.thickness
 
         return sorted(table.items(), key=operator.itemgetter(1), reverse=True)
+
+    @property
+    def top(self):
+        # For backwards compatibility.
+        with warnings.catch_warnings():
+            warnings.simplefilter("always")
+            w = "Striplog.top is deprecated; please use Striplog.unique"
+            warnings.warn(w)
+        return self.unique

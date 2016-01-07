@@ -17,6 +17,7 @@ except:  # Python 2
     from utils import partialmethod
 
 from .component import Component
+from .position import Position
 
 
 class IntervalError(Exception):
@@ -39,7 +40,6 @@ class Interval(object):
         top (float): Required top depth. Required.
         base (float): Base depth. Optional.
         description (str): Textual description.
-        type (str): Base depth. Optional.
         lexicon (dict): A lexicon. See documentation. Optional unless you only
             provide descriptions, because it's needed to extract components.
         max_component (int): The number of components to extract. Default 1.
@@ -48,21 +48,22 @@ class Interval(object):
     """
     def __init__(self, top, base=None,
                  description='',
-                 style=None,
                  lexicon=None,
                  components=None,
                  max_component=1,
                  abbreviations=False):
 
-        if style is not None:
-            self.style = style.lower()
+        # If necessary, convert numbers to Positions
+        if not isinstance(top, Position):
+            top = Position(middle=top)
+        if not isinstance(base, Position):
+            base = Position(middle=base)
 
-        self.top = float(top)
+        self.top = top
         if base is not None:
-            self.base = float(base)
+            self.base = base
         else:
-            self.base = self.top
-            self.style = 'point'
+            self.base = top
 
         self.description = str(description)
 
@@ -85,15 +86,21 @@ class Interval(object):
                     warnings.warn(w)
                 self.components = []
 
+    def __setattr__(self, name, value):
+        # If we were passed top or base, make sure it's a position.
+        if name in ['top', 'base']:
+            if not isinstance(value, Position):
+                value = Position(middle=value)
+        # Must now use the parent's setattr, or we go in circles.
+        super(Interval, self).__setattr__(name, value)
+        return
+
+    def __str__(self):
+        return self.__dict__.__str__()
+
     def __repr__(self):
         s = str(self)
         return "Interval({0})".format(s)
-
-    def __str__(self):
-        s = "top: {top}, base: {base}, "
-        s += "description: '{description}', "
-        s += "components: {components}"
-        return s.format(**self.__dict__)
 
     def __add__(self, other):
         """
@@ -101,13 +108,12 @@ class Interval(object):
             If adding components, should take account of 'amount', if present.
             Or 'proportion'? ...Could be specified by lexicon??
         """
-
         if isinstance(other, self.__class__):
             return self.union(other)
 
         elif isinstance(other, Component):
-            top = self.top
-            base = self.base
+            top = self.top.z
+            base = self.base.z
             d = self.description + ' with ' + other.summary()
             c = self.components + [other]
             return Interval(top, base, description=d, components=c)
@@ -145,6 +151,7 @@ class Interval(object):
             v = getattr(self, e)
             v = v._repr_html_() if (v and (e == 'primary')) else v
             v = self.summary() if e == 'summary' else v
+            v = v.z if e in ['top', 'base'] else v
             rows += row.format(row1=row1, e=e, v=v)
 
         html = '<table>{}</table>'.format(rows)
@@ -171,7 +178,29 @@ class Interval(object):
         Returns:
             Float: The thickness.
         """
-        return abs(self.base - self.top)
+        return abs(self.base.z - self.top.z)
+
+    @property
+    def min_thickness(self):
+        """
+        Returns the minimum possible thickness of the interval, given the
+        uncertainty in its top and base Positions.
+
+        Returns:
+            Float: The minimum thickness.
+        """
+        return abs(self.base.upper - self.top.lower)
+
+    @property
+    def max_thickness(self):
+        """
+        Returns the maximum possible thickness of the interval, given the
+        uncertainty in its top and base Positions.
+
+        Returns:
+            Float: The maximum thickness.
+        """
+        return abs(self.base.lower - self.top.upper)
 
     @property
     def kind(self):
@@ -192,7 +221,7 @@ class Interval(object):
         Gives the order of this interval, based on relative values of
         top & base.
         """
-        if self.top > self.base:
+        if self.top.z > self.base.z:
             return 'elevation'
         else:
             return 'depth'
@@ -228,8 +257,12 @@ class Interval(object):
             d = self.__dict__.copy()
             del(d['top'])
             del(d['base'])
+            self.base.invert()
+            self.top.invert()
             return Interval(top=self.base, base=self.top, **d)
         else:
+            self.base.invert()
+            self.top.invert()
             old_base = self.base
             self.base = self.top
             self.top = old_base
@@ -244,13 +277,13 @@ class Interval(object):
 
     def relationship(self, other):
         """
-        Returns the relationship style.
+        Returns the relationship style. Completely deterministic.
 
         """
         o = {'depth': operator.lt, 'elevation': operator.gt}[self.order]
-        top_inside = o(self.top, other.top) and o(other.top, self.base)
-        base_inside = o(self.top, other.base) and o(other.base, self.base)
-        above_below = o(other.top, self.top) and o(self.base, other.base)
+        top_inside = o(self.top.z, other.top.z) and o(other.top.z, self.base.z)
+        base_inside = o(self.top.z, other.base.z) and o(other.base.z, self.base.z)
+        above_below = o(other.top.z, self.top.z) and o(self.base.z, other.base.z)
 
         if top_inside and base_inside:
             return 'contains'
@@ -258,7 +291,7 @@ class Interval(object):
             return 'containedby'
         elif top_inside or base_inside:
             return 'partially'
-        elif (self.top == other.base) or (self.base == other.top):
+        elif (self.top.z == other.base.z) or (self.base.z == other.top.z):
             return 'touches'
         else:
             return None
@@ -323,11 +356,11 @@ class Interval(object):
         lowermost = min(self, other).copy()  # Only based on tops.
 
         if self.partially_overlaps(other):
-            upper, _ = uppermost.split_at(lowermost.top)
-            middle, lower = lowermost.split_at(uppermost.base)
+            upper, _ = uppermost.split_at(lowermost.top.z)
+            middle, lower = lowermost.split_at(uppermost.base.z)
         else:
-            upper_temp, lower = uppermost.split_at(lowermost.base)
-            upper, _ = upper_temp.split_at(lowermost.top)
+            upper_temp, lower = uppermost.split_at(lowermost.base.z)
+            upper, _ = upper_temp.split_at(lowermost.top.z)
             middle = lowermost
 
         return upper, middle, lower  # middle has lowermost's properties
@@ -377,7 +410,7 @@ class Interval(object):
 
         upper, middle, lower = self._explode(other)
 
-        if self.top == upper.top:
+        if self.top.z == upper.top.z:
             self_is_uppermost = True
         else:
             self_is_uppermost = False
@@ -427,7 +460,7 @@ class Interval(object):
 
         """
         o = {'depth': operator.lt, 'elevation': operator.gt}[self.order]
-        return (o(d, self.base) and o(self.top, d))
+        return (o(d, self.base.z) and o(self.top.z, d))
 
     def split_at(self, d):
         """
