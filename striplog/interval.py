@@ -296,7 +296,7 @@ class Interval(object):
         else:
             return None
 
-    def __overlaps(self, other, rel='any'):
+    def _overlaps(self, other, rel='any'):
         """
         Checks to see if and how two intervals overlap.
 
@@ -314,31 +314,41 @@ class Interval(object):
         return False
 
     # Curry.
-    any_overlaps = partialmethod(__overlaps, rel='any')
-    partially_overlaps = partialmethod(__overlaps, rel='partially')
-    completely_contains = partialmethod(__overlaps, rel='contains')
-    is_contained_by = partialmethod(__overlaps, rel='containedby')
-    touches = partialmethod(__overlaps, rel='touches')
+    any_overlaps = partialmethod(_overlaps, rel='any')
+    partially_overlaps = partialmethod(_overlaps, rel='partially')
+    completely_contains = partialmethod(_overlaps, rel='contains')
+    is_contained_by = partialmethod(_overlaps, rel='containedby')
+    touches = partialmethod(_overlaps, rel='touches')
 
-    def __blend_descriptions(self, other):
+    def spans(self, d):
         """
-        Computes the description for combining two intervals. Make sure that
-        the intervals are already adjusted to the correct thicknesses.
+        Determines if depth d is within this interval.
 
-        Returns a string.
         """
-        thin, thick = sorted([self, other], key=lambda k: k.thickness)
-        total = thin.thickness + thick.thickness
-        prop = 100 * thick.thickness / total
+        o = {'depth': operator.lt, 'elevation': operator.gt}[self.order]
+        return (o(d, self.base.z) and o(self.top.z, d))
 
-        d1 = thick.description.strip(' .,') or thick.summary()
-        d2 = thin.description.strip(' .,') or thin.summary()
-        if d1:
-            d = '{:.1f}% {} with {:.1f}% {}'.format(prop, d1, 100-prop, d2)
-        else:
-            d = ''
+    def split_at(self, d):
+        """
+        Splits the interval. Returns a list of the two new intervals.
 
-        return d
+        Args:
+            d (float): Level or 'depth' to split at.
+
+        TODO:
+            Should this return a Striplog, or just a tuple?
+
+        """
+        if not self.spans(d):
+            m = 'd must be within interval'
+            raise IntervalError(m)
+
+        int1, int2 = self.copy(), self.copy()
+
+        int1.base = d
+        int2.top = d
+
+        return int1, int2  # upper, lower
 
     def _explode(self, other):
         """
@@ -365,15 +375,35 @@ class Interval(object):
 
         return upper, middle, lower  # middle has lowermost's properties
 
+    def _blend_descriptions(self, other):
+        """
+        Computes the description for combining two intervals. Make sure that
+        the intervals are already adjusted to the correct thicknesses.
+
+        Returns a string.
+        """
+        thin, thick = sorted([self, other], key=lambda k: k.thickness)
+        total = thin.thickness + thick.thickness
+        prop = 100 * thick.thickness / total
+
+        d1 = thick.description.strip(' .,') or thick.summary()
+        d2 = thin.description.strip(' .,') or thin.summary()
+        if d1:
+            d = '{:.1f}% {} with {:.1f}% {}'.format(prop, d1, 100-prop, d2)
+        else:
+            d = ''
+
+        return d
+
     def _combine(self, old_self, other, blend=True):
         """
-        Private but not mangled function.
+        Combines components and descriptions but nothing else.
 
         Returns an Interval.
         """
         if blend:
             self.components = old_self.components + other.components
-            self.description = old_self.__blend_descriptions(other)
+            self.description = old_self._blend_descriptions(other)
         else:
             self.components = other.components
             self.description = other.description
@@ -439,8 +469,9 @@ class Interval(object):
         Returns an Interval.
         """
         if not (self.touches(other) or self.any_overlaps(other)):
-            m = 'self must at least touch or partially overlap other'
-            raise IntervalError(m)
+            # m = 'self must at least touch or partially overlap other'
+            # raise IntervalError(m)
+            return self, other
 
         top = max(self, other).top
         if self.partially_overlaps(other):
@@ -454,35 +485,24 @@ class Interval(object):
 
         return result._combine(self, other, blend=blend)
 
-    def spans(self, d):
+    def difference(self, other):
         """
-        Determines if depth d is within this interval.
+        Differences intervals.
 
+        Returns one or two Intervals.
         """
-        o = {'depth': operator.lt, 'elevation': operator.gt}[self.order]
-        return (o(d, self.base.z) and o(self.top.z, d))
-
-    def split_at(self, d):
-        """
-        Splits the interval. Returns a list of the two new intervals.
-
-        Args:
-            d (float): Level or 'depth' to split at.
-
-        TODO:
-            Should this return a Striplog, or just a tuple?
-
-        """
-        if not self.spans(d):
-            m = 'd must be within interval'
-            raise IntervalError(m)
-
-        int1, int2 = self.copy(), self.copy()
-
-        int1.base = d
-        int2.top = d
-
-        return int1, int2  # upper, lower
+        if self.touches(other) or (not self.any_overlaps(other)):
+            return self
+        elif self.completely_contains(other):
+            upper, _, lower = self._explode(other)
+            return upper, lower
+        else:
+            if self > other:
+                return self.split_at(other.top.z)[0]
+            elif self < other:
+                return self.split_at(other.base.z)[1]
+            else:  # They are equal
+                return None
 
     @staticmethod
     def __split_description(text):
