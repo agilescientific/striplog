@@ -50,10 +50,10 @@ class Striplog(object):
 
         if order.lower()[0] == 'a':  # Auto
             # Might as well be strict about it
-            if all([iv.base > iv.top for iv in list_of_Intervals]):
+            if all([iv.base.z > iv.top.z for iv in list_of_Intervals]):
                 order = 'depth'
                 self.order = 'depth'
-            elif all([iv.base < iv.top for iv in list_of_Intervals]):
+            elif all([iv.base.z < iv.top.z for iv in list_of_Intervals]):
                 self.order = 'elevation'
             else:
                 m = "Could not determine order from tops and bases."
@@ -64,7 +64,7 @@ class Striplog(object):
         if order.lower()[0] == 'd':
             self.order = 'depth'
             # Sanity check
-            fail = any([iv.base < iv.top for iv in list_of_Intervals])
+            fail = any([iv.base.z < iv.top.z for iv in list_of_Intervals])
             if fail:
                 m = "Depth order specified but base above top."
                 raise StriplogError(m)
@@ -73,7 +73,7 @@ class Striplog(object):
 
         else:
             self.order = 'elevation'
-            fail = any([iv.base > iv.top for iv in list_of_Intervals])
+            fail = any([iv.base.z > iv.top.z for iv in list_of_Intervals])
             if fail:
                 m = "Elevation order specified but base above top."
                 raise StriplogError(m)
@@ -369,52 +369,60 @@ class Striplog(object):
 
         if not columns:
             if order[0].lower() == 'e':
-                columns = ('bases', 'tops', 'descrs')
+                columns = ('base', 'top', 'description')
             else:
-                columns = ('tops', 'bases', 'descrs')
+                columns = ('top', 'base', 'description')
 
         result = {k: [] for k in columns}
 
+        # Set the indices for the fields.
+        tix = columns.index('top')
+        bix = columns.index('base')
+        dix = columns.index('description')
+
         for i, row in enumerate(as_strings):
+
+            # THIS ONLY WORKS FOR MISSING TOPS!
             if len(row) == 2:
                 row = [row[0], None, row[1]]
 
             # TOP
-            this_top = float(row[0])
+            this_top = float(row[tix])
 
+            # THIS ONLY WORKS FOR MISSING TOPS!
             # BASE
             # Base is null: use next top if this isn't the end.
-            if not row[1]:
+            if row[1] is None:
                 if i < len(as_strings)-1:
                     this_base = float(as_strings[i+1][0])  # Next top.
                 else:
                     this_base = this_top + 1  # Default to 1 m thick at end.
             else:
-                this_base = float(row[1])
+                this_base = float(row[bix])
 
             # DESCRIPTION
-            this_descr = row[2].strip()
+            this_descr = row[dix].strip()
 
             # Deal with making intervals or points...
             if not points:
                 # Insert intervals where needed.
-                if complete and (i > 0) and (this_top != result['bases'][-1]):
-                    result['tops'].append(result['bases'][-1])
-                    result['bases'].append(this_top)
-                    result['descrs'].append('')
+                if complete and (i > 0) and (this_top != result['base'][-1]):
+                    result['top'].append(result['base'][-1])
+                    result['base'].append(this_top)
+                    result['description'].append('')
             else:
                 this_base = None
 
             # ASSIGN
-            result['tops'].append(this_top)
-            result['bases'].append(this_base)
-            result['descrs'].append(this_descr)
+            result['top'].append(this_top)
+            result['base'].append(this_base)
+            result['description'].append(this_descr)
 
         # Build the list.
         list_of_Intervals = []
-        for i, t in enumerate(result['tops']):
-            b = result['bases'][i]
-            d = result['descrs'][i]
+        for i, t in enumerate(result['top']):
+            b = result['base'][i]
+            d = result['description'][i]
             interval = Interval(t, b, description=d,
                                 lexicon=lexicon,
                                 abbreviations=abbreviations)
@@ -1082,13 +1090,11 @@ class Striplog(object):
         Inverts the striplog, changing its order and the order of its contents.
         """
         if copy:
-            print('inverting copy')
             new_intervals = []
             for i in self:
                 new_intervals.append(i.invert(copy=True))
             return Striplog(new_intervals)  # Should get order automatically.
         else:
-            print('inverting in place')
             for i in self:
                 i.invert()
             self.__sort()
