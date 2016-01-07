@@ -75,11 +75,11 @@ class Position(object):
         opposed to just delaing with empty attributes.
         """
         temp = self.__dict__.copy()
-        print(temp)
-        if temp['upper'] == temp['middle']:
-            del temp['upper']
-        if temp['lower'] == temp['middle']:
-            del temp['lower']
+        if getattr(self, 'middle', None):
+            if temp['upper'] == temp['middle']:
+                del temp['upper']
+            if temp['lower'] == temp['middle']:
+                del temp['lower']
         return temp.__str__()
 
     def __repr__(self):
@@ -99,9 +99,23 @@ class Position(object):
         if isinstance(other, self.__class__):
             return self.middle < other.middle
 
+    def _repr_html_(self):
+        """
+        Jupyter Notebook magic repr function.
+        """
+        items = ['upper', 'middle', 'lower']
+        rows = ''
+        row = '<tr><td><strong>{e}</strong></td><td>{v}</td></tr>'
+        for i, e in enumerate(items):
+            v = getattr(self, e, '')
+            rows += row.format(e=e, v=v)
+
+        html = '<table>{}</table>'.format(rows)
+        return html
+
     @property
     def z(self):
-        return self.middle or (self.upper + self.lower)/2
+        return self.__dict__.get('middle', (self.upper + self.lower)/2)
 
     @property
     def uncertainty(self):
