@@ -13,6 +13,7 @@ import operator
 import warnings
 from collections import Counter
 from functools import reduce
+from copy import deepcopy
 
 import numpy as np
 import matplotlib as mpl
@@ -233,18 +234,56 @@ class Striplog(object):
         """
         pass
 
-    def __assert_way_up(self):
+    @property
+    def cum(self):
         """
-        Checks the ways up of Intervals are consistent with each other and
-        with what the striplog thinks it is.
+        Returns the cumulative thickness of all filled intervals.
+
+        It would be nice to use sum() for this (by defining __radd__),
+        but I quite like the ability to add striplogs and get a striplog
+        and I don't think we can have both, its too confusing.
+
+        Not calling it sum, because that's a keyword.
         """
-        op = {'depth': operator.lt,
-              'elevation': operator.gt,
-              }
-        if any([op[self.order](iv.base.z, iv.top.z) for iv in self.__list]):
-            m = "Intervals inconsistent with each other or striplog order."
-            raise StriplogError(m)
-        return
+        total = 0.0
+        for i in self:
+            total += i.thickness
+        return total
+
+    @property
+    def mean(self):
+        """
+        Returns the mean thickness of all filled intervals.
+        """
+        return self.cum / len(self)
+
+    @property
+    def components(self):
+        """
+        Returns the list of compenents in the striplog.
+        """
+        return [i[0] for i in self.unique if i[0]]
+
+    @property
+    def unique(self):
+        """
+        Summarize a Striplog with some statistics.
+        """
+        all_rx = set([iv.primary for iv in self])
+        table = {r: 0 for r in all_rx}
+        for iv in self:
+            table[iv.primary] += iv.thickness
+
+        return sorted(table.items(), key=operator.itemgetter(1), reverse=True)
+
+    @property
+    def top(self):
+        # For backwards compatibility.
+        with warnings.catch_warnings():
+            warnings.simplefilter("always")
+            w = "Striplog.top is deprecated; please use Striplog.unique"
+            warnings.warn(w)
+        return self.unique
 
     @classmethod
     def __loglike_from_image(self, filename, offset):
@@ -307,7 +346,7 @@ class Striplog(object):
 
         list_of_Intervals = []
         for i, t in enumerate(tops):
-            component = components[values[i]]
+            component = deepcopy(components[values[i]])
             interval = Interval(t, bases[i], components=[component])
             list_of_Intervals.append(interval)
 
@@ -481,12 +520,14 @@ class Striplog(object):
         return cls(list_of_Intervals, source="Image")
 
     @classmethod
-    def from_array(cls, a,
-                   lexicon=None,
-                   source="",
-                   points=False,
-                   abbreviations=False):
+    def _from_array(cls, a,
+                    lexicon=None,
+                    source="",
+                    points=False,
+                    abbreviations=False):
         """
+        DEPRECATING
+
         Turn an array-like into a Striplog. It should have the following
         format (where `base` is optional):
 
@@ -505,6 +546,12 @@ class Striplog(object):
         Returns:
             Striplog: The ``striplog`` object.
         """
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("always")
+            w = "from_array() is deprecated."
+            warnings.warn(w)
+
         csv_text = ''
         for interval in a:
             interval = [str(i) for i in interval]
@@ -521,31 +568,69 @@ class Striplog(object):
                             abbreviations=abbreviations)
 
     @classmethod
-    def from_log(cls, a,
-                 basis,
+    def from_log(cls, log,
+                 cutoff=None,
                  components=None,
                  legend=None,
+                 right=False,
+                 basis=None,
+                 abstract=False,
                  source='Log'):
         """
-        Turn a 1D array of integers into a striplog, given a Legend or a
-            sequence of Components.
+        Turn a 1D array of integers into a striplog, given a cutoff.
 
         Args:
-            a (array-like): A 1D array or a list of integers.
-            components (sequence): A list or tuple of Components.
-            legend (Legend): A legend.
+            log (array-like): A 1D array or a list of integers.
+            cutoff (number or array-like): The log value(s) at which to bin
+                the log. Optional. If you don't provide one, 
+            components (array-like): A list of components or a legend.
+            right (bool): Which side of the cutoff to send things that are
+                equal to, i.e. right on, the cutoff.
 
         Returns:
-            Striplog: The ``striplog`` object.
+            Striplog: The `striplog` object.
+
+        TODO:
+            Implement the log blocking function in a well-handling library,
+            instead of here. Then we can just use from_blocky_log().
         """
         if not components:
             if not legend:
                 m = 'You must provide a legend or list of components'
                 raise StriplogError(m)
-            else:
-                components = [decor.component for decor in legend]
+
+        if legend is not None:
+            try:  # To treat it like a legend.
+                components = [deepcopy(decor.component) for decor in legend]
+            except AttributeError:  # It's just a list of components.
+                pass
+
+        if cutoff is not None:
+
+            # First make sure we have enough components.
+            try:
+                n = len(cutoff)
+            except TypeError:
+                n = 1
+            if len(components) < n+1:
+                m = 'For n cutoffs, you need to provide at least'
+                m += 'n+1 components.'
+                raise StriplogError(m)
+
+            # Digitize.
+            try:  # To use cutoff as a list.
+                a = np.digitize(log, cutoff, right)
+            except ValueError:  # It's just a number.
+                a = np.digitize(log, [cutoff], right)
+
+        else:
+            a = log
 
         tops, values = cls.__tops_from_loglike(a)
+
+        if basis is None:
+            m = 'You must provide a depth or elevation basis.'
+            raise StriplogError(m)
 
         list_of_Intervals = cls.__intervals_from_tops(tops,
                                                       values,
@@ -593,6 +678,7 @@ class Striplog(object):
                             dlm=dlm,
                             abbreviations=abbreviations)
 
+    # Outputter
     def to_csv(self, use_descriptions=False, dlm=",", header=True):
         """
         Returns a CSV string built from the summaries of the Intervals.
@@ -626,6 +712,7 @@ class Striplog(object):
 
         return data
 
+    # Outputter
     def to_las3(self, use_descriptions=False, dlm=",", source="Striplog"):
         """
         Returns an LAS 3.0 section string.
@@ -648,6 +735,7 @@ class Striplog(object):
                                         source=source,
                                         data=data)
 
+    # Outputter
     def to_log(self,
                step=1.0,
                start=None,
@@ -668,9 +756,10 @@ class Striplog(object):
             step (float): The step size. Default: 1.0.
             start (float): The start depth of the new log. You will want to
                 match the logs, so use the start depth from the LAS file.
-                Default: The start of the striplog.
+                Default: The basis if provided, else the start of the striplog.
             stop (float): The stop depth of the new log. Use the stop depth
-                of the LAS file. Default: The stop depth of the striplog.
+                of the LAS file. Default: The basis if provided, else the stop
+                depth of the striplog.
             legend (Legend): If you want the codes to come from a legend,
                 provide one. Otherwise the codes come from the log, using
                 integers in the order of prevalence. If you use a legend,
@@ -687,9 +776,6 @@ class Striplog(object):
             ndarray: Two ndarrays in a tuple, (depth, logdata). Logdata
                 has type numpy.int.
         """
-        def null(x):
-            return x
-
         # Make the preparations.
         if basis is not None:
             start, stop = basis[0], basis[-1]
@@ -715,8 +801,13 @@ class Striplog(object):
             table = [j[0] for j in self.unique]
         table.insert(0, Component({}))
 
+        start_ix = self.read_at(start, index=True)
+        stop_ix = self.read_at(stop, index=True)
+        if stop_ix is not None:
+            stop_ix += 1
+
         # Assign the values.
-        for i in self:
+        for i in self[start_ix:stop_ix]:
             c = i.primary
             if match_only:
                 c = Component({k: getattr(c, k, None)
@@ -725,13 +816,13 @@ class Striplog(object):
             if legend and legend_field:
                 # Use the legend field.
                 try:
-                    key = legend.getattr(c, legend_field)
+                    key = legend.getattr(c, legend_field, undefined)
                 except ValueError:
                     key = undefined
             elif field:  # Get data directly from that field in the components.
-                f = field_function or null
+                f = field_function or utils.null
                 try:
-                    key = f(getattr(c, field))
+                    key = f(getattr(c, field, undefined))
                 except ValueError:
                     key = undefined
             else:  # Use the lookup table.
@@ -740,19 +831,20 @@ class Striplog(object):
                 except ValueError:
                     key = undefined
 
-            top_index = np.ceil((i.top.z-start)/step)
-            base_index = np.ceil((i.base.z-start)/step)
+            top_index = np.ceil((max(start, i.top.z)-start)/step)
+            base_index = np.ceil((min(stop, i.base.z)-start)/step)
 
             try:
-                result[top_index:base_index] = key
+                result[top_index:base_index+1] = key
             except:  # Have a list or array or something.
-                result[top_index:base_index] = key[0]
+                result[top_index:base_index+1] = key[0]
 
         if return_meta:
             return result, basis, table
         else:
             return result
 
+    # Outputter
     def plot_axis(self,
                   ax,
                   legend,
@@ -792,6 +884,7 @@ class Striplog(object):
 
         return ax
 
+    # Outputter
     def plot(self,
              legend=None,
              width=1.5,
@@ -831,15 +924,25 @@ class Striplog(object):
 
         # Rely on interval order.
         lower, upper = self[-1].base.z, self[0].top.z
+        rng = abs(upper - lower)
 
         ax.set_ylim([lower, upper])
         ax.set_xticks([])
 
+        # Make sure ticks is a tuple.
         try:
             ticks = tuple(ticks)
         except TypeError:
             ticks = (1, ticks)
 
+        # Avoid MAXTICKS error.
+        while rng/ticks[0] > 1000:
+            mi, ma = 10*ticks[0], ticks[1]
+            if ma <= mi:
+                ma = 10 * mi
+            ticks = (mi, ma)
+
+        # Carry on plotting...
         minorLocator = mpl.ticker.MultipleLocator(ticks[0])
         ax.yaxis.set_minor_locator(minorLocator)
 
@@ -859,30 +962,66 @@ class Striplog(object):
         if return_fig:
             return fig
 
-    def read_at(self, d):
+    def read_at(self, d, index=False):
         """
-        Get the interval at a particular 'depth' (though this might be an
-            elevation or age or anything.
+        Get the index of the interval at a particular 'depth' (though this
+            might be an elevation or age or anything.
 
         Args:
-            d (Number): The depth to query.
+            d (Number): The 'depth' to query.
+            index (bool): Whether to return the index instead of the interval.
 
         Returns:
-            Interval: The interval at that depth, or None if
-                the depth is outside the striplog's range.
+            Int: The interval, or if index==True the index of the interval, at
+                the specified 'depth', or None if the depth is outside the
+                striplog's range.
         """
-        for iv in self:
+        for i, iv in enumerate(self):
             if iv.spans(d):
-                return iv
+                return i if index else iv
         return None
 
+    # For backwards compatibility
     def depth(self, d):
-        # For backwards compatibility.
         with warnings.catch_warnings():
             warnings.simplefilter("always")
             w = "depth() is deprecated; please use read_at()"
             warnings.warn(w)
         return self.read_at(d)
+
+    def abstract(self, log, basis, name, function=None):
+        """
+        'Abstract' a log into the components of a striplog.
+
+        Args:
+            log (array_like). A log or other 1D data.
+            basis (array_like). The depths or elevations of the log samples.
+            name (str). The name of the attribute to store in the components.
+            function (function). A function that takes an array as the only
+                input, and returns whatever you want to store in the 'name'
+                attribute of the primary component.
+        Returns:
+            None. The function works on the striplog in place.
+        """
+        # Build a dict of {index: [log values]} to keep track.
+        intervals = {}
+        previous_ix = -1
+        for i, z in enumerate(basis):
+            ix = self.read_at(z, index=True)
+            if ix is None: continue
+            if ix == previous_ix:
+                intervals[ix].append(log[i])
+            else:
+                intervals[ix] = [log[i]]
+            previous_ix = ix
+
+        # Set the requested attribute in the primary comp of each interval.
+        for ix, data in intervals.items():
+            f = function or utils.null
+            d = f(np.array(data))
+            setattr(self[ix].primary, name, d)
+
+        return None
 
     def find(self, search_term):
         """
@@ -953,7 +1092,7 @@ class Striplog(object):
 
     def prune(self, limit=None, n=None, percentile=None):
         """
-        Remove intervals below a certain limit thickness.
+        Remove intervals below a certain limit thickness. In place.
 
         Args:
             limit (float): Anything thinner than this will be pruned.
@@ -973,7 +1112,8 @@ class Striplog(object):
             prune = self.thinnest(n=n, index=True)
 
         del self[prune]  # In place delete
-        return self
+
+        return
 
     def anneal(self):
         """
@@ -1102,53 +1242,39 @@ class Striplog(object):
             self.order = {'depth': 'elevation', 'elevation': 'depth'}[o]
             return
 
-    @property
-    def cum(self):
+    def crop(self, extent, copy=False):
         """
-        Returns the cumulative thickness of all filled intervals.
+        Crop to a new depth range.
 
-        It would be nice to use sum() for this (by defining __radd__),
-        but I quite like the ability to add striplogs and get a striplog
-        and I don't think we can have both, its too confusing.
+        Args:
+            extent (tuple): The new start and stop depth. Must be 'inside'
+            existing striplog.
 
-        Not calling it sum, because that's a keyword.
+        Returns:
+            Operates in place by deault; if copy is True, returns a striplog.
         """
-        total = 0.0
-        for i in self:
-            total += i.thickness
-        return total
+        try:
+            if extent[0] is None:
+                extent = (self.start, extent[1])
+            if extent[1] is None:
+                extent = (extent[0], self.stop)
+        except:
+            m = "You must provide a 2-tuple for the new extents. Use None for"
+            m += " the existing start or stop."
+            raise StriplogError(m)
 
-    @property
-    def mean(self):
-        """
-        Returns the mean thickness of all filled intervals.
-        """
-        return self.cum / len(self)
+        first_ix = self.read_at(extent[0], index=True)
+        last_ix = self.read_at(extent[1], index=True)
 
-    @property
-    def components(self):
-        """
-        Returns the list of compenents in the striplog.
-        """
-        return [i[0] for i in self.unique if i[0]]
+        first = self[first_ix].split_at(extent[0])[1]
+        last = self[last_ix].split_at(extent[1])[0]
 
-    @property
-    def unique(self):
-        """
-        Summarize a Striplog with some statistics.
-        """
-        all_rx = set([iv.primary for iv in self])
-        table = {r: 0 for r in all_rx}
-        for iv in self:
-            table[iv.primary] += iv.thickness
+        new_list = self.__list[first_ix:last_ix+1].copy()
+        new_list[0] = first
+        new_list[-1] = last
 
-        return sorted(table.items(), key=operator.itemgetter(1), reverse=True)
-
-    @property
-    def top(self):
-        # For backwards compatibility.
-        with warnings.catch_warnings():
-            warnings.simplefilter("always")
-            w = "Striplog.top is deprecated; please use Striplog.unique"
-            warnings.warn(w)
-        return self.unique
+        if copy:
+            return Striplog(new_list)
+        else:
+            self.__list = new_list
+            return
