@@ -56,8 +56,10 @@ class Interval(object):
         # If necessary, convert numbers to Positions
         if not isinstance(top, Position):
             top = Position(middle=top)
-        if not isinstance(base, Position):
-            base = Position(middle=base)
+
+        if base is not None:
+            if not isinstance(base, Position):
+                base = Position(middle=base)
 
         self.top = top
         if base is not None:
@@ -240,7 +242,8 @@ class Interval(object):
         TODO:
             Allow formatting of the entire string, not just the rock.
         """
-        s = [r.summary(fmt=fmt, initial=initial) for r in self.components]
+        s = [c.summary(fmt=fmt, initial=initial)
+             for c in self.components]
         summary = " with ".join(s)
         if summary:
             return "{0:.2f} m of {1}".format(self.thickness, summary)
