@@ -6,9 +6,6 @@ Defines components for holding properties of rocks or samples or whatevers.
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
-from collections.abc import MutableMapping
-from numbers import Number
-import re
 import json
 
 from .utils import CustomFormatter

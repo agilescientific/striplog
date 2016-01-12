@@ -59,6 +59,13 @@ class partialmethod(partial):
                        *(self.args or ()), **(self.keywords or {}))
 
 
+def null(x):
+    """
+    Null function.
+    """
+    return x
+
+
 def hex_to_name(hexx):
     """
     Convert hex to a color name, using matplotlib's colour names.
