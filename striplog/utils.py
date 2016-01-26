@@ -16,19 +16,22 @@ class CustomFormatter(Formatter):
 
     def __init__(self):
         super(CustomFormatter, self).__init__()
-        self.last_index = 0
 
-    def get_value(self, key, args, kwargs):
-        if key == '':
-            key = self.last_index
-            self.last_index += 1
-        return super(CustomFormatter, self).get_value(key, args, kwargs)
-
-    def parse(self, format_string):
-        # We'll leave this alone.
-        return super(CustomFormatter, self).parse(format_string)
+    def get_field(self, field_name, args, kwargs):
+        """
+        Return an underscore if the attribute is absent.
+        Not all components have the same attributes.
+        """
+        try:
+            s = super(CustomFormatter, self)
+            return s.get_field(field_name, args, kwargs)
+        except KeyError:
+            return ("_", field_name)
 
     def convert_field(self, value, conversion):
+        """
+        Define some extra field conversion functions.
+        """
         try:  # If the normal behaviour works, do it.
             s = super(CustomFormatter, self)
             return s.convert_field(value, conversion)
