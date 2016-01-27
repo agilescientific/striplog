@@ -19,7 +19,7 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-from .interval import Interval
+from .interval import Interval, IntervalError
 from .component import Component
 from .legend import Legend
 from . import utils
@@ -50,19 +50,32 @@ class Striplog(object):
             raise StriplogError(m)
 
         if order.lower()[0] == 'a':  # Auto
-            # Might as well be strict about it
-            if all([iv.base.z > iv.top.z for iv in list_of_Intervals]):
+            # If bases == tops, then this is a bunch of 'points'.
+            if all([iv.base.z == iv.top.z for iv in list_of_Intervals]):
+                order = 'none'
+                self.order = 'none'
+            # We will tolerate zero-thickness intervals mixed in.
+            elif all([iv.base.z >= iv.top.z for iv in list_of_Intervals]):
                 order = 'depth'
                 self.order = 'depth'
-            elif all([iv.base.z < iv.top.z for iv in list_of_Intervals]):
+            elif all([iv.base.z <= iv.top.z for iv in list_of_Intervals]):
+                order = 'elevation'
                 self.order = 'elevation'
             else:
                 m = "Could not determine order from tops and bases."
                 raise StriplogError(m)
 
-        # Could tidy this up with a base class and inheritance;
-        # problem is cannot access self until initialized.
-        if order.lower()[0] == 'd':
+        if order.lower()[0] == 'n':
+            self.order = 'none'
+            # Sanity check
+            fail = any([iv.base.z != iv.top.z for iv in list_of_Intervals])
+            if fail:
+                m = "'None' order specified but tops != bases."
+                raise StriplogError(m)
+            # Order force
+            list_of_Intervals.sort(key=operator.attrgetter('top'))
+
+        elif order.lower()[0] == 'd':
             self.order = 'depth'
             # Sanity check
             fail = any([iv.base.z < iv.top.z for iv in list_of_Intervals])
@@ -120,6 +133,19 @@ class Striplog(object):
                 del self.__list[k]
         else:
             del self.__list[key]
+        return
+
+    def __insert(self, index, item):
+        if isinstance(item, self.__class__):
+            # Add them one at a time.
+            for i, iv in enumerate(item):
+                self.__list.insert(index+i, iv)
+        elif isinstance(item, Interval):
+            # Add it.
+            self.__list.insert(index, item)
+            return
+        else:
+            raise StriplogError("You can only insert striplogs or intervals.")
 
     def __len__(self):
         return len(self.__list)
@@ -200,20 +226,6 @@ class Striplog(object):
         self.__list.sort(key=operator.attrgetter('top'))
         return
 
-    def __intersect(self):
-        """
-        Makes a striplog of all intersections.
-
-        """
-        pass
-
-    def __merge(self):
-        """
-        Forces the striplog to be 1D by merging all overlaps.
-
-        """
-        pass
-
     def __strict(self):
         """
         Checks if striplog is monotonically increasing in depth.
@@ -226,13 +238,6 @@ class Striplog(object):
         b = np.array(reduce(conc, [[i.top.z, i.base.z] for i in self]))
 
         return all(np.diff(b) >= 0)
-
-    def __no_overlaps(self):
-        """
-        Checks no overlaps.
-
-        """
-        pass
 
     @property
     def cum(self):
@@ -450,7 +455,7 @@ class Striplog(object):
                     result['base'].append(this_top)
                     result['description'].append('')
             else:
-                this_base = None
+                this_base = None  # Gets set to Top in striplog creation
 
             # ASSIGN
             result['top'].append(this_top)
@@ -574,7 +579,6 @@ class Striplog(object):
                  legend=None,
                  right=False,
                  basis=None,
-                 abstract=False,
                  source='Log'):
         """
         Turn a 1D array of integers into a striplog, given a cutoff.
@@ -844,13 +848,20 @@ class Striplog(object):
         else:
             return result
 
+    def to_flag(self, **kwargs):
+        """
+        A wrapper for to_log() that returns a boolean array.
+        """
+        return self.to_log(**kwargs).astype(bool)
+
     # Outputter
     def plot_axis(self,
                   ax,
                   legend,
                   ladder=False,
                   default_width=1,
-                  match_only=None):
+                  match_only=None,
+                  **kwargs):
         """
         Plotting, but only the Rectangles. You have to set up the figure.
         Returns a matplotlib axis object.
@@ -863,6 +874,7 @@ class Striplog(object):
                 Default 1.
             match_only (list): A list of strings matching the attributes you
                 want to compare when plotting.
+            **kwargs are passed through to matplotlib's `patches.Rectangle`.
 
         Returns:
             axis: The matplotlib.pyplot axis.
@@ -875,11 +887,23 @@ class Striplog(object):
 
             if ladder:
                 w = legend.get_width(i.primary, match_only=match_only) or d
-                w = d * w/legend.max_width
+                try:
+                    w = d * w/legend.max_width
+                except:
+                    w = d
             else:
                 w = d
 
-            rect = mpl.patches.Rectangle(origin, w, thick, color=colour)
+            # Allow override of lw
+            this_patch_kwargs = kwargs.copy()
+            lw = this_patch_kwargs.pop('lw', 0)
+
+            rect = mpl.patches.Rectangle(origin,
+                                         w,
+                                         thick,
+                                         fc=colour,
+                                         lw=lw,
+                                         **this_patch_kwargs)
             ax.add_patch(rect)
 
         return ax
@@ -892,7 +916,9 @@ class Striplog(object):
              aspect=10,
              ticks=(1, 10),
              match_only=None,
-             return_fig=False):
+             ax=None,
+             return_fig=False,
+             **kwargs):
         """
         Hands-free plotting.
 
@@ -905,6 +931,7 @@ class Striplog(object):
                 Only the major interval is labeled. Default (1,10).
             match_only (list): A list of strings matching the attributes you
                 want to compare when plotting.
+            **kwargs are passed through to matplotlib's `patches.Rectangle`.
 
         Returns:
             figure: The matplotlib.pyplot figure.
@@ -913,13 +940,20 @@ class Striplog(object):
             # Build a random-coloured legend.
             legend = Legend.random(self.components)
 
-        fig = plt.figure(figsize=(width, aspect*width))
-        ax = fig.add_axes([0.35, 0.05, 0.6, 0.95])
+        if ax is None:
+            return_ax = False
+            fig = plt.figure(figsize=(width, aspect*width))
+            ax = fig.add_axes([0.35, 0.05, 0.6, 0.95])
+        else:
+            return_ax = True
+
         ax = self.plot_axis(ax=ax,
                             legend=legend,
                             ladder=ladder,
                             default_width=width,
-                            match_only=match_only)
+                            match_only=match_only,
+                            **kwargs
+                            )
         ax.set_xlim([0, width])
 
         # Rely on interval order.
@@ -959,8 +993,12 @@ class Striplog(object):
 
         ax.patch.set_alpha(0)
 
-        if return_fig:
+        if return_ax:
+            return ax
+        elif return_fig:
             return fig
+        else:
+            return
 
     def read_at(self, d, index=False):
         """
@@ -989,9 +1027,9 @@ class Striplog(object):
             warnings.warn(w)
         return self.read_at(d)
 
-    def abstract(self, log, basis, name, function=None):
+    def extract(self, log, basis, name, function=None):
         """
-        'Abstract' a log into the components of a striplog.
+        'Extract' a log into the components of a striplog.
 
         Args:
             log (array_like). A log or other 1D data.
@@ -1008,7 +1046,8 @@ class Striplog(object):
         previous_ix = -1
         for i, z in enumerate(basis):
             ix = self.read_at(z, index=True)
-            if ix is None: continue
+            if ix is None:
+                continue
             if ix == previous_ix:
                 intervals[ix].append(log[i])
             else:
@@ -1023,7 +1062,7 @@ class Striplog(object):
 
         return None
 
-    def find(self, search_term):
+    def find(self, search_term, index=False):
         """
         Look for a regex expression in the descriptions of the striplog.
         If there's no description, it looks in the summaries.
@@ -1049,21 +1088,24 @@ class Striplog(object):
             except TypeError:
                 if search_term in iv.components:
                     hits.append(i)
-        return self[hits]
+        if index:
+            return hits
+        else:
+            return self[hits]
 
-    def find_gaps(self, index=False):
+    def __find_incongruities(self, op, index):
         """
-        Finds gaps in a striplog.
+        Finds gaps and overlaps in a striplog. Private; called by
+        find_gaps() and find_overlaps().
 
         Args:
+            op (operator): operator.gt or operator.lt
             index (bool): If True, returns indices of intervals with
             gaps after them.
 
         Returns:
             Striplog: A striplog of all the gaps. A sort of anti-striplog.
 
-        TODO:
-            Could do something similar to find overlaps.
         """
         hits = []
         intervals = []
@@ -1075,7 +1117,7 @@ class Striplog(object):
 
         for i, iv in enumerate(self[:-1]):
             next_iv = self[i+1]
-            if getattr(iv, one) < getattr(next_iv, two):
+            if op(getattr(iv, one), getattr(next_iv, two)):
                 hits.append(i)
 
                 top = getattr(iv, one)
@@ -1089,6 +1131,34 @@ class Striplog(object):
             return Striplog(intervals)
         else:
             return
+
+    def find_overlaps(self, index=False):
+        """
+        Find overlaps in a striplog.
+
+        Args:
+            index (bool): If True, returns indices of intervals with
+            gaps after them.
+
+        Returns:
+            Striplog: A striplog of all the overlaps as intervals.
+
+        """
+        return self.__find_incongruities(op=operator.gt, index=index)
+
+    def find_gaps(self, index=False):
+        """
+        Finds gaps in a striplog.
+
+        Args:
+            index (bool): If True, returns indices of intervals with
+            gaps after them.
+
+        Returns:
+            Striplog: A striplog of all the gaps. A sort of anti-striplog.
+
+        """
+        return self.__find_incongruities(op=operator.lt, index=index)
 
     def prune(self, limit=None, n=None, percentile=None):
         """
@@ -1130,7 +1200,7 @@ class Striplog(object):
 
         for gap in gaps:
             before = self[gap]
-            after = self[gap+1]
+            after = self[gap + 1]
 
             if self.order == 'depth':
                 t = (after.top.z-before.base.z)/2
@@ -1142,6 +1212,61 @@ class Striplog(object):
                 after.base = after.base.z - t
 
         # These were in-place operations so we don't return anything
+        return
+
+    def fill(self, component):
+        """
+        Fill gaps with the component provided.
+        """
+        pass
+
+    def intersect(self, other):
+        """
+        Makes a striplog of all intersections.
+        """
+        if not isinstance(other, self.__class__):
+            m = "You can only intersect striplogs with each other."
+            raise StriplogError(m)
+
+        result = []
+        for iv in self:
+            for jv in other:
+                try:
+                    result.append(iv.intersect(jv))
+                except IntervalError:
+                    # The intervals don't overlap
+                    pass
+        return Striplog(result)
+
+    def merge_overlaps(self):
+        """
+        Merges overlaps by merging overlapping Intervals.
+
+        TODO: This function will not work if any interval overlaps more than
+            one other intervals at either its base or top.
+
+        """
+        overlaps = np.array(self.find_overlaps(index=True))
+
+        if not overlaps.any():
+            return
+
+        for overlap in overlaps:
+            before = self[overlap].copy()
+            after = self[overlap + 1].copy()
+
+            # Get rid of the before and after pieces.
+            del self[overlap]
+            del self[overlap]
+
+            # Make the new piece.
+            new_segment = before.merge(after)
+
+            # Insert it.
+            self.__insert(overlap, new_segment)
+
+            overlaps += 1
+
         return
 
     def thickest(self, n=1, index=False):
@@ -1211,10 +1336,13 @@ class Striplog(object):
             if lumping:
                 x = self.read_at(d).primary[lumping]
             else:
+                x = self.read_at(d)
+                if not x:
+                    continue
                 if summary:
-                    x = self.read_at(d).primary.summary()
+                    x = x.primary.summary()
                 else:
-                    x = self.read_at(d).primary
+                    x = x.primary
             raw_readings.append(x)
         c = Counter(raw_readings)
         ents, counts = tuple(c.keys()), tuple(c.values())

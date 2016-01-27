@@ -45,6 +45,17 @@ class Interval(object):
         max_component (int): The number of components to extract. Default 1.
         abbreviations (bool): Whether to parse for abbreviations.
 
+    TODO:
+        Seems like I should be able to instantiate like this:
+
+            Interval({'top': 0, 'components':[Component({'age': 'Neogene'})
+
+        I can get around it for now like this:
+
+            Interval(**{'top': 0, 'components':[Component({'age': 'Neogene'})
+
+        Question: should Interval itself cope with only being handed 'top' and
+        either fill in down to the next or optionally create a point?
     """
     def __init__(self, top, base=None,
                  description='',
@@ -82,7 +93,6 @@ class Interval(object):
                 self.components = comps
             else:
                 with warnings.catch_warnings():
-                    warnings.simplefilter("always")
                     w = "You must provide a lexicon to generate "
                     w += "components from descriptions."
                     warnings.warn(w)

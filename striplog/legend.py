@@ -12,13 +12,26 @@ import csv
 import warnings
 import random
 import math
+import re
+
+try:
+    from functools import partialmethod
+except:  # Python 2
+    from utils import partialmethod
 
 from matplotlib import patches
 import matplotlib.pyplot as plt
 
 from .component import Component
 from . import utils
-from .defaults import LEGEND
+from .defaults import LEGEND__NSDOE
+from .defaults import LEGEND__NAGMDM__6_2
+from .defaults import LEGEND__NAGMDM__6_1
+from .defaults import LEGEND__NAGMDM__4_3
+from .defaults import LEGEND__SGMC
+from .defaults import TIMESCALE__ISC
+from .defaults import TIMESCALE__USGS_ISC
+from .defaults import TIMESCALE__DNAG
 
 
 class LegendError(Exception):
@@ -76,10 +89,9 @@ class Decor(object):
             raise LegendError("You must provide at least one decoration.")
 
         # Make sure we have a width, even if it's None.
-        w = getattr(self, 'width', None)
-        if w:
+        try:
             self.width = float(self.width)
-        else:
+        except:
             self.width = None
 
         # Deal with American spelling.
@@ -96,6 +108,11 @@ class Decor(object):
                 try:
                     self.colour = utils.rgb_to_hex(c)
                 except TypeError:
+                    raise LegendError("Colour not recognized: " + c)
+            elif c[0] in ['[', '(']:
+                try:
+                    self.colour = utils.rgb_to_hex(c)
+                except KeyError:
                     raise LegendError("Colour not recognized: " + c)
             elif c[0] != '#':
                 try:
@@ -191,11 +208,16 @@ class Decor(object):
         Make a simple plot of the Decor.
 
         Args:
-        widths (bool): Whether to use the widths in the plot.
-        height (int): A scalar for the height, in inches.
+            fmt (str): A Python format string for the component summaries.
+            fig (Pyplot figure): A figure, optional. Use either fig or ax, not
+                both.
+            ax (Pyplot axis): An axis, optional. Use either fig or ax, not
+                both.
 
         Returns:
-        None. Instead the function creates a plot object as a side-effect.
+        fig or ax or None. If you pass in an ax, you get it back. If you pass
+            in a fig, you get it. If you pass nothing, the function creates a
+            plot object as a side-effect.
         """
 
         u = 4     # aspect ratio of decor plot
@@ -316,14 +338,50 @@ class Legend(object):
             raise LegendError("You can only add legends or decors.")
 
     @classmethod
-    def default(cls):
+    def builtin(cls, name):
         """
-        Generate a default legend. No arguments.
+        Generate a default legend.
+
+        Args:
+            name (str): The name of the legend you want. Not case sensitive.
+                 'nsdoe': Nova Scotia Dept. of Energy
+                 'nagmdm__6_2': USGS N. Am. Geol. Map Data Model 6.2
+                 'nagmdm__6_1': USGS N. Am. Geol. Map Data Model 6.1
+                 'nagmdm__4_3': USGS N. Am. Geol. Map Data Model 4.3
+                 'sgmc': USGS State Geologic Map Compilation
+
+            Default 'nagmdm__6_2'.
 
         Returns:
             Legend: The legend stored in `defaults.py`.
         """
-        return cls.from_csv(LEGEND)
+        names = {
+                 'nsdoe': LEGEND__NSDOE,
+                 'nagmdm__6_2': LEGEND__NAGMDM__6_2,
+                 'nagmdm__6_1': LEGEND__NAGMDM__6_1,
+                 'nagmdm__4_3': LEGEND__NAGMDM__4_3,
+                 'sgmc': LEGEND__SGMC,
+                 }
+        return cls.from_csv(names[name.lower()])
+
+    @classmethod
+    def builtin_timescale(cls, name):
+        """
+        Generate a default timescale legend. No arguments.
+
+        Returns:
+            Legend: The timescale stored in `defaults.py`.
+        """
+        names = {
+                 'isc': TIMESCALE__ISC,
+                 'usgs_isc': TIMESCALE__USGS_ISC,
+                 'dnag': TIMESCALE__DNAG,
+                 }
+        return cls.from_csv(names[name.lower()])
+
+    # Curry.
+    default = partialmethod(builtin, name="NAGMDM__6_2")
+    default_timescale = partialmethod(builtin_timescale, name='ISC')
 
     @classmethod
     def random(cls, components):
@@ -349,6 +407,9 @@ class Legend(object):
         """
         Read CSV text and generate a Legend.
 
+        Args:
+            string (str): The CSV string.
+
         In the first row, list the properties. Precede the properties of the
         component with 'comp ' or 'component '. For example:
 
@@ -371,11 +432,13 @@ class Legend(object):
             f = StringIO(unicode(string))  # Python 2
 
         r = csv.DictReader(f, skipinitialspace=True)
-        list_of_Decors = []
+        list_of_Decors, components = [], []
         for row in r:
             d, component = {}, {}
             for (k, v) in row.items():
-                if k[:4].lower() == 'comp':
+                if k is None:
+                    continue
+                elif k[:4].lower() == 'comp':
                     prop = ' '.join(k.split()[1:])
                     component[prop] = v.lower()
                 else:
@@ -383,7 +446,18 @@ class Legend(object):
                         d[k] = float(v)
                     except ValueError:
                         d[k] = v.lower()
-            d['component'] = Component(component)
+            this_component = Component(component)
+            d['component'] = this_component
+
+            # Check for duplicates and warn.
+            if this_component in components:
+                with warnings.catch_warnings():
+                    warnings.simplefilter("always")
+                    w = "This legend contains duplicate components."
+                    warnings.warn(w)
+            components.append(this_component)
+
+            # Append to the master list and continue.
             list_of_Decors.append(Decor(d))
 
         return cls(list_of_Decors)
@@ -408,9 +482,6 @@ class Legend(object):
                 component_header.append(k)
         header = set(header)
         component_header = set(component_header)
-
-        header = set(header)
-        component_header = set(component_header)
         header.remove('component')
         header_row = ''
         if 'colour' in header:
@@ -431,7 +502,7 @@ class Legend(object):
             for item in header:
                 result += str(row.__dict__.get(item, '')) + ','
             for item in component_header:
-                result += str(row.component.data.get(item, '')) + ','
+                result += str(row.component.__dict__.get(item, '')) + ','
             result += '\n'
 
         return result
@@ -442,8 +513,11 @@ class Legend(object):
         The maximum width of all the Decors in the Legend. This is needed
         to scale a Legend or Striplog when plotting with widths turned on.
         """
-        maximum = max([row.width for row in self.__list])
-        return maximum or 0
+        try:
+            maximum = max([row.width for row in self.__list])
+            return maximum
+        except:
+            return 0
 
     def getattr(self, c, attr, default=None, match_only=None):
         """
