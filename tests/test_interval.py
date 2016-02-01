@@ -35,16 +35,13 @@ def test_interval():
 
     interval_2 = Interval(40, 65, "Red sandstone.", lexicon=lexicon)
     assert interval_2 != interval
-    assert interval_2 > interval
-    answer = '25.00 m of red sandstone'
+    answer = '20.00 m of grey sandstone'
+    # Max gives uppermost
     assert max(interval, interval_2).summary(fmt=fmt) == answer
 
     iv = interval_2 + interval
     assert len(iv.components) == 2
-    assert iv.base - iv.top == 45.0
-
-    iv = interval + 5
-    assert iv.thickness == 25.0
+    assert iv.base.z - iv.top.z == 45.0
 
     rock = Component(r)
     iv = interval + rock

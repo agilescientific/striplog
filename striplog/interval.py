@@ -492,10 +492,7 @@ class Interval(object):
             return self, other
 
         top = max(self, other).top
-        if self.partially_overlaps(other):
-            bot = min(self, other).base
-        else:
-            bot = max(self, other).base
+        bot = min(self, other).base
 
         result = self.copy()
         result.top = top

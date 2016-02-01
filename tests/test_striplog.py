@@ -112,11 +112,9 @@ def test_striplog():
     s[2] = Interval(180, 190, components=[r1, r2])
     assert len(s.find_gaps()) == 2
 
-    assert s._Striplog__sort()  # Not used, should probably delete
-
 
 def test_from_image():
-    legend = Legend.default()
+    legend = Legend.builtin('NSDOE')
     imgfile = "tutorial/M-MG-70_14.3_135.9.png"
     striplog = Striplog.from_img(imgfile, 200, 300, legend=legend)
     assert len(striplog) == 26
@@ -163,12 +161,12 @@ def test_from_array():
          (200, 250, 'grey shale'),
          (200, 250, 'red sandstone with shale stringers'),
          ]
-    s = Striplog.from_array(a, lexicon=lexicon)
+    s = Striplog._from_array(a, lexicon=lexicon)
     assert s.__str__() != ''
 
 
 def test_histogram():
     lexicon = Lexicon.default()
     striplog = Striplog.from_las3(las3, lexicon=lexicon)
-    comps, counts = striplog.histogram()
-    assert counts == (124, 6, 6, 5, 3)
+    _, counts = striplog.histogram()
+    assert counts == (123, 6, 6, 5, 3)

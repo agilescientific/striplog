@@ -4,6 +4,9 @@ Defines a suite a tests for images run with:
 
     py.test --mpl
 
+To generate new test images, see the instructions in
+striplog/run_tests.py
+
 https://pypi.python.org/pypi/pytest-mpl/0.3
 """
 from striplog import Striplog
@@ -22,13 +25,13 @@ def test_striplog_plot():
     """
     Tests mpl image of striplog
     """
-    legend = Legend.default()
+    legend = Legend.builtin('NSDOE')
 
     imgfile = "tutorial/M-MG-70_14.3_135.9.png"
 
     striplog = Striplog.from_img(imgfile, 14.3, 135.9, legend=legend)
 
-    fig = striplog.thickest(n=5).plot(legend=legend)
+    fig = striplog.thickest(n=5).plot(legend=legend, return_fig=True)
     return fig
 
 
@@ -50,5 +53,5 @@ def test_decor_plot():
     decor = Decor(d)
 
     fig = plt.figure(figsize=(4, 1))
-    fig = decor.plot(fmt="{lithology} {colour} {grainsize}", fig=fig)
+    fig = decor.plot(fmt="{lithology!t} {colour} {grainsize}", fig=fig)
     return fig
