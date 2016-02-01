@@ -18,8 +18,9 @@ Tutorials
 ---------
 
 * :download:`The basic objects.<../tutorial/Basic_objects.html>`
-* :download:`The striplog object.<../tutorial/Striplog_object.html>`
-* :download:`The striplog object.<../tutorial/Display_objects.html>`
+* :download:`The display objects.<../tutorial/Display_objects.html>`
+* :download:`Striplog basics.<../tutorial/Striplog_basics.html>`
+* :download:`Advanced striplogging.<../tutorial/Striplog_expert.html>`
 
 The code
 --------
@@ -29,6 +30,7 @@ The code
 
    lexicon
    component
+   position
    interval
    legend
    striplog
