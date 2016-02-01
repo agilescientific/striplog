@@ -29,7 +29,7 @@ striplog
     :target: http://www.apache.org/licenses/LICENSE-2.0
     :alt: License
 
-Lithology and stratigraphic logs for wells. 
+Lithology and stratigraphic logs for wells and outcrop. 
 
 * `A blog post about striplog <http://www.agilegeoscience.com/blog/2015/4/15/striplog>`_
 * `Another one, with a video <http://www.agilegeoscience.com/blog/2015/7/10/geophysics-at-scipy-2015>`_
