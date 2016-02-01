@@ -31,18 +31,22 @@ striplog
 
 Lithology and stratigraphic logs for wells. 
 
-Utilities for handling lithologic and stratigraphic 'interval' logs. Includes a version of `las.py` for loading LAS well log data. 
+* `A blog post about striplog <http://www.agilegeoscience.com/blog/2015/4/15/striplog>`_
+* `Another one, with a video <http://www.agilegeoscience.com/blog/2015/7/10/geophysics-at-scipy-2015>`_
+
 
 Docs
 ----
 
 * `Read The Docs <https://striplog.readthedocs.org/>`_
 
+
 Dependencies
 ------------
 
 * `NumPy <http://www.numpy.org/>`_
 * `matplotlib <http://matplotlib.org/>`_
+
 
 Install
 -------
