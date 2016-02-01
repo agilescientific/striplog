@@ -14,4 +14,9 @@ import pytest
 import matplotlib
 matplotlib.use('agg')
 
+# To generate new images, uncomment this line and instead
+# comment out the last one (below).
+# pytest.main("--mpl-generate-path=imgbase --cov striplog")
+
+# To test as normal
 pytest.main("--mpl --cov striplog")

@@ -12,13 +12,26 @@ import csv
 import warnings
 import random
 import math
+import re
+
+try:
+    from functools import partialmethod
+except:  # Python 2
+    from utils import partialmethod
 
 from matplotlib import patches
 import matplotlib.pyplot as plt
 
 from .component import Component
 from . import utils
-from .defaults import LEGEND
+from .defaults import LEGEND__NSDOE
+from .defaults import LEGEND__NAGMDM__6_2
+from .defaults import LEGEND__NAGMDM__6_1
+from .defaults import LEGEND__NAGMDM__4_3
+from .defaults import LEGEND__SGMC
+from .defaults import TIMESCALE__ISC
+from .defaults import TIMESCALE__USGS_ISC
+from .defaults import TIMESCALE__DNAG
 
 
 class LegendError(Exception):
@@ -52,8 +65,16 @@ class Decor(object):
       d = {'component': my_rock, 'colour': 'red'}
       my_decor = Decor(d)
     """
-    def __init__(self, params):
-        for k, v in params.items():
+    def __init__(self, *params, **kwargs):
+        """
+        Supports the passing in of a single dictionary, or the passing of
+        keyword arguments.
+
+        Possibly a bad idea; review later.
+        """
+        for p in params:
+            params = p
+        for k, v in kwargs.items() or params.items():
             k = k.lower().replace(' ', '_')
             try:
                 v = v.lower()
@@ -67,12 +88,14 @@ class Decor(object):
         if len(self.__dict__) < 2:
             raise LegendError("You must provide at least one decoration.")
 
-        # Make sure we have a width, even if it's None.
-        w = getattr(self, 'width', None)
-        if w:
+        # Make sure we have a width, and it's a float, even if it's None.
+        try:
             self.width = float(self.width)
-        else:
+        except:
             self.width = None
+
+        # Make sure we have a hatch, even if it's None.
+        self.hatch = getattr(self, 'hatch', None)
 
         # Deal with American spelling.
         a = getattr(self, 'color', None)
@@ -89,32 +112,34 @@ class Decor(object):
                     self.colour = utils.rgb_to_hex(c)
                 except TypeError:
                     raise LegendError("Colour not recognized: " + c)
+            elif c[0] in ['[', '(']:
+                try:
+                    self.colour = utils.rgb_to_hex(c)
+                except KeyError:
+                    raise LegendError("Colour not recognized: " + c)
             elif c[0] != '#':
                 try:
                     self.colour = utils.name_to_hex(c)
                 except KeyError:
                     raise LegendError("Colour not recognized: " + c)
-            elif len(c) == 4:
+            elif (c[0] == '#') and (len(c) == 4):
                 # Three-letter hex
-                try:
-                    self.colour = c[:2] + c[1] + 2*c[2] + 2*c[3]
-                except TypeError:
-                    raise LegendError("Colour not recognized: " + c)
+                self.colour = c[:2] + c[1] + 2*c[2] + 2*c[3]
+            elif (c[0] == '#') and (len(c) == 8):
+                # 8-letter hex
+                self.colour = c[:-2]
             else:
                 pass  # Leave the colour alone. Could assert here.
         else:
             self.colour = None
 
     def __repr__(self):
-        s = str(self)
+        s = repr(self.__dict__)
         return "Decor({0})".format(s)
 
     def __str__(self):
-        s = []
-        for key in self.__dict__:
-            t = "{key}='{value}'"
-            s.append(t.format(key=key, value=self.__dict__[key]))
-        return ', '.join(s)
+        s = str(self.__dict__)
+        return "Decor({0})".format(s)
 
     def __add__(self, other):
         if isinstance(other, self.__class__):
@@ -149,6 +174,23 @@ class Decor(object):
     def __hash__(self):
         return hash(frozenset(self.__dict__.keys()))
 
+    def _repr_html_(self):
+        """
+        Jupyter Notebook magic repr function.
+        """
+        rows, c = '', ''
+        s = '<tr><td><strong>{k}</strong></td><td style="{stl}">{v}</td></tr>'
+        for k, v in self.__dict__.items():
+            if k == 'colour':
+                c = utils.text_colour_for_hex(v)
+                style = 'color:{}; background-color:{}'.format(c, v)
+            else:
+                style = 'color:black; background-color:white'
+            v = v._repr_html_() if k == 'component' else v
+            rows += s.format(k=k, v=v, stl=style)
+        html = '<table>{}</table>'.format(rows)
+        return html
+
     @classmethod
     def random(cls, component):
         """
@@ -164,26 +206,44 @@ class Decor(object):
         """
         return utils.hex_to_rgb(self.colour)
 
-    def plot(self, fmt=None):
+    def plot(self, fmt=None, fig=None, ax=None):
         """
         Make a simple plot of the Decor.
 
         Args:
-        widths (bool): Whether to use the widths in the plot.
-        height (int): A scalar for the height, in inches.
+            fmt (str): A Python format string for the component summaries.
+            fig (Pyplot figure): A figure, optional. Use either fig or ax, not
+                both.
+            ax (Pyplot axis): An axis, optional. Use either fig or ax, not
+                both.
 
         Returns:
-        None. Instead the function creates a plot object as a side-effect.
+        fig or ax or None. If you pass in an ax, you get it back. If you pass
+            in a fig, you get it. If you pass nothing, the function creates a
+            plot object as a side-effect.
         """
 
         u = 4     # aspect ratio of decor plot
         v = 0.25  # ratio of decor tile width
 
-        fig = plt.figure(figsize=(u, 1))
-        ax = fig.add_axes([0.1*v, 0.1, 0.8*v, 0.8])
+        r = None
+
+        if fig is None:
+            fig = plt.figure(figsize=(u, 1))
+        else:
+            r = fig
+
+        if ax is None:
+            ax = fig.add_axes([0.1*v, 0.1, 0.8*v, 0.8])
+        else:
+            r = ax
+
         rect1 = patches.Rectangle((0, 0),
                                   u*v, u*v,
-                                  color=self.colour)
+                                  color=self.colour,
+                                  lw=0,
+                                  hatch=self.hatch,
+                                  ec='k')
         ax.add_patch(rect1)
         ax.text(1.0+0.1*v*u, u*v*0.5,
                 self.component.summary(fmt=fmt),
@@ -194,10 +254,9 @@ class Decor(object):
         ax.set_ylim([0, u*v])
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
-        ax.get_yaxis().set_visible(False)
         ax.invert_yaxis()
 
-        return fig
+        return r
 
 
 class Legend(object):
@@ -219,8 +278,8 @@ class Legend(object):
         self._iter = iter(self.__list)  # Set up iterable.
 
     def __repr__(self):
-        s = str(self)
-        return "Legend({0})".format(s)
+        s = [repr(d) for d in self.__list]
+        return "Legend({0})".format('\n'.join(s))
 
     def __str__(self):
         s = [str(d) for d in self.__list]
@@ -285,30 +344,96 @@ class Legend(object):
             raise LegendError("You can only add legends or decors.")
 
     @classmethod
-    def default(cls):
+    def builtin(cls, name):
         """
-        Generate a default legend. No arguments.
+        Generate a default legend.
+
+        Args:
+            name (str): The name of the legend you want. Not case sensitive.
+                 'nsdoe': Nova Scotia Dept. of Energy
+                 'nagmdm__6_2': USGS N. Am. Geol. Map Data Model 6.2
+                 'nagmdm__6_1': USGS N. Am. Geol. Map Data Model 6.1
+                 'nagmdm__4_3': USGS N. Am. Geol. Map Data Model 4.3
+                 'sgmc': USGS State Geologic Map Compilation
+
+            Default 'nagmdm__6_2'.
 
         Returns:
             Legend: The legend stored in `defaults.py`.
         """
-        return cls.from_csv(LEGEND)
+        names = {
+                 'nsdoe': LEGEND__NSDOE,
+                 'nagmdm__6_2': LEGEND__NAGMDM__6_2,
+                 'nagmdm__6_1': LEGEND__NAGMDM__6_1,
+                 'nagmdm__4_3': LEGEND__NAGMDM__4_3,
+                 'sgmc': LEGEND__SGMC,
+                 }
+        return cls.from_csv(names[name.lower()])
 
     @classmethod
-    def random(cls, list_of_Components):
+    def builtin_timescale(cls, name):
+        """
+        Generate a default timescale legend. No arguments.
+
+        Returns:
+            Legend: The timescale stored in `defaults.py`.
+        """
+        names = {
+                 'isc': TIMESCALE__ISC,
+                 'usgs_isc': TIMESCALE__USGS_ISC,
+                 'dnag': TIMESCALE__DNAG,
+                 }
+        return cls.from_csv(names[name.lower()])
+
+    # Curry.
+    default = partialmethod(builtin, name="NAGMDM__6_2")
+    default_timescale = partialmethod(builtin_timescale, name='ISC')
+
+    @classmethod
+    def random(cls, components, width=False, colour=None):
         """
         Generate a random legend for a given list of components.
 
+
+        Args:
+            components (list or Striplog): A list of components. If you pass
+                a Striplog, it will use the primary components.
+            width (bool): Also generate widths for the components, based on the
+                order in which they are encountered.
+            colour (str): If you want to give the Decors all the same colour,
+                provide a hex string.
         Returns:
             Legend: A legend with random colours.
+        TODO:
+            It might be convenient to have a partial method to generate an
+            'empty' legend. Might be an easy way for someone to start with a
+            template, since it'll have the components in it already.
         """
-        list_of_Decors = [Decor.random(r) for r in list_of_Components]
+        try:  # Treating as a Striplog.
+            list_of_Decors = [Decor.random(c)
+                              for c
+                              in [i[0] for i in components.unique if i[0]]
+                              ]
+        except:  # It's a list of Components.
+            list_of_Decors = [Decor.random(c) for c in components]
+
+        if colour is not None:
+            for d in list_of_Decors:
+                d.colour = colour
+
+        if width:
+            for i, d in enumerate(list_of_Decors):
+                d.width = i + 1
+
         return cls(list_of_Decors)
 
     @classmethod
     def from_csv(cls, string):
         """
         Read CSV text and generate a Legend.
+
+        Args:
+            string (str): The CSV string.
 
         In the first row, list the properties. Precede the properties of the
         component with 'comp ' or 'component '. For example:
@@ -332,16 +457,32 @@ class Legend(object):
             f = StringIO(unicode(string))  # Python 2
 
         r = csv.DictReader(f, skipinitialspace=True)
-        list_of_Decors = []
+        list_of_Decors, components = [], []
         for row in r:
             d, component = {}, {}
             for (k, v) in row.items():
-                if k[:4].lower() == 'comp':
+                if k is None:
+                    continue
+                elif k[:4].lower() == 'comp':
                     prop = ' '.join(k.split()[1:])
                     component[prop] = v.lower()
                 else:
-                    d[k] = v.lower()
-            d['component'] = Component(component)
+                    try:
+                        d[k] = float(v)
+                    except ValueError:
+                        d[k] = v.lower()
+            this_component = Component(component)
+            d['component'] = this_component
+
+            # Check for duplicates and warn.
+            if this_component in components:
+                with warnings.catch_warnings():
+                    warnings.simplefilter("always")
+                    w = "This legend contains duplicate components."
+                    warnings.warn(w)
+            components.append(this_component)
+
+            # Append to the master list and continue.
             list_of_Decors.append(Decor(d))
 
         return cls(list_of_Decors)
@@ -364,9 +505,6 @@ class Legend(object):
                 header.append(j)
             for k in row.component.__dict__.keys():
                 component_header.append(k)
-        header = set(header)
-        component_header = set(component_header)
-
         header = set(header)
         component_header = set(component_header)
         header.remove('component')
@@ -400,12 +538,60 @@ class Legend(object):
         The maximum width of all the Decors in the Legend. This is needed
         to scale a Legend or Striplog when plotting with widths turned on.
         """
-        maximum = max([row.width for row in self.__list])
-        return maximum or 0
+        try:
+            maximum = max([row.width for row in self.__list])
+            return maximum
+        except:
+            return 0
+
+    def get_decor(self, c, match_only=None):
+        """
+        Get the decor for a component.
+
+        Args:
+           c (component): The component to look up.
+           match_only (list of str): The component attributes to include in the
+               comparison. Default: All of them.
+
+        Returns:
+           Decor. The matching Decor from the Legend, or None if not found.
+        """
+        if c:
+            if match_only:
+                # Filter the component only those attributes
+                c = Component({k: getattr(c, k, None) for k in match_only})
+            for decor in self.__list:
+                if c == decor.component:
+                    return decor
+        return None
+
+    def getattr(self, c, attr, default=None, match_only=None):
+        """
+        Get the attribute of a component.
+
+        Args:
+           c (component): The component to look up.
+           attr (str): The attribute to get.
+           default (str): What to return in the event of no match.
+           match_only (list of str): The component attributes to include in the
+               comparison. Default: All of them.
+
+        Returns:
+           obj. The specified attribute of the matching Decor in the Legend.
+        """
+        matching_decor = self.get_decor(c, match_only=match_only)
+        if matching_decor is not None:
+            return getattr(matching_decor, attr)
+        else:
+            return default
 
     def get_colour(self, c, default='#eeeeee', match_only=None):
         """
-        Get the display colour of a component.
+        Get the display colour of a component. Wraps `getattr()`.
+
+        Development note:
+            Cannot define this as a `partial()` because I want
+            to maintain the order of arguments in `getattr()`.
 
         Args:
            c (component): The component to look up.
@@ -416,21 +602,21 @@ class Legend(object):
         Returns:
            str. The hex string of the matching Decor in the Legend.
         """
-        if c:
-            if match_only:
-                # Filter the component only those attributes
-                c = Component({k: getattr(c, k) for k in match_only})
-            for decor in self.__list:
-                if c == decor.component:
-                    return decor.colour
-        return default
+        return self.getattr(c=c,
+                            attr='colour',
+                            default=default,
+                            match_only=match_only)
 
     def get_width(self, c, default=0, match_only=None):
         """
-        Get the display width of a component.
+        Get the display width of a component. Wraps `getattr()`.
+
+        Development note:
+            Cannot define this as a `partial()` because I want
+            to maintain the order of arguments in `getattr()`.
 
         Args:
-           c (component): The component to look up.
+        c (component): The component to look up.
            default (float): The width to return in the event of no match.
            match_only (list of str): The component attributes to include in the
                comparison. Default: All of them.
@@ -438,14 +624,10 @@ class Legend(object):
         Returns:
            float. The width of the matching Decor in the Legend.
         """
-        if c:
-            if match_only:
-                # Filter the component only those attributes
-                c = Component({k: getattr(c, k) for k in match_only})
-            for decor in self.__list:
-                if c == decor.component:
-                    return decor.width
-        return default
+        return self.getattr(c=c,
+                            attr='width',
+                            default=default,
+                            match_only=match_only)
 
     def get_component(self, colour, tolerance=0, default=None):
         """
@@ -507,3 +689,45 @@ class Legend(object):
         """
         for d in self.__list:
             d.plot(fmt=fmt)
+
+        return None
+
+    def fancy_plot(self, ncols=1, fmt=None):
+
+        """
+        Make a simple plot of the Legend.
+
+        Args:
+            ncols (int): Number of columns (default is 1).
+            fmt (str): Text formatting for the decor description.
+
+        Returns:
+            figure: matplotlib figure object
+        """
+
+        u = 4     # aspect ratio of decor plot
+        v = 0.25  # ratio of decor tile width
+        nrows = 10
+
+        fig, axs = plt.subplots(nrows, ncols, figsize=(u * ncols, nrows))
+
+        for ax, d in zip(axs.flat, self.__list):
+            rect = patches.Rectangle((0.05, 0.05),  # hack so it draws edges
+                                     u * v, u * v,
+                                     facecolor=d.colour,
+                                     edgecolor='k')
+            ax.add_patch(rect)
+            ax.text(1.0 + 0.15 * v * u, 0.5,
+                    d.component.summary(fmt=fmt),
+                    fontsize=max(u, 13),
+                    verticalalignment='center',
+                    horizontalalignment='left')
+            ax.set_xlim([0, u * v])
+            ax.set_ylim([0, u * v])
+            ax.axis('equal')
+
+        # turn unused axes off
+        for ax in axs.flat[::-1]:
+            ax.set_axis_off()
+
+        return fig

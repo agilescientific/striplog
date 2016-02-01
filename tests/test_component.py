@@ -49,20 +49,17 @@ def test_identity():
 
 def test_summary():
     rock = Component(r)
-    s = rock.summary(fmt="My rock: {lithology} ({colour}, {GRAINSIZE})")
+    s = rock.summary(fmt="My rock: {lithology} ({colour}, {grainsize!u})")
     assert s == 'My rock: sand (grey, VF-F)'
 
     rock6 = Component(r6)
     s = rock6.summary(fmt="My rock: {lithology}")
-    assert s == 'My rock: '
+    assert s == 'My rock: _'
 
     empty = Component({})
     d = "String"
     assert not empty  # Should have False value
     assert empty.summary(default=d) == d
-
-    with pytest.raises(ComponentError):
-        rock.summary(fmt="My rock: {not there}")
 
 
 def test_from_text():

@@ -4,30 +4,38 @@ Defines a suite a tests for images run with:
 
     py.test --mpl
 
+To generate new test images, see the instructions in
+striplog/run_tests.py
+
 https://pypi.python.org/pypi/pytest-mpl/0.3
 """
 from striplog import Striplog
 from striplog import Legend, Component, Decor
 
+import matplotlib.pyplot as plt
 import pytest
 
+args = {'tolerance': 10,
+        'savefig_kwargs': {'dpi': 100},
+        }
 
-@pytest.mark.mpl_image_compare
+
+@pytest.mark.mpl_image_compare(**args)
 def test_striplog_plot():
     """
     Tests mpl image of striplog
     """
-    legend = Legend.default()
+    legend = Legend.builtin('NSDOE')
 
     imgfile = "tutorial/M-MG-70_14.3_135.9.png"
 
     striplog = Striplog.from_img(imgfile, 14.3, 135.9, legend=legend)
 
-    fig = striplog.thickest(n=5).plot(legend=legend)
+    fig = striplog.thickest(n=5).plot(legend=legend, return_fig=True)
     return fig
 
 
-@pytest.mark.mpl_image_compare
+@pytest.mark.mpl_image_compare(**args)
 def test_decor_plot():
     """
     Tests mpl image of decor
@@ -43,6 +51,7 @@ def test_decor_plot():
          'width': 3}
 
     decor = Decor(d)
-    print(decor.component.summary())
-    fig = decor.plot(fmt="{lithology} {colour} {grainsize}")
+
+    fig = plt.figure(figsize=(4, 1))
+    fig = decor.plot(fmt="{lithology!t} {colour} {grainsize}", fig=fig)
     return fig

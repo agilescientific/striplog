@@ -32,7 +32,7 @@ def test_decor():
     rock = Component(r)
     rock3 = Component(r3)
 
-    d = Decor({'colour': '##FF0000',
+    d = Decor({'colour': '#FF0000',
                'component': rock})
     d3 = Decor({'colour': 'green',
                'component': rock3})

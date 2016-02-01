@@ -17,9 +17,9 @@ striplog
     :target: https://pypi.python.org/pypi/striplog/
     :alt: Python version
     
-.. image:: https://img.shields.io/coveralls/agile-geoscience/striplog.svg 
-    :target: https://coveralls.io/r/agile-geoscience/striplog
-    :alt: Coveralls coverage
+.. image:: https://coveralls.io/repos/agile-geoscience/striplog/badge.svg?branch=master&service=github
+    :target: https://coveralls.io/github/agile-geoscience/striplog?branch=master
+    :alt: Coveralls
 
 .. image:: https://img.shields.io/codacy/ad9af103cba14d33abd5b327727ff644.svg 
     :target: https://www.codacy.com/app/matt/striplog/dashboard
@@ -31,18 +31,22 @@ striplog
 
 Lithology and stratigraphic logs for wells. 
 
-Utilities for handling lithologic and stratigraphic 'interval' logs. Includes a version of `las.py` for loading LAS well log data. 
+* `A blog post about striplog <http://www.agilegeoscience.com/blog/2015/4/15/striplog>`_
+* `Another one, with a video <http://www.agilegeoscience.com/blog/2015/7/10/geophysics-at-scipy-2015>`_
+
 
 Docs
 ----
 
 * `Read The Docs <https://striplog.readthedocs.org/>`_
 
+
 Dependencies
 ------------
 
 * `NumPy <http://www.numpy.org/>`_
 * `matplotlib <http://matplotlib.org/>`_
+
 
 Install
 -------

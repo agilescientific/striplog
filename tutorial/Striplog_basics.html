@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>Basic_objects</title>
+<title>Striplog_basics</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -174,7 +174,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Basic-objects">Basic objects<a class="anchor-link" href="#Basic-objects">&#182;</a></h1>
+<h1 id="Striplog-basics">Striplog basics<a class="anchor-link" href="#Striplog-basics">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -183,14 +183,8 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>A <code>striplog</code> depends on a hierarchy of objects. This notebook shows the objects and their basic functionality.</p>
-<ul>
-<li><a href="#Lexicon">Lexicon</a>: A dictionary containing the words and word categories to use for rock descriptions.</li>
-<li><a href="#Component">Component</a>: A set of attributes. </li>
-<li><a href="#Interval">Interval</a>: One element from a Striplog — consists of a top, base, a description, one or more Components, and a source.</li>
-</ul>
-<p>Striplogs (a set of <code>Interval</code>s) are described in <a href="Striplog_object.ipynb">a separate notebook</a>.</p>
-<p>Decors and Legends are also described in <a href="Display_objects.ipynb">another notebook</a>.</p>
+<p>This notebooks looks at the main <code>striplog</code> object. For the basic objects it depends on, see <a href="./Basic_objects.ipynb">Basic objects</a>.</p>
+<p>First, import anything we might need.</p>
 
 </div>
 </div>
@@ -200,7 +194,12 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="kn">import</span> <span class="nn">striplog</span>
+<div class=" highlight hl-ipython3"><pre><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">striplog</span>
 <span class="n">striplog</span><span class="o">.</span><span class="n">__version__</span>
 </pre></div>
 
@@ -225,31 +224,49 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr />
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Lexicon">Lexicon<a class="anchor-link" href="#Lexicon">&#182;</a></h2>
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Lexicon</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">Lexicon</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Legend</span><span class="p">,</span> <span class="n">Lexicon</span><span class="p">,</span> <span class="n">Interval</span><span class="p">,</span> <span class="n">Component</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">legend</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">builtin</span><span class="p">(</span><span class="s">&#39;NSDOE&#39;</span><span class="p">)</span>
+<span class="n">lexicon</span> <span class="o">=</span> <span class="n">Lexicon</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Making-a-striplog">Making a <code>striplog</code><a class="anchor-link" href="#Making-a-striplog">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Striplog</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Striplog</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -263,77 +280,16 @@ div#notebook {
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-    A Lexicon is a dictionary of &apos;types&apos; and regex patterns.
+    A Striplog is a sequence of intervals.
 
-    Most commonly you will just load the default one.
+    We will build them from LAS files or CSVs.
 
     Args:
-        params (dict): The dictionary to use. For an example, refer to the
-            default lexicon in &#96;&#96;defaults.py&#96;&#96;.
+        list_of_Intervals (list): A list of Interval objects.
+        source (str): A source for the data. Default None.
     
 </pre>
 </div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">lexicon</span> <span class="o">=</span> <span class="n">Lexicon</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
-<span class="n">lexicon</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[3]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>{&apos;abbreviations&apos;: {&apos;Bld&apos;: &apos;boulder&apos;, &apos;Poln&apos;: &apos;pollen&apos;, &apos;Ltl&apos;: &apos;little&apos;, &apos;Bry&apos;: &apos;bryozoa&apos;, &apos;Grap&apos;: &apos;graptolite&apos;, &apos;tub&apos;: &apos;tubular&apos;, &apos;aph&apos;: &apos;aphanitic&apos;, &apos;Cor&apos;: &apos;coral&apos;, &apos;crbnt&apos;: &apos;carbonate&apos;, &apos;exclas&apos;: &apos;extraclastic&apos;, &apos;pyr&apos;: &apos;pyritized&apos;, &apos;S.W.&apos;: &apos;salt water&apos;, &apos;vrtl&apos;: &apos;vertical&apos;, &apos;Mdst&apos;: &apos;mudstone&apos;, &apos;SOCM&apos;: &apos;slight oil cut mud&apos;, &apos;brt&apos;: &apos;bright&apos;, &apos;mod&apos;: &apos;moderate&apos;, &apos;sm&apos;: &apos;smooth&apos;, &apos;mrly&apos;: &apos;marly&apos;, &apos;Phyl&apos;: &apos;phyllite&apos;, &apos;Chara&apos;: &apos;charophytes&apos;, &apos;or&apos;: &apos;orangish&apos;, &apos;gept&apos;: &apos;geopetal&apos;, &apos;flky&apos;: &apos;flaky&apos;, &apos;anhy&apos;: &apos;anhydritic&apos;, &apos;Deer&apos;: &apos;decrease&apos;, &apos;Qtzt&apos;: &apos;quartzite&apos;, &apos;mdy&apos;: &apos;muddy&apos;, &apos;Stach&apos;: &apos;stachyodes*&apos;, &apos;cmt&apos;: &apos;cemented&apos;, &apos;Sa&apos;: &apos;salt&apos;, &apos;gy&apos;: &apos;gray&apos;, &apos;perm&apos;: &apos;permeability&apos;, &apos;rhb&apos;: &apos;rhombic&apos;, &apos;sdy&apos;: &apos;sandy&apos;, &apos;Char&apos;: &apos;charophyte&apos;, &apos;pch&apos;: &apos;patchy&apos;, &apos;fl&apos;: &apos;filled&apos;, &apos;Mtrx&apos;: &apos;matrix&apos;, &apos;O str&apos;: &apos;Ostracod&apos;, &apos;sil&apos;: &apos;siliceous&apos;, &apos;dissem&apos;: &apos;disseminated&apos;, &apos;G&amp;OCM&apos;: &apos;gas and oil cut mud&apos;, &apos;psool&apos;: &apos;pseudo oolitic&apos;, &apos;Strom&apos;: &apos;stromatoporoid&apos;, &apos;recem&apos;: &apos;recemented&apos;, &apos;rsns&apos;: &apos;resinous&apos;, &apos;volc&apos;: &apos;volcanics&apos;, &apos;Sedm&apos;: &apos;sediment&apos;, &apos;sc&apos;: &apos;scales&apos;, &apos;Slick slick&apos;: &apos;slickenside&apos;, &apos;m&apos;: &apos;medium&apos;, &apos;Rk&apos;: &apos;rock&apos;, &apos;Smwt&apos;: &apos;somewhat&apos;, &apos;Iran&apos;: &apos;granule&apos;, &apos;tgh&apos;: &apos;tough&apos;, &apos;fl/&apos;: &apos;flowing&apos;, &apos;FIt&apos;: &apos;fault&apos;, &apos;venn&apos;: &apos;vermillon&apos;, &apos;vit&apos;: &apos;vitreous&apos;, &apos;Spfool&apos;: &apos;superficial olite&apos;, &apos;Allo&apos;: &apos;allochem&apos;, &apos;tn&apos;: &apos;tan&apos;, &apos;Lut&apos;: &apos;lutite&apos;, &apos;Lith&apos;: &apos;lithology&apos;, &apos;pris&apos;: &apos;prismatic&apos;, &apos;SI&apos;: &apos;shut in&apos;, &apos;Sol&apos;: &apos;Soution&apos;, &apos;mass&apos;: &apos;massive&apos;, &apos;Tr&apos;: &apos;trace&apos;, &apos;deb&apos;: &apos;debris&apos;, &apos;drsy&apos;: &apos;drusy&apos;, &apos;med.&apos;: &apos;medium&apos;, &apos;p.p.&apos;: &apos;pin-poin&apos;, &apos;Bas&apos;: &apos;basalt&apos;, &apos;Chlor&apos;: &apos;chlorite&apos;, &apos;gr&apos;: &apos;grained&apos;, &apos;Orbit&apos;: &apos;Orbitolina&apos;, &apos;Ooc&apos;: &apos;oolicast&apos;, &apos;LL&apos;: &apos;laterolog&apos;, &apos;MLL&apos;: &apos;microlaterolog&apos;, &apos;Wtr&apos;: &apos;water&apos;, &apos;g&apos;: &apos;good&apos;, &apos;crd&apos;: &apos;cored&apos;, &apos;intfrag&apos;: &apos;interfragmental&apos;, &apos;Cont&apos;: &apos;content&apos;, &apos;HO&apos;: &apos;heavy oil&apos;, &apos;pk&apos;: &apos;pink&apos;, &apos;lt&apos;: &apos;lighter&apos;, &apos;xbd&apos;: &apos;cross-bedded&apos;, &apos;Pel&apos;: &apos;pellet&apos;, &apos;cntrt&apos;: &apos;contorted&apos;, &apos;intpar&apos;: &apos;interparticle&apos;, &apos;Tub&apos;: &apos;tube&apos;, &apos;Ls&apos;: &apos;limestone&apos;, &apos;phos&apos;: &apos;phosphatic&apos;, &apos;Repl&apos;: &apos;replaced&apos;, &apos;var&apos;: &apos;variable&apos;, &apos;meta&apos;: &apos;metamorphic&apos;, &apos;boudg&apos;: &apos;boudinage&apos;, &apos;bu&apos;: &apos;buff&apos;, &apos;bit&apos;: &apos;bitumeninous&apos;, &apos;crpld&apos;: &apos;crumpled&apos;, &apos;lav&apos;: &apos;lavender&apos;, &apos;gns&apos;: &apos;gneiss&apos;, &apos;od&apos;: &apos;odor&apos;, &apos;vi&apos;: &apos;violet&apos;, &apos;Gr&apos;: &apos;grains&apos;, &quot;&apos;&apos; or do&quot;: &apos;ditto&apos;, &apos;depau&apos;: &apos;depauperate&apos;, &apos;SAB&apos;: &apos;strong air blow&apos;, &apos;contm&apos;: &apos;contaminated&apos;, &apos;Foss&apos;: &apos;fossiliferous&apos;, &apos;porcel&apos;: &apos;porcelaneous&apos;, &apos;Oyst&apos;: &apos;oyster&apos;, &apos;sltst&apos;: &apos;siltstone&apos;, &apos;Glos&apos;: &apos;gloss&apos;, &apos;IES&apos;: &apos;induction electric&apos;, &apos;Plag&apos;: &apos;plagioclase&apos;, &apos;ox&apos;: &apos;oxidized&apos;, &apos;Sd&apos;: &apos;sand&apos;, &apos;Intst&apos;: &apos;intersticies&apos;, &apos;magnt&apos;: &apos;magnetite&apos;, &apos;rng&apos;: &apos;range&apos;, &apos;ahd&apos;: &apos;anhedral&apos;, &apos;loc&apos;: &apos;location&apos;, &apos;stal&apos;: &apos;stalactitic&apos;, &apos;rnd&apos;: &apos;rounded&apos;, &apos;Sid&apos;: &apos;siderite&apos;, &apos;rep&apos;: &apos;replacedment&apos;, &apos;Euryamph&apos;: &apos;euryamphipora*&apos;, &apos;lithgr&apos;: &apos;lithographic&apos;, &apos;ireg&apos;: &apos;irregular&apos;, &apos;bo&apos;: &apos;bophaceous&apos;, &apos;Fau&apos;: &apos;fauna&apos;, &apos;Arag&apos;: &apos;aragonite&apos;, &apos;biocl&apos;: &apos;bioclastic&apos;, &apos;Oomol&apos;: &apos;oomold&apos;, &apos;sid&apos;: &apos;sideritic&apos;, &apos;hem&apos;: &apos;hematitic&apos;, &apos;flg&apos;: &apos;flaggy&apos;, &apos;r&apos;: &apos;rare&apos;, &apos;tstg&apos;: &apos;testing&apos;, &apos;fenst&apos;: &apos;fenestral&apos;, &apos;deer&apos;: &apos;decreasing&apos;, &apos;Rem&apos;: &apos;remains&apos;, &apos;SGCM&apos;: &apos;slight gas cut mud&apos;, &apos;Port por&apos;: &apos;porosity&apos;, &apos;grnt.w&apos;: &apos;granite wash&apos;, &apos;phr&apos;: &apos;phreatic&apos;, &apos;glos&apos;: &apos;glossy&apos;, &apos;comp&apos;: &apos;completion&apos;, &apos;euhd&apos;: &apos;euhedral&apos;, &apos;devit&apos;: &apos;devitrified&apos;, &apos;Cav&apos;: &apos;cavernous&apos;, &apos;pol&apos;: &apos;polished&apos;, &apos;chty&apos;: &apos;cherty&apos;, &apos;imbd&apos;: &apos;imbedded&apos;, &apos;bor&apos;: &apos;boreding&apos;, &apos;W&apos;: &apos;west&apos;, &apos;lse&apos;: &apos;loose&apos;, &apos;bioh&apos;: &apos;biohermal&apos;, &apos;conspic&apos;: &apos;conspicuous&apos;, &apos;plty&apos;: &apos;platy&apos;, &apos;uncons&apos;: &apos;unconsolidated&apos;, &apos;lmpy&apos;: &apos;lumpy&apos;, &apos;abnt&apos;: &apos;abundant&apos;, &apos;ga&apos;: &apos;gauged&apos;, &apos;sml&apos;: &apos;small&apos;, &apos;Grt&apos;: &apos;granite&apos;, &apos;Scs&apos;: &apos;scarce&apos;, &apos;G.W.&apos;: &apos;granite wash&apos;, &apos;Clclt&apos;: &apos;calcilutite&apos;, &apos;cren&apos;: &apos;crenulated&apos;, &apos;lge&apos;: &apos;large&apos;, &apos;BHT&apos;: &apos;bottom hole temperature&apos;, &apos;Mbl&apos;: &apos;marble&apos;, &apos;brak&apos;: &apos;brackish&apos;, &apos;mnut&apos;: &apos;minute&apos;, &apos;n&apos;: &apos;no, none, non&apos;, &apos;Spo&apos;: &apos;spore&apos;, &apos;lmy&apos;: &apos;limy&apos;, &apos;gen&apos;: &apos;generally&apos;, &apos;Trip&apos;: &apos;tripoli&apos;, &apos;Incl&apos;: &apos;inclusion&apos;, &apos;BW&apos;: &apos;barrels of water&apos;, &apos;cb&apos;: &apos;carbonized&apos;, &apos;Sst&apos;: &apos;sandstone&apos;, &apos;sd&apos;: &apos;sand (1/16-2 mm)&apos;, &apos;S.W.C.&apos;: &apos;sidewall core&apos;, &apos;Fen&apos;: &apos;fenestra&apos;, &apos;TSTM&apos;: &apos;too small to measure&apos;, &apos;DST&apos;: &apos;drill stem test&apos;, &apos;intpt&apos;: &apos;interpretation&apos;, &apos;O&amp;SW&apos;: &apos;oil and salt water&apos;, &apos;sh&apos;: &apos;shale&apos;, &apos;Vnlet&apos;: &apos;veinlet&apos;, &apos;Shlt por&apos;: &apos;shelter porosity&apos;, &apos;Nod&apos;: &apos;nodules&apos;, &apos;mat&apos;: &apos;material, matter&apos;, &apos;cons&apos;: &apos;considerable&apos;, &apos;FAB&apos;: &apos;fair air blow&apos;, &apos;dist&apos;: &apos;distillate&apos;, &apos;Pch&apos;: &apos;patch&apos;, &apos;elg&apos;: &apos;elongate&apos;, &apos;Lyr&apos;: &apos;layer&apos;, &apos;Schm&apos;: &apos;schist&apos;, &apos;cotd&apos;: &apos;coateding&apos;, &apos;Microstyl&apos;: &apos;microstylolite&apos;, &apos;cht&apos;: &apos;chert&apos;, &apos;Lstr&apos;: &apos;lustre&apos;, &apos;spec&apos;: &apos;speckled&apos;, &apos;FTAB&apos;: &apos;faint air blow&apos;, &apos;Gyp&apos;: &apos;gypsumiferous&apos;, &apos;Dol&apos;: &apos;dolomite&apos;, &apos;Ctgs&apos;: &apos;cuttings&apos;, &apos;phen&apos;: &apos;phenocrysts&apos;, &apos;aren&apos;: &apos;arenaceous&apos;, &apos;Clvg&apos;: &apos;cleavage&apos;, &apos;carb&apos;: &apos;carbonaceous&apos;, &apos;Strk&apos;: &apos;streak&apos;, &apos;Volc&apos;: &apos;volcanic&apos;, &apos;coqid&apos;: &apos;coquinaoid&apos;, &apos;lac&apos;: &apos;lacustrine&apos;, &apos;lrg&apos;: &apos;larger&apos;, &apos;prly&apos;: &apos;pearly&apos;, &apos;Rbl&apos;: &apos;rubble&apos;, &apos;srt&apos;: &apos;sorting&apos;, &apos;alg&apos;: &apos;algal&apos;, &apos;Wkst&apos;: &apos;wackestone&apos;, &apos;OTS&apos;: &apos;oil to surface&apos;, &apos;p.d&apos;: &apos;pressure deformation&apos;, &apos;bar&apos;: &apos;baritic&apos;, &apos;AOF&apos;: &apos;absolute open flow&apos;, &apos;dtrl&apos;: &apos;detritalus&apos;, &apos;aglm&apos;: &apos;agglomerate&apos;, &apos;euhed&apos;: &apos;euhedral&apos;, &apos;Gast&apos;: &apos;gastropod&apos;, &apos;Foram&apos;: &apos;foraminifera&apos;, &apos;lim&apos;: &apos;itic&apos;, &apos;su&apos;: &apos;sulphurous&apos;, &apos;(W)&apos;: &apos;wildcat&apos;, &apos;mag&apos;: &apos;magnetic&apos;, &apos;frg&apos;: &apos;fringing&apos;, &apos;col&apos;: &apos;colored&apos;, &apos;pbl&apos;: &apos;pebble (4-64 mm)&apos;, &apos;hkl&apos;: &apos;hackly&apos;, &apos;Mic&apos;: &apos;micaceous&apos;, &apos;Xl&apos;: &apos;crystal&apos;, &apos;cub&apos;: &apos;cubic&apos;, &apos;bdg&apos;: &apos;bedding&apos;, &apos;intgn&apos;: &apos;inter grown&apos;, &apos;DF&apos;: &apos;derrick floor&apos;, &apos;s&amp;p&apos;: &apos;salt &amp; pepper&apos;, &apos;intxln&apos;: &apos;intercrystalline&apos;, &apos;contam&apos;: &apos;contaminated&apos;, &apos;marn&apos;: &apos;marine&apos;, &apos;Circ&apos;: &apos;circulate&apos;, &apos;mar&apos;: &apos;maroon&apos;, &apos;intst&apos;: &apos;intersticitial&apos;, &apos;stri&apos;: &apos;striated&apos;, &apos;oom&apos;: &apos;oomoldic&apos;, &apos;E&apos;: &apos;east&apos;, &apos;KB&apos;: &apos;kelly bushing&apos;, &apos;GOR&apos;: &apos;gas-to-oil ratio&apos;, &apos;&amp;&apos;: &apos;and&apos;, &apos;Fp&apos;: &apos;flowing pressure&apos;, &apos;uncons.&apos;: &apos;unconsolidated&apos;, &apos;min&apos;: &apos;mineralized&apos;, &apos;Solen&apos;: &apos;solenopora*&apos;, &apos;Slt&apos;: &apos;silt&apos;, &apos;ck&apos;: &apos;choke&apos;, &apos;Girv&apos;: &apos;girvanella*&apos;, &apos;DI&apos;: &apos;dual induction log&apos;, &apos;WCM&apos;: &apos;water cut mud&apos;, &apos;Zr&apos;: &apos;zircon&apos;, &apos;Belm&apos;: &apos;belemnites*&apos;, &apos;bdd&apos;: &apos;bedded&apos;, &apos;chk&apos;: &apos;chalky&apos;, &apos;Meta&apos;: &apos;metamorphic rock&apos;, &apos;spkld&apos;: &apos;speckled&apos;, &apos;Var&apos;: &apos;variation&apos;, &apos;micr&apos;: &apos;micritic&apos;, &apos;apprx&apos;: &apos;approximate&apos;, &apos;Invtb&apos;: &apos;invertebrate&apos;, &apos;bl&apos;: &apos;bluish&apos;, &apos;men&apos;: &apos;meniscus&apos;, &apos;Tex&apos;: &apos;texture&apos;, &apos;Frac&apos;: &apos;fracture&apos;, &apos;acic&apos;: &apos;acicular&apos;, &apos;sel&apos;: &apos;selenite&apos;, &apos;crinal&apos;: &apos;crinoidal&apos;, &apos;Glob&apos;: &apos;globigerina*&apos;, &apos;sqz&apos;: &apos;squeezed&apos;, &apos;fib&apos;: &apos;fibrous&apos;, &apos;rug&apos;: &apos;rugosa&apos;, &apos;coln&apos;: &apos;colonial&apos;, &apos;Rad&apos;: &apos;radial&apos;, &apos;magn&apos;: &apos;magnetic&apos;, &apos;Bioh&apos;: &apos;bioherm&apos;, &apos;Fluor&apos;: &apos;fluoresceince&apos;, &apos;posa&apos;: &apos;possible&apos;, &apos;Scol&apos;: &apos;scolecodonts&apos;, &apos;sli&apos;: &apos;slightly&apos;, &apos;Lam&apos;: &apos;laminations&apos;, &apos;Fe-st&apos;: &apos;ironstone&apos;, &apos;Fac&apos;: &apos;facet&apos;, &apos;detr&apos;: &apos;detrital&apos;, &apos;PH&apos;: &apos;per hour&apos;, &apos;dom&apos;: &apos;dominant&apos;, &apos;Orth&apos;: &apos;orthoclase&apos;, &apos;ctc&apos;: &apos;contact&apos;, &apos;fol&apos;: &apos;foliated&apos;, &apos;t.b.&apos;: &apos;thin-bedded&apos;, &apos;rndd&apos;: &apos;rounded&apos;, &apos;Sil&apos;: &apos;silica&apos;, &apos;gl&apos;: &apos;glassy&apos;, &apos;Mat&apos;: &apos;material&apos;, &apos;micropor&apos;: &apos;microporosity&apos;, &apos;Flk&apos;: &apos;flake&apos;, &apos;eux&apos;: &apos;euxinic&apos;, &apos;Phlog&apos;: &apos;phloaopite&apos;, &apos;circ&apos;: &apos;circulation&apos;, &apos;tr&apos;: &apos;trace&apos;, &apos;tex&apos;: &apos;texture&apos;, &apos;sks&apos;: &apos;slickensided&apos;, &apos;GIP&apos;: &apos;good initial puff&apos;, &apos;cov&apos;: &apos;covered&apos;, &apos;MCO&apos;: &apos;mud cut oil&apos;, &apos;Pap&apos;: &apos;paper&apos;, &apos;Glas&apos;: &apos;glass&apos;, &apos;PPM&apos;: &apos;parts per million&apos;, &apos;bas&apos;: &apos;basaltic&apos;, &apos;ls&apos;: &apos;limestone&apos;, &apos;V.P.S.&apos;: &apos;very poor sample V.P.S.&apos;, &apos;Micropor&apos;: &apos;micropore&apos;, &apos;Aglm&apos;: &apos;agglomerate&apos;, &apos;cly&apos;: &apos;clayey&apos;, &apos;In&apos;: &apos;inch&apos;, &apos;poly&apos;: &apos;polygonal&apos;, &apos;SSO&apos;: &apos;slight show of oil&apos;, &apos;lmn&apos;: &apos;limonitic&apos;, &apos;Grv&apos;: &apos;gravel&apos;, &apos;flor&apos;: &apos;fluorescence&apos;, &apos;s&apos;: &apos;small&apos;, &apos;Clcar&apos;: &apos;calcarenite&apos;, &apos;OCM&apos;: &apos;oil cut mud&apos;, &apos;decr&apos;: &apos;decreasing&apos;, &apos;rhmb&apos;: &apos;rhombic&apos;, &apos;Pisol&apos;: &apos;pisolite&apos;, &apos;p-p&apos;: &apos;pin point&apos;, &apos;stn&apos;: &apos;staining&apos;, &apos;frmwk&apos;: &apos;framework&apos;, &apos;arg&apos;: &apos;argillaceous&apos;, &apos;Tp&apos;: &apos;top&apos;, &apos;Cl&apos;: &apos;clay&apos;, &apos;med&apos;: &apos;medium&apos;, &apos;rexl&apos;: &apos;recrystallization&apos;, &apos;slb&apos;: &apos;slabby&apos;, &apos;Rhb&apos;: &apos;rhomb&apos;, &apos;Wl&apos;: &apos;well&apos;, &apos;Qtz&apos;: &apos;quartz&apos;, &apos;crpxln&apos;: &apos;crystocrystalline&apos;, &apos;max&apos;: &apos;maximum&apos;, &apos;Flo&apos;: &apos;flora&apos;, &apos;crnk&apos;: &apos;crinkled&apos;, &apos;sa&apos;: &apos;salt&apos;, &apos;Ptg&apos;: &apos;parting&apos;, &apos;sed&apos;: &apos;sedimentary&apos;, &apos;Gal&apos;: &apos;galeolaria*&apos;, &apos;SOCW&apos;: &apos;slight oil cut water&apos;, &apos;blk&apos;: &apos;black&apos;, &apos;stromlt&apos;: &apos;stromatolite&apos;, &apos;syn&apos;: &apos;syntaxial&apos;, &apos;chit&apos;: &apos;chitinous&apos;, &apos;T.D.&apos;: &apos;total depth&apos;, &apos;vug&apos;: &apos;vugular&apos;, &apos;clr&apos;: &apos;clear&apos;, &apos;org&apos;: &apos;organic&apos;, &apos;eqnt&apos;: &apos;equant&apos;, &apos;sz&apos;: &apos;size&apos;, &apos;jt&apos;: &apos;jointing&apos;, &apos;s &amp; p&apos;: &apos;salt and pepper&apos;, &apos;vert&apos;: &apos;vertical&apos;, &apos;abv&apos;: &apos;above&apos;, &apos;(D)&apos;: &apos;development&apos;, &apos;ab&apos;: &apos;above&apos;, &apos;Par&apos;: &apos;particle&apos;, &apos;calctc&apos;: &apos;calcitic&apos;, &apos;authg&apos;: &apos;authigenic&apos;, &apos;extr&apos;: &apos;extremely&apos;, &apos;n.v.p.&apos;: &apos;no visible porosity&apos;, &apos;rdsh&apos;: &apos;redish&apos;, &apos;fr&apos;: &apos;fair&apos;, &apos;lam&apos;: &apos;laminated&apos;, &apos;Slst&apos;: &apos;siltstone&apos;, &apos;up&apos;: &apos;upper&apos;, &apos;pt&apos;: &apos;partly&apos;, &apos;grd&apos;: &apos;graded&apos;, &apos;glas&apos;: &apos;glassy&apos;, &apos;O-Qtz&apos;: &apos;orthoquartzite&apos;, &apos;plag&apos;: &apos;plagioclase&apos;, &apos;rbl&apos;: &apos;rubblbly&apos;, &apos;micgr&apos;: &apos;micrograined&apos;, &apos;unident&apos;: &apos;unidentifiable&apos;, &apos;Ctc&apos;: &apos;contact&apos;, &apos;vcol&apos;: &apos;varicolored&apos;, &apos;Mol&apos;: &apos;mollusca&apos;, &apos;t.s.&apos;: &apos;thin section&apos;, &apos;Intvl&apos;: &apos;interval&apos;, &apos;Tas&apos;: &apos;tasmanites*&apos;, &apos;fau&apos;: &apos;fauna&apos;, &apos;cgl&apos;: &apos;conglomerate&apos;, &apos;vps&apos;: &apos;very poor samples&apos;, &apos;Microol&apos;: &apos;micro-oolite&apos;, &apos;bld&apos;: &apos;bladed&apos;, &apos;uni&apos;: &apos;uniform&apos;, &apos;rd&apos;: &apos;rounded&apos;, &apos;Sh&apos;: &apos;shale&apos;, &apos;Satm sat&apos;: &apos;saturation&apos;, &apos;alt&apos;: &apos;altering&apos;, &apos;Stn&apos;: &apos;stain&apos;, &apos;ES&apos;: &apos;electric&apos;, &apos;LL8&apos;: &apos;laterolog-8&apos;, &apos;Gns&apos;: &apos;gneiss&apos;, &apos;Pt&apos;: &apos;part&apos;, &apos;intrapar&apos;: &apos;intraparticle&apos;, &apos;volat&apos;: &apos;volatile&apos;, &apos;orsh&apos;: &apos;orangish&apos;, &apos;repl&apos;: &apos;replacement&apos;, &apos;app&apos;: &apos;appear&apos;, &apos;mky&apos;: &apos;milky&apos;, &apos;dkr&apos;: &apos;darker&apos;, &apos;grnt&apos;: &apos;granite&apos;, &apos;argl&apos;: &apos;argillate&apos;, &apos;qtzc&apos;: &apos;quartzitic&apos;, &apos;Elev&apos;: &apos;elevation&apos;, &apos;irr&apos;: &apos;irregular&apos;, &apos;lith&apos;: &apos;lithographic&apos;, &apos;spl&apos;: &apos;sample&apos;, &apos;cotd gn&apos;: &apos;coated grains&apos;, &apos;lg&apos;: &apos;long&apos;, &apos;blky&apos;: &apos;blocky&apos;, &apos;Bot&apos;: &apos;botryoid&apos;, &apos;Onc&apos;: &apos;oncolite&apos;, &apos;por&apos;: &apos;poroussity&apos;, &apos;fac&apos;: &apos;faceted&apos;, &apos;Tent&apos;: &apos;tentaculites*&apos;, &apos;intxl&apos;: &apos;intercrystalline&apos;, &apos;sb&apos;: &apos;sub&apos;, &apos;x&apos;: &apos;cross&apos;, &apos;Descr&apos;: &apos;description&apos;, &apos;Ft&apos;: &apos;foot&apos;, &apos;intclas&apos;: &apos;intraclastic&apos;, &apos;bur&apos;: &apos;burrowed&apos;, &apos;ss&apos;: &apos;sandstone&apos;, &apos;rthy&apos;: &apos;earthy&apos;, &apos;lent&apos;: &apos;lenticular&apos;, &apos;Assem&apos;: &apos;Assem&apos;, &apos;sim&apos;: &apos;similar&apos;, &apos;x-lam&apos;: &apos;cross-laminated&apos;, &apos;Cbl&apos;: &apos;cobble&apos;, &apos;vgt&apos;: &apos;varigated&apos;, &apos;rad&apos;: &apos;radiating&apos;, &apos;bcm&apos;: &apos;becoming&apos;, &apos;MCW&apos;: &apos;mud cut water&apos;, &apos;Pend&apos;: &apos;pendularous&apos;, &apos;surf&apos;: &apos;surface&apos;, &apos;LSD&apos;: &apos;legal subdivision&apos;, &apos;stmg&apos;: &apos;streaming&apos;, &apos;frag&apos;: &apos;fragmental&apos;, &apos;Splin&apos;: &apos;splintery&apos;, &apos;grapst&apos;: &apos;grapestone&apos;, &apos;microxln&apos;: &apos;microcrystalline&apos;, &apos;abs&apos;: &apos;absent&apos;, &apos;assoc&apos;: &apos;associated&apos;, &apos;ark&apos;: &apos;arkosic&apos;, &apos;Jasp&apos;: &apos;jasper&apos;, &apos;csg&apos;: &apos;casing&apos;, &apos;exp&apos;: &apos;exposed&apos;, &apos;Moll&apos;: &apos;mollusc&apos;, &apos;sacc&apos;: &apos;saccharoidal&apos;, &apos;Pbl&apos;: &apos;pebble&apos;, &apos;blksh&apos;: &apos;blackish&apos;, &apos;Stylio&apos;: &apos;styliolina*&apos;, &apos;indst&apos;: &apos;indistinct&apos;, &apos;aft&apos;: &apos;after&apos;, &apos;Microfos&apos;: &apos;microfossilferous&apos;, &apos;litt&apos;: &apos;littoral&apos;, &apos;thk&apos;: &apos;thick&apos;, &apos;Biot&apos;: &apos;biotite&apos;, &apos;fibr&apos;: &apos;fibrous&apos;, &apos;hvy&apos;: &apos;heavy&apos;, &apos;nod&apos;: &apos;nodule&apos;, &apos;rec&apos;: &apos;recovered&apos;, &apos;olvn&apos;: &apos;olivine&apos;, &apos;Mrl&apos;: &apos;marl&apos;, &apos;calc&apos;: &apos;calcitareous&apos;, &apos;flk&apos;: &apos;flake&apos;, &apos;Bit&apos;: &apos;bitumen&apos;, &apos;dk&apos;: &apos;darker&apos;, &apos;Vn&apos;: &apos;vein&apos;, &apos;cotg&apos;: &apos;coateding&apos;, &apos;SNP&apos;: &apos;sidewall neutron porosity log&apos;, &apos;brit&apos;: &apos;brittle&apos;, &apos;lit&apos;: &apos;lithic&apos;, &apos;consol&apos;: &apos;consolidated&apos;, &apos;altg&apos;: &apos;alternating&apos;, &apos;sy-Ca&apos;: &apos;sparry calcite&apos;, &apos;anhed&apos;: &apos;anhedral&apos;, &apos;Vad&apos;: &apos;vadose&apos;, &apos;Stri&apos;: &apos;striae&apos;, &apos;W.R.&apos;: &apos;washed residue&apos;, &apos;Hem&apos;: &apos;hematite&apos;, &apos;embd&apos;: &apos;embedded&apos;, &apos;bnd&apos;: &apos;banded&apos;, &apos;SGCW&apos;: &apos;slight gas cut water&apos;, &apos;lig&apos;: &apos;lignitic&apos;, &apos;spr&apos;: &apos;sparry&apos;, &apos;wtr cush&apos;: &apos;water cushion&apos;, &apos;ex&apos;: &apos;excellent&apos;, &apos;Fspr&apos;: &apos;feldspar&apos;, &apos;psdo&apos;: &apos;pseudo&apos;, &apos;mott&apos;: &apos;mottled&apos;, &apos;Vug&apos;: &apos;vug&apos;, &apos;Fe&apos;: &apos;iron-ferruginous&apos;, &apos;spher&apos;: &apos;spherulitic&apos;, &apos;strk&apos;: &apos;streaked&apos;, &apos;Bdst&apos;: &apos;boundstone&apos;, &apos;Fuc&apos;: &apos;fucoid&apos;, &apos;fspr&apos;: &apos;feldsparathic&apos;, &apos;trnsp&apos;: &apos;transparent&apos;, &apos;tab&apos;: &apos;tabular&apos;, &apos;IAB&apos;: &apos;initial air blow&apos;, &apos;srtg&apos;: &apos;Sorteding&apos;, &apos;BWPD&apos;: &apos;barrels of water per day&apos;, &apos;crm&apos;: &apos;cream&apos;, &apos;skel&apos;: &apos;skeletal&apos;, &apos;hom&apos;: &apos;homogeneous&apos;, &apos;Chaet&apos;: &apos;chaetetes*&apos;, &apos;mic&apos;: &apos;micro&apos;, &apos;sbang&apos;: &apos;subangular&apos;, &apos;Lat&apos;: &apos;laterite&apos;, &apos;bulb&apos;: &apos;bulbous&apos;, &apos;Lim&apos;: &apos;limonite&apos;, &apos;hrtl&apos;: &apos;horizontal&apos;, &apos;shad&apos;: &apos;shadow&apos;, &apos;purp&apos;: &apos;purple&apos;, &apos;V.op&apos;: &apos;valve open&apos;, &apos;intv&apos;: &apos;interval&apos;, &apos;varic&apos;: &apos;varicolored&apos;, &apos;Clcsp&apos;: &apos;calcisphere&apos;, &apos;Conc&apos;: &apos;concretion&apos;, &apos;dism&apos;: &apos;disseminated&apos;, &apos;Het&apos;: &apos;Heterostegina&apos;, &apos;clyst&apos;: &apos;claystone&apos;, &apos;pap&apos;: &apos;papery&apos;, &apos;Jt&apos;: &apos;joint&apos;, &apos;prphy&apos;: &apos;porphyry&apos;, &apos;sps&apos;: &apos;sparsly&apos;, &apos;sol&apos;: &apos;solitary&apos;, &apos;Ark&apos;: &apos;arkose&apos;, &apos;wxy&apos;: &apos;waxy&apos;, &apos;Mbr&apos;: &apos;member&apos;, &apos;Cvg&apos;: &apos;caving&apos;, &apos;Tril&apos;: &apos;trilobite&apos;, &apos;Bent&apos;: &apos;bentonite&apos;, &apos;mos&apos;: &apos;mosaic&apos;, &apos;orng&apos;: &apos;orange&apos;, &apos;dru&apos;: &apos;drusy&apos;, &apos;Bdeye&apos;: &apos;birdseye&apos;, &apos;Spher&apos;: &apos;spherule&apos;, &apos;sblit&apos;: &apos;sublithic&apos;, &apos;Plcy&apos;: &apos;palecypod&apos;, &apos;WIP&apos;: &apos;weak initial puff&apos;, &apos;SIP&apos;: &apos;shut in pressure&apos;, &apos;bdeye&apos;: &apos;birdseye&apos;, &apos;Phos&apos;: &apos;phosphate&apos;, &apos;ferr&apos;: &apos;ferruginous&apos;, &apos;pos&apos;: &apos;possibility&apos;, &apos;Contam&apos;: &apos;contamination&apos;, &apos;GAP&apos;: &apos;good air blow&apos;, &apos;zeo&apos;: &apos;zeolite&apos;, &apos;chky&apos;: &apos;chalky&apos;, &apos;k&apos;: &apos;permeabilityable&apos;, &apos;Microspr&apos;: &apos;microspar&apos;, &apos;BWPH&apos;: &apos;barrels of water per hour&apos;, &apos;Clus&apos;: &apos;cluster&apos;, &apos;Bur&apos;: &apos;burrow&apos;, &apos;Pybit&apos;: &apos;pyrobitumen&apos;, &apos;wg&apos;: &apos;vuggy&apos;, &apos;chal&apos;: &apos;chalcedony&apos;, &apos;och&apos;: &apos;ochre&apos;, &apos;Bubl&apos;: &apos;bubble&apos;, &apos;md&apos;: &apos;muddy&apos;, &apos;Calc&apos;: &apos;calcite&apos;, &apos;plas&apos;: &apos;plastic&apos;, &apos;sug&apos;: &apos;sugary&apos;, &apos;intbd&apos;: &apos;interbedded&apos;, &apos;Glauc&apos;: &apos;glauconite&apos;, &apos;Pkst&apos;: &apos;packstone&apos;, &apos;intstl&apos;: &apos;interstitial&apos;, &apos;GR&apos;: &apos;gamma ray&apos;, &apos;mas&apos;: &apos;massive&apos;, &apos;MMCFG&apos;: &apos;million cubic feet of gas&apos;, &apos;Diagn&apos;: &apos;diagenesis&apos;, &apos;Piso&apos;: &apos;pisoid&apos;, &apos;strgr&apos;: &apos;stringer&apos;, &apos;sphal&apos;: &apos;sphalerite&apos;, &apos;Spr&apos;: &apos;spore&apos;, &apos;mnr&apos;: &apos;minor&apos;, &apos;GL&apos;: &apos;guard log&apos;, &apos;Rpl&apos;: &apos;ripple&apos;, &apos;PL&apos;: &apos;proximity log&apos;, &apos;spsly&apos;: &apos;sparsly&apos;, &apos;vrvd&apos;: &apos;varved&apos;, &apos;Plt&apos;: &apos;plant&apos;, &apos;spty&apos;: &apos;spottedy&apos;, &apos;Pent&apos;: &apos;pentamerus*&apos;, &apos;bf&apos;: &apos;buff&apos;, &apos;qtzs&apos;: &apos;quartzose&apos;, &apos;olv&apos;: &apos;olive&apos;, &apos;p&apos;: &apos;poorly&apos;, &apos;OWWO&apos;: &apos;old well worked over&apos;, &apos;Mn&apos;: &apos;manganese&apos;, &apos;qtz&apos;: &apos;quartz&apos;, &apos;mot&apos;: &apos;mottled&apos;, &apos;cncn&apos;: &apos;concentric&apos;, &apos;bri&apos;: &apos;bright&apos;, &apos;pres&apos;: &apos;preservation&apos;, &apos;Biost&apos;: &apos;biostrom&apos;, &apos;hetr&apos;: &apos;heterogeneous&apos;, &apos;Amph&apos;: &apos;amphipora*&apos;, &apos;gyp&apos;: &apos;gypsumiferous&apos;, &apos;FDL&apos;: &apos;formation density log&apos;, &apos;Mid&apos;: &apos;middle&apos;, &apos;bldr&apos;: &apos;boulder&apos;, &apos;hex&apos;: &apos;hexagonal&apos;, &apos;cpct&apos;: &apos;compact&apos;, &apos;sph&apos;: &apos;spherules&apos;, &apos;DLL&apos;: &apos;dual laterolog&apos;, &apos;mnrl&apos;: &apos;mineralized&apos;, &apos;O&amp;G&apos;: &apos;oil and gas&apos;, &apos;elong&apos;: &apos;elongate&apos;, &apos;Fe-mag&apos;: &apos;ferro-magnesian&apos;, &apos;Alg&apos;: &apos;algal&apos;, &apos;qtzt&apos;: &apos;quartzite&apos;, &apos;n/s&apos;: &apos;no show&apos;, &apos;chlor&apos;: &apos;chlorite&apos;, &apos;xl&apos;: &apos;crystalline&apos;, &apos;incl&apos;: &apos;inclusion&apos;, &apos;ig&apos;: &apos;igneous&apos;, &apos;ea&apos;: &apos;earthy&apos;, &apos;Radax&apos;: &apos;radiaxial&apos;, &apos;Musc&apos;: &apos;muscovite&apos;, &apos;rr&apos;: &apos;rare&apos;, &apos;Bm&apos;: &apos;basement&apos;, &apos;frs&apos;: &apos;fresh&apos;, &apos;Bdg&apos;: &apos;bedding&apos;, &apos;Spg&apos;: &apos;sponge&apos;, &apos;rexlzd&apos;: &apos;recrystallized&apos;, &apos;vis&apos;: &apos;visible&apos;, &apos;Para&apos;: &apos;paraparchites*&apos;, &apos;lchd&apos;: &apos;leached&apos;, &apos;wi&apos;: &apos;with&apos;, &apos;Str&apos;: &apos;structure&apos;, &apos;flt&apos;: &apos;faulted&apos;, &apos;sec&apos;: &apos;secondary&apos;, &apos;spic&apos;: &apos;spicular&apos;, &apos;dolst&apos;: &apos;dolostone&apos;, &apos;fnly&apos;: &apos;finly&apos;, &apos;v&apos;: &apos;very&apos;, &apos;phyl&apos;: &apos;phyllitic&apos;, &apos;Peld&apos;: &apos;pelletoid&apos;, &apos;fld&apos;: &apos;feldsparthic&apos;, &apos;biost&apos;: &apos;biostromal&apos;, &apos;fuc&apos;: &apos;fucoidal&apos;, &apos;Su&apos;: &apos;sulphur&apos;, &apos;tns&apos;: &apos;tension&apos;, &apos;Asph&apos;: &apos;assemblage&apos;, &apos;Syring&apos;: &apos;syringopora*&apos;, &apos;Clst&apos;: &apos;claystone&apos;, &apos;Crin&apos;: &apos;crinoidal&apos;, &apos;Bnd&apos;: &apos;band&apos;, &apos;Cono&apos;: &apos;conodont&apos;, &apos;resd&apos;: &apos;residual&apos;, &apos;Ren&apos;: &apos;renalcis*&apos;, &apos;mol&apos;: &apos;moldic&apos;, &apos;strg&apos;: &apos;stringer&apos;, &apos;Ost&apos;: &apos;ostracod&apos;, &apos;DL&apos;: &apos;density log&apos;, &apos;conc&apos;: &apos;concretionary&apos;, &apos;Res&apos;: &apos;residue&apos;, &apos;cche&apos;: &apos;caliche&apos;, &apos;GTS&apos;: &apos;gas to surface&apos;, &apos;str&apos;: &apos;streak&apos;, &apos;Hyde&apos;: &apos;hydrocarbon&apos;, &apos;ang&apos;: &apos;angular&apos;, &apos;SO&amp;W&apos;: &apos;show of oil and water&apos;, &apos;abd&apos;: &apos;abundant&apos;, &apos;est&apos;: &apos;estimated&apos;, &apos;ovgth&apos;: &apos;overgrowth&apos;, &apos;Equiv&apos;: &apos;equivalent&apos;, &apos;Dia&apos;: &apos;diameter&apos;, &apos;mrl&apos;: &apos;marly&apos;, &apos;intgran&apos;: &apos;intergranular&apos;, &apos;pisol&apos;: &apos;pisolitic&apos;, &apos;Sphal&apos;: &apos;sphalerite&apos;, &apos;intcl&apos;: &apos;intraclasts&apos;, &apos;glau&apos;: &apos;glauconitic&apos;, &apos;typ&apos;: &apos;typical&apos;, &apos;S&apos;: &apos;sonic, acoustilog&apos;, &apos;Styl&apos;: &apos;stylolite&apos;, &apos;ptg&apos;: &apos;parting&apos;, &apos;Sel&apos;: &apos;selenite&apos;, &apos;Len&apos;: &apos;lens&apos;, &apos;BHCS&apos;: &apos;bore hole compensated sonic&apos;, &apos;gvl&apos;: &apos;gravel&apos;, &apos;w/&apos;: &apos;with&apos;, &apos;RT&apos;: &apos;rotary table&apos;, &apos;slky&apos;: &apos;silky&apos;, &apos;splty&apos;: &apos;splintery&apos;, &apos;styl&apos;: &apos;stylotitic&apos;, &apos;G&apos;: &apos;gas&apos;, &apos;Grst&apos;: &apos;grainstone&apos;, &apos;gywk&apos;: &apos;graywacke&apos;, &apos;ptch&apos;: &apos;patches&apos;, &apos;Exclas&apos;: &apos;extraclast&apos;, &apos;bent&apos;: &apos;bentonitic&apos;, &apos;Ech&apos;: &apos;echinoid&apos;, &apos;gry&apos;: &apos;greyish&apos;, &apos;Ig&apos;: &apos;igneous rock&apos;, &apos;Fm&apos;: &apos;formation&apos;, &apos;wh&apos;: &apos;white&apos;, &apos;gran&apos;: &apos;granular&apos;, &apos;hydc&apos;: &apos;hydrocarbon&apos;, &apos;pyrbit&apos;: &apos;pyrobitumen&apos;, &apos;mtx&apos;: &apos;matrix&apos;, &apos;sptd&apos;: &apos;spottedy&apos;, &apos;Chk&apos;: &apos;chalk&apos;, &apos;Cyp&apos;: &apos;cypridopsis*&apos;, &apos;ti&apos;: &apos;tight&apos;, &apos;Rf&apos;: &apos;reef&apos;, &apos;imp&apos;: &apos;impression&apos;, &apos;drlr&apos;: &apos;driller&apos;, &apos;perf&apos;: &apos;perforated&apos;, &apos;Wd&apos;: &apos;wood&apos;, &apos;intercal&apos;: &apos;intercalated&apos;, &apos;Bor&apos;: &apos;bored&apos;, &apos;onc&apos;: &apos;oncolites&apos;, &apos;ctd&apos;: &apos;coated&apos;, &apos;Agg&apos;: &apos;aggregate&apos;, &apos;ind&apos;: &apos;indurated&apos;, &apos;vrtb&apos;: &apos;vertebrate&apos;, &apos;₵&apos;: &apos;core&apos;, &apos;Fus&apos;: &apos;fusulinid&apos;, &apos;cln&apos;: &apos;clean&apos;, &apos;fls&apos;: &apos;flesh&apos;, &apos;cl&apos;: &apos;clastic&apos;, &apos;peld&apos;: &apos;pelletoidal&apos;, &apos;Cal&apos;: &apos;caliper&apos;, &apos;Clcrd&apos;: &apos;calcirudite&apos;, &apos;wtr&apos;: &apos;water&apos;, &apos;pyrcl&apos;: &apos;pyroclastic&apos;, &apos;xlam&apos;: &apos;cross-laminated&apos;, &apos;D &amp; A&apos;: &apos;dry and abandoned&apos;, &apos;Bd&apos;: &apos;bed&apos;, &apos;metaph&apos;: &apos;metamorphosed&apos;, &apos;sept&apos;: &apos;septate&apos;, &apos;thn&apos;: &apos;thin&apos;, &apos;orth&apos;: &apos;orthoclase&apos;, &apos;Cgl&apos;: &apos;conglomerate&apos;, &apos;Coq&apos;: &apos;coquina&apos;, &apos;Perm&apos;: &apos;permeability&apos;, &apos;wthd&apos;: &apos;weathered&apos;, &apos;WAB&apos;: &apos;weak air blow&apos;, &apos;Dist&apos;: &apos;distillate&apos;, &apos;SO&amp;G&apos;: &apos;show of oil and gas&apos;, &apos;Micr&apos;: &apos;micrite&apos;, &apos;Spic&apos;: &apos;spicule&apos;, &apos;Pelec&apos;: &apos;pelecypod&apos;, &apos;apr&apos;: &apos;apparent&apos;, &apos;sat&apos;: &apos;saturated&apos;, &apos;ps&apos;: &apos;pseudo-&apos;, &apos;BOPD&apos;: &apos;barrels of oil per day&apos;, &apos;Prod&apos;: &apos;production&apos;, &apos;dns&apos;: &apos;denser&apos;, &apos;sln&apos;: &apos;solution&apos;, &apos;Gran&apos;: &apos;granule&apos;, &apos;fros&apos;: &apos;frosted&apos;, &apos;ooc&apos;: &apos;oocastic&apos;, &apos;Zn&apos;: &apos;zone&apos;, &apos;Gwke&apos;: &apos;graywacke&apos;, &apos;Pol&apos;: &apos;polish&apos;, &apos;BHFP&apos;: &apos;bottom hole flow pressure&apos;, &apos;gd&apos;: &apos;good&apos;, &apos;com&apos;: &apos;common&apos;, &apos;xln&apos;: &apos;crystalline&apos;, &apos;Pyr&apos;: &apos;pyrite&apos;, &apos;ap&apos;: &apos;appears&apos;, &apos;Tf&apos;: &apos;tuffaceous&apos;, &apos;w/o&apos;: &apos;without w/o&apos;, &apos;r.f.p&apos;: &apos;rounded frosted pitted&apos;, &apos;OC&apos;: &apos;oil cut&apos;, &apos;msm&apos;: &apos;metasomatic&apos;, &apos;exv&apos;: &apos;extrusive&apos;, &apos;conch&apos;: &apos;conchoidal&apos;, &apos;N&apos;: &apos;Neutron&apos;, &apos;Anthr&apos;: &apos;anthracite&apos;, &apos;OWDD&apos;: &apos;oil well drilled deeper&apos;, &apos;I.P.&apos;: &apos;in part&apos;, &apos;SO&apos;: &apos;show of oil&apos;, &apos;irid&apos;: &apos;iridescent&apos;, &apos;f&apos;: &apos;finely&apos;, &apos;BOPH&apos;: &apos;barrels of oil per hour&apos;, &apos;clas&apos;: &apos;clastic&apos;, &apos;IP&apos;: &apos;initial production&apos;, &apos;Chtz&apos;: &apos;chitinozoa&apos;, &apos;hi&apos;: &apos;high&apos;, &apos;Biosp&apos;: &apos;biosparite&apos;, &apos;pred&apos;: &apos;predominantly&apos;, &apos;tuf&apos;: &apos;tuffaceous&apos;, &apos;ML&apos;: &apos;microlog, minilog&apos;, &apos;scat&apos;: &apos;scattered&apos;, &apos;sch&apos;: &apos;schist&apos;, &apos;rf&apos;: &apos;reefoid&apos;, &apos;zn&apos;: &apos;zone&apos;, &apos;insl&apos;: &apos;insoluble&apos;, &apos;pkr&apos;: &apos;packer&apos;, &apos;MCFG&apos;: &apos;thousand cubic feet of gas&apos;, &apos;oo&apos;: &apos;ooidal&apos;, &apos;op&apos;: &apos;open&apos;, &apos;/&apos;: &apos;with&apos;, &apos;pit&apos;: &apos;pitted&apos;, &apos;sl&apos;: &apos;slightly&apos;, &apos;Cmt&apos;: &apos;cement&apos;, &apos;lstr&apos;: &apos;lustre&apos;, &apos;o&apos;: &apos;oil&apos;, &apos;Brec&apos;: &apos;breccia&apos;, &apos;@&apos;: &apos;at&apos;, &apos;Ool&apos;: &apos;oolite&apos;, &apos;psi&apos;: &apos;pounds per square inch&apos;, &apos;Deb&apos;: &apos;debris&apos;, &apos;dess&apos;: &apos;dessiccation&apos;, &apos;mica&apos;: &apos;micaeous&apos;, &apos;PB&apos;: &apos;plugged back&apos;, &apos;pkish&apos;: &apos;pinkish&apos;, &apos;pel&apos;: &apos;pellet&apos;, &apos;Gab&apos;: &apos;gabbro&apos;, &apos;u&apos;: &apos;upper&apos;, &apos;BHP&apos;: &apos;bottom hole pressure&apos;, &apos;asph&apos;: &apos;asphaltic&apos;, &apos;Spl&apos;: &apos;sampole&apos;, &apos;Ceph&apos;: &apos;cephalopod&apos;, &apos;nac&apos;: &apos;nacerous&apos;, &apos;fos&apos;: &apos;fossiliferous&apos;, &apos;sft&apos;: &apos;soft&apos;, &apos;Inoc&apos;: &apos;inoceramus*&apos;, &apos;Fvst&apos;: &apos;favosites*&apos;, &apos;C&apos;: &apos;coal&apos;, &apos;OSR&apos;: &apos;oil source rock&apos;, &apos;OTD&apos;: &apos;old total depth&apos;, &apos;tt&apos;: &apos;tightly&apos;, &apos;BO&apos;: &apos;barrels of oil&apos;, &apos;Min&apos;: &apos;mineral&apos;, &apos;fri&apos;: &apos;friable&apos;, &apos;amb&apos;: &apos;amber&apos;, &apos;grysh&apos;: &apos;greyish&apos;, &apos;cbl&apos;: &apos;cobble (64-256 mm)&apos;, &apos;Typ&apos;: &apos;type&apos;, &apos;wk&apos;: &apos;weak&apos;, &apos;abt&apos;: &apos;about&apos;, &apos;pl&apos;: &apos;plant&apos;, &apos;Milid&apos;: &apos;miliolid&apos;, &apos;intgwn&apos;: &apos;intergrown&apos;, &apos;wthrd&apos;: &apos;weathered&apos;, &apos;Hal&apos;: &apos;halitiferous&apos;, &apos;slily&apos;: &apos;slightly&apos;, &apos;cvg&apos;: &apos;cavings&apos;, &apos;Clslt&apos;: &apos;calcisiltite&apos;, &apos;Stromlt&apos;: &apos;stromatolite&apos;, &apos;struc&apos;: &apos;structure&apos;, &apos;Db&apos;: &apos;diabase&apos;, &apos;a.a.&apos;: &apos;same as above sample&apos;, &apos;Endo&apos;: &apos;endothyra*&apos;, &apos;Sl&apos;: &apos;slate&apos;, &apos;Rud&apos;: &apos;rudist&apos;, &apos;Ivan&apos;: &apos;ivanovia*&apos;, &apos;gty&apos;: &apos;gravity&apos;, &apos;rmn&apos;: &apos;remainant&apos;, &apos;bd&apos;: &apos;bed&apos;, &apos;F.Q.G.&apos;: &apos;frosted quartz  grains&apos;, &apos;evap&apos;: &apos;evapourititic&apos;, &apos;gn&apos;: &apos;green&apos;, &apos;Lig&apos;: &apos;lignite&apos;, &apos;dol&apos;: &apos;dolomitic&apos;, &apos;Spk&apos;: &apos;speck&apos;, &apos;amt&apos;: &apos;amount&apos;, &apos;ves&apos;: &apos;vesicular&apos;, &apos;Chit&apos;: &apos;chitinous&apos;, &apos;Col&apos;: &apos;color&apos;, &apos;bioturb&apos;: &apos;bioturbated&apos;, &apos;cntr&apos;: &apos;centered&apos;, &apos;blsh&apos;: &apos;bluish&apos;, &apos;thru&apos;: &apos;throughout&apos;, &apos;suc&apos;: &apos;sucrosic&apos;, &apos;foram&apos;: &apos;foraminiferal&apos;, &apos;GCW&apos;: &apos;gas cut water&apos;, &apos;Brac&apos;: &apos;brachiopod&apos;, &apos;Unconf&apos;: &apos;unconformity&apos;, &apos;sbrndd&apos;: &apos;sub rounded&apos;, &apos;grad&apos;: &apos;grading&apos;, &apos;len&apos;: &apos;lentilcular&apos;, &apos;prob&apos;: &apos;probably&apos;, &apos;vn&apos;: &apos;vein&apos;, &apos;intrlam&apos;: &apos;interlaminated&apos;, &apos;OWPB&apos;: &apos;oil well plugged back&apos;, &apos;sp&apos;: &apos;spotty&apos;, &apos;trnsl&apos;: &apos;translucent&apos;, &apos;Gil&apos;: &apos;gilsonite&apos;, &apos;Btm&apos;: &apos;bottom&apos;, &apos;fluor&apos;: &apos;fluoresceincent&apos;, &apos;Pst&apos;: &apos;pumice-stone&apos;, &apos;Shl&apos;: &apos;shell&apos;, &apos;shy&apos;: &apos;shaly&apos;, &apos;gt&apos;: &apos;gritty&apos;, &apos;frac&apos;: &apos;fractured&apos;, &apos;fen&apos;: &apos;fenestraal&apos;, &apos;grnl&apos;: &apos;granule (2-4 mm)&apos;, &apos;amor&apos;: &apos;amorphous&apos;, &apos;gil&apos;: &apos;gilsonite&apos;, &apos;slty&apos;: &apos;silty&apos;, &apos;brk&apos;: &apos;brackish&apos;, &apos;Intclas&apos;: &apos;intraclast&apos;, &apos;crs&apos;: &apos;coarse&apos;, &apos;Pyrxn&apos;: &apos;pyroxene&apos;, &apos;pet&apos;: &apos;petroleumiferous&apos;, &apos;dd&apos;: &apos;dead&apos;, &apos;dend&apos;: &apos;dendritic&apos;, &apos;SP&apos;: &apos;spontaneous potential&apos;, &apos;sa-c&apos;: &apos;salt castic&apos;, &apos;brd&apos;: &apos;bored&apos;, &apos;biot&apos;: &apos;biotite&apos;, &apos;strat&apos;: &apos;strataified&apos;, &apos;Kao&apos;: &apos;kaolin&apos;, &apos;Casph&apos;: &apos;calcisphaera*&apos;, &apos;slt&apos;: &apos;silt&apos;, &apos;Exv&apos;: &apos;extrusive rock&apos;, &apos;w&apos;: &apos;well&apos;, &apos;Frg&apos;: &apos;fringe&apos;, &apos;choc&apos;: &apos;chocolate&apos;, &apos;diagn&apos;: &apos;diagenesisetic&apos;, &apos;gnsh&apos;: &apos;greenish&apos;, &apos;incr&apos;: &apos;increasing&apos;, &apos;Gt&apos;: &apos;grit&apos;, &apos;brhg&apos;: &apos;branching&apos;, &apos;ter&apos;: &apos;terriginous&apos;, &apos;Chal&apos;: &apos;chalcedony&apos;, &apos;hor&apos;: &apos;horizontal&apos;, &apos;Av&apos;: &apos;average&apos;, &apos;Surf&apos;: &apos;surface&apos;, &apos;cp&apos;: &apos;compare&apos;, &apos;l&apos;: &apos;lower&apos;, &apos;Cub&apos;: &apos;cube&apos;, &apos;coq&apos;: &apos;coquina&apos;, &apos;Brach&apos;: &apos;brachiopod&apos;, &apos;gsy&apos;: &apos;grasy&apos;, &apos;amm&apos;: &apos;ammonite&apos;, &apos;brec&apos;: &apos;brecciated&apos;, &apos;hd&apos;: &apos;hard&apos;, &apos;xbdg&apos;: &apos;cross-bedding&apos;, &apos;clus&apos;: &apos;cluster&apos;, &apos;intr&apos;: &apos;intrusionive&apos;, &apos;grdg&apos;: &apos;grading&apos;, &apos;bot&apos;: &apos;botryoidal&apos;, &apos;Scaph&apos;: &apos;scaphopod&apos;, &apos;Macrofos&apos;: &apos;macrofossil&apos;, &apos;crpxl&apos;: &apos;cryptocrystalline&apos;, &apos;freq&apos;: &apos;frequent&apos;, &apos;c&apos;: &apos;coarsely&apos;, &apos;fis&apos;: &apos;fissile&apos;, &apos;Biomi&apos;: &apos;biomicrite&apos;, &apos;Imp&apos;: &apos;impression&apos;, &apos;trip&apos;: &apos;tripolic&apos;, &apos;kao&apos;: &apos;kaolin&apos;, &apos;SW&apos;: &apos;salt water&apos;, &apos;Mag&apos;: &apos;magnetite&apos;, &apos;Cht&apos;: &apos;chert&apos;, &apos;yel&apos;: &apos;yellow&apos;, &apos;hornbd&apos;: &apos;hornblend&apos;, &apos;res&apos;: &apos;residuual&apos;, &apos;ool&apos;: &apos;oolitic&apos;, &apos;Strat&apos;: &apos;strata&apos;, &apos;Intr&apos;: &apos;intrusive&apos;, &apos;PD&apos;: &apos;per day&apos;, &apos;brn&apos;: &apos;brown&apos;, &apos;prom&apos;: &apos;prominently&apos;, &apos;Anhy&apos;: &apos;anhydrite&apos;, &apos;BHSIP&apos;: &apos;bottom hole shut in pressure&apos;, &apos;swbd&apos;: &apos;swabbed&apos;, &apos;n.s.&apos;: &apos;no sample&apos;, &apos;intlam&apos;: &apos;interlaminated&apos;, &apos;fnt&apos;: &apos;faintly&apos;, &apos;yelsh&apos;: &apos;ish&apos;, &apos;wvy&apos;: &apos;wavy&apos;, &apos;corln&apos;: &apos;coralline&apos;, &apos;fltg&apos;: &apos;floating&apos;, &apos;undly&apos;: &apos;underlying&apos;, &apos;Shw&apos;: &apos;show&apos;, &apos;oomol&apos;: &apos;oomoldic&apos;, &apos;x-bd&apos;: &apos;cross-bedded&apos;, &apos;Oo&apos;: &apos;ooid&apos;, &apos;piso&apos;: &apos;pisolitic&apos;, &apos;occ&apos;: &apos;occasional&apos;, &apos;Tham&apos;: &apos;thamnopora*&apos;, &apos;musc&apos;: &apos;muscovite&apos;, &apos;Brk&apos;: &apos;break&apos;, &apos;Psool&apos;: &apos;pseudo oolite&apos;, &apos;Rec&apos;: &apos;recovery&apos;, &apos;Sphaer&apos;: &apos;sphaerocodium*&apos;, &apos;DIL&apos;: &apos;dual induction laterolog&apos;, &apos;num&apos;: &apos;numerous&apos;, &apos;des&apos;: &apos;descript&apos;, &apos;Frag&apos;: &apos;fragment&apos;, &apos;drlg&apos;: &apos;drilling&apos;, &apos;prim&apos;: &apos;primary&apos;, &apos;Novac&apos;: &apos;novaculite&apos;, &apos;Pet&apos;: &apos;petroleum&apos;, &apos;Evap&apos;: &apos;evapourite&apos;, &apos;CN&apos;: &apos;compensated neutron&apos;, &apos;aprox&apos;: &apos;approximately&apos;, &apos;x-strat&apos;: &apos;cross-stratified&apos;, &apos;GCM&apos;: &apos;gas cut mud&apos;, &apos;OFM&apos;: &apos;oil flecked mud&apos;, &apos;mrlst&apos;: &apos;marlstone&apos;, &apos;Uc&apos;: &apos;underclay&apos;}, &apos;amount&apos;: [&apos;streaks?&apos;, &apos;veins?&apos;, &apos;stringers?&apos;, &apos;interbed(?:s|ded)?&apos;, &apos;blotch(?:es)?&apos;, &apos;bands?&apos;, &apos;fragments?&apos;, &apos;impurit(?:y|ies)&apos;, &apos;minor&apos;, &apos;some&apos;, &apos;abundant&apos;, &apos;rare&apos;, &apos;flakes?&apos;, &apos;[-\\.\\d]+%&apos;], &apos;colour&apos;: [&apos;red(?:dish)?&apos;, &apos;gray(?:ish)?&apos;, &apos;grey(?:ish)?&apos;, &apos;black(?:ish)?&apos;, &apos;whit(?:e|ish)&apos;, &apos;blu(?:e|ish)&apos;, &apos;purpl(?:e|ish)&apos;, &apos;yellow(?:ish)?&apos;, &apos;green(?:ish)?&apos;, &apos;brown(?:ish)?&apos;, &apos;light&apos;, &apos;dark&apos;, &apos;sandy&apos;], &apos;grainsize&apos;: [&apos;vf(?:-)?&apos;, &apos;f(?:-)?&apos;, &apos;m(?:-)?&apos;, &apos;c(?:-)?&apos;, &apos;vc&apos;, &apos;very fine(?: to)?&apos;, &apos;fine(?: to)?&apos;, &apos;medium(?: to)?&apos;, &apos;coarse(?: to)?&apos;, &apos;very coarse&apos;, &apos;v fine(?: to)?&apos;, &apos;med(?: to)?&apos;, &apos;med.(?: to)?&apos;, &apos;v coarse&apos;, &apos;grains?&apos;, &apos;granules?&apos;, &apos;pebbles?&apos;, &apos;cobbles?&apos;, &apos;boulders?&apos;], &apos;synonyms&apos;: {&apos;Anhydrite&apos;: [&apos;Gypsum&apos;], &apos;Overburden&apos;: [&apos;Drift&apos;], &apos;Salt&apos;: [&apos;Halite&apos;, &apos;Sylvite&apos;]}, &apos;parts_of_speech&apos;: {&apos;subordinate&apos;: [&apos;amount&apos;], &apos;adjective&apos;: [&apos;colour&apos;, &apos;grainsize&apos;], &apos;noun&apos;: [&apos;lithology&apos;]}, &apos;lithology&apos;: [&apos;overburden&apos;, &apos;sandstone&apos;, &apos;siltstone&apos;, &apos;shale&apos;, &apos;mudstone&apos;, &apos;limestone&apos;, &apos;dolomite&apos;, &apos;salt&apos;, &apos;halite&apos;, &apos;anhydrite&apos;, &apos;gypsum&apos;, &apos;sylvite&apos;, &apos;clay&apos;, &apos;mud&apos;, &apos;silt&apos;, &apos;sand&apos;, &apos;gravel&apos;, &apos;boulders&apos;]}</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">lexicon</span><span class="o">.</span><span class="n">synonyms</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[4]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>{&apos;Anhydrite&apos;: [&apos;Gypsum&apos;],
- &apos;Overburden&apos;: [&apos;Drift&apos;],
- &apos;Salt&apos;: [&apos;Halite&apos;, &apos;Sylvite&apos;]}</pre>
-</div>
-
 </div>
 
 </div>
@@ -345,7 +301,8 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Most of the lexicon works 'behind the scenes' when processing descriptions into <code>Rock</code> components.</p>
+<p>Here is one of the images we will convert into striplogs:</p>
+<p><img src="M-MG-70_14.3_135.9.png" width=50 style="float:left" /></p>
 
 </div>
 </div>
@@ -355,26 +312,10 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">lexicon</span><span class="o">.</span><span class="n">find_synonym</span><span class="p">(</span><span class="s">&#39;Halite&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">imgfile</span> <span class="o">=</span> <span class="s">&quot;M-MG-70_14.3_135.9.png&quot;</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;salt&apos;</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -384,8 +325,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">s</span> <span class="o">=</span> <span class="s">&quot;grysh gn ss w/ sp gy sh&quot;</span>
-<span class="n">lexicon</span><span class="o">.</span><span class="n">expand_abbreviations</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">strip</span> <span class="o">=</span> <span class="n">Striplog</span><span class="o">.</span><span class="n">from_img</span><span class="p">(</span><span class="n">imgfile</span><span class="p">,</span> <span class="mf">14.3</span><span class="p">,</span> <span class="mf">135.9</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">)</span>
+<span class="n">strip</span>
 </pre></div>
 
 </div>
@@ -400,7 +341,7 @@ div#notebook {
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&apos;greyish green sandstone with spotty gray shale&apos;</pre>
+<pre>Striplog(26 Intervals, start=14.3, stop=135.9)</pre>
 </div>
 
 </div>
@@ -408,54 +349,144 @@ div#notebook {
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr />
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Component">Component<a class="anchor-link" href="#Component">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>A set of attributes. All are optional.</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Component</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">strip</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">ladder</span><span class="o">=</span><span class="k">True</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+g2rifwFh68ZPBzeIMQAAAABJRU5ErkJggg==
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Representations-of-a-striplog">Representations of a <code>striplog</code><a class="anchor-link" href="#Representations-of-a-striplog">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>There are several ways to inspect a striplog:</p>
+<ul>
+<li><strong><code>print</code></strong> prints the contents of the striplog</li>
+<li><strong><code>top</code></strong> shows us a list of the primary lithologies in the striplog, in order of cumulative thickness</li>
+<li><strong><code>plot</code></strong> makes a plot of the striplog with coloured bars</li>
+</ul>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="n">Component</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="n">strip</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 
 </div>
@@ -468,17 +499,11 @@ div#notebook {
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>
-    Initialize with a dictionary of properties. You can use any
-    properties you want e.g.:
-
-        - lithology: a simple one-word rock type
-        - colour, e.g. &apos;grey&apos;
-        - grainsize or range, e.g. &apos;vf-f&apos;
-        - modifier, e.g. &apos;rippled&apos;
-        - quantity, e.g. &apos;35%&apos;, or &apos;stringers&apos;
-        - description, e.g. from cuttings
-    
+<pre>{&apos;top&apos;: Position({&apos;middle&apos;: 14.3, &apos;units&apos;: &apos;m&apos;}), &apos;base&apos;: Position({&apos;middle&apos;: 51.24117647058824, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;&apos;, &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;anhydrite&apos;})]}
+{&apos;top&apos;: Position({&apos;middle&apos;: 51.24117647058824, &apos;units&apos;: &apos;m&apos;}), &apos;base&apos;: Position({&apos;middle&apos;: 54.81764705882354, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;&apos;, &apos;components&apos;: [Component({&apos;grainsize&apos;: &apos;vf-f&apos;, &apos;lithology&apos;: &apos;sandstone&apos;, &apos;colour&apos;: &apos;grey&apos;})]}
+{&apos;top&apos;: Position({&apos;middle&apos;: 54.81764705882354, &apos;units&apos;: &apos;m&apos;}), &apos;base&apos;: Position({&apos;middle&apos;: 56.55882352941177, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;&apos;, &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;anhydrite&apos;})]}
+{&apos;top&apos;: Position({&apos;middle&apos;: 56.55882352941177, &apos;units&apos;: &apos;m&apos;}), &apos;base&apos;: Position({&apos;middle&apos;: 58.86470588235295, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;&apos;, &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;dolomite&apos;})]}
+{&apos;top&apos;: Position({&apos;middle&apos;: 58.86470588235295, &apos;units&apos;: &apos;m&apos;}), &apos;base&apos;: Position({&apos;middle&apos;: 60.464705882352945, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;&apos;, &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;siltstone&apos;, &apos;colour&apos;: &apos;red&apos;})]}
 </pre>
 </div>
 </div>
@@ -487,26 +512,12 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We define a new rock with a Python <code>dict</code> object:</p>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">r</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;colour&#39;</span><span class="p">:</span> <span class="s">&#39;grey&#39;</span><span class="p">,</span>
-     <span class="s">&#39;grainsize&#39;</span><span class="p">:</span> <span class="s">&#39;vf-f&#39;</span><span class="p">,</span>
-     <span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;sand&#39;</span><span class="p">}</span>
-<span class="n">rock</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-<span class="n">rock</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">strip</span><span class="o">.</span><span class="n">unique</span>
 </pre></div>
 
 </div>
@@ -519,8 +530,16 @@ div#notebook {
 
 <div class="output_area"><div class="prompt output_prompt">Out[9]:</div>
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>lithology</strong></td><td>sand</td></tr></table>
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[(Component({&apos;lithology&apos;: &apos;siltstone&apos;, &apos;colour&apos;: &apos;grey&apos;}), 46.16470588235293),
+ (Component({&apos;lithology&apos;: &apos;anhydrite&apos;}), 39.67058823529412),
+ (Component({&apos;grainsize&apos;: &apos;vf-f&apos;, &apos;lithology&apos;: &apos;sandstone&apos;, &apos;colour&apos;: &apos;grey&apos;}),
+  19.200000000000003),
+ (Component({&apos;lithology&apos;: &apos;dolomite&apos;}), 8.282352941176498),
+ (Component({&apos;lithology&apos;: &apos;volcanic&apos;}), 4.42352941176469),
+ (Component({&apos;lithology&apos;: &apos;siltstone&apos;, &apos;colour&apos;: &apos;red&apos;}), 2.7764705882352843),
+ (Component({&apos;lithology&apos;: &apos;limestone&apos;}), 1.082352941176481)]</pre>
 </div>
 
 </div>
@@ -534,7 +553,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The Rock has a colour:</p>
+<p>It's easy enough to visualize this. Perhaps this should be a method...</p>
 
 </div>
 </div>
@@ -544,7 +563,13 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">rock</span><span class="p">[</span><span class="s">&#39;colour&#39;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">list_of_int</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">strip</span><span class="o">.</span><span class="n">unique</span><span class="p">:</span>
+    <span class="n">list_of_int</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Interval</span><span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]]))</span>
+    <span class="n">depth</span> <span class="o">+=</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">Striplog</span><span class="p">(</span><span class="n">list_of_int</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -555,11 +580,71 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
+<div class="output_area"><div class="prompt"></div>
 
 
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;grey&apos;</pre>
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
 </div>
 
 </div>
@@ -573,7 +658,16 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>And it has a summary, which is generated from its attributes.</p>
+<h2 id="Plot">Plot<a class="anchor-link" href="#Plot">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If you call <code>plot()</code> on a <code>Striplog</code> you'll get random colours (one per rock type in the striplog), and preset aspect ratio of 10.</p>
 
 </div>
 </div>
@@ -583,7 +677,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">rock</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">strip</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -594,11 +688,130 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
+<div class="output_area"><div class="prompt"></div>
 
 
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;Grey, vf-f, sand&apos;</pre>
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+AAAAAElFTkSuQmCC
+"
+>
 </div>
 
 </div>
@@ -612,7 +825,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can format the summary if we wish:</p>
+<p>For more control, you can pass some parameters. You'll probably always want to pass a legend.</p>
 
 </div>
 </div>
@@ -622,7 +835,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">rock</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s">&quot;My rock: {lithology} ({colour}, {grainsize!u})&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">strip</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">ladder</span><span class="o">=</span><span class="k">True</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -633,11 +846,267 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
+<div class="output_area"><div class="prompt"></div>
 
 
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;My rock: sand (grey, VF-F)&apos;</pre>
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">hashy_csv</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;colour,width,hatch,component colour,component grainsize,component lithology</span>
+<span class="s">#dddddd,1,---,grey,,siltstone,</span>
+<span class="s">#dddddd,2,xxx,,,anhydrite,</span>
+<span class="s">#dddddd,3,...,grey,vf-f,sandstone,</span>
+<span class="s">#dddddd,4,+--,,,dolomite,</span>
+<span class="s">#dddddd,5,ooo,,,volcanic,</span>
+<span class="s">#dddddd,6,---,red,,siltstone,</span>
+<span class="s">#dddddd,7,,,,limestone,</span>
+<span class="s">&quot;&quot;&quot;</span>
+<span class="n">hashy</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">hashy_csv</span><span class="p">)</span>
+<span class="n">strip</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hashy</span><span class="p">,</span> <span class="n">ladder</span><span class="o">=</span><span class="k">True</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
 </div>
 
 </div>
@@ -651,284 +1120,26 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The formatting supports the usual <code>s</code>, <code>r</code>, and <code>a</code>:</p>
-<ul>
-<li><code>s</code>: <code>str</code></li>
-<li><code>r</code>: <code>repr</code></li>
-<li><code>a</code>: <code>ascii</code></li>
-</ul>
-<p>Also some string functions:</p>
-<ul>
-<li><code>u</code>: <code>str.upper</code></li>
-<li><code>l</code>: <code>str.lower</code></li>
-<li><code>c</code>: <code>str.capitalize</code></li>
-<li><code>t</code>: <code>str.title</code></li>
-</ul>
-<p>And some numerical ones, for arrays of numbers:</p>
-<ul>
-<li><code>+</code> or <code>∑</code>: <code>np.sum</code></li>
-<li><code>m</code> or <code>µ</code>: <code>np.mean</code></li>
-<li><code>v</code>: <code>np.var</code></li>
-<li><code>d</code>: <code>np.std</code></li>
-<li><code>x</code>: <code>np.product</code></li>
-</ul>
-
+<h2 id="Manipulating-a-striplog">Manipulating a <code>striplog</code><a class="anchor-link" href="#Manipulating-a-striplog">&#182;</a></h2>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">x</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;colour&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Grey&#39;</span><span class="p">,</span> <span class="s">&#39;Brown&#39;</span><span class="p">],</span>
-     <span class="s">&#39;bogosity&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.51</span><span class="p">,</span> <span class="mf">0.66</span><span class="p">],</span>
-     <span class="s">&#39;porosity&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2003</span><span class="p">,</span> <span class="mf">0.1998</span><span class="p">,</span> <span class="mf">0.2112</span><span class="p">,</span> <span class="mf">0.2013</span><span class="p">,</span> <span class="mf">0.1990</span><span class="p">],</span>
-     <span class="s">&#39;grainsize&#39;</span><span class="p">:</span> <span class="s">&#39;VF-F&#39;</span><span class="p">,</span>
-     <span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;Sand&#39;</span><span class="p">,</span>
-     <span class="p">}</span>
-
-<span class="n">X</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
-<span class="n">fmt</span>  <span class="o">=</span> <span class="s">&#39;The {colour[0]!u} {lithology!u} has a total of {bogosity!∑:.2f} bogons&#39;</span>
-<span class="n">fmt</span> <span class="o">+=</span> <span class="s">&#39;and mean porosity of {porosity!µ:2.0%}.&#39;</span>
-
-<span class="n">X</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Again, the object is indexable and iterable.</p>
 
 </div>
 </div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[13]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;The GREY SAND has a total of 1.62 bogonsand mean porosity of 20%.&apos;</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">X</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;{&quot;porosity&quot;: [0.2003, 0.1998, 0.2112, 0.2013, 0.199], &quot;colour&quot;: [&quot;Grey&quot;, &quot;Brown&quot;], &quot;grainsize&quot;: &quot;VF-F&quot;, &quot;bogosity&quot;: [0.45, 0.51, 0.66], &quot;lithology&quot;: &quot;Sand&quot;}&apos;</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can compare rocks with the usual <code>==</code> operator:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">rock2</span> <span class="o">=</span> <span class="n">Component</span><span class="p">({</span><span class="s">&#39;grainsize&#39;</span><span class="p">:</span> <span class="s">&#39;VF-F&#39;</span><span class="p">,</span>
-                   <span class="s">&#39;colour&#39;</span><span class="p">:</span> <span class="s">&#39;Grey&#39;</span><span class="p">,</span>
-                   <span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;Sand&#39;</span><span class="p">})</span>
-<span class="n">rock</span> <span class="o">==</span> <span class="n">rock2</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[15]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>True</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">rock</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[16]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>lithology</strong></td><td>sand</td></tr></table>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In order to create a Component object from text, we need a lexicon to compare the text against. The lexicon describes the language we want to extract, and what it means.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">rock3</span> <span class="o">=</span> <span class="n">Component</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="s">&#39;Grey fine sandstone.&#39;</span><span class="p">,</span> <span class="n">lexicon</span><span class="p">)</span>
-<span class="n">rock3</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[17]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>grainsize</strong></td><td>fine</td></tr><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Components support double-star-unpacking:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="s">&quot;My rock: {lithology} ({colour}, {grainsize})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">rock3</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[18]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;My rock: sandstone (grey, fine)&apos;</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr />
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Position">Position<a class="anchor-link" href="#Position">&#182;</a></h2><p>Positions define points in the earth, like a top, but with uncertainty. You can define:</p>
-<ul>
-<li><code>upper</code> — the highest possible location</li>
-<li><code>middle</code> — the most likely location</li>
-<li><code>lower</code> — the lowest possible location</li>
-<li><code>units</code> — the units of measurement</li>
-<li><code>x</code> and <code>y</code> — the <em>x</em> and <em>y</em> location (these don't have uncertainty, sorry)</li>
-<li><code>meta</code> — a Python dictionary containing anything you want</li>
-</ul>
-<p>Positions don't have a 'way up'.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Position</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">Position</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="n">strip</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
 </pre></div>
 
 </div>
@@ -941,13 +1152,9 @@ div#notebook {
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>
-    Used to represent a position: a top or base.
-
-    Not sure whether to go with upper-middle-lower or z_max, z_mid, z_min.
-    Sticking to upper and lower, because ordering in Intervals is already
-    based on &apos;above&apos; and &apos;below&apos;.
-    
+<pre>{&apos;top&apos;: Position({&apos;upper&apos;: 14.3, &apos;lower&apos;: 14.3, &apos;middle&apos;: 14.3, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 51.24117647058824, &apos;lower&apos;: 51.24117647058824, &apos;middle&apos;: 51.24117647058824, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;anhydrite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 51.24117647058824, &apos;lower&apos;: 51.24117647058824, &apos;middle&apos;: 51.24117647058824, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 54.81764705882354, &apos;lower&apos;: 54.81764705882354, &apos;middle&apos;: 54.81764705882354, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;grainsize&apos;: &apos;vf-f&apos;, &apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;sandstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 54.81764705882354, &apos;lower&apos;: 54.81764705882354, &apos;middle&apos;: 54.81764705882354, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 56.55882352941177, &apos;lower&apos;: 56.55882352941177, &apos;middle&apos;: 56.55882352941177, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;anhydrite&apos;})]}
 </pre>
 </div>
 </div>
@@ -958,17 +1165,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;upper&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
-          <span class="s">&#39;middle&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-          <span class="s">&#39;lower&#39;</span><span class="p">:</span> <span class="mi">110</span><span class="p">,</span>
-          <span class="s">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;kind&#39;</span><span class="p">:</span> <span class="s">&#39;erosive&#39;</span><span class="p">,</span> <span class="s">&#39;source&#39;</span><span class="p">:</span> <span class="s">&#39;DOE&#39;</span><span class="p">}</span>
-          <span class="p">}</span>
-
-<span class="n">p</span> <span class="o">=</span> <span class="n">Position</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
-<span class="n">p</span>
+<div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="n">strip</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">primary</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
 </pre></div>
 
 </div>
@@ -979,10 +1179,101 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Volcanic
+</pre>
+</div>
+</div>
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td><strong>upper</strong></td><td>95.0</td></tr><tr><td><strong>middle</strong></td><td>100.0</td></tr><tr><td><strong>lower</strong></td><td>110.0</td></tr></table>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">strip</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>36.94 m of anhydrite
+3.58 m of vf-f, grey, sandstone
+1.74 m of anhydrite
+2.31 m of dolomite
+1.60 m of red, siltstone
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="nb">len</span><span class="p">(</span><span class="n">strip</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[17]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>26</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">d</span><span class="o">.</span><span class="n">top</span><span class="o">.</span><span class="n">z</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">strip</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">13</span><span class="p">]])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[19]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([ 60.46470588,  61.45294118,  62.77058824,  63.94705882,
+        64.37058824,  65.07647059,  66.77058824,  71.1       ])</pre>
 </div>
 
 </div>
@@ -996,7 +1287,90 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Even if you don't give a <code>middle</code>, you can always get <code>z</code>: the central, most likely position:</p>
+<p>You can even index into it with an iterable, like a list of indices. The result is a striplog.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">strip</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGMAAAIPCAYAAABnkmCdAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
+AAALEgAACxIB0t1+/AAABtBJREFUeJzt3T2LrVcZgOHn0QhiYbBJLLVRrISIWAkB7bUSRPCrSGmt
+3WktLSxMEyIEQbGwERSR8wOCYBH8KASJhQk2FoKFsCxyxIOcQwbMeb3HuS7YxZ6ZzXqZm7Vghnfv
+Z885Q8O7/tcXwL+JESJGiBghYoSIEfLU1Qvu7jnfe/XqZVte+MQ+6st2RogYIWKEiBEiRogYIWKE
+iBEiRogYIWKEXPa/qd19fmaev2q92+iynXHOuX/OuXfVereRYypEjBAxQsQIESNEjBAxQsQIESNE
+jBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAx
+QsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQI
+ESNEjBDzM0LMzwhxTIWIESJGiBghYoSIESJGiBghYoSIESJGiBghYoSIESJGiBghYoSIESJGiBgh
+YoSIESJGiBghYoSIESJGiBghYoSIESJGiBghYoSIESJGyJ5zrl1w95xz9tJFbwk7I0SMEDFCxAgR
+I0SMEDFCxAgRI0SMEDFCxAgRI0SMEDFCxAgRI0SMEDFCxAgRI0SMEDFCxAgRI0SMEDFCDDMJceNz
+iGMqRIwQMULECBEjRIwQMULECBEjRIwQMULECBEjRIwQMULECBEjRIwQMULECBEjRIwQMULECBEj
+RIwQMULECBEjRIwQMULECBEjRIwQMULECBEjRIwQMULECBEjRIwQMULECBEjRIwQMULECBEjRIwQ
+MULECBEjRIwQMULECBEjRIwQMULECBEjRIwQ8zNCzM8IcUyFiBEiRogYIWKEiBEiRogYIWKEiBEi
+RogYIWKEiBEiRogYIWKEiBEiRogYIWKEiBEiRogYIWKEiBEiRogYIWKEiBEiRogYIWKEiBEiRogY
+IWKEiBEiRogYIWKEiBEiRogYIWKEiBEiRogYIWKEiBEiRogYIWKEiBFy2efaPuz7L3zp2s9vjfny
+i6888qNk7YwQMULECBEjRIwQMULECBEjxDCTkMt2xjnn/jnn3lXr3UaOqRAxQsQIESNEjBAxQsQI
+ESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNE
+jBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjJAb
+xdjdp3f3R7v7m919bXc/tbsf2N2f7+7vdvdnu/v0k77Y/3c33RnfmZmfnnM+NjMfn5nfzsw3Z+YX
+55yPzswvZ+ZbT+YS7463jbG775+ZT59zXpqZOef845zz15n53My8/ODHXp6Zzz+xq7wjbrIzPjwz
+f9ndl3b3V7v74u6+b2aePee8MTNzzvnzzDzzJC/0LrhJjKdm5rmZ+e4557mZ+du8dUT956y9Oz17
+751wk/kZf5qZ1885rz54/uN5K8Ybu/vsOeeN3f3gzLz5qBc/NDfjQw8ePMbbxnjwy359dz9yzvn9
+zHxmZl578PjqzHx7Zr4yMz95zOvvz8z9fz3fXTvoMW46WeYbM/PK7r5nZv4wM1+bmXfPzA939+sz
+88eZ+cKTucS740Yxzjm/nplPPuJbn31nL+du8xd4iBghYoSIESJGiBghYoSIESJGiBghYoSIESJG
+iBghYoSIESJGiBghYoSIESJGiBghYoSIESJGiBghYoTsOdfeFL6755yzly56S9gZIWKEiBEiRogY
+IWKEiBEiRogYIWKEiBEiRogYIWKEiBEiRogYIWKEiBEiRogYIWKEiBEiRogYIWKEiBEiRogYIWKE
+iBEiRogYITcd2fBfe2ioCY/hbWQhjqkQMULECBEjRIwQMULECBEjRIwQMULECBEjRIwQMULECBEj
+RIwQMULECBEjRIwQMULECBEjRIwQMULECLnsxueH/f3NH1x7g2/Me5/54iPvNbYzQsQIESNEjBAx
+QsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQIESNEjBAxQsQI
+ESNEjBAxQsQIMT8j5LKdcc65f865d9V6t5FjKkSMEDFCxAgRI0SMEDFCxAgRI0SMEDFCxAgRI0SM
+EDFCxAgRI0SMEDFCxAgRI0SMEDFCxAgRI0SMEDFCxAgRI0SMEDFCxAgRI0SMEDFCxAgRI0SMEDFC
+xAgRI0SMEDFCxAgRI0SMEDFCxAjZc861C+6ec85euugtcXkMHs8xFSJGiBghYoSIEfJPHZa5fFYz
+QHQAAAAASUVORK5CYII=
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Slicing-and-indexing">Slicing and indexing<a class="anchor-link" href="#Slicing-and-indexing">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Slicing returns a new <code>striplog</code>:</p>
 
 </div>
 </div>
@@ -1006,9 +1380,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;upper&#39;</span><span class="p">:</span> <span class="mi">75</span><span class="p">,</span> <span class="s">&#39;lower&#39;</span><span class="p">:</span> <span class="mi">85</span><span class="p">}</span>
-<span class="n">p</span> <span class="o">=</span> <span class="n">Position</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
-<span class="n">p</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">strip</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 </pre></div>
 
 </div>
@@ -1021,8 +1393,9 @@ div#notebook {
 
 <div class="output_area"><div class="prompt output_prompt">Out[21]:</div>
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td><strong>upper</strong></td><td>75.0</td></tr><tr><td><strong>middle</strong></td><td></td></tr><tr><td><strong>lower</strong></td><td>85.0</td></tr></table>
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Striplog(2 Intervals, start=51.24117647058824, stop=56.55882352941177)</pre>
 </div>
 
 </div>
@@ -1036,7 +1409,22 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">p</span><span class="o">.</span><span class="n">z</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">rock</span> <span class="o">=</span> <span class="n">strip</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;sandstone&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">rock2</span> <span class="o">=</span> <span class="n">Component</span><span class="p">({</span><span class="s">&#39;lithology&#39;</span><span class="p">:</span><span class="s">&#39;shale&#39;</span><span class="p">,</span> <span class="s">&#39;colour&#39;</span><span class="p">:</span><span class="s">&#39;grey&#39;</span><span class="p">})</span>
+<span class="n">iv</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">rock</span><span class="p">,</span> <span class="n">rock2</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">strip</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Striplog</span><span class="p">([</span><span class="n">iv</span><span class="p">])</span>
 </pre></div>
 
 </div>
@@ -1047,11 +1435,11 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[22]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[23]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>80.0</pre>
+<pre>Striplog(3 Intervals, start=129.68823529411765, stop=350.0)</pre>
 </div>
 
 </div>
@@ -1059,40 +1447,15 @@ div#notebook {
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr />
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Interval">Interval<a class="anchor-link" href="#Interval">&#182;</a></h2><p>Intervals are where it gets interesting. An interval can have:</p>
-<ul>
-<li>a top</li>
-<li>a base</li>
-<li>a description (in natural language)</li>
-<li>a list of <code>Component</code>s</li>
-</ul>
-<p>Intervals don't have a 'way up', it's implied by the order of <code>top</code> and <code>base</code>.</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="kn">from</span> <span class="nn">striplog</span> <span class="k">import</span> <span class="n">Interval</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">Interval</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="k">del</span> <span class="n">strip</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+
+<span class="n">strip</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -1104,37 +1467,91 @@ div#notebook {
 
 
 <div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-    Used to represent a lithologic or stratigraphic interval, or single point,
-    such as a sample location.
 
-    Initialize with a top (and optional base) and a description and/or
-    an ordered list of components.
 
-    Args:
-        top (float): Required top depth. Required.
-        base (float): Base depth. Optional.
-        description (str): Textual description.
-        lexicon (dict): A lexicon. See documentation. Optional unless you only
-            provide descriptions, because it&apos;s needed to extract components.
-        max_component (int): The number of components to extract. Default 1.
-        abbreviations (bool): Whether to parse for abbreviations.
-
-    TODO:
-        Seems like I should be able to instantiate like this:
-
-            Interval({&apos;top&apos;: 0, &apos;components&apos;:[Component({&apos;age&apos;: &apos;Neogene&apos;})
-
-        I can get around it for now like this:
-
-            Interval(**{&apos;top&apos;: 0, &apos;components&apos;:[Component({&apos;age&apos;: &apos;Neogene&apos;})
-
-        Question: should Interval itself cope with only being handed &apos;top&apos; and
-        either fill in down to the next or optionally create a point?
-    
-</pre>
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+RK5CYII=
+"
+>
 </div>
+
 </div>
 
 </div>
@@ -1146,46 +1563,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>I might make an <code>Interval</code> explicitly from a Component...</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">Interval</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">rock</span><span class="p">])</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[24]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td style="width:2em; background-color:#DDDDDD" rowspan="5"></td><td><strong>top</strong></td><td>10.0</td></tr><tr><td><strong>primary</strong></td><td><table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>lithology</strong></td><td>sand</td></tr></table></td></tr><tr><td><strong>summary</strong></td><td>10.00 m of grey, vf-f, sand</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>base</strong></td><td>20.0</td></tr></table>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>... or I might pass a description and a <code>lexicon</code> and Striplog will parse the description and attempt to extract structured <code>Component</code> objects from it.</p>
-
+<h2 id="Read-or-write-CSV-or-LAS3">Read or write CSV or LAS3<a class="anchor-link" href="#Read-or-write-CSV-or-LAS3">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -1194,47 +1572,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">Interval</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="s">&quot;Grey sandstone with shale flakes.&quot;</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">=</span><span class="n">lexicon</span><span class="p">)</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[25]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&quot;Interval({&apos;top&apos;: Position({&apos;units&apos;: &apos;m&apos;, &apos;middle&apos;: 20.0}), &apos;description&apos;: &apos;Grey sandstone with shale flakes.&apos;, &apos;base&apos;: Position({&apos;units&apos;: &apos;m&apos;, &apos;middle&apos;: 40.0}), &apos;components&apos;: [Component({&apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;sandstone&apos;})]})&quot;</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Notice I only got one <code>Component</code>, even though the description contains a subordinate lithology. This is the default behaviour, we have to ask for more components:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">interval</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="s">&quot;Grey sandstone with black shale flakes.&quot;</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">=</span><span class="n">lexicon</span><span class="p">,</span> <span class="n">max_component</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="n">strip</span><span class="o">.</span><span class="n">to_las3</span><span class="p">())</span>
 </pre></div>
 
 </div>
@@ -1247,7 +1585,42 @@ div#notebook {
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>{&apos;top&apos;: Position({&apos;units&apos;: &apos;m&apos;, &apos;middle&apos;: 20.0}), &apos;description&apos;: &apos;Grey sandstone with black shale flakes.&apos;, &apos;base&apos;: Position({&apos;units&apos;: &apos;m&apos;, &apos;middle&apos;: 40.0}), &apos;components&apos;: [Component({&apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;sandstone&apos;}), Component({&apos;amount&apos;: &apos;flakes&apos;, &apos;colour&apos;: &apos;black&apos;, &apos;lithology&apos;: &apos;shale&apos;})]}
+<pre>~Lithology_Parameter
+LITH .   Striplog         : Lithology source          {S}
+LITHD.   MD               : Lithology depth reference {S}
+
+~Lithology_Definition
+LITHT.M                   : Lithology top depth       {F}
+LITHB.M                   : Lithology base depth      {F}
+LITHD.                    : Lithology description     {S}
+
+~Lithology_Data | Lithology_Definition
+   14.300,   51.241,  &quot;Anhydrite&quot;                                     
+   51.241,   54.818,  &quot;Vf-f, grey, sandstone&quot;                         
+   54.818,   56.559,  &quot;Anhydrite&quot;                                     
+   56.559,   58.865,  &quot;Dolomite&quot;                                      
+   60.465,   61.453,  &quot;Anhydrite&quot;                                     
+   61.453,   62.771,  &quot;Vf-f, grey, sandstone&quot;                         
+   62.771,   63.947,  &quot;Red, siltstone&quot;                                
+   63.947,   64.371,  &quot;Dolomite&quot;                                      
+   64.371,   65.076,  &quot;Grey, siltstone&quot;                               
+   65.076,   66.771,  &quot;Dolomite&quot;                                      
+   66.771,   71.100,  &quot;Vf-f, grey, sandstone&quot;                         
+   71.100,   71.806,  &quot;Dolomite&quot;                                      
+   71.806,   81.782,  &quot;Vf-f, grey, sandstone&quot;                         
+   81.782,   85.782,  &quot;Grey, siltstone&quot;                               
+   85.782,   87.006,  &quot;Dolomite&quot;                                      
+   87.006,   88.512,  &quot;Grey, siltstone&quot;                               
+   88.512,   88.982,  &quot;Dolomite&quot;                                      
+   88.982,   95.900,  &quot;Grey, siltstone&quot;                               
+   95.900,   96.276,  &quot;Dolomite&quot;                                      
+   96.276,  104.371,  &quot;Grey, siltstone&quot;                               
+  104.371,  104.747,  &quot;Dolomite&quot;                                      
+  104.747,  129.688,  &quot;Grey, siltstone&quot;                               
+  129.688,  130.394,  &quot;Dolomite&quot;                                      
+  130.394,  131.476,  &quot;Limestone&quot;                                     
+  131.476,  135.900,  &quot;Volcanic&quot;                                      
+
 </pre>
 </div>
 </div>
@@ -1256,79 +1629,83 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>Interval</code>s have a <code>primary</code> attribute, which holds the first component, no matter how many components there are.</p>
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">strip</span><span class="o">.</span><span class="n">source</span>
+</pre></div>
 
 </div>
 </div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[26]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&apos;Image&apos;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">interval</span><span class="o">.</span><span class="n">primary</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">csv_string</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;  200.000,  230.329,  Anhydrite                                       </span>
+<span class="s">  230.329,  233.269,  Grey vf-f sandstone                             </span>
+<span class="s">  233.269,  234.700,  Anhydrite                                       </span>
+<span class="s">  234.700,  236.596,  Dolomite                                        </span>
+<span class="s">  236.596,  237.911,  Red siltstone                                   </span>
+<span class="s">  237.911,  238.723,  Anhydrite                                       </span>
+<span class="s">  238.723,  239.807,  Grey vf-f sandstone                             </span>
+<span class="s">  239.807,  240.774,  Red siltstone                                   </span>
+<span class="s">  240.774,  241.122,  Dolomite                                        </span>
+<span class="s">  241.122,  241.702,  Grey siltstone                                  </span>
+<span class="s">  241.702,  243.095,  Dolomite                                        </span>
+<span class="s">  243.095,  246.654,  Grey vf-f sandstone                             </span>
+<span class="s">  246.654,  247.234,  Dolomite                                        </span>
+<span class="s">  247.234,  255.435,  Grey vf-f sandstone                             </span>
+<span class="s">  255.435,  258.723,  Grey siltstone                                  </span>
+<span class="s">  258.723,  259.729,  Dolomite                                        </span>
+<span class="s">  259.729,  260.967,  Grey siltstone                                  </span>
+<span class="s">  260.967,  261.354,  Dolomite                                        </span>
+<span class="s">  261.354,  267.041,  Grey siltstone                                  </span>
+<span class="s">  267.041,  267.350,  Dolomite                                        </span>
+<span class="s">  267.350,  274.004,  Grey siltstone                                  </span>
+<span class="s">  274.004,  274.313,  Dolomite                                        </span>
+<span class="s">  274.313,  294.816,  Grey siltstone                                  </span>
+<span class="s">  294.816,  295.397,  Dolomite                                        </span>
+<span class="s">  295.397,  296.286,  Limestone                                       </span>
+<span class="s">  296.286,  300.000,  Volcanic                                        </span>
+<span class="s">&quot;&quot;&quot;</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[27]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Ask for the summary to see the thickness and a <code>Rock</code> summary of the primary component. Note that the format code only applies to the <code>Rock</code> part of the summary.</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">interval</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s">&quot;{colour} {lithology}&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">strip2</span> <span class="o">=</span> <span class="n">Striplog</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">csv_string</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">=</span><span class="n">lexicon</span><span class="p">)</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[28]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;20.00 m of grey sandstone with black shale&apos;</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -1338,7 +1715,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can change an interval's properties:</p>
+<p>Notice the warning about a missing term in the lexicon.</p>
 
 </div>
 </div>
@@ -1348,10 +1725,25 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">interval</span><span class="o">.</span><span class="n">top</span> <span class="o">=</span> <span class="mi">18</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">Component</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="s">&#39;Grey vf-f sandstone&#39;</span><span class="p">,</span> <span class="n">lexicon</span><span class="p">)</span>
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[29]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -1361,25 +1753,46 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">interval</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">las3</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;~Lithology_Parameter</span>
+<span class="s">LITH .                    : Lithology source          {S}</span>
+<span class="s">LITHD.   MD               : Lithology depth reference {S}</span>
+
+<span class="s">~Lithology_Definition</span>
+<span class="s">LITHT.M                   : Lithology top depth       {F}</span>
+<span class="s">LITHB.M                   : Lithology base depth      {F}</span>
+<span class="s">LITHN.                    : Lithology name            {S}</span>
+
+<span class="s">~Lithology_Data | Lithology_Definition</span>
+<span class="s">  200.000,  230.329,  Anhydrite                                       </span>
+<span class="s">  230.329,  233.269,  Grey vf-f sandstone                             </span>
+<span class="s">  233.269,  234.700,  Anhydrite                                       </span>
+<span class="s">  234.700,  236.596,  Dolomite                                        </span>
+<span class="s">  236.596,  237.911,  Red siltstone                                   </span>
+<span class="s">  237.911,  238.723,  Anhydrite                                       </span>
+<span class="s">  238.723,  239.807,  Grey vf-f sandstone                             </span>
+<span class="s">  239.807,  240.774,  Red siltstone                                   </span>
+<span class="s">  240.774,  241.122,  Dolomite                                        </span>
+<span class="s">  241.122,  241.702,  Grey siltstone                                  </span>
+<span class="s">  241.702,  243.095,  Dolomite                                        </span>
+<span class="s">  243.095,  246.654,  Grey vf-f sandstone                             </span>
+<span class="s">  246.654,  247.234,  Dolomite                                        </span>
+<span class="s">  247.234,  255.435,  Grey vf-f sandstone                             </span>
+<span class="s">  255.435,  258.723,  Grey siltstone                                  </span>
+<span class="s">  258.723,  259.729,  Dolomite                                        </span>
+<span class="s">  259.729,  260.967,  Grey siltstone                                  </span>
+<span class="s">  260.967,  261.354,  Dolomite                                        </span>
+<span class="s">  261.354,  267.041,  Grey siltstone                                  </span>
+<span class="s">  267.041,  267.350,  Dolomite                                        </span>
+<span class="s">  267.350,  274.004,  Grey siltstone                                  </span>
+<span class="s">  274.004,  274.313,  Dolomite                                        </span>
+<span class="s">  274.313,  294.816,  Grey siltstone                                  </span>
+<span class="s">  294.816,  295.397,  Dolomite                                        </span>
+<span class="s">  295.397,  296.286,  Limestone                                       </span>
+<span class="s">  296.286,  300.000,  Volcanic                                        </span>
+<span class="s">&quot;&quot;&quot;</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[30]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td style="width:2em; background-color:#DDDDDD" rowspan="5"></td><td><strong>top</strong></td><td>18.0</td></tr><tr><td><strong>primary</strong></td><td><table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></td></tr><tr><td><strong>summary</strong></td><td>22.00 m of grey, sandstone with flakes, black, shale</td></tr><tr><td><strong>description</strong></td><td>Grey sandstone with black shale flakes.</td></tr><tr><td><strong>base</strong></td><td>40.0</td></tr></table>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -1389,111 +1802,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">interval</span><span class="o">.</span><span class="n">top</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[31]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td><strong>upper</strong></td><td>18.0</td></tr><tr><td><strong>middle</strong></td><td>18.0</td></tr><tr><td><strong>lower</strong></td><td>18.0</td></tr></table>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr />
-
-<h2 id="Comparing-and-combining-intervals">Comparing and combining intervals<a class="anchor-link" href="#Comparing-and-combining-intervals">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="c"># Depth ordered</span>
-<span class="n">i1</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">62.5</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;limestone&#39;</span><span class="p">})])</span>
-<span class="n">i2</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">62</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">63</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;sandstone&#39;</span><span class="p">})])</span>
-<span class="n">i3</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">62.5</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">63.5</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;siltstone&#39;</span><span class="p">})])</span>
-<span class="n">i4</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">63</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;shale&#39;</span><span class="p">})])</span>
-<span class="n">i5</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">63.1</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">63.4</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;dolomite&#39;</span><span class="p">})])</span>
-
-<span class="c"># Elevation ordered</span>
-<span class="n">i8</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;sandstone&#39;</span><span class="p">})])</span>
-<span class="n">i7</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;limestone&#39;</span><span class="p">})])</span>
-<span class="n">i6</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s">&#39;lithology&#39;</span><span class="p">:</span> <span class="s">&#39;siltstone&#39;</span><span class="p">})])</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">i2</span><span class="o">.</span><span class="n">order</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[33]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&apos;depth&apos;</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Technical aside:</strong> The <code>Interval</code> class is a <code>functools.total_ordering</code>, so providing <code>__eq__</code> and one other comparison (such as <code>__lt__</code>) in the class definition means that instances of the class have implicit order. So you can use <code>sorted</code> on a Striplog, for example.</p>
-<p>It wasn't clear to me whether this should compare tops (say), so that '&gt;' might mean 'above', or if it should be keyed on thickness. I chose the former, and implemented other comparisons instead.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="n">i3</span> <span class="o">==</span> <span class="n">i2</span><span class="p">)</span>  <span class="c"># False, they don&#39;t have the same top</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">i1</span> <span class="o">&gt;</span> <span class="n">i4</span><span class="p">)</span>   <span class="c"># True, i1 is above i4</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">,</span> <span class="n">i5</span><span class="p">)</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>  <span class="c"># 0.3 m of dolomite</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">strip3</span> <span class="o">=</span> <span class="n">Striplog</span><span class="o">.</span><span class="n">from_las3</span><span class="p">(</span><span class="n">las3</span><span class="p">,</span> <span class="n">lexicon</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">strip3</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -1506,337 +1816,34 @@ div#notebook {
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>False
-True
-0.30 m of dolomite
+<pre>{&apos;top&apos;: Position({&apos;upper&apos;: 200.0, &apos;lower&apos;: 200.0, &apos;middle&apos;: 200.0, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Anhydrite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 230.329, &apos;lower&apos;: 230.329, &apos;middle&apos;: 230.329, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;anhydrite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 230.329, &apos;lower&apos;: 230.329, &apos;middle&apos;: 230.329, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Grey vf-f sandstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 233.269, &apos;lower&apos;: 233.269, &apos;middle&apos;: 233.269, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;grainsize&apos;: &apos;vf-f&apos;, &apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;sandstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 233.269, &apos;lower&apos;: 233.269, &apos;middle&apos;: 233.269, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Anhydrite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 234.7, &apos;lower&apos;: 234.7, &apos;middle&apos;: 234.7, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;anhydrite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 234.7, &apos;lower&apos;: 234.7, &apos;middle&apos;: 234.7, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Dolomite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 236.596, &apos;lower&apos;: 236.596, &apos;middle&apos;: 236.596, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;dolomite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 236.596, &apos;lower&apos;: 236.596, &apos;middle&apos;: 236.596, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Red siltstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 237.911, &apos;lower&apos;: 237.911, &apos;middle&apos;: 237.911, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;colour&apos;: &apos;red&apos;, &apos;lithology&apos;: &apos;siltstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 237.911, &apos;lower&apos;: 237.911, &apos;middle&apos;: 237.911, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Anhydrite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 238.723, &apos;lower&apos;: 238.723, &apos;middle&apos;: 238.723, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;anhydrite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 238.723, &apos;lower&apos;: 238.723, &apos;middle&apos;: 238.723, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Grey vf-f sandstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 239.807, &apos;lower&apos;: 239.807, &apos;middle&apos;: 239.807, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;grainsize&apos;: &apos;vf-f&apos;, &apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;sandstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 239.807, &apos;lower&apos;: 239.807, &apos;middle&apos;: 239.807, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Red siltstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 240.774, &apos;lower&apos;: 240.774, &apos;middle&apos;: 240.774, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;colour&apos;: &apos;red&apos;, &apos;lithology&apos;: &apos;siltstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 240.774, &apos;lower&apos;: 240.774, &apos;middle&apos;: 240.774, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Dolomite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 241.122, &apos;lower&apos;: 241.122, &apos;middle&apos;: 241.122, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;dolomite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 241.122, &apos;lower&apos;: 241.122, &apos;middle&apos;: 241.122, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Grey siltstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 241.702, &apos;lower&apos;: 241.702, &apos;middle&apos;: 241.702, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;siltstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 241.702, &apos;lower&apos;: 241.702, &apos;middle&apos;: 241.702, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Dolomite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 243.095, &apos;lower&apos;: 243.095, &apos;middle&apos;: 243.095, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;dolomite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 243.095, &apos;lower&apos;: 243.095, &apos;middle&apos;: 243.095, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Grey vf-f sandstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 246.654, &apos;lower&apos;: 246.654, &apos;middle&apos;: 246.654, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;grainsize&apos;: &apos;vf-f&apos;, &apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;sandstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 246.654, &apos;lower&apos;: 246.654, &apos;middle&apos;: 246.654, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Dolomite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 247.234, &apos;lower&apos;: 247.234, &apos;middle&apos;: 247.234, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;dolomite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 247.234, &apos;lower&apos;: 247.234, &apos;middle&apos;: 247.234, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Grey vf-f sandstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 255.435, &apos;lower&apos;: 255.435, &apos;middle&apos;: 255.435, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;grainsize&apos;: &apos;vf-f&apos;, &apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;sandstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 255.435, &apos;lower&apos;: 255.435, &apos;middle&apos;: 255.435, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Grey siltstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 258.723, &apos;lower&apos;: 258.723, &apos;middle&apos;: 258.723, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;siltstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 258.723, &apos;lower&apos;: 258.723, &apos;middle&apos;: 258.723, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Dolomite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 259.729, &apos;lower&apos;: 259.729, &apos;middle&apos;: 259.729, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;dolomite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 259.729, &apos;lower&apos;: 259.729, &apos;middle&apos;: 259.729, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Grey siltstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 260.967, &apos;lower&apos;: 260.967, &apos;middle&apos;: 260.967, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;siltstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 260.967, &apos;lower&apos;: 260.967, &apos;middle&apos;: 260.967, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Dolomite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 261.354, &apos;lower&apos;: 261.354, &apos;middle&apos;: 261.354, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;dolomite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 261.354, &apos;lower&apos;: 261.354, &apos;middle&apos;: 261.354, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Grey siltstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 267.041, &apos;lower&apos;: 267.041, &apos;middle&apos;: 267.041, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;siltstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 267.041, &apos;lower&apos;: 267.041, &apos;middle&apos;: 267.041, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Dolomite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 267.35, &apos;lower&apos;: 267.35, &apos;middle&apos;: 267.35, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;dolomite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 267.35, &apos;lower&apos;: 267.35, &apos;middle&apos;: 267.35, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Grey siltstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 274.004, &apos;lower&apos;: 274.004, &apos;middle&apos;: 274.004, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;siltstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 274.004, &apos;lower&apos;: 274.004, &apos;middle&apos;: 274.004, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Dolomite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 274.313, &apos;lower&apos;: 274.313, &apos;middle&apos;: 274.313, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;dolomite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 274.313, &apos;lower&apos;: 274.313, &apos;middle&apos;: 274.313, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Grey siltstone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 294.816, &apos;lower&apos;: 294.816, &apos;middle&apos;: 294.816, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;colour&apos;: &apos;grey&apos;, &apos;lithology&apos;: &apos;siltstone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 294.816, &apos;lower&apos;: 294.816, &apos;middle&apos;: 294.816, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Dolomite&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 295.397, &apos;lower&apos;: 295.397, &apos;middle&apos;: 295.397, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;dolomite&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 295.397, &apos;lower&apos;: 295.397, &apos;middle&apos;: 295.397, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Limestone&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 296.286, &apos;lower&apos;: 296.286, &apos;middle&apos;: 296.286, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;limestone&apos;})]}
+{&apos;top&apos;: Position({&apos;upper&apos;: 296.286, &apos;lower&apos;: 296.286, &apos;middle&apos;: 296.286, &apos;units&apos;: &apos;m&apos;}), &apos;description&apos;: &apos;Volcanic&apos;, &apos;base&apos;: Position({&apos;upper&apos;: 300.0, &apos;lower&apos;: 300.0, &apos;middle&apos;: 300.0, &apos;units&apos;: &apos;m&apos;}), &apos;components&apos;: [Component({})]}
 </pre>
 </div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">i2</span> <span class="o">&gt;</span> <span class="n">i4</span> <span class="o">&gt;</span> <span class="n">i5</span>  <span class="c"># True</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[35]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>True</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can combine intervals with the <code>+</code> operator. (However, you cannot subtract intervals.)</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">i2</span> <span class="o">+</span> <span class="n">i3</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[36]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td style="width:2em; background-color:#DDDDDD" rowspan="5"></td><td><strong>top</strong></td><td>62.0</td></tr><tr><td><strong>primary</strong></td><td><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></td></tr><tr><td><strong>summary</strong></td><td>1.50 m of sandstone with siltstone</td></tr><tr><td><strong>description</strong></td><td>50.0% 1.00 m of siltstone with 50.0% 1.00 m of sandstone</td></tr><tr><td><strong>base</strong></td><td>63.5</td></tr></table>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Adding a rock adds a (minor) component and adds to the description.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">interval</span> <span class="o">+</span> <span class="n">rock3</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[37]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td style="width:2em; background-color:#DDDDDD" rowspan="5"></td><td><strong>top</strong></td><td>18.0</td></tr><tr><td><strong>primary</strong></td><td><table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></td></tr><tr><td><strong>summary</strong></td><td>22.00 m of grey, sandstone with flakes, black, shale with grey, fine, sandstone</td></tr><tr><td><strong>description</strong></td><td>Grey sandstone with black shale flakes. with Grey, fine, sandstone</td></tr><tr><td><strong>base</strong></td><td>40.0</td></tr></table>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">i6</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span><span class="n">i7</span><span class="p">),</span> <span class="n">i5</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span><span class="n">i4</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[38]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(&apos;partially&apos;, &apos;containedby&apos;)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="n">i1</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i2</span><span class="p">))</span>  <span class="c"># True</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">i2</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i3</span><span class="p">))</span>  <span class="c"># True</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">i2</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i4</span><span class="p">))</span>  <span class="c"># False</span>
-<span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">i6</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i7</span><span class="p">))</span>  <span class="c"># True</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">i7</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i6</span><span class="p">))</span>  <span class="c"># True</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">i6</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i8</span><span class="p">))</span>  <span class="c"># False</span>
-<span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">i5</span><span class="o">.</span><span class="n">is_contained_by</span><span class="p">(</span><span class="n">i3</span><span class="p">))</span>  <span class="c"># True</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">i5</span><span class="o">.</span><span class="n">is_contained_by</span><span class="p">(</span><span class="n">i4</span><span class="p">))</span>  <span class="c"># True</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">i5</span><span class="o">.</span><span class="n">is_contained_by</span><span class="p">(</span><span class="n">i2</span><span class="p">))</span>  <span class="c"># False</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>True
-True
-False
-
-True
-True
-False
-
-True
-True
-False
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[46]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">x</span> <span class="o">=</span> <span class="n">i4</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">i5</span><span class="p">)</span>
-<span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="mi">65</span>
-<span class="n">x</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[46]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Striplog(3 Intervals, start=63.0, stop=65.0)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[47]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">i1</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">i2</span><span class="p">,</span> <span class="n">blend</span><span class="o">=</span><span class="k">False</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[47]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td style="width:2em; background-color:#DDDDDD" rowspan="5"></td><td><strong>top</strong></td><td>62.0</td></tr><tr><td><strong>primary</strong></td><td><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></td></tr><tr><td><strong>summary</strong></td><td>0.50 m of sandstone</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>base</strong></td><td>62.5</td></tr></table>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[48]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">i1</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">i2</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[48]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td style="width:2em; background-color:#DDDDDD" rowspan="5"></td><td><strong>top</strong></td><td>62.0</td></tr><tr><td><strong>primary</strong></td><td><table><tr><td><strong>lithology</strong></td><td>limestone</td></tr></table></td></tr><tr><td><strong>summary</strong></td><td>0.50 m of limestone with sandstone</td></tr><tr><td><strong>description</strong></td><td>60.0% 1.50 m of limestone with 40.0% 1.00 m of sandstone</td></tr><tr><td><strong>base</strong></td><td>62.5</td></tr></table>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[55]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">i1</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">i3</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[55]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<table><tr><td style="width:2em; background-color:#DDDDDD" rowspan="5"></td><td><strong>top</strong></td><td>61.0</td></tr><tr><td><strong>primary</strong></td><td><table><tr><td><strong>lithology</strong></td><td>limestone</td></tr></table></td></tr><tr><td><strong>summary</strong></td><td>1.50 m of limestone with siltstone</td></tr><tr><td><strong>description</strong></td><td>60.0% 1.50 m of limestone with 40.0% 1.00 m of siltstone</td></tr><tr><td><strong>base</strong></td><td>62.5</td></tr></table>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[50]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">i3</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">i5</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[50]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(Interval({&apos;top&apos;: Position({&apos;units&apos;: &apos;m&apos;, &apos;middle&apos;: 62.5}), &apos;description&apos;: &apos;&apos;, &apos;base&apos;: Position({&apos;units&apos;: &apos;m&apos;, &apos;middle&apos;: 63.1}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;siltstone&apos;})]}),
- Interval({&apos;top&apos;: Position({&apos;units&apos;: &apos;m&apos;, &apos;middle&apos;: 63.4}), &apos;description&apos;: &apos;&apos;, &apos;base&apos;: Position({&apos;units&apos;: &apos;m&apos;, &apos;middle&apos;: 63.5}), &apos;components&apos;: [Component({&apos;lithology&apos;: &apos;siltstone&apos;})]}))</pre>
-</div>
-
 </div>
 
 </div>

@@ -6,7 +6,9 @@ Defines components for holding properties of rocks or samples or whatevers.
 :copyright: 2015 Agile Geoscience
 :license: Apache 2.0
 """
-import re
+import json
+
+from .utils import CustomFormatter
 
 
 class ComponentError(Exception):
@@ -27,35 +29,39 @@ class Component(object):
         - modifier, e.g. 'rippled'
         - quantity, e.g. '35%', or 'stringers'
         - description, e.g. from cuttings
-
-    You can include as many other things as you want, e.g.
-
-        - porosity
-        - cementation
-        - lithology code
     """
 
     def __init__(self, properties):
         for k, v in properties.items():
             if k and v:
-                setattr(self, k.lower(), v.lower())
+                setattr(self, k, v)
+
+    def __str__(self):
+        return self.__dict__.__str__()
 
     def __repr__(self):
         s = str(self)
         return "Component({0})".format(s)
-
-    def __str__(self):
-        s = []
-        for key in self.__dict__:
-            t = '"{key}":"{value}"'
-            s.append(t.format(key=key, value=self.__dict__[key]))
-        return ', '.join(s)
 
     def __getitem__(self, key):
         """
         So we can get at attributes with variables.
         """
         return self.__dict__.get(key)
+
+    def __len__(self):
+        return len(self.__dict__)
+
+    def __iter__(self):
+        return iter(self.__dict__)
+
+    def __setitem__(self, key, value):
+        self.__dict__[key] = value
+        return
+
+    def __delitem__(self, key):
+        del self.__dict__[key]
+        return
 
     def __bool__(self):
         if not self.__dict__.keys():
@@ -70,11 +76,23 @@ class Component(object):
         if not isinstance(other, self.__class__):
             return False
 
-        # Weed out empty elements
-        s = {k: v for k, v in self.__dict__.items() if v}
-        o = {k: v for k, v in other.__dict__.items() if v}
+        ds = self.__dict__.items()
+        do = other.__dict__.items()
 
-        # Compare
+        try:
+            strobj = basestring  # Fails in Python 3
+        except:
+            strobj = str
+
+        # Weed out empty elements and case-desensitize.
+        try:
+            s = {k.lower(): v.lower() for k, v in ds if v}
+            o = {k.lower(): v.lower() for k, v in do if v}
+        except (AttributeError, ValueError):  # Dealing with numbers.
+            s = {k.lower(): v for k, v in ds if isinstance(v, strobj)}
+            o = {k.lower(): v for k, v in do if isinstance(v, strobj)}
+
+        # Compare.
         if s == o:
             return True
         else:
@@ -89,9 +107,15 @@ class Component(object):
     def __hash__(self):
         return hash(frozenset(self.__dict__.keys()))
 
+    def keys(self):
+        """
+        Needed for double-star behaviour, along with __getitem__().
+        """
+        return self.__dict__.keys()
+
     def _repr_html_(self):
         """
-        IPython Notebook magic repr function.
+        Jupyter Notebook magic repr function.
         """
         rows = ''
         s = '<tr><td><strong>{k}</strong></td><td>{v}</td></tr>'
@@ -99,6 +123,9 @@ class Component(object):
             rows += s.format(k=k, v=v)
         html = '<table>{}</table>'.format(rows)
         return html
+
+    def json(self):
+        return json.dumps(self.__dict__)
 
     @classmethod
     def from_text(cls, text, lexicon, required=None, first_only=True):
@@ -149,38 +176,14 @@ class Component(object):
         if default and not self.__dict__:
             return default
 
-        if not fmt:
-            string, flist = '', []
-            for item in self.__dict__:
-                string += '{}, '
-                flist.append(item)
-            string = string.strip(', ')
-        else:
-            fmt = re.sub(r'  ', '_dblspc_', fmt)
-            string = re.sub(r'\{(\w+)\}', '{}', fmt)
-            flist = re.findall(r'\{(\w+)\}', fmt)
-
-        words = []
-        for key in flist:
-            word = self.__dict__.get(key.lower())
-            if word and key[0].isupper():
-                word = word.capitalize()
-            if word and key.isupper():
-                word = word.upper()
-            if not word:
-                word = ''
-            words.append(word)
+        f = fmt or '{' + '}, {'.join(list(self.__dict__.keys())) + '}'
 
         try:
-            summary = string.format(*words)
+            summary = CustomFormatter().format(f, **self.__dict__)
         except KeyError as e:
-            raise ComponentError("No such attribute, "+str(e))
+            raise ComponentError("Error building summary, "+str(e))
 
-        if initial and summary:
+        if summary and initial and not fmt:
             summary = summary[0].upper() + summary[1:]
-
-        # Tidy up double spaces
-        summary = re.sub(r'  ', ' ', summary)
-        summary = re.sub(r'_dblspc_', '  ', summary)
 
         return summary
