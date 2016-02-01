@@ -881,28 +881,30 @@ class Striplog(object):
         """
         for i in self.__list:
             origin = (0, i.top.z)
-            colour = legend.get_colour(i.primary, match_only=match_only)
+            d = legend.get_decor(i.primary, match_only=match_only)
             thick = i.base.z - i.top.z
-            d = default_width
 
             if ladder:
-                w = legend.get_width(i.primary, match_only=match_only) or d
+                w = d.width or default_width
                 try:
-                    w = d * w/legend.max_width
+                    w = default_width * w/legend.max_width
                 except:
-                    w = d
+                    w = default_width
             else:
-                w = d
+                w = default_width
 
             # Allow override of lw
             this_patch_kwargs = kwargs.copy()
             lw = this_patch_kwargs.pop('lw', 0)
+            ec = this_patch_kwargs.pop('ec', 'k')
 
             rect = mpl.patches.Rectangle(origin,
                                          w,
                                          thick,
-                                         fc=colour,
+                                         fc=d.colour,
                                          lw=lw,
+                                         hatch=d.hatch,
+                                         ec=ec,  # edgecolour for hatching
                                          **this_patch_kwargs)
             ax.add_patch(rect)
 

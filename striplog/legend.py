@@ -88,11 +88,14 @@ class Decor(object):
         if len(self.__dict__) < 2:
             raise LegendError("You must provide at least one decoration.")
 
-        # Make sure we have a width, even if it's None.
+        # Make sure we have a width, and it's a float, even if it's None.
         try:
             self.width = float(self.width)
         except:
             self.width = None
+
+        # Make sure we have a hatch, even if it's None.
+        self.hatch = getattr(self, 'hatch', None)
 
         # Deal with American spelling.
         a = getattr(self, 'color', None)
@@ -119,12 +122,12 @@ class Decor(object):
                     self.colour = utils.name_to_hex(c)
                 except KeyError:
                     raise LegendError("Colour not recognized: " + c)
-            elif len(c) == 4:
+            elif (c[0] == '#') and (len(c) == 4):
                 # Three-letter hex
-                try:
-                    self.colour = c[:2] + c[1] + 2*c[2] + 2*c[3]
-                except TypeError:
-                    raise LegendError("Colour not recognized: " + c)
+                self.colour = c[:2] + c[1] + 2*c[2] + 2*c[3]
+            elif (c[0] == '#') and (len(c) == 8):
+                # 8-letter hex
+                self.colour = c[:-2]
             else:
                 pass  # Leave the colour alone. Could assert here.
         else:
@@ -237,7 +240,10 @@ class Decor(object):
 
         rect1 = patches.Rectangle((0, 0),
                                   u*v, u*v,
-                                  color=self.colour)
+                                  color=self.colour,
+                                  lw=0,
+                                  hatch=self.hatch,
+                                  ec='k')
         ax.add_patch(rect1)
         ax.text(1.0+0.1*v*u, u*v*0.5,
                 self.component.summary(fmt=fmt),
@@ -384,22 +390,41 @@ class Legend(object):
     default_timescale = partialmethod(builtin_timescale, name='ISC')
 
     @classmethod
-    def random(cls, components):
+    def random(cls, components, width=False, colour=None):
         """
         Generate a random legend for a given list of components.
 
-        If you pass a Striplog, it will use the primary components.
 
+        Args:
+            components (list or Striplog): A list of components. If you pass
+                a Striplog, it will use the primary components.
+            width (bool): Also generate widths for the components, based on the
+                order in which they are encountered.
+            colour (str): If you want to give the Decors all the same colour,
+                provide a hex string.
         Returns:
             Legend: A legend with random colours.
+        TODO:
+            It might be convenient to have a partial method to generate an
+            'empty' legend. Might be an easy way for someone to start with a
+            template, since it'll have the components in it already.
         """
         try:  # Treating as a Striplog.
             list_of_Decors = [Decor.random(c)
                               for c
-                              in [i[0] for i in components.top if i[0]]
+                              in [i[0] for i in components.unique if i[0]]
                               ]
         except:  # It's a list of Components.
             list_of_Decors = [Decor.random(c) for c in components]
+
+        if colour is not None:
+            for d in list_of_Decors:
+                d.colour = colour
+
+        if width:
+            for i, d in enumerate(list_of_Decors):
+                d.width = i + 1
+
         return cls(list_of_Decors)
 
     @classmethod
@@ -519,6 +544,27 @@ class Legend(object):
         except:
             return 0
 
+    def get_decor(self, c, match_only=None):
+        """
+        Get the decor for a component.
+
+        Args:
+           c (component): The component to look up.
+           match_only (list of str): The component attributes to include in the
+               comparison. Default: All of them.
+
+        Returns:
+           Decor. The matching Decor from the Legend, or None if not found.
+        """
+        if c:
+            if match_only:
+                # Filter the component only those attributes
+                c = Component({k: getattr(c, k, None) for k in match_only})
+            for decor in self.__list:
+                if c == decor.component:
+                    return decor
+        return None
+
     def getattr(self, c, attr, default=None, match_only=None):
         """
         Get the attribute of a component.
@@ -533,14 +579,11 @@ class Legend(object):
         Returns:
            obj. The specified attribute of the matching Decor in the Legend.
         """
-        if c:
-            if match_only:
-                # Filter the component only those attributes
-                c = Component({k: getattr(c, k, None) for k in match_only})
-            for decor in self.__list:
-                if c == decor.component:
-                    return getattr(decor, attr)
-        return default
+        matching_decor = self.get_decor(c, match_only=match_only)
+        if matching_decor is not None:
+            return getattr(matching_decor, attr)
+        else:
+            return default
 
     def get_colour(self, c, default='#eeeeee', match_only=None):
         """
