@@ -519,27 +519,6 @@ class Interval(object):
             else:  # They are equal
                 return None
 
-    @staticmethod
-    def __split_description(text):
-        """
-        Split a description into parts, each of which can be turned into
-        a single component.
-        """
-        # Protect some special sequences.
-        t = re.sub(r'(\d) ?in\. ', r'\1 inch ', text)  # Protect.
-        t = re.sub(r'(\d) ?ft\. ', r'\1 feet ', t)  # Protect.
-
-        # Transform all part delimiters to 'with'.
-        t = re.sub(r'\;?\.? ?((under)? \d+%) (?=\w)', r' with \1 ', t)
-        t = re.sub(r'\. ', r' with ', t)
-
-        # Split.
-        f = re.IGNORECASE
-        pattern = re.compile(r'.(?:with|contain(?:s|ing)?)', flags=f)
-        parts = filter(None, pattern.split(t))
-
-        return [i.strip() for i in parts]
-
     def __parse_description(self, lexicon,
                             max_component=1,
                             abbreviations=False):
@@ -554,7 +533,7 @@ class Interval(object):
             text = self.description
 
         components = []
-        for p, part in enumerate(self.__split_description(text)):
+        for p, part in enumerate(lexicon.split_description(text)):
             if p == max_component:
                 break
             components.append(Component.from_text(part, lexicon))

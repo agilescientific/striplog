@@ -15,12 +15,12 @@ from striplog import Legend, Component, Decor
 import matplotlib.pyplot as plt
 import pytest
 
-args = {'tolerance': 10,
-        'savefig_kwargs': {'dpi': 100},
-        }
+params = {'tolerance': 20,
+           'savefig_kwargs': {'dpi': 100},
+          }
 
 
-@pytest.mark.mpl_image_compare(**args)
+@pytest.mark.mpl_image_compare(**params)
 def test_striplog_plot():
     """
     Tests mpl image of striplog
@@ -35,7 +35,7 @@ def test_striplog_plot():
     return fig
 
 
-@pytest.mark.mpl_image_compare(**args)
+@pytest.mark.mpl_image_compare(**params)
 def test_decor_plot():
     """
     Tests mpl image of decor
