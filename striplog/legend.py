@@ -12,7 +12,6 @@ import csv
 import warnings
 import random
 import math
-import re
 
 try:
     from functools import partialmethod
@@ -32,6 +31,11 @@ from .defaults import LEGEND__SGMC
 from .defaults import TIMESCALE__ISC
 from .defaults import TIMESCALE__USGS_ISC
 from .defaults import TIMESCALE__DNAG
+
+# This module is not used directly, but must
+# be imported in order to registers the new
+# hatches.
+from . import hatches
 
 
 class LegendError(Exception):
