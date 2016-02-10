@@ -1360,10 +1360,7 @@ class Striplog(object):
         Inverts the striplog, changing its order and the order of its contents.
         """
         if copy:
-            new_intervals = []
-            for i in self:
-                new_intervals.append(i.invert(copy=True))
-            return Striplog(new_intervals)  # Should get order automatically.
+            return Striplog([i.invert(copy=True) for i in self])
         else:
             for i in self:
                 i.invert()

@@ -36,6 +36,18 @@ def test_init():
     assert rock.colour == 'grey'
 
 
+def test_component_html():
+    """
+    For jupyter notebook.
+
+    Hard to test this because attributes are returned in random order.
+    """
+    r = {'lithology': 'sand'}
+    rock = Component(r)
+    html = """<table><tr><td><strong>lithology</strong></td><td>sand</td></tr></table>"""
+    assert rock._repr_html_() == html
+
+
 def test_identity():
     rock = Component(r)
     assert rock != 'non-Component'

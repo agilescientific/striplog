@@ -150,8 +150,7 @@ class Decor(object):
             result = [self, other]
             return Legend(result)
         elif isinstance(other, Legend):
-            result = [self] + other.__list
-            return Legend(result)
+            return other + self
         else:
             raise LegendError("You can only add legends or decors.")
 
@@ -232,7 +231,7 @@ class Decor(object):
 
         r = None
 
-        if fig is None:
+        if (fig is None) and (ax is None):
             fig = plt.figure(figsize=(u, 1))
         else:
             r = fig
@@ -245,7 +244,7 @@ class Decor(object):
         rect1 = patches.Rectangle((0, 0),
                                   u*v, u*v,
                                   color=self.colour,
-                                  lw=0,
+                                  lw=1,
                                   hatch=self.hatch,
                                   ec='k')
         ax.add_patch(rect1)
@@ -401,13 +400,14 @@ class Legend(object):
 
         Args:
             components (list or Striplog): A list of components. If you pass
-                a Striplog, it will use the primary components.
+                a Striplog, it will use the primary components. If you pass a
+                component on its own, you will get a random Decor.
             width (bool): Also generate widths for the components, based on the
                 order in which they are encountered.
             colour (str): If you want to give the Decors all the same colour,
                 provide a hex string.
         Returns:
-            Legend: A legend with random colours.
+            Legend or Decor: A legend (or Decor) with random colours.
         TODO:
             It might be convenient to have a partial method to generate an
             'empty' legend. Might be an easy way for someone to start with a
@@ -418,8 +418,13 @@ class Legend(object):
                               for c
                               in [i[0] for i in components.unique if i[0]]
                               ]
-        except:  # It's a list of Components.
-            list_of_Decors = [Decor.random(c) for c in components]
+        except:
+            try:
+                components.append('')  # Test for list.
+                list_of_Decors = [Decor.random(c) for c in components[:-1]]
+            except:
+                # It's a single component.
+                list_of_Decors = [Decor.random(components)]
 
         if colour is not None:
             for d in list_of_Decors:
@@ -695,43 +700,3 @@ class Legend(object):
             d.plot(fmt=fmt)
 
         return None
-
-    def fancy_plot(self, ncols=1, fmt=None):
-
-        """
-        Make a simple plot of the Legend.
-
-        Args:
-            ncols (int): Number of columns (default is 1).
-            fmt (str): Text formatting for the decor description.
-
-        Returns:
-            figure: matplotlib figure object
-        """
-
-        u = 4     # aspect ratio of decor plot
-        v = 0.25  # ratio of decor tile width
-        nrows = 10
-
-        fig, axs = plt.subplots(nrows, ncols, figsize=(u * ncols, nrows))
-
-        for ax, d in zip(axs.flat, self.__list):
-            rect = patches.Rectangle((0.05, 0.05),  # hack so it draws edges
-                                     u * v, u * v,
-                                     facecolor=d.colour,
-                                     edgecolor='k')
-            ax.add_patch(rect)
-            ax.text(1.0 + 0.15 * v * u, 0.5,
-                    d.component.summary(fmt=fmt),
-                    fontsize=max(u, 13),
-                    verticalalignment='center',
-                    horizontalalignment='left')
-            ax.set_xlim([0, u * v])
-            ax.set_ylim([0, u * v])
-            ax.axis('equal')
-
-        # turn unused axes off
-        for ax in axs.flat[::-1]:
-            ax.set_axis_off()
-
-        return fig

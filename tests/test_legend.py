@@ -41,6 +41,25 @@ def test_decor():
     assert isinstance(l, Legend)
     assert len(l) == 2
     assert d.rgb == (255, 0, 0)
+    assert Decor.random(rock3).colour != ''
+
+
+def test_decor_html():
+    """For jupyter notebook
+    """
+    r = {'lithology': 'sand'}
+    rock = Component(r)
+    d = {'color': '#267022', 'component': rock, 'width': 3}
+    decor = Decor(d)
+    component_row = """<tr><td><strong>component</strong></td><td style="color:black; background-color:white"><table><tr><td><strong>lithology</strong></td><td>sand</td></tr></table></td></tr>"""
+    hatch_row = """<tr><td><strong>hatch</strong></td><td style="color:black; background-color:white">None</td></tr>"""
+    colour_row = """<tr><td><strong>colour</strong></td><td style="color:#FFFFFF; background-color:#267022">#267022</td></tr>"""
+    width_row = """<tr><td><strong>width</strong></td><td style="color:black; background-color:white">3.0</td></tr>"""
+    html = decor._repr_html_()
+    assert component_row in html
+    assert hatch_row in html
+    assert colour_row in html
+    assert width_row in html
 
 
 def test_legend():
@@ -79,13 +98,33 @@ def test_legend():
     colours = [d.colour for d in legend]
     assert len(colours) == 8
 
+    assert Legend.random(rock3)[0].colour != ''
+
     l = Legend.random([rock, rock3])
-    assert l != legend
+    assert len(l) == 2
     assert getattr(l[-1], 'colour') != ''
     assert l.to_csv() != ''
+    assert l.max_width == 0
 
+    l = Legend.random([rock, rock3], width=True, colour='#abcdef')
+    assert getattr(l[0], 'colour') == '#abcdef'
+
+    # Test sums.
     summed = legend + l
     assert len(summed) == 10
+
+    summed_again = legend + d
+    assert len(summed_again) == 9
+
+    summed_again_again = d + legend
+    assert len(summed_again_again) == 9
+
+    # Test equality.
+    assert not d == legend
+
+
+def test_legend_builtins():
+    assert len(Legend.builtin_timescale('isc'))
 
 
 def test_warning(recwarn):

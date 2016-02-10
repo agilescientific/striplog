@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import pytest
 
 params = {'tolerance': 20,
-           'savefig_kwargs': {'dpi': 100},
+          'savefig_kwargs': {'dpi': 100},
           }
 
 
@@ -54,4 +54,19 @@ def test_decor_plot():
 
     fig = plt.figure(figsize=(4, 1))
     fig = decor.plot(fmt="{lithology!t} {colour} {grainsize}", fig=fig)
+    return fig
+
+
+@pytest.mark.mpl_image_compare(**params)
+def test_pattern_fills():
+    """
+    Tests mpl image of decor
+    """
+    hatches = "pctLbs!=v^"
+    decors = [Decor({'component': Component({'hatch': h}), 'hatch': h, 'colour': '#eeeeee'}) for h in hatches]
+
+    fig = plt.figure(figsize=(1, 12))
+    for i, d in enumerate(decors):
+        ax = fig.add_subplot(len(decors), 1, i+1)
+        ax = d.plot(ax=ax, fmt='')
     return fig

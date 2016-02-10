@@ -117,6 +117,28 @@ class Bricks(Shapes):
         super().__init__(hatch, density)
 
 
+class SlantBricks(Shapes):
+    def __init__(self, hatch, density):
+        verts = [
+            (0.0, 0.0),
+            (1., 0.),
+            (0.75, 1.),
+            ]
+
+        codes = [Path.MOVETO,
+                 Path.LINETO,
+                 Path.LINETO,
+                 ]
+
+        path = Path(verts, codes, closed=False)
+
+        self.shape_vertices = path.vertices
+        self.shape_codes = path.codes
+        self.num_rows = hatch.count("s") * density
+        self.size = 1.0
+        super().__init__(hatch, density)
+
+
 class Ticks(Shapes):
     """
     Attempt at USGS pattern 230
@@ -169,6 +191,30 @@ class Ells(Shapes):
         super().__init__(hatch, density)
 
 
+class Triangles(Shapes):
+    def __init__(self, hatch, density):
+        verts = [
+            (0.250, 0.5),
+            (0., 0.),
+            (0.5, 0.),
+            (0.25, 0.5),
+            ]
+
+        codes = [Path.MOVETO,
+                 Path.LINETO,
+                 Path.LINETO,
+                 Path.LINETO,
+                 ]
+
+        path = Path(verts, codes, closed=False)
+
+        self.shape_vertices = path.vertices
+        self.shape_codes = path.codes
+        self.num_rows = hatch.count("t") * density
+        self.size = 1.0
+        super().__init__(hatch, density)
+
+
 class Vees(Shapes):
     """
     Attempt at USGS pattern 731
@@ -197,11 +243,38 @@ class Vees(Shapes):
         super().__init__(hatch, density)
 
 
+class InvertedVees(Shapes):
+    def __init__(self, hatch, density):
+        verts = [
+            (0.250, 0.5),
+            (0., 0.),
+            (0.25, 0.5),
+            (0.5, 0.),
+            ]
+
+        codes = [Path.MOVETO,
+                 Path.LINETO,
+                 Path.MOVETO,
+                 Path.LINETO,
+                 ]
+
+        path = Path(verts, codes, closed=False)
+
+        self.shape_vertices = path.vertices
+        self.shape_codes = path.codes
+        self.num_rows = hatch.count("^") * density
+        self.size = 1.0
+        super().__init__(hatch, density)
+
+
 # Register custom hatches
 mpl.hatch._hatch_types.append(Crosses)
 mpl.hatch._hatch_types.append(Pluses)
 mpl.hatch._hatch_types.append(Dashes)
 mpl.hatch._hatch_types.append(Bricks)
+mpl.hatch._hatch_types.append(SlantBricks)
 mpl.hatch._hatch_types.append(Ticks)
 mpl.hatch._hatch_types.append(Ells)
+mpl.hatch._hatch_types.append(Triangles)
 mpl.hatch._hatch_types.append(Vees)
+mpl.hatch._hatch_types.append(InvertedVees)

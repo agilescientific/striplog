@@ -155,10 +155,11 @@ class Component(object):
 
         Args:
             component (dict): A component dictionary.
-            fmt (str): Describes the format with a string. Use '%'
-                to signal a field in the component, which is analogous
-                to a dictionary. If no format is given, you will
-                just get a list of attributes.
+            fmt (str): Describes the format with a string. If no format is
+                given, you will just get a list of attributes. If you give the
+                empty string (''), you'll get `default` back. By default this
+                gives you the empty string, effectively suppressing the
+                summary.
             initial (bool): Whether to capitialize the first letter.
             default (str): What to give if there's no component defined.
 
@@ -174,6 +175,9 @@ class Component(object):
             r.summary()  -->  'Red, vf-f, sandstone'
         """
         if default and not self.__dict__:
+            return default
+
+        if fmt == '':
             return default
 
         f = fmt or '{' + '}, {'.join(list(self.__dict__.keys())) + '}'

@@ -119,10 +119,7 @@ class Position(object):
 
     @property
     def uncertainty(self):
-        if self.upper is None:  # Then lower is also None
-            return 0.
-        else:
-            return abs(self.upper - self.lower)
+        return abs(self.upper - self.lower)
 
     @property
     def span(self):

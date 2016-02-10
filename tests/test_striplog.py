@@ -94,6 +94,14 @@ def test_striplog():
     assert s.__repr__() is not ''
     assert s.__str__() is not ''
 
+    s_rev = s.invert(copy=True)
+    assert s_rev.order == 'depth'
+    x = s.invert()
+    assert x is None
+    assert s.order == 'depth'
+    assert s[0] == iv1
+    assert s[0].top.z == 100
+
     # Top down: depth order
     iv1 = Interval(80, 120, components=[r1])
     iv2 = Interval(120, 150, components=[r2])
@@ -112,6 +120,15 @@ def test_striplog():
     s[2] = Interval(180, 190, components=[r1, r2])
     assert len(s.find_gaps()) == 2
 
+    # Crop.
+    x = s.crop((110, 210), copy=True)
+    print(x)
+    assert x.start == 110
+
+    # To csv
+    csv = x.to_csv(header=True)
+    assert csv[:3] == 'Top'
+
 
 def test_from_image():
     legend = Legend.builtin('NSDOE')
@@ -122,17 +139,26 @@ def test_from_image():
     assert np.floor(striplog.find('sandstone').cum) == 15
     assert striplog.depth(260).primary.lithology == 'siltstone'
     assert striplog.to_las3() is not ''
-    assert striplog.to_log()[5] == 2.0
     assert striplog.cum == 100.0
     assert striplog.thickest().primary.lithology == 'anhydrite'
     assert striplog.thickest(n=7)[1].primary.lithology == 'sandstone'
     assert striplog.thinnest().primary.lithology == 'dolomite'
     assert striplog.thinnest(n=7)[1].primary.lithology == 'siltstone'
 
+    # To and from log.
+    log, basis, table = striplog.to_log(step=0.1524, return_meta=True)
+    assert log[5] == 2.0
+    strip = Striplog.from_log(log, basis=basis, components=table)
+    assert len(strip) == len(striplog)
+    strip2 = Striplog.from_log(log, basis=basis, cutoff=3, legend=legend)
+    assert len(strip2) == 18
+
+    # Indexing.
     indices = [2, 7, 20]
     del striplog[indices]
     assert len(striplog.find_gaps()) == len(indices)
 
+    # Prune and anneal.
     striplog.prune(limit=1.0)
     assert len(striplog) == 14
 
