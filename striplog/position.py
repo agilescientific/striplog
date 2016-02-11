@@ -25,6 +25,7 @@ class Meta(object):
             if k and v:
                 setattr(self, k, v)
 
+
 @total_ordering
 class Position(object):
     """
@@ -86,12 +87,11 @@ class Position(object):
         s = str(self)
         return "Position({0})".format(s)
 
-    # Must supply __eq__ and one other rich comparison for
-    # the total_ordering function to provide the others.
-    # Not sure if this should be comparing thicknesses, depths,
-    # or...? Using elevation, so 'less than' means 'below'.
-    # Note that it's only comparing tops to determine ordering.
     def __eq__(self, other):
+        """
+        Must supply __eq__ and one other rich comparison for
+        the total_ordering function to provide the others.
+        """
         if isinstance(other, self.__class__):
             return self.middle == other.middle
 
@@ -115,17 +115,24 @@ class Position(object):
 
     @property
     def z(self):
+        """
+        Property. Guaranteed to give the 'middle' depth, either as defined,
+        or the average of the upper and lower bounds.
+        """
         return self.__dict__.get('middle', (self.upper + self.lower)/2)
 
     @property
     def uncertainty(self):
-        if self.upper is None:  # Then lower is also None
-            return 0.
-        else:
-            return abs(self.upper - self.lower)
+        """
+        Property. The range of the upper and lower bounds.
+        """
+        return abs(self.upper - self.lower)
 
     @property
     def span(self):
+        """
+        Property. A tuple of lower, upper. Provided for convenience.
+        """
         return self.lower, self.upper
 
     def invert(self):

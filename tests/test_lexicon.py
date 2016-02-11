@@ -2,7 +2,6 @@
 """
 Define a suite a tests for the Lexicon module.
 """
-
 from striplog import Lexicon
 
 

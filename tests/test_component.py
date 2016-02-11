@@ -2,11 +2,8 @@
 """
 Define a suite a tests for the Component module.
 """
-import pytest
-
 from striplog.rock import Rock
 from striplog import Component
-from striplog.component import ComponentError
 from striplog import Lexicon
 
 r = {'colour': 'grey',
@@ -26,17 +23,32 @@ r6 = {'grainsize': 'Coarse',
       'lithology': None}
 
 
-def test_rock():
+def test_init():
+    """Test Rock() for backward compatibility.
+    """
     rock = Rock(r)
     assert rock
 
-
-def test_init():
     rock = Component(r)
     assert rock.colour == 'grey'
 
 
+def test_component_html():
+    """
+    For jupyter notebook.
+
+    Hard to test this because attributes are returned in random order.
+    """
+    r = {'lithology': 'sand'}
+    rock = Component(r)
+    html = """<table><tr><td><strong>lithology</strong></td><td>sand</td></tr></table>"""
+    assert rock._repr_html_() == html
+
+
 def test_identity():
+    """
+    Test equals.
+    """
     rock = Component(r)
     assert rock != 'non-Component'
 
@@ -48,6 +60,9 @@ def test_identity():
 
 
 def test_summary():
+    """
+    Test ability to generate summaries.
+    """
     rock = Component(r)
     s = rock.summary(fmt="My rock: {lithology} ({colour}, {grainsize!u})")
     assert s == 'My rock: sand (grey, VF-F)'
@@ -63,6 +78,9 @@ def test_summary():
 
 
 def test_from_text():
+    """
+    Test generation from strings.
+    """
     rock3 = Component(r3)
     lexicon = Lexicon.default()
     s = 'Grey coarse sandstone.'

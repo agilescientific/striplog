@@ -11,10 +11,14 @@ from striplog.utils import hex_is_dark, text_colour_for_hex
 
 
 def test_null():
+    """Test the null function on itself.
+    """
     assert null(null) == null
 
 
 def test_partial():
+    """Pretty sure this test doesn't test what I need. See coverage report.
+    """
     def f(a, b):
         return a + b
 
@@ -31,6 +35,8 @@ def test_partial():
 
 
 def test_colours():
+    """Test colour conversions.
+    """
     assert rgb_to_hex([0, 0, 0]) == '#000000'
     assert rgb_to_hex([255, 128, 128]) == '#FF8080'
     assert hex_to_rgb('#000000') == (0, 0, 0)
@@ -38,6 +44,8 @@ def test_colours():
 
 
 def test_names():
+    """Test colour names.
+    """
     assert name_to_hex('red') == '#FF0000'
     assert name_to_hex('Red') == '#FF0000'
     assert hex_to_name('#FF0000') == 'red'
@@ -46,6 +54,8 @@ def test_names():
 
 
 def test_hex_is_dark():
+    """Test ability to recover correct colour for text.
+    """
     assert not hex_is_dark('#FFFF00')
     assert hex_is_dark('#330000')
     assert text_colour_for_hex('#FFFF00') == '#000000'

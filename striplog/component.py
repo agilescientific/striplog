@@ -31,10 +31,11 @@ class Component(object):
         - description, e.g. from cuttings
     """
 
-    def __init__(self, properties):
-        for k, v in properties.items():
-            if k and v:
-                setattr(self, k, v)
+    def __init__(self, properties=None):
+        if properties is not None:
+            for k, v in properties.items():
+                if k and v:
+                    setattr(self, k, v)
 
     def __str__(self):
         return self.__dict__.__str__()
@@ -43,17 +44,14 @@ class Component(object):
         s = str(self)
         return "Component({0})".format(s)
 
-    def __getitem__(self, key):
-        """
-        So we can get at attributes with variables.
-        """
-        return self.__dict__.get(key)
-
     def __len__(self):
         return len(self.__dict__)
 
     def __iter__(self):
         return iter(self.__dict__)
+
+    def __getitem__(self, key):
+        return self.__dict__.get(key)
 
     def __setitem__(self, key, value):
         self.__dict__[key] = value
@@ -101,10 +99,12 @@ class Component(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    # If we define __eq__ we also need __hash__ otherwise the object
-    # becomes unhashable. All this does is hash the frozenset of the
-    # keys. (You can only hash immutables.)
     def __hash__(self):
+        """
+        If we define __eq__ we also need __hash__ otherwise the object
+        becomes unhashable. All this does is hash the frozenset of the
+        keys. (You can only hash immutables.)
+        """
         return hash(frozenset(self.__dict__.keys()))
 
     def keys(self):
@@ -125,6 +125,9 @@ class Component(object):
         return html
 
     def json(self):
+        """
+        Returns a JSON dump of the dictionary representation of the instance.
+        """
         return json.dumps(self.__dict__)
 
     @classmethod
@@ -136,6 +139,8 @@ class Component(object):
             text (str): The text string to parse.
             lexicon (Lexicon): The dictionary to use for the
                 categories and lexemes.
+            required (str): An attribute that we must have. If a required
+                attribute is missing from the component, then None is returned.
             first_only (bool): Whether to only take the first
                 match of a lexeme against the text string.
 
@@ -155,11 +160,13 @@ class Component(object):
 
         Args:
             component (dict): A component dictionary.
-            fmt (str): Describes the format with a string. Use '%'
-                to signal a field in the component, which is analogous
-                to a dictionary. If no format is given, you will
-                just get a list of attributes.
-            initial (bool): Whether to capitialize the first letter.
+            fmt (str): Describes the format with a string. If no format is
+                given, you will just get a list of attributes. If you give the
+                empty string (''), you'll get `default` back. By default this
+                gives you the empty string, effectively suppressing the
+                summary.
+            initial (bool): Whether to capitialize the first letter. Default is
+                True.
             default (str): What to give if there's no component defined.
 
         Returns:
@@ -174,6 +181,9 @@ class Component(object):
             r.summary()  -->  'Red, vf-f, sandstone'
         """
         if default and not self.__dict__:
+            return default
+
+        if fmt == '':
             return default
 
         f = fmt or '{' + '}, {'.join(list(self.__dict__.keys())) + '}'

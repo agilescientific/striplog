@@ -19,6 +19,12 @@ csv_text = u"""colour, width, component lithology, component colour, component g
 #A6D1FF, 3, Limestone, ,
 #FFDBBA, 3, Sandstone, Red, VF-F"""
 
+csv_duplicate = u"""colour, width, component lithology, component colour, component grainsize
+#F7E9A6, 3, Sandstone, Grey, VF-F
+#FF99CC, 2, Anhydrite, ,
+#FF99DD, 3, Anhydrite, ,
+#DBD6BC, 3, Heterolithic, Grey,"""
+
 r = {'colour': 'grey',
      'grainsize': 'vf-f',
      'lithology': 'sand'}
@@ -26,21 +32,6 @@ r = {'colour': 'grey',
 r3 = {'colour': 'red',
       'grainsize': 'vf-f',
       'lithology': 'sandstone'}
-
-
-def test_decor():
-    rock = Component(r)
-    rock3 = Component(r3)
-
-    d = Decor({'colour': '#FF0000',
-               'component': rock})
-    d3 = Decor({'colour': 'green',
-               'component': rock3})
-
-    l = d + d3
-    assert isinstance(l, Legend)
-    assert len(l) == 2
-    assert d.rgb == (255, 0, 0)
 
 
 def test_legend():
@@ -79,16 +70,42 @@ def test_legend():
     colours = [d.colour for d in legend]
     assert len(colours) == 8
 
+    assert Legend.random(rock3)[0].colour != ''
+
     l = Legend.random([rock, rock3])
-    assert l != legend
+    assert len(l) == 2
     assert getattr(l[-1], 'colour') != ''
     assert l.to_csv() != ''
+    assert l.max_width == 0
 
+    l = Legend.random([rock, rock3], width=True, colour='#abcdef')
+    assert getattr(l[0], 'colour') == '#abcdef'
+
+    # Test sums.
     summed = legend + l
     assert len(summed) == 10
 
+    summed_again = legend + d
+    assert len(summed_again) == 9
 
-def test_warning(recwarn):
+    summed_again_again = d + legend
+    assert len(summed_again_again) == 9
+
+    # Test equality.
+    assert not d == legend
+
+
+def test_legend_builtins():
+    """Test the builtins.
+    """
+    assert len(Legend.builtin('nsdoe')) == 18
+    assert len(Legend.builtin('nagmdm__6_2')) == 206
+
+    # And builtin timescale.
+    assert len(Legend.builtin_timescale('isc')) == 240
+
+
+def test_tolerance_warning(recwarn):
     """Test warning triggers if tolerance too low.
     """
     legend = Legend.from_csv(csv_text)
@@ -99,28 +116,26 @@ def test_warning(recwarn):
     assert w.lineno
 
 
+def test_duplicate_warning(recwarn):
+    """Test warning triggers if duplicate component in CSV.
+    """
+    Legend.from_csv(csv_duplicate)
+    w = recwarn.pop()
+    assert issubclass(w.category, UserWarning)
+    assert 'duplicate' in str(w.message)
+    assert w.lineno
+
+
 def test_error():
     """Test errors are raised.
     """
     rock = Component(r)
 
-    # No component
-    with pytest.raises(LegendError):
-        Decor({'colour': 'red'})
-
-    # No decoration
-    with pytest.raises(LegendError):
-        Decor({'component': rock})
-
-    # Bad colour
-    with pytest.raises(LegendError):
-        Decor({'colour': 'blurple',
-               'component': rock})
-
     # Adding incompatible things
     legend = Legend.from_csv(csv_text)
     with pytest.raises(LegendError):
-        legend + rock
+        _ = legend + rock
+        assert _
 
     # Tolerance not allowed.
     with pytest.raises(LegendError):

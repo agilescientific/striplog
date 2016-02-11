@@ -3,7 +3,7 @@
 """
 A striplog is a sequence of intervals.
 
-:copyright: 2015 Agile Geoscience
+:copyright: 2016 Agile Geoscience
 :license: Apache 2.0
 """
 import re
@@ -42,6 +42,9 @@ class Striplog(object):
     Args:
         list_of_Intervals (list): A list of Interval objects.
         source (str): A source for the data. Default None.
+        order (str): 'auto', 'depth', 'elevation', or 'none'. Please refer to
+            the documentation for details. Best idea is to let the default
+            work. Default: 'auto'.
     """
     def __init__(self, list_of_Intervals, source=None, order='auto'):
 
@@ -102,15 +105,13 @@ class Striplog(object):
 
     def __repr__(self):
         l = len(self.__list)
-        details = "start={}, stop={}".format(self.start, self.stop)
+        details = "start={}, stop={}".format(self.start.z, self.stop.z)
         return "Striplog({0} Intervals, {1})".format(l, details)
 
     def __str__(self):
         s = [str(i) for i in self.__list]
         return '\n'.join(s)
 
-    # Could use collections but doing this with raw magics.
-    # Set up Striplog as an array-like iterable.
     def __getitem__(self, key):
         if type(key) is slice:
             i = key.indices(len(self.__list))
@@ -137,11 +138,9 @@ class Striplog(object):
 
     def __insert(self, index, item):
         if isinstance(item, self.__class__):
-            # Add them one at a time.
             for i, iv in enumerate(item):
                 self.__list.insert(index+i, iv)
         elif isinstance(item, Interval):
-            # Add it.
             self.__list.insert(index, item)
             return
         else:
@@ -167,7 +166,6 @@ class Striplog(object):
     def __next__(self):
         """
         Supports iterable.
-
         """
         try:
             result = self.__list[self.__index]
@@ -179,7 +177,7 @@ class Striplog(object):
 
     def next(self):
         """
-        Retains Python 2 compatibility.
+        For Python 2 compatibility.
         """
         return self.__next__()
 
@@ -204,32 +202,50 @@ class Striplog(object):
 
     @property
     def start(self):
+        """
+        Property. The closest Position to the datum.
+
+        Returns:
+            Position.
+        """
         if self.order == 'depth':
-            return self[0].top.z
+            return self[0].top
         else:
-            return self[-1].base.z
+            return self[-1].base
 
     @property
     def stop(self):
+        """
+        Property. The furthest Position from the datum.
+
+        Returns:
+            Position.
+        """
         if self.order == 'depth':
-            return self[-1].base.z
+            return self[-1].base
         else:
-            return self[0].top.z
+            return self[0].top
 
     def __sort(self):
         """
-        Sorts into 'natural' order: top-down for depth-ordered
+        Private method. Sorts into 'natural' order: top-down for depth-ordered
         striplogs; bottom-up for elevation-ordered.
 
         Sorts in place.
+
+        Returns:
+            None.
         """
         self.__list.sort(key=operator.attrgetter('top'))
         return
 
     def __strict(self):
         """
-        Checks if striplog is monotonically increasing in depth.
+        Private method. Checks if striplog is monotonically increasing in
+        depth.
 
+        Returns:
+            Bool.
         """
         def conc(a, b):
             return a + b
@@ -242,13 +258,16 @@ class Striplog(object):
     @property
     def cum(self):
         """
-        Returns the cumulative thickness of all filled intervals.
+        Property. Gives the cumulative thickness of all filled intervals.
 
         It would be nice to use sum() for this (by defining __radd__),
         but I quite like the ability to add striplogs and get a striplog
-        and I don't think we can have both, its too confusing.
+        and I don't think we can have both, it's too confusing.
 
         Not calling it sum, because that's a keyword.
+
+        Returns:
+            Float. The cumulative thickness.
         """
         total = 0.0
         for i in self:
@@ -258,21 +277,30 @@ class Striplog(object):
     @property
     def mean(self):
         """
-        Returns the mean thickness of all filled intervals.
+        Property. Returns the mean thickness of all filled intervals.
+
+        Returns:
+            Float. The mean average of interval thickness.
         """
         return self.cum / len(self)
 
     @property
     def components(self):
         """
-        Returns the list of compenents in the striplog.
+        Property. Returns the list of compenents in the striplog.
+
+        Returns:
+            List. A list of the unique components.
         """
         return [i[0] for i in self.unique if i[0]]
 
     @property
     def unique(self):
         """
-        Summarize a Striplog with some statistics.
+        Property. Summarize a Striplog with some statistics.
+
+        Returns:
+            List. A list of (Component, total thickness thickness) tuples.
         """
         all_rx = set([iv.primary for iv in self])
         table = {r: 0 for r in all_rx}
@@ -283,6 +311,9 @@ class Striplog(object):
 
     @property
     def top(self):
+        """
+        Property. 
+        """
         # For backwards compatibility.
         with warnings.catch_warnings():
             warnings.simplefilter("always")
@@ -314,9 +345,8 @@ class Striplog(object):
     @classmethod
     def __tops_from_loglike(self, loglike, offset=0):
         """
-        Take a log-like stream of numbers or strings,
-        and return two arrays: one of the tops (changes), and one of the
-        values from the stream.
+        Take a log-like stream of numbers or strings, and return two arrays:
+        one of the tops (changes), and one of the values from the stream.
 
         Args:
             loglike (array-like): The input stream of loglike data.
@@ -340,8 +370,19 @@ class Striplog(object):
     @classmethod
     def __intervals_from_tops(self, tops, values, basis, components):
         """
-        Take a sequence of tops in an arbitrary dimension, and provide a list
-        of intervals from which a striplog can be made.
+        Private method. Take a sequence of tops in an arbitrary dimension,
+        and provide a list of intervals from which a striplog can be made.
+
+        This is only intended to be used by ``from_img()``.
+
+        Args:
+            tops (iterable). A list of floats.
+            values (iterable). A list of values to look up.
+            basis (iterable). A list of components.
+            components (iterable). A list of Components.
+
+        Returns:
+            List. A list of Intervals.
         """
         # Scale tops to actual depths.
         length = float(basis.size)
@@ -384,6 +425,7 @@ class Striplog(object):
                 description. Default: False.
             complete (bool): Whether to make 'blank' intervals, or just leave
                 gaps. Default: False.
+            order (str): The order, 'depth' or 'elevation'. Default: 'depth'.
             columns (tuple or list): The names of the columns.
 
         Returns:
@@ -395,9 +437,6 @@ class Striplog(object):
             459.71,   589.61,    Limestone
             589.71,   827.50,    Green shale
             827.60,   1010.84,   Fine sandstone
-
-        Todo:
-            Automatic abbreviation detection.
         """
 
         text = re.sub(r'(\n+|\r\n|\r)', '\n', text.strip())
@@ -531,10 +570,10 @@ class Striplog(object):
                     points=False,
                     abbreviations=False):
         """
-        DEPRECATING
+        DEPRECATING.
 
         Turn an array-like into a Striplog. It should have the following
-        format (where `base` is optional):
+        format (where ``base`` is optional):
 
             [(top, base, description),
              (top, base, description),
@@ -586,17 +625,18 @@ class Striplog(object):
         Args:
             log (array-like): A 1D array or a list of integers.
             cutoff (number or array-like): The log value(s) at which to bin
-                the log. Optional. If you don't provide one, 
-            components (array-like): A list of components or a legend.
+                the log. Optional.
+            components (array-like): A list of components. Use this or
+                ``legend``.
+            legend (``Legend``): A legend object. Use this or ``components``.
             right (bool): Which side of the cutoff to send things that are
                 equal to, i.e. right on, the cutoff.
+            basis (array-like): A depth basis for the log, so striplog knows
+                where to put the boundaries.
+            source (str): The source of the data. Default 'Log'.
 
         Returns:
-            Striplog: The `striplog` object.
-
-        TODO:
-            Implement the log blocking function in a well-handling library,
-            instead of here. Then we can just use from_blocky_log().
+            Striplog: The ``striplog`` object.
         """
         if not components:
             if not legend:
@@ -764,6 +804,11 @@ class Striplog(object):
             stop (float): The stop depth of the new log. Use the stop depth
                 of the LAS file. Default: The basis if provided, else the stop
                 depth of the striplog.
+            field (str): If you want the data to come from one of the
+                attributes of the components in the striplog, provide it.
+            field_function (function): Provide a function to apply to the field
+                you are asking for. It's up to you to make sure the function
+                does what you want.
             legend (Legend): If you want the codes to come from a legend,
                 provide one. Otherwise the codes come from the log, using
                 integers in the order of prevalence. If you use a legend,
@@ -773,20 +818,26 @@ class Striplog(object):
             match_only (list): If you only want to match some attributes of
                 the Components (e.g. lithology), provide a list of those
                 you want to match.
-            return_meta (bool): Also return the depth basis (np.linspace),
-                and the component table.
+            undefined (number): What to fill in where no value can be
+                determined, e.g. ``-999.25`` or ``np.null``. Default 0.
+            return_meta (bool): If ``True``, also return the depth basis
+                (np.linspace), and the component table.
 
         Returns:
-            ndarray: Two ndarrays in a tuple, (depth, logdata). Logdata
-                has type numpy.int.
+            ndarray: If ``return_meta`` was ``True``, you get:
+                  * The log data as an array of ints.
+                  * The depth basis as an array of floats.
+                  * A list of the components in the order matching the ints.
+                If ``return_meta`` was ``False`` (the default), you only get
+                the log data.
         """
         # Make the preparations.
         if basis is not None:
             start, stop = basis[0], basis[-1]
             step = basis[1] - start
         else:
-            start = start or self.start
-            stop = stop or self.stop
+            start = start or self.start.z
+            stop = stop or self.stop.z
             pts = np.ceil((stop - start)/step) + 1
             basis = np.linspace(start, stop, pts)
 
@@ -850,11 +901,11 @@ class Striplog(object):
 
     def to_flag(self, **kwargs):
         """
-        A wrapper for to_log() that returns a boolean array.
+        A wrapper for ``to_log()`` that returns a boolean array.
+        Useful for masking. Has the same interface as ``to_log()``.
         """
         return self.to_log(**kwargs).astype(bool)
 
-    # Outputter
     def plot_axis(self,
                   ax,
                   legend,
@@ -874,7 +925,7 @@ class Striplog(object):
                 Default 1.
             match_only (list): A list of strings matching the attributes you
                 want to compare when plotting.
-            **kwargs are passed through to matplotlib's `patches.Rectangle`.
+            **kwargs are passed through to matplotlib's ``patches.Rectangle``.
 
         Returns:
             axis: The matplotlib.pyplot axis.
@@ -933,10 +984,14 @@ class Striplog(object):
                 Only the major interval is labeled. Default (1,10).
             match_only (list): A list of strings matching the attributes you
                 want to compare when plotting.
-            **kwargs are passed through to matplotlib's `patches.Rectangle`.
+            ax (ax): A maplotlib axis to plot onto. If you pass this, it will
+                be returned. Optional.
+            return_fig (bool): Whether or not to return the maplotlib ``fig``
+                object. Default False.
+            **kwargs are passed through to matplotlib's ``patches.Rectangle``.
 
         Returns:
-            figure: The matplotlib.pyplot figure.
+            None. Unless you specify ``return_fig=True`` or pass in an ``ax``.
         """
         if not legend:
             # Build a random-coloured legend.
@@ -1005,24 +1060,26 @@ class Striplog(object):
     def read_at(self, d, index=False):
         """
         Get the index of the interval at a particular 'depth' (though this
-            might be an elevation or age or anything.
+            might be an elevation or age or anything).
 
         Args:
             d (Number): The 'depth' to query.
             index (bool): Whether to return the index instead of the interval.
 
         Returns:
-            Int: The interval, or if index==True the index of the interval, at
-                the specified 'depth', or None if the depth is outside the
-                striplog's range.
+            Interval: The interval, or if ``index==True`` the index of the
+                interval, at the specified 'depth', or ``None`` if the depth is
+                outside the striplog's range.
         """
         for i, iv in enumerate(self):
             if iv.spans(d):
                 return i if index else iv
         return None
 
-    # For backwards compatibility
     def depth(self, d):
+        """
+        For backwards compatibility.
+        """
         with warnings.catch_warnings():
             warnings.simplefilter("always")
             w = "depth() is deprecated; please use read_at()"
@@ -1077,8 +1134,10 @@ class Striplog(object):
         Args:
             search_term (string or Component): The thing you want to search
                 for. Strings are treated as regular expressions.
+            index (bool): Whether to return the index instead of the interval.
         Returns:
             Striplog: A striplog that contains only the 'hit' Intervals.
+                However, if ``index`` was ``True``, then that's what you get.
         """
         hits = []
         for i, iv in enumerate(self):
@@ -1097,17 +1156,16 @@ class Striplog(object):
 
     def __find_incongruities(self, op, index):
         """
-        Finds gaps and overlaps in a striplog. Private; called by
+        Private method. Finds gaps and overlaps in a striplog. Called by
         find_gaps() and find_overlaps().
 
         Args:
-            op (operator): operator.gt or operator.lt
-            index (bool): If True, returns indices of intervals with
+            op (operator): ``operator.gt`` or ``operator.lt``
+            index (bool): If ``True``, returns indices of intervals with
             gaps after them.
 
         Returns:
             Striplog: A striplog of all the gaps. A sort of anti-striplog.
-
         """
         hits = []
         intervals = []
@@ -1144,7 +1202,6 @@ class Striplog(object):
 
         Returns:
             Striplog: A striplog of all the overlaps as intervals.
-
         """
         return self.__find_incongruities(op=operator.gt, index=index)
 
@@ -1158,7 +1215,6 @@ class Striplog(object):
 
         Returns:
             Striplog: A striplog of all the gaps. A sort of anti-striplog.
-
         """
         return self.__find_incongruities(op=operator.lt, index=index)
 
@@ -1192,8 +1248,8 @@ class Striplog(object):
         Fill in empty intervals by growing from top and base.
 
         Note that this operation happens in-place and destroys any information
-        about the Position (e.g. metadata associated with the top or base). See
-        issue #54.
+        about the ``Position`` (e.g. metadata associated with the top or base).
+        See GitHub issue #54.
         """
         gaps = self.find_gaps(index=True)
 
@@ -1220,11 +1276,17 @@ class Striplog(object):
         """
         Fill gaps with the component provided.
         """
-        pass
+        raise NotImplementedError
 
     def intersect(self, other):
         """
         Makes a striplog of all intersections.
+
+        Args:
+            Striplog. The striplog instance to intersect with.
+
+        Returns:
+            Striplog. The reuslt of the intersection.
         """
         if not isinstance(other, self.__class__):
             m = "You can only intersect striplogs with each other."
@@ -1244,9 +1306,11 @@ class Striplog(object):
         """
         Merges overlaps by merging overlapping Intervals.
 
+        The function takes no arguments and returns ``None``. It operates on
+        the striplog 'in place'
+
         TODO: This function will not work if any interval overlaps more than
             one other intervals at either its base or top.
-
         """
         overlaps = np.array(self.find_overlaps(index=True))
 
@@ -1279,6 +1343,10 @@ class Striplog(object):
             n (int): The number of thickest intervals to return. Default: 1.
             index (bool): If True, only the indices of the intervals are
                 returned. You can use this to index into the striplog.
+
+        Returns:
+            Interval. The thickest interval. Or, if ``index`` was ``True``,
+            the index of the thickest interval.
         """
         s = sorted(range(len(self)), key=lambda k: self[k].thickness)
         indices = s[-n:]
@@ -1295,6 +1363,15 @@ class Striplog(object):
     def thinnest(self, n=1, index=False):
         """
         Returns the thinnest interval(s) as a striplog.
+
+        Args:
+            n (int): The number of thickest intervals to return. Default: 1.
+            index (bool): If True, only the indices of the intervals are
+                returned. You can use this to index into the striplog.
+
+        Returns:
+            Interval. The thickest interval. Or, if ``index`` was ``True``,
+            the index of the thickest interval.
 
         TODO:
             If you ask for the thinnest bed and there's a tie, you will
@@ -1332,7 +1409,7 @@ class Striplog(object):
         TODO:
             Deal with numeric properties, so I can histogram 'Vp' values, say.
         """
-        d_list = np.arange(self.start, self.stop, interval)
+        d_list = np.arange(self.start.z, self.stop.z, interval)
         raw_readings = []
         for d in d_list:
             if lumping:
@@ -1358,12 +1435,18 @@ class Striplog(object):
     def invert(self, copy=False):
         """
         Inverts the striplog, changing its order and the order of its contents.
+
+        Operates in place by default.
+
+        Args:
+            copy (bool): Whether to operate in place or make a copy.
+
+        Returns:
+            None if operating in-place, or an inverted copy of the striplog
+                if not.
         """
         if copy:
-            new_intervals = []
-            for i in self:
-                new_intervals.append(i.invert(copy=True))
-            return Striplog(new_intervals)  # Should get order automatically.
+            return Striplog([i.invert(copy=True) for i in self])
         else:
             for i in self:
                 i.invert()
@@ -1378,16 +1461,17 @@ class Striplog(object):
 
         Args:
             extent (tuple): The new start and stop depth. Must be 'inside'
-            existing striplog.
+                existing striplog.
+            copy (bool): Whether to operate in place or make a copy.
 
         Returns:
             Operates in place by deault; if copy is True, returns a striplog.
         """
         try:
             if extent[0] is None:
-                extent = (self.start, extent[1])
+                extent = (self.start.z, extent[1])
             if extent[1] is None:
-                extent = (extent[0], self.stop)
+                extent = (extent[0], self.stop.z)
         except:
             m = "You must provide a 2-tuple for the new extents. Use None for"
             m += " the existing start or stop."

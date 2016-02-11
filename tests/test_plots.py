@@ -15,15 +15,15 @@ from striplog import Legend, Component, Decor
 import matplotlib.pyplot as plt
 import pytest
 
-args = {'tolerance': 10,
-        'savefig_kwargs': {'dpi': 100},
-        }
+params = {'tolerance': 20,
+          'savefig_kwargs': {'dpi': 100},
+          }
 
 
-@pytest.mark.mpl_image_compare(**args)
+@pytest.mark.mpl_image_compare(**params)
 def test_striplog_plot():
     """
-    Tests mpl image of striplog
+    Tests mpl image of striplog.
     """
     legend = Legend.builtin('NSDOE')
 
@@ -35,10 +35,27 @@ def test_striplog_plot():
     return fig
 
 
-@pytest.mark.mpl_image_compare(**args)
+@pytest.mark.mpl_image_compare(**params)
+def test_striplog_ladder_plot():
+    """
+    Tests mpl image of striplog with the ladder option.
+    """
+    legend = Legend.builtin('NSDOE')
+
+    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+
+    striplog = Striplog.from_img(imgfile, 14.3, 135.9, legend=legend)
+
+    fig = striplog.thickest(n=5).plot(legend=legend,
+                                      ladder=True,
+                                      return_fig=True)
+    return fig
+
+
+@pytest.mark.mpl_image_compare(**params)
 def test_decor_plot():
     """
-    Tests mpl image of decor
+    Tests mpl image of decor.
     """
     r = {'colour': 'grey',
          'grainsize': 'vf-f',
@@ -54,4 +71,22 @@ def test_decor_plot():
 
     fig = plt.figure(figsize=(4, 1))
     fig = decor.plot(fmt="{lithology!t} {colour} {grainsize}", fig=fig)
+    return fig
+
+
+@pytest.mark.mpl_image_compare(**params)
+def test_pattern_fills():
+    """
+    Tests mpl image of decors with pattern fills.
+    """
+    hatches = "pctLbs!=v^"
+    decors = [Decor({'component': Component({'hatch': h}),
+                     'hatch': h,
+                     'colour': '#eeeeee'})
+              for h in hatches]
+
+    fig = plt.figure(figsize=(1, 12))
+    for i, d in enumerate(decors):
+        ax = fig.add_subplot(len(decors), 1, i+1)
+        ax = d.plot(ax=ax, fmt='')
     return fig

@@ -2,7 +2,6 @@
 """
 Define a suite a tests for the Striplog module.
 """
-
 import numpy as np
 import pytest
 
@@ -39,41 +38,53 @@ LITHD.                    : Lithology description     {S}
   422.440,  423.414,  "Grey, mudstone"
  """
 
-csv_string = """  200.000,  230.329,  Anhydrite
-                  230.329,  233.269,  Grey vf-f sandstone
-                  233.269,  234.700,  Anhydrite
-                  234.700,  236.596,  Dolomite
-                  236.596,  237.911,  Red siltstone
-                  237.911,  238.723,  Anhydrite
-                  238.723,  239.807,  Grey vf-f sandstone
-                  239.807,  240.774,  Red siltstone
-                  240.774,  241.122,  Dolomite
-                  241.122,  241.702,  Grey siltstone
-                  241.702,  243.095,  Dolomite
-                  243.095,  246.654,  Grey vf-f sandstone
-                  246.654,  247.234,  Dolomite
-                  247.234,  255.435,  Grey vf-f sandstone
-                  255.435,  258.723,  Grey siltstone
-                  258.723,  259.729,  Dolomite
-                  259.729,  260.967,  Grey siltstone
-                  260.967,  261.354,  Dolomite
-                  261.354,  267.041,  Grey siltstone
-                  267.041,  267.350,  Dolomite
-                  267.350,  274.004,  Grey siltstone
-                  274.004,  274.313,  Dolomite
-                  274.313,  294.816,  Grey siltstone
-                  294.816,  295.397,  Dolomite
-                  295.397,  296.286,  Limestone
-                  296.286,  300.000,  Volcanic
-                  """
+csv_intervals = """   200.000,  230.329,  Anhydrite
+                      230.329,  233.269,  Grey vf-f sandstone
+                      233.269,  234.700,  Anhydrite
+                      234.700,  236.596,  Dolomite
+                      236.596,  237.911,  Red siltstone
+                      237.911,  238.723,  Anhydrite
+                      238.723,  239.807,  Grey vf-f sandstone
+                      239.807,  240.774,  Red siltstone
+                      240.774,  241.122,  Dolomite
+                      241.122,  241.702,  Grey siltstone
+                      241.702,  243.095,  Dolomite
+                      243.095,  246.654,  Grey vf-f sandstone
+                      246.654,  247.234,  Dolomite
+                      247.234,  255.435,  Grey vf-f sandstone
+                      255.435,  258.723,  Grey siltstone
+                      258.723,  259.729,  Dolomite
+                      259.729,  260.967,  Grey siltstone
+                      260.967,  261.354,  Dolomite
+                      261.354,  267.041,  Grey siltstone
+                      267.041,  267.350,  Dolomite
+                      267.350,  274.004,  Grey siltstone
+                      274.004,  274.313,  Dolomite
+                      274.313,  294.816,  Grey siltstone
+                      294.816,  295.397,  Dolomite
+                      295.397,  296.286,  Limestone
+                      296.286,  300.000,  Volcanic
+                      """
+
+csv_points = """1200, 6.4
+                1205, 7.3
+                1210, 8.2
+                1250, 9.2
+                1275, 4.3
+                1300, 2.2
+                """
 
 
 def test_error():
+    """Test the generic error.
+    """
     with pytest.raises(StriplogError):
         Striplog([])
 
 
 def test_striplog():
+    """Test most of the things.
+    """
     r1 = Component({'lithology': 'sand'})
     r2 = Component({'lithology': 'shale'})
     r3 = Component({'lithology': 'limestone'})
@@ -94,6 +105,14 @@ def test_striplog():
     assert s.__repr__() is not ''
     assert s.__str__() is not ''
 
+    s_rev = s.invert(copy=True)
+    assert s_rev.order == 'depth'
+    x = s.invert()
+    assert x is None
+    assert s.order == 'depth'
+    assert s[0] == iv1
+    assert s[0].top.z == 100
+
     # Top down: depth order
     iv1 = Interval(80, 120, components=[r1])
     iv2 = Interval(120, 150, components=[r2])
@@ -112,8 +131,21 @@ def test_striplog():
     s[2] = Interval(180, 190, components=[r1, r2])
     assert len(s.find_gaps()) == 2
 
+    # Crop.
+    x = s.crop((110, 210), copy=True)
+    assert x.start == 110
+
+    # To csv
+    csv = x.to_csv(header=True)
+    assert csv[:3] == 'Top'
+
+    # Add.
+    assert len(s + iv4) == 5
+
 
 def test_from_image():
+    """Test the generation of a striplog from an image.
+    """
     legend = Legend.builtin('NSDOE')
     imgfile = "tutorial/M-MG-70_14.3_135.9.png"
     striplog = Striplog.from_img(imgfile, 200, 300, legend=legend)
@@ -122,17 +154,30 @@ def test_from_image():
     assert np.floor(striplog.find('sandstone').cum) == 15
     assert striplog.depth(260).primary.lithology == 'siltstone'
     assert striplog.to_las3() is not ''
-    assert striplog.to_log()[5] == 2.0
     assert striplog.cum == 100.0
     assert striplog.thickest().primary.lithology == 'anhydrite'
     assert striplog.thickest(n=7)[1].primary.lithology == 'sandstone'
     assert striplog.thinnest().primary.lithology == 'dolomite'
     assert striplog.thinnest(n=7)[1].primary.lithology == 'siltstone'
 
+    # To and from log.
+    log, basis, table = striplog.to_log(step=0.1524, return_meta=True)
+    assert log[5] == 2.0
+    strip = Striplog.from_log(log, basis=basis, components=table)
+    assert len(strip) == len(striplog)
+    strip2 = Striplog.from_log(log, basis=basis, cutoff=3, legend=legend)
+    assert len(strip2) == 18
+
+    # Extract log onto striplog.
+    striplog.extract(log, basis=basis, name="Log", function=np.mean)
+    assert striplog[0].primary.Log == 2.0
+
+    # Indexing.
     indices = [2, 7, 20]
     del striplog[indices]
     assert len(striplog.find_gaps()) == len(indices)
 
+    # Prune and anneal.
     striplog.prune(limit=1.0)
     assert len(striplog) == 14
 
@@ -144,17 +189,31 @@ def test_from_image():
 
 
 def test_from_csv():
+    """Test the CSV route.
+    """
     lexicon = Lexicon.default()
-    strip2 = Striplog.from_csv(csv_string, lexicon=lexicon)
+    strip2 = Striplog.from_csv(csv_intervals, lexicon=lexicon)
     assert len(strip2.top) == 7
 
 
+def test_points():
+    """Test a striplog of points.
+    """
+    points = Striplog.from_csv(csv_points, points=True)
+    assert len(points) == 6
+    assert points.order == 'none'
+
+
 def test_from_las3():
+    """Test the LAS3 route.
+    """
     s = Striplog.from_las3(las3)
     assert len(s) == 14
 
 
 def test_from_array():
+    """Test the array route.
+    """
     lexicon = Lexicon.default()
 
     a = [(100, 200, 'red sandstone'),
@@ -165,7 +224,57 @@ def test_from_array():
     assert s.__str__() != ''
 
 
+def test_striplog_intersect():
+    """Test intersection. This example is from the tutorial.
+    """
+    chrono = Striplog([Interval(**{'top': 0,
+                                   'base': 60,
+                                   'components': [Component({'age': 'Holocene'})]
+                                   }),
+                       Interval(**{'top': 60,
+                                   'base': 75,
+                                   'components': [Component({'age': 'Palaeogene'})]
+                                   }),
+                       Interval(**{'top': 75,
+                                   'base': 100,
+                                   'components': [Component({'age': 'Cretaceous'})]
+                                   }),
+                       ])
+    legend = Legend.builtin('NSDOE')
+    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+    strip = Striplog.from_img(imgfile, 14.3, 135.9, legend=legend)
+    sands = strip.find('sandstone')
+    cretaceous = chrono.find('Palaeogene')
+    cret_sand = sands.intersect(cretaceous)
+    assert len(cret_sand) == 3
+    assert cret_sand.stop == 75
+
+
+def test_striplog_merge():
+    """Test merging. This example is from the tutorial.
+    """
+    lappy = Striplog([Interval(**{'top': 0, 
+                                  'base': 60,
+                                  'components':[Component({'lithology': 'dolomite'}),]}),
+                      Interval(**{'top': 55,
+                                  'base': 75,
+                                  'components':[Component({'lithology': 'limestone'}),]}),
+                      Interval(**{'top': 75,
+                                  'base': 80,
+                                  'components':[Component({'lithology': 'volcanic'}),]}), 
+                      Interval(**{'top': 78,
+                                  'base': 100,
+                                  'components':[Component({'lithology': 'anhydrite'}),]})
+                      ])
+    assert lappy.find_overlaps(index=True) == [0, 2]
+    assert lappy.merge_overlaps() is None
+    assert lappy.find_overlaps() is None
+    assert lappy.merge_overlaps() is None
+
+
 def test_histogram():
+    """Test histogram. This example is from the tutorial.
+    """
     lexicon = Lexicon.default()
     striplog = Striplog.from_las3(las3, lexicon=lexicon)
     _, counts = striplog.histogram()

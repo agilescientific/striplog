@@ -7,7 +7,6 @@ Defines intervals for holding components.
 :license: Apache 2.0
 """
 import operator
-import re
 import warnings
 from functools import total_ordering
 
@@ -64,7 +63,6 @@ class Interval(object):
                  max_component=1,
                  abbreviations=False):
 
-        # If necessary, convert numbers to Positions
         if not isinstance(top, Position):
             top = Position(middle=top)
 
@@ -134,12 +132,11 @@ class Interval(object):
             m = "You can only add components or intervals."
             raise IntervalError(m)
 
-    # Must supply __eq__ and one other rich comparison for
-    # the total_ordering function to provide the others.
-    # Not sure if this should be comparing thicknesses, depths,
-    # or...? Using elevation, so 'less than' means 'below'.
-    # Note that it's only comparing tops to determine ordering.
     def __eq__(self, other):
+        """
+        Must supply __eq__ and one other rich comparison for
+        the total_ordering function to provide the others.
+        """
         if isinstance(other, self.__class__):
             return self.top == other.top
 
@@ -331,7 +328,7 @@ class Interval(object):
                 return True
         return False
 
-    # Curry.
+    # Curry _overlaps() into some convenient functions.
     any_overlaps = partialmethod(_overlaps, rel='any')
     partially_overlaps = partialmethod(_overlaps, rel='partially')
     completely_contains = partialmethod(_overlaps, rel='contains')
@@ -342,20 +339,24 @@ class Interval(object):
         """
         Determines if depth d is within this interval.
 
+        Args:
+            d (float): Level or 'depth' to evaluate.
+
+        Returns:
+            bool. Whether the depth is in the interval.
         """
         o = {'depth': operator.lt, 'elevation': operator.gt}[self.order]
         return (o(d, self.base.z) and o(self.top.z, d))
 
     def split_at(self, d):
         """
-        Splits the interval. Returns a list of the two new intervals.
+        Splits an interval.
 
         Args:
             d (float): Level or 'depth' to split at.
 
-        TODO:
-            Should this return a Striplog, or just a tuple?
-
+        Returns:
+            tuple. The two intervals that result from the split.
         """
         if not self.spans(d):
             m = 'd must be within interval'
@@ -370,11 +371,15 @@ class Interval(object):
 
     def _explode(self, other):
         """
-        self must at least partially overlap other.
+        Private function. 'Explodes' an interval with another interval.
+        Note that `self` must at least partially overlap `other`.
 
-        If blend is False, you are essentially replacing self with other.
+        Args:
+            other (Interval): The other Interval.
 
-        Returns a tuple of Intervals.
+        Returns:
+            tuple. Three Intervals: upper, middle, lower; `middle` has the
+                properties of the lowermost Interval.
         """
         if not self.order == other.order:
             m = 'self and other must have the same wayupness'
@@ -395,10 +400,15 @@ class Interval(object):
 
     def _blend_descriptions(self, other):
         """
-        Computes the description for combining two intervals. Make sure that
-        the intervals are already adjusted to the correct thicknesses.
+        Private method. Computes the description for combining two intervals.
+        Make sure that the intervals are already adjusted to the correct
+        thicknesses.
 
-        Returns a string.
+        Args:
+            other (Interval): The other Interval.
+
+        Returns:
+            str. The blended description.
         """
         thin, thick = sorted([self, other], key=lambda k: k.thickness)
         total = thin.thickness + thick.thickness
@@ -415,9 +425,15 @@ class Interval(object):
 
     def _combine(self, old_self, other, blend=True):
         """
-        Combines components and descriptions but nothing else.
+        Private method. Combines components and descriptions but nothing else.
 
-        Returns an Interval.
+        Args:
+            old_self (Interval): You have to pass the instance explicitly.
+            other (Interval): The other Interval.
+            blend (bool): Whether to blend or not.
+
+        Returns:
+            Interval. The combined description.
         """
         if blend:
             self.components = old_self.components + other.components
@@ -430,11 +446,17 @@ class Interval(object):
 
     def intersect(self, other, blend=True):
         """
-        self must at least partially overlap other.
+        Perform the intersection binary operation. self must at least
+        partially overlap with other or an IntervalError is raised.
 
         If blend is False, you are essentially replacing self with other.
 
-        Returns an Interval.
+        Args:
+            other (Interval): The other Interval.
+            blend (bool): Whether to blend or not.
+
+        Returns:
+            Interval. The intersection of the Interval with the one provided.
         """
         if not self.any_overlaps(other):
             m = 'self must at least partially overlap other'
@@ -446,11 +468,17 @@ class Interval(object):
 
     def merge(self, other, blend=True):
         """
-        self must at least partially overlap other.
+        Perform the merge binary operation. self must at least
+        partially overlap with other or an IntervalError is raised.
 
         If blend is False, you are essentially replacing self with other.
 
-        Returns a Striplog.
+        Args:
+            other (Interval): The other Interval.
+            blend (bool): Whether to blend or not.
+
+        Returns:
+            Striplog. The merge of the Interval with the one provided.
         """
         if not self.any_overlaps(other):
             m = 'self must at least partially overlap other'
@@ -482,9 +510,17 @@ class Interval(object):
 
     def union(self, other, blend=True):
         """
-        Unions intervals. Self must at least touch or partially overlap other.
+        Perform the union binary operation. self must at least touch other or
+        an IntervalError is raised.
 
-        Returns an Interval.
+        If blend is False, you are essentially replacing self with other.
+
+        Args:
+            other (Interval): The other Interval.
+            blend (bool): Whether to blend or not.
+
+        Returns:
+            Interval. The union of the Interval with the one provided.
         """
         if not (self.touches(other) or self.any_overlaps(other)):
             # m = 'self must at least touch or partially overlap other'
@@ -502,9 +538,13 @@ class Interval(object):
 
     def difference(self, other):
         """
-        Differences intervals.
+        Perform the difference binary operation.
 
-        Returns one or two Intervals.
+        Args:
+            other (Interval): The other Interval.
+
+        Returns:
+            Interval. One or two Intervals.
         """
         if self.touches(other) or (not self.any_overlaps(other)):
             return self
@@ -519,27 +559,6 @@ class Interval(object):
             else:  # They are equal
                 return None
 
-    @staticmethod
-    def __split_description(text):
-        """
-        Split a description into parts, each of which can be turned into
-        a single component.
-        """
-        # Protect some special sequences.
-        t = re.sub(r'(\d) ?in\. ', r'\1 inch ', text)  # Protect.
-        t = re.sub(r'(\d) ?ft\. ', r'\1 feet ', t)  # Protect.
-
-        # Transform all part delimiters to 'with'.
-        t = re.sub(r'\;?\.? ?((under)? \d+%) (?=\w)', r' with \1 ', t)
-        t = re.sub(r'\. ', r' with ', t)
-
-        # Split.
-        f = re.IGNORECASE
-        pattern = re.compile(r'.(?:with|contain(?:s|ing)?)', flags=f)
-        parts = filter(None, pattern.split(t))
-
-        return [i.strip() for i in parts]
-
     def __parse_description(self, lexicon,
                             max_component=1,
                             abbreviations=False):
@@ -547,6 +566,15 @@ class Interval(object):
         Turns a description into a lists of components. The items in the
         list are in the order they were found in the description, which is
         usually order of importance.
+
+        Args:
+            lexicon (Lexicon): The translation between words and their meaning.
+            max_component (int): The most components to return. Default 1.
+            abbreviations (bool): Whether to expand abreviations or not.
+                Default False.
+
+        Returns:
+            List. A list of Components extracted from the description text.
         """
         if abbreviations:
             text = lexicon.expand_abbreviations(self.description)
@@ -554,7 +582,7 @@ class Interval(object):
             text = self.description
 
         components = []
-        for p, part in enumerate(self.__split_description(text)):
+        for p, part in enumerate(lexicon.split_description(text)):
             if p == max_component:
                 break
             components.append(Component.from_text(part, lexicon))

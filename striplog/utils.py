@@ -13,7 +13,9 @@ from . import defaults
 
 
 class CustomFormatter(Formatter):
-
+    """
+    Extends the Python string formatter to some new functions.
+    """
     def __init__(self):
         super(CustomFormatter, self).__init__()
 
@@ -55,6 +57,9 @@ class CustomFormatter(Formatter):
 
 
 class partialmethod(partial):
+    """
+    Extends partial to work on class methods.
+    """
     def __get__(self, instance, owner):
         if instance is None:
             return self
@@ -67,7 +72,8 @@ class partialmethod(partial):
 
 def null(x):
     """
-    Null function.
+    Null function. Used for default in functions that can apply a user-
+    supplied function to data before returning.
     """
     return x
 
@@ -98,7 +104,7 @@ def name_to_hex(name):
     Returns:
         str: The hex code for the colour.
     """
-    return defaults.COLOURS[name.lower()]
+    return defaults.COLOURS[name.lower()].upper()
 
 
 def rgb_to_hex(rgb):

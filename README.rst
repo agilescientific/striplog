@@ -44,6 +44,8 @@ Docs
 Dependencies
 ------------
 
+These are best installed with Anaconda, see **Install**, below.
+
 * `NumPy <http://www.numpy.org/>`_
 * `matplotlib <http://matplotlib.org/>`_
 
@@ -52,6 +54,33 @@ Install
 -------
 
 * ``pip install striplog``
+
+I recommend setting up a virtual environment:
+
+* Install `Anaconda <http://docs.continuum.io/anaconda/install>`_ if you don't have it already
+* Then do this to create an environment called ``myenv`` (or whatever you like), answering Yes to the confirmation question::
+
+    conda create -n myenv python=3.5 numpy matplotlib
+    source activate myenv
+
+* Then you can do::
+
+    pip install striplog
+
+
+Development
+-----------
+
+There are other requirements for testing, as listed in ``setup.py``. They should install with::
+
+    python setup.py test
+
+But I had better luck doing ``conda install pytest`` first.
+
+The tests can be run with::
+
+    python run_tests.py
+
 
 SciPy 2015
 ----------

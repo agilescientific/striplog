@@ -14,7 +14,7 @@ from itertools import islice
 
 from . import defaults
 
-SPECIAL = ['synonyms', 'parts_of_speech', 'abbreviations']
+SPECIAL = ['synonyms', 'splitters', 'parts_of_speech', 'abbreviations']
 
 
 class LexiconError(Exception):
@@ -249,6 +249,30 @@ class Lexicon(object):
                 component[category] = filtered
 
         return component
+
+    def split_description(self, text):
+        """
+        Split a description into parts, each of which can be turned into
+        a single component.
+        """
+        # Protect some special sequences.
+        t = re.sub(r'(\d) ?in\. ', r'\1 inch ', text)  # Protect.
+        t = re.sub(r'(\d) ?ft\. ', r'\1 feet ', t)  # Protect.
+
+        # Transform all part delimiters to first splitter.
+        words = getattr(self, 'splitters')
+        try:
+            splitter = words[0].strip()
+        except:
+            splitter = 'with'
+        t = re.sub(r'\,?\;?\.? ?((under)?(less than)? \d+%) (?=\w)', r' '+splitter+' \1 ', t)
+
+        # Split.
+        f = re.IGNORECASE
+        pattern = re.compile(r'(?:' + r'|'.join(words) + r')', flags=f)
+        parts = filter(None, pattern.split(t))
+
+        return [i.strip() for i in parts]
 
     @property
     def categories(self):
