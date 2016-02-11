@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 """
-Define a suite a tests for the Interval module.
+Define a suite a tests for the Position module.
 """
 import pytest
 

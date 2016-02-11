@@ -20,7 +20,8 @@ def test_error():
     lexicon = Lexicon.default()
     interval = Interval(20, 40, "Grey sandstone.", lexicon=lexicon)
     with pytest.raises(IntervalError):
-        interval + 'this will raise'
+        _ = interval + 'this will raise'
+        assert _
 
 
 def test_interval():
@@ -73,6 +74,8 @@ i6 = Interval(top=100, base=0, components=[Component({'lithology': 'siltstone'})
 
 
 def test_interval_invert():
+    """Test inverting works.
+    """
     i = i1.invert(copy=True)
     assert i.order == 'elevation'
     ii = i2.invert()
@@ -93,15 +96,15 @@ def test_interval_binary_relationships():
     assert i6.relationship(i7) == 'partially'
     assert i5.relationship(i4) == 'containedby'
 
-    assert (i1.partially_overlaps(i2))
-    assert (i2.partially_overlaps(i3))
-    assert not (i2.partially_overlaps(i4))
-    assert (i6.partially_overlaps(i7))
-    assert (i7.partially_overlaps(i6))
-    assert not (i6.partially_overlaps(i8))
-    assert (i5.is_contained_by(i3))
-    assert (i5.is_contained_by(i4))
-    assert not (i5.is_contained_by(i2))
+    assert i1.partially_overlaps(i2)
+    assert i2.partially_overlaps(i3)
+    assert not i2.partially_overlaps(i4)
+    assert i6.partially_overlaps(i7)
+    assert i7.partially_overlaps(i6)
+    assert not i6.partially_overlaps(i8)
+    assert i5.is_contained_by(i3)
+    assert i5.is_contained_by(i4)
+    assert not i5.is_contained_by(i2)
 
 
 def test_interval_binary_operations():
@@ -118,6 +121,8 @@ def test_interval_binary_operations():
 
 
 def test_interval_binary_errors():
+    """Test errors thrown by binary operations.
+    """
     with pytest.raises(IntervalError):
         i1.merge(i8)
     with pytest.raises(IntervalError):

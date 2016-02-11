@@ -23,6 +23,9 @@ sys.path.insert(0, os.path.abspath('..'))
 
 
 class Mock(MagicMock):
+    """
+    Required to get around having to install dependencies to build docs.
+    """
     @classmethod
     def __getattr__(cls, name):
             return Mock()

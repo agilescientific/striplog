@@ -1,15 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf 8 -*-
 """
-A striplog is a sequence of intervals.
+Custom hatches for matplotlib. They have a geological flavour.
 
-:copyright: 2015 Agile Geoscience
+See https://github.com/agile-geoscience/striplog/issues/7 for details.
+
+:copyright: 2016 Agile Geoscience
 :license: Apache 2.0
 """
 import matplotlib as mpl
 from matplotlib.hatch import Shapes
 from matplotlib.path import Path
 
+
+# The hatches have to be registered with mpl.hatch to be recoginized.
+# See the end of this file.
+
+# But first we create the hatch classes themselves. Long winded.
 
 class Crosses(Shapes):
     """
@@ -118,6 +125,9 @@ class Bricks(Shapes):
 
 
 class SlantBricks(Shapes):
+    """
+    Slanted version of Bricks.
+    """
     def __init__(self, hatch, density):
         verts = [
             (0.0, 0.0),
@@ -192,6 +202,9 @@ class Ells(Shapes):
 
 
 class Triangles(Shapes):
+    """
+    Triangles.
+    """
     def __init__(self, hatch, density):
         verts = [
             (0.250, 0.5),
@@ -244,6 +257,9 @@ class Vees(Shapes):
 
 
 class InvertedVees(Shapes):
+    """
+    Inverted version of Vees.
+    """
     def __init__(self, hatch, density):
         verts = [
             (0.250, 0.5),

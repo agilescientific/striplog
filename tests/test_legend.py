@@ -3,7 +3,6 @@
 Define a suite a tests for the Legend module.
 """
 import pytest
-import warnings
 
 from striplog import Legend
 from striplog import Decor
@@ -33,47 +32,6 @@ r = {'colour': 'grey',
 r3 = {'colour': 'red',
       'grainsize': 'vf-f',
       'lithology': 'sandstone'}
-
-
-def test_decor():
-    rock = Component(r)
-    rock3 = Component(r3)
-
-    d = Decor({'colour': '#FF0000',
-               'component': rock})
-    d1 = Decor({'colour': '#F80',
-               'component': rock3})
-    d2 = Decor({'colour': '(255, 128, 0)',
-               'component': rock3})
-    d3 = Decor({'colour': 'orange',
-               'component': rock3})
-
-    l = d + d3
-    assert isinstance(l, Legend)
-    assert len(l) == 2
-    assert d.rgb == (255, 0, 0)
-    assert Decor.random(rock3).colour != ''
-    assert d1.colour == '#ff8800'
-    assert d2.colour == '#ff8000'
-    assert d3.colour == '#ffa500'
-
-
-def test_decor_html():
-    """For jupyter notebook
-    """
-    r = {'lithology': 'sand'}
-    rock = Component(r)
-    d = {'color': '#267022', 'component': rock, 'width': 3}
-    decor = Decor(d)
-    component_row = """<tr><td><strong>component</strong></td><td style="color:black; background-color:white"><table><tr><td><strong>lithology</strong></td><td>sand</td></tr></table></td></tr>"""
-    hatch_row = """<tr><td><strong>hatch</strong></td><td style="color:black; background-color:white">None</td></tr>"""
-    colour_row = """<tr><td><strong>colour</strong></td><td style="color:#FFFFFF; background-color:#267022">#267022</td></tr>"""
-    width_row = """<tr><td><strong>width</strong></td><td style="color:black; background-color:white">3.0</td></tr>"""
-    html = decor._repr_html_()
-    assert component_row in html
-    assert hatch_row in html
-    assert colour_row in html
-    assert width_row in html
 
 
 def test_legend():
@@ -138,7 +96,13 @@ def test_legend():
 
 
 def test_legend_builtins():
-    assert len(Legend.builtin_timescale('isc'))
+    """Test the builtins.
+    """
+    assert len(Legend.builtin('nsdoe')) == 18
+    assert len(Legend.builtin('nagmdm__6_2')) == 206
+
+    # And builtin timescale.
+    assert len(Legend.builtin_timescale('isc')) == 240
 
 
 def test_tolerance_warning(recwarn):
@@ -167,23 +131,11 @@ def test_error():
     """
     rock = Component(r)
 
-    # No component
-    with pytest.raises(LegendError):
-        Decor({'colour': 'red'})
-
-    # No decoration
-    with pytest.raises(LegendError):
-        Decor({'component': rock})
-
-    # Bad colour
-    with pytest.raises(LegendError):
-        Decor({'colour': 'blurple',
-               'component': rock})
-
     # Adding incompatible things
     legend = Legend.from_csv(csv_text)
     with pytest.raises(LegendError):
-        legend + rock
+        _ = legend + rock
+        assert _
 
     # Tolerance not allowed.
     with pytest.raises(LegendError):

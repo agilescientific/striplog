@@ -23,7 +23,7 @@ params = {'tolerance': 20,
 @pytest.mark.mpl_image_compare(**params)
 def test_striplog_plot():
     """
-    Tests mpl image of striplog
+    Tests mpl image of striplog.
     """
     legend = Legend.builtin('NSDOE')
 
@@ -38,7 +38,7 @@ def test_striplog_plot():
 @pytest.mark.mpl_image_compare(**params)
 def test_striplog_ladder_plot():
     """
-    Tests mpl image of striplog
+    Tests mpl image of striplog with the ladder option.
     """
     legend = Legend.builtin('NSDOE')
 
@@ -46,14 +46,16 @@ def test_striplog_ladder_plot():
 
     striplog = Striplog.from_img(imgfile, 14.3, 135.9, legend=legend)
 
-    fig = striplog.thickest(n=5).plot(legend=legend, ladder=True, return_fig=True)
+    fig = striplog.thickest(n=5).plot(legend=legend,
+                                      ladder=True,
+                                      return_fig=True)
     return fig
 
 
 @pytest.mark.mpl_image_compare(**params)
 def test_decor_plot():
     """
-    Tests mpl image of decor
+    Tests mpl image of decor.
     """
     r = {'colour': 'grey',
          'grainsize': 'vf-f',
@@ -75,10 +77,13 @@ def test_decor_plot():
 @pytest.mark.mpl_image_compare(**params)
 def test_pattern_fills():
     """
-    Tests mpl image of decor
+    Tests mpl image of decors with pattern fills.
     """
     hatches = "pctLbs!=v^"
-    decors = [Decor({'component': Component({'hatch': h}), 'hatch': h, 'colour': '#eeeeee'}) for h in hatches]
+    decors = [Decor({'component': Component({'hatch': h}),
+                     'hatch': h,
+                     'colour': '#eeeeee'})
+              for h in hatches]
 
     fig = plt.figure(figsize=(1, 12))
     for i, d in enumerate(decors):

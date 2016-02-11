@@ -2,6 +2,9 @@
 # -*- coding: utf 8 -*-
 """
 Python installation file.
+
+:copyright: 2016 Agile Geoscience
+:license: Apache 2.0
 """
 from setuptools import setup
 import re
@@ -14,7 +17,6 @@ with open(VERSIONFILE, "r")as f:
     mo = pattern.search(verstrline)
 if mo:
     verstr = mo.group(1)
-    print("Version "+verstr)
 else:
     raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
 
@@ -28,9 +30,6 @@ TEST_REQUIREMENTS = ['pytest',
                      'pytest-mpl'
                      ]
 
-# Test command is:
-# py.test --mpl --cov striplog
-
 CLASSIFIERS = ['Development Status :: 4 - Beta',
                'Intended Audience :: Science/Research',
                'Natural Language :: English',
@@ -41,11 +40,12 @@ CLASSIFIERS = ['Development Status :: 4 - Beta',
                'Programming Language :: Python :: 3.3',
                'Programming Language :: Python :: 3.4',
                'Programming Language :: Python :: 3.5',
+               'Programming Language :: Python :: 3.6',
                ]
 
 setup(name='striplog',
       version=verstr,
-      description='Tools for making and managing striplogs.',
+      description='Tools for making and managing subsurface data.',
       url='http://github.com/agile-geoscience/striplog',
       author='Agile Geoscience',
       author_email='hello@agilegeoscience.com',
