@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 
 from striplog import Component
+from striplog import Position
 from striplog import Interval
 from striplog import Legend
 from striplog import Lexicon
@@ -39,33 +40,41 @@ LITHD.                    : Lithology description     {S}
   422.440,  423.414,  "Grey, mudstone"
  """
 
-csv_string = """  200.000,  230.329,  Anhydrite
-                  230.329,  233.269,  Grey vf-f sandstone
-                  233.269,  234.700,  Anhydrite
-                  234.700,  236.596,  Dolomite
-                  236.596,  237.911,  Red siltstone
-                  237.911,  238.723,  Anhydrite
-                  238.723,  239.807,  Grey vf-f sandstone
-                  239.807,  240.774,  Red siltstone
-                  240.774,  241.122,  Dolomite
-                  241.122,  241.702,  Grey siltstone
-                  241.702,  243.095,  Dolomite
-                  243.095,  246.654,  Grey vf-f sandstone
-                  246.654,  247.234,  Dolomite
-                  247.234,  255.435,  Grey vf-f sandstone
-                  255.435,  258.723,  Grey siltstone
-                  258.723,  259.729,  Dolomite
-                  259.729,  260.967,  Grey siltstone
-                  260.967,  261.354,  Dolomite
-                  261.354,  267.041,  Grey siltstone
-                  267.041,  267.350,  Dolomite
-                  267.350,  274.004,  Grey siltstone
-                  274.004,  274.313,  Dolomite
-                  274.313,  294.816,  Grey siltstone
-                  294.816,  295.397,  Dolomite
-                  295.397,  296.286,  Limestone
-                  296.286,  300.000,  Volcanic
-                  """
+csv_intervals = """   200.000,  230.329,  Anhydrite
+                      230.329,  233.269,  Grey vf-f sandstone
+                      233.269,  234.700,  Anhydrite
+                      234.700,  236.596,  Dolomite
+                      236.596,  237.911,  Red siltstone
+                      237.911,  238.723,  Anhydrite
+                      238.723,  239.807,  Grey vf-f sandstone
+                      239.807,  240.774,  Red siltstone
+                      240.774,  241.122,  Dolomite
+                      241.122,  241.702,  Grey siltstone
+                      241.702,  243.095,  Dolomite
+                      243.095,  246.654,  Grey vf-f sandstone
+                      246.654,  247.234,  Dolomite
+                      247.234,  255.435,  Grey vf-f sandstone
+                      255.435,  258.723,  Grey siltstone
+                      258.723,  259.729,  Dolomite
+                      259.729,  260.967,  Grey siltstone
+                      260.967,  261.354,  Dolomite
+                      261.354,  267.041,  Grey siltstone
+                      267.041,  267.350,  Dolomite
+                      267.350,  274.004,  Grey siltstone
+                      274.004,  274.313,  Dolomite
+                      274.313,  294.816,  Grey siltstone
+                      294.816,  295.397,  Dolomite
+                      295.397,  296.286,  Limestone
+                      296.286,  300.000,  Volcanic
+                      """
+
+csv_points = """1200, 6.4
+                1205, 7.3
+                1210, 8.2
+                1250, 9.2
+                1275, 4.3
+                1300, 2.2
+                """
 
 
 def test_error():
@@ -129,6 +138,9 @@ def test_striplog():
     csv = x.to_csv(header=True)
     assert csv[:3] == 'Top'
 
+    # Add.
+    assert len(s + iv4) == 5
+
 
 def test_from_image():
     legend = Legend.builtin('NSDOE')
@@ -153,6 +165,10 @@ def test_from_image():
     strip2 = Striplog.from_log(log, basis=basis, cutoff=3, legend=legend)
     assert len(strip2) == 18
 
+    # Extract log onto striplog.
+    striplog.extract(log, basis=basis, name="Log", function=np.mean)
+    assert striplog[0].primary.Log == 2.0
+
     # Indexing.
     indices = [2, 7, 20]
     del striplog[indices]
@@ -171,8 +187,14 @@ def test_from_image():
 
 def test_from_csv():
     lexicon = Lexicon.default()
-    strip2 = Striplog.from_csv(csv_string, lexicon=lexicon)
+    strip2 = Striplog.from_csv(csv_intervals, lexicon=lexicon)
     assert len(strip2.top) == 7
+
+
+def test_points():
+    points = Striplog.from_csv(csv_points, points=True)
+    assert len(points) == 6
+    assert points.order == 'none'
 
 
 def test_from_las3():
@@ -189,6 +211,33 @@ def test_from_array():
          ]
     s = Striplog._from_array(a, lexicon=lexicon)
     assert s.__str__() != ''
+
+
+def test_striplog_intersect():
+    chrono = Striplog([Interval(**{'top': 0,  'base': 60, 'components':[Component({'age': 'Holocene'})]}),
+                       Interval(**{'top': 60, 'base': 75, 'components':[Component({'age': 'Palaeogene'})]}),
+                       Interval(**{'top': 75, 'base': 100, 'components':[Component({'age': 'Cretaceous'})]}),
+                       ])
+    legend = Legend.builtin('NSDOE')
+    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+    strip = Striplog.from_img(imgfile, 14.3, 135.9, legend=legend)
+    sands = strip.find('sandstone')
+    cretaceous = chrono.find('Palaeogene')
+    cret_sand = sands.intersect(cretaceous)
+    assert len(cret_sand) == 3
+    assert cret_sand.stop == 75
+
+
+def test_striplog_merge():
+    lappy = Striplog([Interval(**{'top': 0,  'base': 60, 'components':[Component({'lithology': 'dolomite'}),]}),
+                      Interval(**{'top': 55, 'base': 75, 'components':[Component({'lithology': 'limestone'}),]}),
+                      Interval(**{'top': 75, 'base': 80, 'components':[Component({'lithology': 'volcanic'}),]}), 
+                      Interval(**{'top': 78, 'base': 100, 'components':[Component({'lithology': 'anhydrite'}),]})
+                      ])
+    assert lappy.find_overlaps(index=True) == [0, 2]
+    assert lappy.merge_overlaps() is None
+    assert lappy.find_overlaps() is None
+    assert lappy.merge_overlaps() is None
 
 
 def test_histogram():

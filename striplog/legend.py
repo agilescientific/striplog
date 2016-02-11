@@ -86,7 +86,7 @@ class Decor(object):
                 v = v
             setattr(self, k, v)
 
-        if not getattr(self, 'component', None):
+        if getattr(self, 'component', None) is None:
             raise LegendError("You must provide a Component to decorate.")
 
         if len(self.__dict__) < 2:
@@ -113,27 +113,29 @@ class Decor(object):
         if c is not None:
             if type(c) in [list, tuple]:
                 try:
-                    self.colour = utils.rgb_to_hex(c)
+                    colour = utils.rgb_to_hex(c)
                 except TypeError:
                     raise LegendError("Colour not recognized: " + c)
             elif c[0] in ['[', '(']:
                 try:
-                    self.colour = utils.rgb_to_hex(c)
+                    x = list(map(float, c[1:-1].split(',')))
+                    colour = utils.rgb_to_hex(x)
                 except KeyError:
                     raise LegendError("Colour not recognized: " + c)
             elif c[0] != '#':
                 try:
-                    self.colour = utils.name_to_hex(c)
+                    colour = utils.name_to_hex(c)
                 except KeyError:
                     raise LegendError("Colour not recognized: " + c)
             elif (c[0] == '#') and (len(c) == 4):
                 # Three-letter hex
-                self.colour = c[:2] + c[1] + 2*c[2] + 2*c[3]
+                colour = c[:2] + c[1] + 2*c[2] + 2*c[3]
             elif (c[0] == '#') and (len(c) == 8):
                 # 8-letter hex
-                self.colour = c[:-2]
+                colour = c[:-2]
             else:
-                pass  # Leave the colour alone. Could assert here.
+                colour = c
+            self.colour = colour.lower()
         else:
             self.colour = None
 
@@ -572,7 +574,7 @@ class Legend(object):
             for decor in self.__list:
                 if c == decor.component:
                     return decor
-        return None
+        return Decor({'colour': '#eeeeee', 'component': Component()})
 
     def getattr(self, c, attr, default=None, match_only=None):
         """

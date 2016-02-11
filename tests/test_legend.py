@@ -3,6 +3,7 @@
 Define a suite a tests for the Legend module.
 """
 import pytest
+import warnings
 
 from striplog import Legend
 from striplog import Decor
@@ -19,6 +20,12 @@ csv_text = u"""colour, width, component lithology, component colour, component g
 #A6D1FF, 3, Limestone, ,
 #FFDBBA, 3, Sandstone, Red, VF-F"""
 
+csv_duplicate = u"""colour, width, component lithology, component colour, component grainsize
+#F7E9A6, 3, Sandstone, Grey, VF-F
+#FF99CC, 2, Anhydrite, ,
+#FF99DD, 3, Anhydrite, ,
+#DBD6BC, 3, Heterolithic, Grey,"""
+
 r = {'colour': 'grey',
      'grainsize': 'vf-f',
      'lithology': 'sand'}
@@ -34,7 +41,11 @@ def test_decor():
 
     d = Decor({'colour': '#FF0000',
                'component': rock})
-    d3 = Decor({'colour': 'green',
+    d1 = Decor({'colour': '#F80',
+               'component': rock3})
+    d2 = Decor({'colour': '(255, 128, 0)',
+               'component': rock3})
+    d3 = Decor({'colour': 'orange',
                'component': rock3})
 
     l = d + d3
@@ -42,6 +53,9 @@ def test_decor():
     assert len(l) == 2
     assert d.rgb == (255, 0, 0)
     assert Decor.random(rock3).colour != ''
+    assert d1.colour == '#ff8800'
+    assert d2.colour == '#ff8000'
+    assert d3.colour == '#ffa500'
 
 
 def test_decor_html():
@@ -127,7 +141,7 @@ def test_legend_builtins():
     assert len(Legend.builtin_timescale('isc'))
 
 
-def test_warning(recwarn):
+def test_tolerance_warning(recwarn):
     """Test warning triggers if tolerance too low.
     """
     legend = Legend.from_csv(csv_text)
@@ -135,6 +149,16 @@ def test_warning(recwarn):
     w = recwarn.pop()
     assert issubclass(w.category, UserWarning)
     assert 'tolerance of 0' in str(w.message)
+    assert w.lineno
+
+
+def test_duplicate_warning(recwarn):
+    """Test warning triggers if duplicate component in CSV.
+    """
+    Legend.from_csv(csv_duplicate)
+    w = recwarn.pop()
+    assert issubclass(w.category, UserWarning)
+    assert 'duplicate' in str(w.message)
     assert w.lineno
 
 

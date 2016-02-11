@@ -36,6 +36,21 @@ def test_striplog_plot():
 
 
 @pytest.mark.mpl_image_compare(**params)
+def test_striplog_ladder_plot():
+    """
+    Tests mpl image of striplog
+    """
+    legend = Legend.builtin('NSDOE')
+
+    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+
+    striplog = Striplog.from_img(imgfile, 14.3, 135.9, legend=legend)
+
+    fig = striplog.thickest(n=5).plot(legend=legend, ladder=True, return_fig=True)
+    return fig
+
+
+@pytest.mark.mpl_image_compare(**params)
 def test_decor_plot():
     """
     Tests mpl image of decor

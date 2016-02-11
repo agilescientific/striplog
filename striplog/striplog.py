@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 from .interval import Interval, IntervalError
 from .component import Component
 from .legend import Legend
+from .legend import Decor
 from . import utils
 from . import templates
 

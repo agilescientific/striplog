@@ -31,10 +31,11 @@ class Component(object):
         - description, e.g. from cuttings
     """
 
-    def __init__(self, properties):
-        for k, v in properties.items():
-            if k and v:
-                setattr(self, k, v)
+    def __init__(self, properties=None):
+        if properties is not None:
+            for k, v in properties.items():
+                if k and v:
+                    setattr(self, k, v)
 
     def __str__(self):
         return self.__dict__.__str__()

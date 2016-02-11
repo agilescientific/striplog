@@ -98,7 +98,7 @@ def name_to_hex(name):
     Returns:
         str: The hex code for the colour.
     """
-    return defaults.COLOURS[name.lower()]
+    return defaults.COLOURS[name.lower()].upper()
 
 
 def rgb_to_hex(rgb):
