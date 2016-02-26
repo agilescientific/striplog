@@ -186,12 +186,19 @@ class Decor(object):
         rows, c = '', ''
         s = '<tr><td><strong>{k}</strong></td><td style="{stl}">{v}</td></tr>'
         for k, v in self.__dict__.items():
+
             if k == 'colour':
                 c = utils.text_colour_for_hex(v)
                 style = 'color:{}; background-color:{}'.format(c, v)
             else:
                 style = 'color:black; background-color:white'
-            v = v._repr_html_() if k == 'component' else v
+
+            if k == 'component':
+                try:
+                    v = v._repr_html_()
+                except AttributeError:
+                    v = v.__repr__()
+
             rows += s.format(k=k, v=v, stl=style)
         html = '<table>{}</table>'.format(rows)
         return html
