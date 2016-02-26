@@ -11,6 +11,14 @@ Defines some default values for parsing cuttings descriptions.
 # depend on matplotlib just for this. Goal is that matplotlib plotting
 # will be optional.
 COLOURS = {
+    'k': '#000000',
+    'w': '#FFFFFF',
+    'r': '#FF0000',
+    'g': '#00FF00',
+    'b': '#0000FF',
+    'c': '#00FFFF',
+    'm': '#FF00FF',
+    'y': '#FFFF00',
     'aliceblue':            '#F0F8FF',
     'antiquewhite':         '#FAEBD7',
     'aqua':                 '#00FFFF',
