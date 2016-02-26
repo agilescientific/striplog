@@ -117,7 +117,7 @@ def test_interval_binary_operations():
     x = i4.merge(i5)
     x[-1].base = 65
     assert len(x) == 3
-    assert x.stop == 65.0
+    assert x.stop.z == 65.0
 
 
 def test_interval_binary_errors():

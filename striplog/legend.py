@@ -86,7 +86,7 @@ class Decor(object):
                 v = v
             setattr(self, k, v)
 
-        if getattr(self, 'component', None) is None:
+        if (getattr(self, 'component', None) is None) and (getattr(self, 'curve', None) is None):
             raise LegendError("You must provide a Component to decorate.")
 
         if len(self.__dict__) < 2:
@@ -476,6 +476,7 @@ class Legend(object):
 
         r = csv.DictReader(f, skipinitialspace=True)
         list_of_Decors, components = [], []
+        kind = 'component'
         for row in r:
             d, component = {}, {}
             for (k, v) in row.items():
@@ -484,13 +485,18 @@ class Legend(object):
                 elif k[:4].lower() == 'comp':
                     prop = ' '.join(k.split()[1:])
                     component[prop] = v.lower()
+
+                elif k[:5].lower() == 'curve':
+                    prop = ' '.join(k.split()[1:])
+                    component[prop] = v.lower()
+                    kind = 'curve'
                 else:
                     try:
                         d[k] = float(v)
                     except ValueError:
                         d[k] = v.lower()
             this_component = Component(component)
-            d['component'] = this_component
+            d[kind] = this_component
 
             # Check for duplicates and warn.
             if this_component in components:
@@ -574,12 +580,18 @@ class Legend(object):
         Returns:
            Decor. The matching Decor from the Legend, or None if not found.
         """
-        if c:
-            if match_only:
-                # Filter the component only those attributes
-                c = Component({k: getattr(c, k, None) for k in match_only})
+        if isinstance(c, Component):
+            if c:
+                if match_only:
+                    # Filter the component only those attributes
+                    c = Component({k: getattr(c, k, None) for k in match_only})
+                for decor in self.__list:
+                    if c == decor.component:
+                        return decor
+        else:
+            print("Getting for other")
             for decor in self.__list:
-                if c == decor.component:
+                if getattr(c, 'mnemonic').lower() == decor.curve.mnemonic:
                     return decor
         return Decor({'colour': '#eeeeee', 'component': Component()})
 

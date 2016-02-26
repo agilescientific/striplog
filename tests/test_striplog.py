@@ -100,8 +100,8 @@ def test_striplog():
     s = s1 + s2
     assert s.order == 'elevation'
     assert len(s) == 4
-    assert s.start == 100
-    assert s.stop == 200
+    assert s.start.z == 100
+    assert s.stop.z == 200
     assert s.__repr__() is not ''
     assert s.__str__() is not ''
 
@@ -122,8 +122,8 @@ def test_striplog():
     s = Striplog([iv1, iv2, iv3, iv4])
     assert s.order == 'depth'
     assert len(s) == 4
-    assert s.start == 80
-    assert s.stop == 250
+    assert s.start.z == 80
+    assert s.stop.z == 250
 
     l = [iv.thickness for iv in s]
     assert len(l) == 4
@@ -133,7 +133,7 @@ def test_striplog():
 
     # Crop.
     x = s.crop((110, 210), copy=True)
-    assert x.start == 110
+    assert x.start.z == 110
 
     # To csv
     csv = x.to_csv(header=True)
@@ -247,7 +247,7 @@ def test_striplog_intersect():
     cretaceous = chrono.find('Palaeogene')
     cret_sand = sands.intersect(cretaceous)
     assert len(cret_sand) == 3
-    assert cret_sand.stop == 75
+    assert cret_sand.stop.z == 75
 
 
 def test_striplog_merge():

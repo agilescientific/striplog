@@ -89,7 +89,7 @@ def hex_to_name(hexx):
         str: The name of the colour, or None if not found.
     """
     for n, h in defaults.COLOURS.items():
-        if h == hexx.upper():
+        if (len(n) > 1) and (h == hexx.upper()):
             return n
     return None
 
