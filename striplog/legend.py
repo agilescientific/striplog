@@ -586,12 +586,18 @@ class Legend(object):
                     # Filter the component only those attributes
                     c = Component({k: getattr(c, k, None) for k in match_only})
                 for decor in self.__list:
-                    if c == decor.component:
-                        return decor
+                    try:
+                        if c == decor.component:
+                            return decor
+                    except AttributeError:
+                        continue
         else:
             for decor in self.__list:
-                if getattr(c, 'mnemonic').lower() == decor.curve.mnemonic:
-                    return decor
+                try:
+                    if getattr(c, 'mnemonic').lower() == decor.curve.mnemonic:
+                        return decor
+                except AttributeError:
+                    continue
         return Decor({'colour': '#eeeeee', 'component': Component()})
 
     def getattr(self, c, attr, default=None, match_only=None):
