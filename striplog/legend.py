@@ -589,7 +589,6 @@ class Legend(object):
                     if c == decor.component:
                         return decor
         else:
-            print("Getting for other")
             for decor in self.__list:
                 if getattr(c, 'mnemonic').lower() == decor.curve.mnemonic:
                     return decor
