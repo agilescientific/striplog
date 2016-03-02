@@ -81,7 +81,7 @@ class Interval(object):
         if components:
             self.components = list(components)
         else:
-            self.components = None
+            self.components = []
 
         if self.description and (not self.components):
             if lexicon:

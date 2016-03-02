@@ -392,8 +392,10 @@ class Striplog(object):
 
         list_of_Intervals = []
         for i, t in enumerate(tops):
-            component = deepcopy(components[values[i]])
-            interval = Interval(t, bases[i], components=[component])
+            c = [deepcopy(components[values[i]])]
+            if c[0] is None:
+                c = []
+            interval = Interval(t, bases[i], components=c)
             list_of_Intervals.append(interval)
 
         return list_of_Intervals
@@ -841,7 +843,7 @@ class Striplog(object):
             pts = np.ceil((stop - start)/step) + 1
             basis = np.linspace(start, stop, pts)
 
-        if field:
+        if (field is not None) or (legend_field is not None):
             result = np.zeros_like(basis)
         else:
             result = np.zeros_like(basis, dtype=np.int)
@@ -868,26 +870,26 @@ class Striplog(object):
                 c = Component({k: getattr(c, k, None)
                                for k in match_only})
 
-            if legend and legend_field:
-                # Use the legend field.
+            if legend and legend_field:  # Use the legend field.
                 try:
                     key = legend.getattr(c, legend_field, undefined)
+                    key = key or undefined
                 except ValueError:
                     key = undefined
             elif field:  # Get data directly from that field in the components.
                 f = field_function or utils.null
                 try:
-                    key = f(getattr(c, field, undefined))
+                    key = f(getattr(c, field, undefined)) or undefined
                 except ValueError:
                     key = undefined
             else:  # Use the lookup table.
                 try:
-                    key = table.index(c)
+                    key = table.index(c) or undefined
                 except ValueError:
                     key = undefined
 
-            top_index = np.ceil((max(start, i.top.z)-start)/step)
-            base_index = np.ceil((min(stop, i.base.z)-start)/step)
+            top_index = int(np.ceil((max(start, i.top.z)-start)/step))
+            base_index = int(np.ceil((min(stop, i.base.z)-start)/step))
 
             try:
                 result[top_index:base_index+1] = key
