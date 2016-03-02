@@ -448,10 +448,13 @@ class Legend(object):
         return cls(list_of_Decors)
 
     @classmethod
-    def from_image(cls, filename, components, col_offset=0.1, row_offset=2):
+    def from_image(cls, filename, components, ignore=None, col_offset=0.1, row_offset=2):
         """
         A slightly easier way to make legends from images.
         """
+        if ignore is None:
+            ignore = []
+
         rgb = utils.loglike_from_image(filename, offset=col_offset)
         loglike = np.array([utils.rgb_to_hex(t) for t in rgb])
 
@@ -460,7 +463,8 @@ class Legend(object):
         hexes_reduced = []
         for h in hexes:
             if h not in hexes_reduced:
-                hexes_reduced.append(h)
+                if h not in ignore:
+                    hexes_reduced.append(h)
 
         list_of_Decors = []
         for i, c in enumerate(components):
