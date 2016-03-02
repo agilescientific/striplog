@@ -111,19 +111,23 @@ def rgb_to_hex(rgb):
     """
     Utility function to convert (r,g,b) triples to hex.
     http://ageo.co/1CFxXpO
-
     Args:
-      rgb (tuple): A sequernce of RGB values in the
+      rgb (tuple): A sequence of RGB values in the
         range 0-255 or 0-1.
-
     Returns:
       str: The hex code for the colour.
     """
     r, g, b = rgb[:3]
-    if 0 < r*g*b < 1:
+    if (r < 0) or (g < 0) or (b < 0):
+            raise Exception("RGB values must all be 0-255 or 0-1")
+    if (r > 255) or (g > 255) or (b > 255):
+            raise Exception("RGB values must all be 0-255 or 0-1")
+    if (r < 1) or (g < 1) or (b < 1):
+        if (r > 1) or (g > 1) or (b > 1):
+            raise Exception("RGB values must all be 0-255 or 0-1")
         rgb = tuple([int(round(val * 255)) for val in [r, g, b]])
     else:
-        rgb = (r, g, b)
+        rgb = (int(r), int(g), int(b))
     result = '#%02x%02x%02x' % rgb
     return result.upper()
 
