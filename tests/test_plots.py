@@ -29,7 +29,7 @@ def test_striplog_plot():
 
     imgfile = "tutorial/M-MG-70_14.3_135.9.png"
 
-    striplog = Striplog.from_img(imgfile, 14.3, 135.9, legend=legend)
+    striplog = Striplog.from_image(imgfile, 14.3, 135.9, legend=legend)
 
     fig = striplog.thickest(n=5).plot(legend=legend, return_fig=True)
     return fig
@@ -44,7 +44,7 @@ def test_striplog_ladder_plot():
 
     imgfile = "tutorial/M-MG-70_14.3_135.9.png"
 
-    striplog = Striplog.from_img(imgfile, 14.3, 135.9, legend=legend)
+    striplog = Striplog.from_image(imgfile, 14.3, 135.9, legend=legend)
 
     fig = striplog.thickest(n=5).plot(legend=legend,
                                       ladder=True,

@@ -18,6 +18,7 @@ try:
 except:  # Python 2
     from utils import partialmethod
 
+import numpy as np
 from matplotlib import patches
 import matplotlib.pyplot as plt
 
@@ -32,10 +33,11 @@ from .defaults import TIMESCALE__ISC
 from .defaults import TIMESCALE__USGS_ISC
 from .defaults import TIMESCALE__DNAG
 
+###############################################
 # This module is not used directly, but must
-# be imported in order to registers the new
-# hatches.
-from . import hatches
+# be imported in order to register new hatches.
+from . import hatches  # DO NOT DELETE
+###############################################
 
 
 class LegendError(Exception):
@@ -442,6 +444,28 @@ class Legend(object):
         if width:
             for i, d in enumerate(list_of_Decors):
                 d.width = i + 1
+
+        return cls(list_of_Decors)
+
+    @classmethod
+    def from_image(cls, filename, components, col_offset=0.1, row_offset=2):
+        """
+        A slightly easier way to make legends from images.
+        """
+        rgb = utils.loglike_from_image(filename, offset=col_offset)
+        loglike = np.array([utils.rgb_to_hex(t) for t in rgb])
+
+        # Get the pixels and colour values at 'tops' (i.e. changes).
+        tops, hexes = utils.tops_from_loglike(loglike, offset=row_offset)
+        hexes_reduced = []
+        for h in hexes:
+            if h not in hexes_reduced:
+                hexes_reduced.append(h)
+
+        list_of_Decors = []
+        for i, c in enumerate(components):
+            d = Decor({'colour': hexes_reduced[i], 'component': c})
+            list_of_Decors.append(d)
 
         return cls(list_of_Decors)
 

@@ -8,6 +8,7 @@ from string import Formatter
 from functools import partial
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from . import defaults
 
@@ -176,3 +177,54 @@ def text_colour_for_hex(hexx, percent=50, dark='#000000', light='#FFFFFF'):
         bool: The colour's brightness is less than the given percent.
     """
     return light if hex_is_dark(hexx, percent=percent) else dark
+
+
+def loglike_from_image(filename, offset):
+        """
+        Get a log-like stream of RGB values from an image.
+
+        Args:
+            filename (str): The filename of a PNG image.
+            offset (Number): If < 1, interpreted as proportion of way across
+                the image. If > 1, interpreted as pixels from left.
+
+        Returns:
+            ndarray: A 2d array (a column of RGB triples) at the specified
+            offset.
+
+        TODO:
+            Generalize this to extract 'logs' from images in other ways, such
+            as giving the mean of a range of pixel columns, or an array of
+            columns. See also a similar routine in pythonanywhere/freqbot.
+        """
+        im = plt.imread(filename)
+        if offset < 1:
+            col = int(im.shape[1] * offset)
+        else:
+            col = offset
+        return im[:, col, :3]
+
+
+def tops_from_loglike(loglike, offset=0):
+        """
+        Take a log-like stream of numbers or strings, and return two arrays:
+        one of the tops (changes), and one of the values from the stream.
+
+        Args:
+            loglike (array-like): The input stream of loglike data.
+            offset (int): Offset (down) from top at which to get lithology,
+                to be sure of getting 'clean' pixels.
+
+        Returns:
+            ndarray: Two arrays, tops and values.
+        """
+        loglike = np.array(loglike)
+        all_edges = loglike[1:] == loglike[:-1]
+        edges = all_edges[1:] & (all_edges[:-1] == 0)
+
+        tops = np.where(edges)[0] + 1
+        tops = np.append(0, tops)
+
+        values = loglike[tops + offset]
+
+        return tops, values

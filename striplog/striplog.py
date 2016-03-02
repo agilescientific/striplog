@@ -322,58 +322,12 @@ class Striplog(object):
         return self.unique
 
     @classmethod
-    def __loglike_from_image(self, filename, offset):
-        """
-        Get a log-like stream of RGB values from an image.
-
-        Args:
-            filename (str): The filename of a PNG image.
-
-        Returns:
-            ndarray: A 2d array (a column of RGB triples) at the specified
-            offset.
-
-        TODO:
-            Generalize this to extract 'logs' from images in other ways, such
-            as giving the mean of a range of pixel columns, or an array of
-            columns. See also a similar routine in pythonanywhere/freqbot.
-        """
-        im = plt.imread(filename)
-        col = im.shape[1]/(100./offset)
-        return im[:, col, :3]
-
-    @classmethod
-    def __tops_from_loglike(self, loglike, offset=0):
-        """
-        Take a log-like stream of numbers or strings, and return two arrays:
-        one of the tops (changes), and one of the values from the stream.
-
-        Args:
-            loglike (array-like): The input stream of loglike data.
-            offset (int): Offset (down) from top at which to get lithology,
-                to be sure of getting 'clean' pixels.
-
-        Returns:
-            ndarray: Two arrays, tops and values.
-        """
-        loglike = np.array(loglike)
-        all_edges = loglike[1:] == loglike[:-1]
-        edges = all_edges[1:] & (all_edges[:-1] == 0)
-
-        tops = np.where(edges)[0] + 1
-        tops = np.append(0, tops)
-
-        values = loglike[tops + offset]
-
-        return tops, values
-
-    @classmethod
     def __intervals_from_tops(self, tops, values, basis, components):
         """
         Private method. Take a sequence of tops in an arbitrary dimension,
         and provide a list of intervals from which a striplog can be made.
 
-        This is only intended to be used by ``from_img()``.
+        This is only intended to be used by ``from_image()``.
 
         Args:
             tops (iterable). A list of floats.
@@ -516,11 +470,11 @@ class Striplog(object):
         return cls(list_of_Intervals, source=source)
 
     @classmethod
-    def from_img(cls, filename, start, stop, legend,
-                 source="Image",
-                 offset=10,
-                 pixel_offset=2,
-                 tolerance=0):
+    def from_image(cls, filename, start, stop, legend,
+                   source="Image",
+                   col_offset=0.1,
+                   row_offset=2,
+                   tolerance=0):
         """
         Read an image and generate Striplog.
 
@@ -530,9 +484,9 @@ class Striplog(object):
             stop (float or int): The depth at the bottom of the image.
             legend (Legend): A legend to look up the components in.
             source (str): A source for the data. Default: 'Image'.
-            offset (Number): The percentage of the way across the image from
-                which to extract the pixel column. Default: 10.
-            pixel_offset (int): The number of pixels to skip at the top of
+            col_offset (Number): The proportion of the way across the image
+                from which to extract the pixel column. Default: 0.1 (ie 10%).
+            row_offset (int): The number of pixels to skip at the top of
                 each change in colour. Default: 2.
             tolerance (float): The Euclidean distance between hex colours,
                 which has a maximum (black to white) of 441.67 in base 10.
@@ -541,12 +495,11 @@ class Striplog(object):
         Returns:
             Striplog: The ``striplog`` object.
         """
-        rgb = cls.__loglike_from_image(filename, offset)
+        rgb = utils.loglike_from_image(filename, col_offset)
         loglike = np.array([utils.rgb_to_hex(t) for t in rgb])
 
         # Get the pixels and colour values at 'tops' (i.e. changes).
-        tops, hexes = cls.__tops_from_loglike(loglike,
-                                              offset=pixel_offset)
+        tops, hexes = utils.tops_from_loglike(loglike, offset=row_offset)
         hexes_reduced = list(set(hexes))
 
         # Get the components corresponding to the colours.
@@ -564,6 +517,17 @@ class Striplog(object):
                                                       components)
 
         return cls(list_of_Intervals, source="Image")
+
+    @classmethod
+    def from_img(cls, *args, **kwargs):
+        """
+        For backwards compatibility.
+        """
+        with warnings.catch_warnings():
+            warnings.simplefilter("always")
+            w = "from_img() is deprecated; please use from_image()"
+            warnings.warn(w)
+        return cls.from_image(*args, **kwargs)
 
     @classmethod
     def _from_array(cls, a,
@@ -672,7 +636,7 @@ class Striplog(object):
         else:
             a = log
 
-        tops, values = cls.__tops_from_loglike(a)
+        tops, values = utils.tops_from_loglike(a)
 
         if basis is None:
             m = 'You must provide a depth or elevation basis.'
