@@ -448,9 +448,21 @@ class Legend(object):
         return cls(list_of_Decors)
 
     @classmethod
-    def from_image(cls, filename, components, ignore=None, col_offset=0.1, row_offset=2):
+    def from_image(cls, filename, components,
+                   ignore=None,
+                   col_offset=0.1,
+                   row_offset=2):
         """
         A slightly easier way to make legends from images.
+
+        Args:
+            filename (str)
+            components (list)
+            ignore (list): Colours to ignore, e.g. "#FFFFFF" to ignore white.
+            col_offset (Number): If < 1, interpreted as proportion of way
+                across the image. If > 1, interpreted as pixels from left.
+            row_offset (int): Number of pixels to skip at the top of each
+                interval.
         """
         if ignore is None:
             ignore = []
@@ -460,6 +472,8 @@ class Legend(object):
 
         # Get the pixels and colour values at 'tops' (i.e. changes).
         tops, hexes = utils.tops_from_loglike(loglike, offset=row_offset)
+
+        # Reduce to unique colours.
         hexes_reduced = []
         for h in hexes:
             if h not in hexes_reduced:
