@@ -31,7 +31,9 @@ def test_striplog_plot():
 
     striplog = Striplog.from_image(imgfile, 14.3, 135.9, legend=legend)
 
-    fig = striplog.thickest(n=5).plot(legend=legend, return_fig=True)
+    fig = striplog.thickest(n=5).plot(legend=legend,
+                                      ladder=False,
+                                      return_fig=True)
     return fig
 
 
