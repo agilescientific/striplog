@@ -605,7 +605,7 @@ class Legend(object):
         to scale a Legend or Striplog when plotting with widths turned on.
         """
         try:
-            maximum = max([row.width for row in self.__list])
+            maximum = max([row.width for row in self.__list if row.width is not None])
             return maximum
         except:
             return 0

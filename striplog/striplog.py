@@ -706,7 +706,7 @@ class Striplog(object):
 
         if header:
             data += '{0:12s}{1:12s}'.format('Top', 'Base')
-            data += '  {0:48s}'.format('Lithology')
+            data += '  {0:48s}\n'.format('Lithology')
 
         for i in self.__list:
             if use_descriptions and i.description:
@@ -931,7 +931,7 @@ class Striplog(object):
     def plot(self,
              legend=None,
              width=1.5,
-             ladder=False,
+             ladder=True,
              aspect=10,
              ticks=(1, 10),
              match_only=None,
@@ -1013,6 +1013,11 @@ class Striplog(object):
         ax.spines['bottom'].set_visible(False)
         ax.yaxis.set_ticks_position('left')
         ax.get_yaxis().set_tick_params(which='both', direction='out')
+
+        # Optional title.
+        title = getattr(self, 'title', None)
+        if title is not None:
+            ax.set_title(title)
 
         ax.patch.set_alpha(0)
 
