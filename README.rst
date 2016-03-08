@@ -68,7 +68,7 @@ I recommend setting up a virtual environment:
     pip install striplog
 
 
-Development
+Development: setting up for testing
 -----------
 
 There are other requirements for testing, as listed in ``setup.py``. They should install with::
@@ -80,6 +80,24 @@ But I had better luck doing ``conda install pytest`` first.
 The tests can be run with::
 
     python run_tests.py
+
+
+Development: running the bleeding edge
+-----------
+
+To run the latest version of the code, you should be on the `develop` branch:
+
+    git clone https://github.com/agile-geoscience/striplog.git
+    cd striplog
+    git checkout develop
+    
+You probably want to continue in your virtual environment (see above).
+
+Then I use these commands, which you can join with `;` if you like, to keep the software up to date:
+
+    /usr/bin/yes | pip uninstall striplog     # Of course you don't need this one if you didn't install it yet.
+    python setup.py sdist
+    pip install dist/striplog-0.6.1.tar.gz    # Or whatever was the last version to build.
 
 
 SciPy 2015
