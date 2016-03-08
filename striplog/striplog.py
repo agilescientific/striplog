@@ -312,7 +312,7 @@ class Striplog(object):
     @property
     def top(self):
         """
-        Property. 
+        Property.
         """
         # For backwards compatibility.
         with warnings.catch_warnings():
@@ -872,6 +872,30 @@ class Striplog(object):
         """
         return self.to_log(**kwargs).astype(bool)
 
+    def plot_points(self, ax,
+                    field=None,
+                    field_function=None,
+                    undefined=0,
+                    **kwargs):
+        """
+        Plotting, but only for points (as opposed to intervals).
+        """
+
+        ys = [iv.top.z for iv in self]
+
+        if field is not None:
+            f = field_function or utils.null
+            xs = [f(getattr(iv.primary, field, undefined)) for iv in self]
+        else:
+            xs = [1 for iv in self]
+
+        for x, y in zip(xs, ys):
+            ax.axhline(y, 0, 1, color='lightgray', zorder=0)
+
+        ax.scatter(xs, ys, **kwargs)
+
+        return ax
+
     def plot_axis(self,
                   ax,
                   legend,
@@ -896,10 +920,10 @@ class Striplog(object):
         Returns:
             axis: The matplotlib.pyplot axis.
         """
-        for i in self.__list:
-            origin = (0, i.top.z)
-            d = legend.get_decor(i.primary, match_only=match_only)
-            thick = i.base.z - i.top.z
+        for iv in self.__list:
+            origin = (0, iv.top.z)
+            d = legend.get_decor(iv.primary, match_only=match_only)
+            thick = iv.base.z - iv.top.z
 
             if ladder:
                 w = d.width or default_width
@@ -970,14 +994,19 @@ class Striplog(object):
         else:
             return_ax = True
 
-        ax = self.plot_axis(ax=ax,
-                            legend=legend,
-                            ladder=ladder,
-                            default_width=width,
-                            match_only=match_only,
-                            **kwargs
-                            )
-        ax.set_xlim([0, width])
+        if self.order == 'none':
+            # Then this is a set of points.
+            ax = self.plot_points(ax=ax, **kwargs)
+        else:
+            ax = self.plot_axis(ax=ax,
+                                legend=legend,
+                                ladder=ladder,
+                                default_width=width,
+                                match_only=match_only,
+                                **kwargs
+                                )
+
+            ax.set_xlim([0, width])
 
         # Rely on interval order.
         lower, upper = self[-1].base.z, self[0].top.z

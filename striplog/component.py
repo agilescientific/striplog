@@ -34,8 +34,12 @@ class Component(object):
     def __init__(self, properties=None):
         if properties is not None:
             for k, v in properties.items():
-                if k and v:
+                try:  # To treat as number...
+                    setattr(self, k, float(v))
+                except ValueError:  # It's a string.
                     setattr(self, k, v)
+                except TypeError:  # It's probably None.
+                    continue
 
     def __str__(self):
         return self.__dict__.__str__()
