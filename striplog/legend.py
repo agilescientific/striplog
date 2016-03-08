@@ -471,7 +471,7 @@ class Legend(object):
         loglike = np.array([utils.rgb_to_hex(t) for t in rgb])
 
         # Get the pixels and colour values at 'tops' (i.e. changes).
-        tops, hexes = utils.tops_from_loglike(loglike, offset=row_offset)
+        _, hexes = utils.tops_from_loglike(loglike, offset=row_offset)
 
         # Reduce to unique colours.
         hexes_reduced = []
