@@ -355,7 +355,60 @@ class Striplog(object):
         return list_of_Intervals
 
     @classmethod
-    def from_csv(cls, text,
+    def from_csv_text(cls, text, lexicon=None, points=False):
+        try:
+            f = StringIO(text)  # Python 3
+        except TypeError:
+            f = StringIO(unicode(text))  # Python 2
+
+        reader = csv.DictReader(f)
+
+        # Reorganize the data to make fixing it easier.
+        reorg = {k.strip(): [] for k in reader.fieldnames}
+        t = f.tell()
+        for k in reorg:
+            f.seek(t)
+            for r in reader:
+                s = {k.strip(): v.strip() for k, v in r.items()}
+                try:
+                    reorg[k].append(float(s[k]))
+                except ValueError:
+                    reorg[k].append(s[k])
+
+        # Fix things.
+        # Fill upwards if needed.
+        if ('top' not in reorg.keys()) and ('base' in reorg.keys()):
+            reorg['top'] =  [reorg['base'][0] - 1] + reorg['base'][:-1]
+        # Rename 'depth'
+        if ('top' not in reorg.keys()) and ('depth' in reorg.keys()):
+            reorg['top'] = reorg.pop('depth')
+        # Fill down if needed.
+        if ('base' not in reorg.keys()) and (not points):
+            reorg['base'] = reorg['top'][1:] + [reorg['top'][-1] + 1]
+
+        # Reassemble as list of dicts
+        all_data = []
+        for data in zip(*reorg.values()):
+            all_data.append({k: v for k, v in zip(reorg.keys(), data)})
+
+        # Build the list of intervals to pass to __init__()
+        list_of_Intervals = []
+        for i in all_data:
+            top = i.pop('top')
+            base = i.pop('base', None)
+            descr = i.pop('description', '')
+            if i:
+                c = Component(i)
+                iv = Interval(**{'top': top, 'base': base, 'description': descr, 'components': [c]})
+            else:
+                iv = Interval(**{'top': top, 'base': base, 'description': descr, 'lexicon': lexicon})
+            list_of_Intervals.append(iv)
+
+        # Get out of here.
+        return cls(list_of_Intervals)
+
+    @classmethod
+    def from_descriptions(cls, text,
                  lexicon=None,
                  source='CSV',
                  dlm=',',
@@ -468,6 +521,17 @@ class Striplog(object):
             list_of_Intervals.append(interval)
 
         return cls(list_of_Intervals, source=source)
+
+    @classmethod
+    def from_csv(cls, *args, **kwargs):
+        """
+        For backwards compatibility.
+        """
+        with warnings.catch_warnings():
+            warnings.simplefilter("always")
+            w = "from_csv() is deprecated; please use from_descriptions()"
+            warnings.warn(w)
+        return cls.from_descriptions(*args, **kwargs)
 
     @classmethod
     def from_image(cls, filename, start, stop, legend,
@@ -892,7 +956,7 @@ class Striplog(object):
         for x, y in zip(xs, ys):
             ax.axhline(y, 0, 1, color='lightgray', zorder=0)
 
-        ax.scatter(xs, ys, **kwargs)
+        ax.plot(xs, ys, 'o', clip_on=False, **kwargs)
 
         return ax
 
@@ -1007,13 +1071,13 @@ class Striplog(object):
                                 )
 
             ax.set_xlim([0, width])
+            ax.set_xticks([])
 
         # Rely on interval order.
         lower, upper = self[-1].base.z, self[0].top.z
         rng = abs(upper - lower)
 
         ax.set_ylim([lower, upper])
-        ax.set_xticks([])
 
         # Make sure ticks is a tuple.
         try:
