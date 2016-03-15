@@ -954,7 +954,7 @@ class Striplog(object):
             xs = [1 for iv in self]
 
         for x, y in zip(xs, ys):
-            ax.axhline(y, 0, 1, color='lightgray', zorder=0)
+            ax.axhline(y, 0, x, color='lightgray', zorder=0)
 
         ax.plot(xs, ys, 'o', clip_on=False, **kwargs)
 
