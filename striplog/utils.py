@@ -28,7 +28,9 @@ class CustomFormatter(Formatter):
         try:
             s = super(CustomFormatter, self)
             return s.get_field(field_name, args, kwargs)
-        except KeyError:
+        except KeyError:    # Key is missing
+            return ("_", field_name)
+        except IndexError:  # Value is missing
             return ("_", field_name)
 
     def convert_field(self, value, conversion):
@@ -55,6 +57,18 @@ class CustomFormatter(Formatter):
                      'x': np.product,
                      }
             return funcs.get(conversion)(value)
+
+
+def dict_repr_html(dictionary):
+    """
+    Jupyter Notebook magic repr function.
+    """
+    rows = ''
+    s = '<tr><td><strong>{k}</strong></td><td>{v}</td></tr>'
+    for k, v in dictionary.items():
+        rows += s.format(k=k, v=v)
+    html = '<table>{}</table>'.format(rows)
+    return html
 
 
 class partialmethod(partial):
@@ -228,3 +242,11 @@ def tops_from_loglike(loglike, offset=0):
         values = loglike[tops + offset]
 
         return tops, values
+
+
+def list_and_add(a, b):
+    if not isinstance(b, list):
+        b = [b]
+    if not isinstance(a, list):
+        a = [a]
+    return a + b

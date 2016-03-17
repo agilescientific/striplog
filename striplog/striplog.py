@@ -362,10 +362,13 @@ class Striplog(object):
             data['top'] = [data['base'][0] - 1] + data['base'][:-1]
         # Rename 'depth' or 'MD'
         if ('top' not in data.keys()):
-            data['top'] = data.pop('depth', data.pop('MD'))
+            data['top'] = data.pop('depth', data.pop('MD', None))
         # Fill down if needed.
         if ('base' not in data.keys()) and (not points):
             data['base'] = data['top'][1:] + [data['top'][-1] + 1]
+
+        if data['top'] is None:
+            raise StriplogError('Could not get tops.')
 
         # Get rid of null-like values if specified.
         if null is not None:
@@ -428,8 +431,19 @@ class Striplog(object):
             base = i.pop('base', None)
             descr = i.pop('description', '')
             if i:
-                c = Component(i)
-                iv = Interval(**{'top': top, 'base': base, 'description': descr, 'components': [c]})
+                c, d = {}, {}
+                for k, v in i.items():
+                    if (k[:5].lower() == 'comp ') or (k[:9].lower() == 'component'):
+                        k = re.sub(r'comp(?:onent)? ', '', k, flags=re.I)
+                        c[k] = v  # It's a component
+                    else:
+                        d[k] = v  # It's data
+                comp = [Component(c)] if c else None
+                iv = Interval(**{'top': top,
+                                 'base': base,
+                                 'description': descr,
+                                 'data': d,
+                                 'components': comp})
             else:
                 iv = Interval(**{'top': top, 'base': base, 'description': descr, 'lexicon': lexicon})
             list_of_Intervals.append(iv)
@@ -825,7 +839,7 @@ class Striplog(object):
 
         if header:
             data += '{0:12s}{1:12s}'.format('Top', 'Base')
-            data += '  {0:48s}\n'.format('Lithology')
+            data += '  {0:48s}\n'.format('Component')
 
         for i in self.__list:
             if use_descriptions and i.description:
@@ -959,10 +973,10 @@ class Striplog(object):
                     key = key or undefined
                 except ValueError:
                     key = undefined
-            elif field:  # Get data directly from that field in the components.
+            elif field:  # Get data directly from that field in iv.data.
                 f = field_function or utils.null
                 try:
-                    key = f(getattr(c, field, undefined)) or undefined
+                    key = f(i.data.get(field, undefined)) or undefined
                 except ValueError:
                     key = undefined
             else:  # Use the lookup table.
@@ -1005,7 +1019,7 @@ class Striplog(object):
 
         if field is not None:
             f = field_function or utils.null
-            xs = [f(getattr(iv.primary, field, undefined)) for iv in self]
+            xs = [f(iv.data.get(field, undefined)) for iv in self]
         else:
             xs = [1 for iv in self]
 
@@ -1237,7 +1251,7 @@ class Striplog(object):
         for ix, data in intervals.items():
             f = function or utils.null
             d = f(np.array(data))
-            setattr(self[ix].primary, name, d)
+            self[ix].data[name] = d
 
         return None
 
@@ -1269,10 +1283,12 @@ class Striplog(object):
             except TypeError:
                 if search_term in iv.components:
                     hits.append(i)
-        if index:
+        if hits and index:
             return hits
-        else:
+        elif hits:
             return self[hits]
+        else:
+            return
 
     def __find_incongruities(self, op, index):
         """
@@ -1398,6 +1414,28 @@ class Striplog(object):
         """
         raise NotImplementedError
 
+    def union(self, other):
+        """
+        Makes a striplog of all unions.
+
+        Args:
+            Striplog. The striplog instance to union with.
+
+        Returns:
+            Striplog. The result of the union.
+        """
+        if not isinstance(other, self.__class__):
+            m = "You can only union striplogs with each other."
+            raise StriplogError(m)
+
+        result = []
+        for iv in deepcopy(self):
+            for jv in other:
+                if iv.any_overlaps(jv):
+                    iv = iv.union(jv)
+            result.append(iv)
+        return Striplog(result)
+
     def intersect(self, other):
         """
         Makes a striplog of all intersections.
@@ -1406,7 +1444,7 @@ class Striplog(object):
             Striplog. The striplog instance to intersect with.
 
         Returns:
-            Striplog. The reuslt of the intersection.
+            Striplog. The result of the intersection.
         """
         if not isinstance(other, self.__class__):
             m = "You can only intersect striplogs with each other."
