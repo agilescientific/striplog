@@ -17,6 +17,7 @@ except:  # Python 2
 
 from .component import Component
 from .position import Position
+from . import utils
 
 
 class IntervalError(Exception):
@@ -59,6 +60,7 @@ class Interval(object):
     def __init__(self, top, base=None,
                  description='',
                  lexicon=None,
+                 data=None,
                  components=None,
                  max_component=1,
                  abbreviations=False):
@@ -77,6 +79,8 @@ class Interval(object):
             self.base = top
 
         self.description = str(description)
+
+        self.data = data or {}
 
         if components:
             self.components = list(components)
@@ -126,7 +130,9 @@ class Interval(object):
             base = self.base.z
             d = self.description + ' with ' + other.summary()
             c = self.components + [other]
-            return Interval(top, base, description=d, components=c)
+            data = self._combine_data(other)
+
+            return Interval(top, base, description=d, data=data, components=c)
 
         else:
             m = "You can only add components or intervals."
@@ -146,11 +152,17 @@ class Interval(object):
                 return self.top < other.top
             return self.top > other.top
 
+    # def __gt__(self, other):
+    #     if isinstance(other, self.__class__):
+    #         if self.order == 'elevation':
+    #             return self.top < other.top
+    #         return self.top > other.top
+
     def _repr_html_(self):
         """
         Jupyter Notebook magic repr function.
         """
-        items = ['top', 'primary', 'summary', 'description', 'base']
+        items = ['top', 'primary', 'summary', 'description', 'data', 'base']
         rows = ''
         row = '<tr>{row1}<td><strong>{e}</strong></td><td>{v}</td></tr>'
         style = 'width:2em; background-color:#DDDDDD'
@@ -160,6 +172,7 @@ class Interval(object):
             v = getattr(self, e)
             v = v._repr_html_() if (v and (e == 'primary')) else v
             v = self.summary() if e == 'summary' else v
+            v = utils.dict_repr_html(self.data) if e == 'data' else v
             v = v.z if e in ['top', 'base'] else v
             rows += row.format(row1=row1, e=e, v=v)
 
@@ -345,7 +358,7 @@ class Interval(object):
         Returns:
             bool. Whether the depth is in the interval.
         """
-        o = {'depth': operator.lt, 'elevation': operator.gt}[self.order]
+        o = {'depth': operator.le, 'elevation': operator.ge}[self.order]
         return (o(d, self.base.z) and o(self.top.z, d))
 
     def split_at(self, d):
@@ -359,7 +372,7 @@ class Interval(object):
             tuple. The two intervals that result from the split.
         """
         if not self.spans(d):
-            m = 'd must be within interval'
+            m = 'd = {} must be within interval {}'.format(d, self)
             raise IntervalError(m)
 
         int1, int2 = self.copy(), self.copy()
@@ -398,6 +411,23 @@ class Interval(object):
 
         return upper, middle, lower  # middle has lowermost's properties
 
+    def _combine_data(self, other):
+        """
+        Combines data only.
+
+        Args:
+            other (Interval): The other Interval.
+
+        Returns:
+            dict. The blended data.
+        """
+        data = dict(self.data)
+        for k, v in other.data.items():
+            if k in data:
+                v = utils.list_and_add(data[k], v)
+            data[k] = v
+        return data
+
     def _blend_descriptions(self, other):
         """
         Private method. Computes the description for combining two intervals.
@@ -425,7 +455,8 @@ class Interval(object):
 
     def _combine(self, old_self, other, blend=True):
         """
-        Private method. Combines components and descriptions but nothing else.
+        Private method. Combines data, components, and descriptions but
+        nothing else.
 
         Args:
             old_self (Interval): You have to pass the instance explicitly.
@@ -438,9 +469,11 @@ class Interval(object):
         if blend:
             self.components = old_self.components + other.components
             self.description = old_self._blend_descriptions(other)
+            self.data = old_self._combine_data(other)
         else:
             self.components = other.components
             self.description = other.description
+            self.data = other.data
 
         return self
 
@@ -527,8 +560,12 @@ class Interval(object):
             # raise IntervalError(m)
             return self, other
 
-        top = max(self, other).top
-        bot = min(self, other).base
+        if self.order == 'elevation':
+            top = max(self.top.z, other.top.z)
+            bot = min(self.base.z, other.base.z)
+        else:
+            top = min(self.top.z, other.top.z)
+            bot = max(self.base.z, other.base.z)
 
         result = self.copy()
         result.top = top

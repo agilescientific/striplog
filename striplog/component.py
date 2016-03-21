@@ -190,7 +190,9 @@ class Component(object):
         if fmt == '':
             return default
 
-        f = fmt or '{' + '}, {'.join(list(self.__dict__.keys())) + '}'
+        keys = [k for k, v in self.__dict__.items() if v is not '']
+
+        f = fmt or '{' + '}, {'.join(keys) + '}'
 
         try:
             summary = CustomFormatter().format(f, **self.__dict__)

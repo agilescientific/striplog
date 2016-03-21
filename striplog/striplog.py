@@ -7,6 +7,7 @@ A striplog is a sequence of intervals.
 :license: Apache 2.0
 """
 import re
+import shlex
 from io import StringIO
 import csv
 import operator
@@ -354,6 +355,101 @@ class Striplog(object):
 
         return list_of_Intervals
 
+    def _clean_longitudinal_data(data, points, null=None):
+
+        # Fill upwards if needed.
+        if ('top' not in data.keys()) and ('base' in data.keys()):
+            data['top'] = [data['base'][0] - 1] + data['base'][:-1]
+        # Rename 'depth' or 'MD'
+        if ('top' not in data.keys()):
+            data['top'] = data.pop('depth', data.pop('MD', None))
+        # Fill down if needed.
+        if ('base' not in data.keys()) and (not points):
+            data['base'] = data['top'][1:] + [data['top'][-1] + 1]
+
+        if data['top'] is None:
+            raise StriplogError('Could not get tops.')
+
+        # Get rid of null-like values if specified.
+        if null is not None:
+            for k, v in data.items():
+                data[k] = [i if i != null else None for i in v]
+
+        return data
+
+    @classmethod
+    def from_petrel(cls, filename, points=False, null=None):
+        with open(filename, 'r') as f:
+            text = f.read()
+
+        # Gather fieldnames from header.
+        s = re.search(r'BEGIN HEADER(.+?)END HEADER', text, flags=re.DOTALL)
+        fieldnames = list(filter(None, s.groups()[0].split('\n')))
+
+        def fixer(s):
+            # Make floats
+            try:
+                s = float(s)
+            except ValueError:
+                pass
+            # Correct strings
+            try:
+                s = s.strip(""" "'""")
+            except:
+                pass
+            if s == 'TRUE':
+                s = True
+            if s == 'FALSE':
+                s = False
+            return s
+
+        # Gather data.
+        s = re.search(r'END HEADER\n(.+)', text, flags=re.DOTALL)
+        data = [list(map(fixer, shlex.split(i))) for i in s.groups()[0].split('\n')]
+        data = list(filter(None, data))
+
+        result = {}
+        for i, f in enumerate(fieldnames):
+            a = [d[i] for d in data]
+            result[f] = a
+
+        data = cls._clean_longitudinal_data(result, points, null=null)
+
+        return cls(cls._build_list_of_Intervals(data))
+
+    def _build_list_of_Intervals(data_dict, lexicon=None):
+
+        # Reassemble as list of dicts
+        all_data = []
+        for data in zip(*data_dict.values()):
+            all_data.append({k: v for k, v in zip(data_dict.keys(), data)})
+
+        # Build the list of intervals to pass to __init__()
+        list_of_Intervals = []
+        for i in all_data:
+            top = i.pop('top')
+            base = i.pop('base', None)
+            descr = i.pop('description', '')
+            if i:
+                c, d = {}, {}
+                for k, v in i.items():
+                    if (k[:5].lower() == 'comp ') or (k[:9].lower() == 'component'):
+                        k = re.sub(r'comp(?:onent)? ', '', k, flags=re.I)
+                        c[k] = v  # It's a component
+                    else:
+                        d[k] = v  # It's data
+                comp = [Component(c)] if c else None
+                iv = Interval(**{'top': top,
+                                 'base': base,
+                                 'description': descr,
+                                 'data': d,
+                                 'components': comp})
+            else:
+                iv = Interval(**{'top': top, 'base': base, 'description': descr, 'lexicon': lexicon})
+            list_of_Intervals.append(iv)
+
+        return list_of_Intervals
+
     @classmethod
     def from_csv_text(cls, text, lexicon=None, points=False):
         try:
@@ -375,37 +471,10 @@ class Striplog(object):
                 except ValueError:
                     reorg[k].append(s[k])
 
-        # Fix things.
-        # Fill upwards if needed.
-        if ('top' not in reorg.keys()) and ('base' in reorg.keys()):
-            reorg['top'] =  [reorg['base'][0] - 1] + reorg['base'][:-1]
-        # Rename 'depth'
-        if ('top' not in reorg.keys()) and ('depth' in reorg.keys()):
-            reorg['top'] = reorg.pop('depth')
-        # Fill down if needed.
-        if ('base' not in reorg.keys()) and (not points):
-            reorg['base'] = reorg['top'][1:] + [reorg['top'][-1] + 1]
-
-        # Reassemble as list of dicts
-        all_data = []
-        for data in zip(*reorg.values()):
-            all_data.append({k: v for k, v in zip(reorg.keys(), data)})
-
-        # Build the list of intervals to pass to __init__()
-        list_of_Intervals = []
-        for i in all_data:
-            top = i.pop('top')
-            base = i.pop('base', None)
-            descr = i.pop('description', '')
-            if i:
-                c = Component(i)
-                iv = Interval(**{'top': top, 'base': base, 'description': descr, 'components': [c]})
-            else:
-                iv = Interval(**{'top': top, 'base': base, 'description': descr, 'lexicon': lexicon})
-            list_of_Intervals.append(iv)
+        data = cls._clean_longitudinal_data(reorg, points)
 
         # Get out of here.
-        return cls(list_of_Intervals)
+        return cls(cls._build_list_of_Intervals(data, lexicon=lexicon))
 
     @classmethod
     def from_descriptions(cls, text,
@@ -770,7 +839,7 @@ class Striplog(object):
 
         if header:
             data += '{0:12s}{1:12s}'.format('Top', 'Base')
-            data += '  {0:48s}\n'.format('Lithology')
+            data += '  {0:48s}\n'.format('Component')
 
         for i in self.__list:
             if use_descriptions and i.description:
@@ -904,10 +973,10 @@ class Striplog(object):
                     key = key or undefined
                 except ValueError:
                     key = undefined
-            elif field:  # Get data directly from that field in the components.
+            elif field:  # Get data directly from that field in iv.data.
                 f = field_function or utils.null
                 try:
-                    key = f(getattr(c, field, undefined)) or undefined
+                    key = f(i.data.get(field, undefined)) or undefined
                 except ValueError:
                     key = undefined
             else:  # Use the lookup table.
@@ -937,6 +1006,7 @@ class Striplog(object):
         return self.to_log(**kwargs).astype(bool)
 
     def plot_points(self, ax,
+                    legend=None,
                     field=None,
                     field_function=None,
                     undefined=0,
@@ -949,14 +1019,14 @@ class Striplog(object):
 
         if field is not None:
             f = field_function or utils.null
-            xs = [f(getattr(iv.primary, field, undefined)) for iv in self]
+            xs = [f(iv.data.get(field, undefined)) for iv in self]
         else:
             xs = [1 for iv in self]
 
         for x, y in zip(xs, ys):
             ax.axhline(y, xmin=0, xmax=x, color='lightgray', zorder=0)
 
-        ax.plot(xs, ys, 'o', clip_on=False, **kwargs)
+        ax.scatter(xs, ys, clip_on=False, **kwargs)
 
         return ax
 
@@ -1181,7 +1251,7 @@ class Striplog(object):
         for ix, data in intervals.items():
             f = function or utils.null
             d = f(np.array(data))
-            setattr(self[ix].primary, name, d)
+            self[ix].data[name] = d
 
         return None
 
@@ -1213,10 +1283,12 @@ class Striplog(object):
             except TypeError:
                 if search_term in iv.components:
                     hits.append(i)
-        if index:
+        if hits and index:
             return hits
-        else:
+        elif hits:
             return self[hits]
+        else:
+            return
 
     def __find_incongruities(self, op, index):
         """
@@ -1342,6 +1414,28 @@ class Striplog(object):
         """
         raise NotImplementedError
 
+    def union(self, other):
+        """
+        Makes a striplog of all unions.
+
+        Args:
+            Striplog. The striplog instance to union with.
+
+        Returns:
+            Striplog. The result of the union.
+        """
+        if not isinstance(other, self.__class__):
+            m = "You can only union striplogs with each other."
+            raise StriplogError(m)
+
+        result = []
+        for iv in deepcopy(self):
+            for jv in other:
+                if iv.any_overlaps(jv):
+                    iv = iv.union(jv)
+            result.append(iv)
+        return Striplog(result)
+
     def intersect(self, other):
         """
         Makes a striplog of all intersections.
@@ -1350,7 +1444,7 @@ class Striplog(object):
             Striplog. The striplog instance to intersect with.
 
         Returns:
-            Striplog. The reuslt of the intersection.
+            Striplog. The result of the intersection.
         """
         if not isinstance(other, self.__class__):
             m = "You can only intersect striplogs with each other."
