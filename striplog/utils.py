@@ -6,11 +6,73 @@ Helper functions for the striplog package.
 """
 from string import Formatter
 from functools import partial
+import re
+import shlex
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 from . import defaults
+
+try:
+    from IPython.display import HTML
+    ipy = True
+except:
+    ipy = False
+    pass
+
+
+def inspect_petrel(filename):
+    data = read_petrel(filename)
+    data = {k: ', '.join(list(map(str, set(v)))) for k, v in data.items()}
+    if ipy:
+        return HTML(dict_repr_html(data))
+    else:
+        return data
+
+
+def read_petrel(filename, function=None, remap=None):
+        with open(filename, 'r') as f:
+            text = f.read()
+
+        # Gather fieldnames from header.
+        s = re.search(r'BEGIN HEADER(.+?)END HEADER', text, flags=re.DOTALL)
+        fieldnames = list(filter(None, s.groups()[0].split('\n')))
+
+        function = function or {}
+
+        if remap is not None:
+            fieldnames = [remap.get(f, f) for f in fieldnames]
+
+        def fixer(s):
+            # Make floats
+            try:
+                s = float(s)
+            except ValueError:
+                pass
+            # Correct strings
+            try:
+                s = s.strip(""" "'""")
+            except:
+                pass
+            if s == 'TRUE':
+                s = True
+            if s == 'FALSE':
+                s = False
+            return s
+
+        # Gather data.
+        s = re.search(r'END HEADER\n(.+)', text, flags=re.DOTALL)
+        fields = s.groups()[0].split('\n')
+        data = [list(map(fixer, shlex.split(i))) for i in fields]
+        data = list(filter(None, data))  # Deals with null data items
+
+        result = {}
+        for i, f in enumerate(fieldnames):
+            func = function.get(f, null)
+            result[f] = [func(d[i]) for d in data]
+
+        return result
 
 
 class CustomFormatter(Formatter):
@@ -91,6 +153,17 @@ def null(x):
     supplied function to data before returning.
     """
     return x
+
+
+def null_default(x):
+    """
+    Null function. Used for default in functions that can apply a user-
+    supplied function to data before returning.
+    """
+    def null(y):
+        return x
+
+    return null
 
 
 def hex_to_name(hexx):
