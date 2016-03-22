@@ -471,7 +471,23 @@ class Striplog(object):
         return list_of_Intervals
 
     @classmethod
-    def from_csv_text(cls, text, lexicon=None, points=False):
+    def from_csv(cls, filename=None,
+                 text=None,
+                 lexicon=None,
+                 points=False,
+                 include=None,
+                 exclude=None,
+                 remap=None,
+                 null=None,
+                 ignore=None):
+
+        if (filename is None) and (text is None):
+            raise StriplogError("You must provide a filename or CSV text.")
+
+        if (filename is not None):
+            with open(filename) as f:
+                text = f.read()
+
         try:
             f = StringIO(text)  # Python 3
         except TypeError:
@@ -491,10 +507,19 @@ class Striplog(object):
                 except ValueError:
                     reorg[k].append(s[k])
 
-        data = cls._clean_longitudinal_data(reorg, points)
+        remap = remap or {}
+        for k, v in remap.items():
+            reorg[v] = reorg.pop(k)
 
-        # Get out of here.
-        return cls(cls._build_list_of_Intervals(data, lexicon=lexicon))
+        data = cls._clean_longitudinal_data(reorg, points, null=null)
+
+        list_of_Intervals = cls._build_list_of_Intervals(data,
+                                                         lexicon=lexicon,
+                                                         include=include,
+                                                         exclude=exclude,
+                                                         ignore=ignore)
+
+        return cls(list_of_Intervals)
 
     @classmethod
     def from_descriptions(cls, text,
@@ -610,17 +635,6 @@ class Striplog(object):
             list_of_Intervals.append(interval)
 
         return cls(list_of_Intervals, source=source)
-
-    @classmethod
-    def from_csv(cls, *args, **kwargs):
-        """
-        For backwards compatibility.
-        """
-        with warnings.catch_warnings():
-            warnings.simplefilter("always")
-            w = "from_csv() is deprecated; please use from_descriptions()"
-            warnings.warn(w)
-        return cls.from_descriptions(*args, **kwargs)
 
     @classmethod
     def from_image(cls, filename, start, stop, legend,
@@ -739,7 +753,7 @@ class Striplog(object):
                  basis=None,
                  source='Log'):
         """
-        Turn a 1D array of integers into a striplog, given a cutoff.
+        Turn a 1D array into a striplog, given a cutoff.
 
         Args:
             log (array-like): A 1D array or a list of integers.
@@ -1125,7 +1139,7 @@ class Striplog(object):
             p = mpl.collections.PatchCollection(patches, cmap=cmap, lw=lw)
             p.set_array(self.get_data(colour, colour_function, default=np.nan))
             ax.add_collection(p)
-            cb = plt.colorbar(p)
+            cb = plt.colorbar(p)  #  orientation='horizontal' only really works with ticks=[0, 0.1, 0.2] say
             cb.outline.set_linewidth(0)
 
         return ax
