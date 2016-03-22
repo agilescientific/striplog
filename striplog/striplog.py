@@ -357,12 +357,15 @@ class Striplog(object):
 
     def _clean_longitudinal_data(data, points, null=None):
 
-        # Fill upwards if needed.
-        if ('top' not in data.keys()) and ('base' in data.keys()):
-            data['top'] = [data['base'][0] - 1] + data['base'][:-1]
         # Rename 'depth' or 'MD'
         if ('top' not in data.keys()):
             data['top'] = data.pop('depth', data.pop('MD', None))
+
+        # Sort everything
+        idx = list(data.keys()).index('top')
+        values = sorted(zip(*data.values()), key=lambda x: x[idx])
+        data = {k: list(v) for k, v in zip(data.keys(), zip(*values))}
+
         # Fill down if needed.
         if ('base' not in data.keys()) and (not points):
             data['base'] = data['top'][1:] + [data['top'][-1] + 1]
@@ -405,7 +408,6 @@ class Striplog(object):
                                                          include=include,
                                                          exclude=exclude
                                                          )
-
         return cls(list_of_Intervals)
 
     def _build_list_of_Intervals(data_dict,
@@ -422,6 +424,9 @@ class Striplog(object):
         all_data = []
         for data in zip(*data_dict.values()):
             all_data.append({k: v for k, v in zip(data_dict.keys(), data)})
+
+        # Sort
+        all_data = sorted(all_data, key=lambda x: x['top'])
 
         # Filter down:
         wanted_data = []
@@ -478,6 +483,7 @@ class Striplog(object):
                  include=None,
                  exclude=None,
                  remap=None,
+                 function=None,
                  null=None,
                  ignore=None):
 
@@ -1059,7 +1065,7 @@ class Striplog(object):
 
         ax.set_xlim((min(xs), max(xs)))
         for x, y in zip(xs, ys):
-            ax.axhline(y, xmin=0, xmax=x, color='lightgray', zorder=0)
+            ax.axhline(y, color='lightgray', zorder=0)
 
         ax.scatter(xs, ys, clip_on=False, **kwargs)
 
@@ -1137,7 +1143,7 @@ class Striplog(object):
         if colour is not None:
             cmap = cmap or 'viridis'
             p = mpl.collections.PatchCollection(patches, cmap=cmap, lw=lw)
-            p.set_array(self.get_data(colour, colour_function, default=np.nan))
+            p.set_array(self.get_data(colour, colour_function, default=default))
             ax.add_collection(p)
             cb = plt.colorbar(p)  #  orientation='horizontal' only really works with ticks=[0, 0.1, 0.2] say
             cb.outline.set_linewidth(0)
@@ -1146,13 +1152,16 @@ class Striplog(object):
 
     def get_data(self, field, function=None, default=None):
         f = function or utils.null
-        default = default or np.nan
         data = []
         for iv in self:
-            try:
-                data.append(f(iv.data.get(field)))
-            except:
-                data.append(default)
+            d = iv.data.get(field)
+            if d is None:
+                if default is not None:
+                    d = default
+                else:
+                    d = np.nan
+            data.append(f(d))
+
         return np.array(data)
 
     # Outputter
@@ -1167,6 +1176,7 @@ class Striplog(object):
              return_fig=False,
              colour=None,
              cmap='viridis',
+             default=None,
              **kwargs):
         """
         Hands-free plotting.
@@ -1212,6 +1222,7 @@ class Striplog(object):
                                 match_only=match_only,
                                 colour=colour,
                                 cmap=cmap,
+                                default=default,
                                 **kwargs
                                 )
 
