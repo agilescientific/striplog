@@ -1116,15 +1116,17 @@ class Striplog(object):
                                              w,
                                              thick,
                                              lw=lw,
+                                             ec=ec,  # edgecolour for hatching
                                              **this_patch_kwargs)
                 patches.append(rect)
 
         if colour is not None:
             cmap = cmap or 'viridis'
-            p = mpl.collections.PatchCollection(patches, cmap=cmap)
+            p = mpl.collections.PatchCollection(patches, cmap=cmap, lw=lw)
             p.set_array(self.get_data(colour, colour_function, default=np.nan))
             ax.add_collection(p)
-            plt.colorbar(p)
+            cb = plt.colorbar(p)
+            cb.outline.set_linewidth(0)
 
         return ax
 
