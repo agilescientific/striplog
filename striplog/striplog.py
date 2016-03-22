@@ -1057,7 +1057,9 @@ class Striplog(object):
                   default_width=1,
                   match_only=None,
                   colour=None,
+                  colour_function=None,
                   cmap=None,
+                  default=None,
                   **kwargs):
         """
         Plotting, but only the Rectangles. You have to set up the figure.
@@ -1098,27 +1100,43 @@ class Striplog(object):
             lw = this_patch_kwargs.pop('lw', 0)
             ec = this_patch_kwargs.pop('ec', 'k')
 
-            rect = mpl.patches.Rectangle(origin,
-                                         w,
-                                         thick,
-                                         fc=d.colour,
-                                         lw=lw,
-                                         hatch=d.hatch,
-                                         ec=ec,  # edgecolour for hatching
-                                         **this_patch_kwargs)
-            patches.append(rect)
+            if colour is None:
+                rect = mpl.patches.Rectangle(origin,
+                                             w,
+                                             thick,
+                                             fc=d.colour,
+                                             lw=lw,
+                                             hatch=d.hatch,
+                                             ec=ec,  # edgecolour for hatching
+                                             **this_patch_kwargs)
+                ax.add_patch(rect)
+            else:
+                rect = mpl.patches.Rectangle(origin,
+                                             w,
+                                             thick,
+                                             lw=lw,
+                                             **this_patch_kwargs)
+                patches.append(rect)
 
         if colour is not None:
             cmap = cmap or 'viridis'
-
-        p = mpl.collections.PatchCollection(patches, cmap=cmap)
-
-        if colour is not None:
-            p.set_array(self.data.get(colour, np.nan))
-
-        ax.add_collection(p)
+            p = mpl.collections.PatchCollection(patches, cmap=cmap)
+            p.set_array(self.get_data(colour, colour_function, default=np.nan))
+            ax.add_collection(p)
+            plt.colorbar(p)
 
         return ax
+
+    def get_data(self, field, function=None, default=None):
+        f = function or utils.null
+        default = default or np.nan
+        data = []
+        for iv in self:
+            try:
+                data.append(f(iv.data.get(field)))
+            except:
+                data.append(default)
+        return np.array(data)
 
     # Outputter
     def plot(self,
@@ -1156,7 +1174,7 @@ class Striplog(object):
         Returns:
             None. Unless you specify ``return_fig=True`` or pass in an ``ax``.
         """
-        if (legend is None) and (colour is None):
+        if legend is None:
                 legend = Legend.random(self.components)
 
         if ax is None:
@@ -1175,7 +1193,7 @@ class Striplog(object):
                                 ladder=ladder,
                                 default_width=width,
                                 match_only=match_only,
-                                colour=None,
+                                colour=colour,
                                 cmap=cmap,
                                 **kwargs
                                 )
