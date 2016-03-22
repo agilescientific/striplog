@@ -1043,6 +1043,7 @@ class Striplog(object):
         else:
             xs = [1 for iv in self]
 
+        ax.set_xlim((min(xs), max(xs)))
         for x, y in zip(xs, ys):
             ax.axhline(y, xmin=0, xmax=x, color='lightgray', zorder=0)
 
@@ -1190,8 +1191,6 @@ class Striplog(object):
             if ma <= mi:
                 ma = 10 * mi
             ticks = (mi, ma)
-
-        print(rng/ticks[0])
 
         # Carry on plotting...
         minorLocator = mpl.ticker.MultipleLocator(ticks[0])
