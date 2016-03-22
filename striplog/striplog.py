@@ -1057,7 +1057,7 @@ class Striplog(object):
                   default_width=1,
                   match_only=None,
                   colour=None,
-                  cmap='viridis',
+                  cmap=None,
                   **kwargs):
         """
         Plotting, but only the Rectangles. You have to set up the figure.
@@ -1078,6 +1078,7 @@ class Striplog(object):
         Returns:
             axis: The matplotlib.pyplot axis.
         """
+        patches = []
         for iv in self.__list:
             origin = (0, iv.top.z)
             d = legend.get_decor(iv.primary, match_only=match_only)
@@ -1105,7 +1106,17 @@ class Striplog(object):
                                          hatch=d.hatch,
                                          ec=ec,  # edgecolour for hatching
                                          **this_patch_kwargs)
-            ax.add_patch(rect)
+            patches.append(rect)
+
+        if colour is not None:
+            cmap = cmap or 'viridis'
+
+        p = mpl.collections.PatchCollection(patches, cmap=cmap)
+
+        if colour is not None:
+            p.set_array(self.data.get(colour, np.nan))
+
+        ax.add_collection(p)
 
         return ax
 
@@ -1190,8 +1201,6 @@ class Striplog(object):
             if ma <= mi:
                 ma = 10 * mi
             ticks = (mi, ma)
-
-        print(rng/ticks[0])
 
         # Carry on plotting...
         minorLocator = mpl.ticker.MultipleLocator(ticks[0])
