@@ -1043,8 +1043,9 @@ class Striplog(object):
         else:
             xs = [1 for iv in self]
 
+        ax.set_xlim((min(xs), max(xs)))
         for x, y in zip(xs, ys):
-            ax.axhline(y, 0, 1, color='lightgray', zorder=0)
+            ax.axhline(y, xmin=0, xmax=x, color='lightgray', zorder=0)
 
         ax.scatter(xs, ys, clip_on=False, **kwargs)
 
