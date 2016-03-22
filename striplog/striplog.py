@@ -378,55 +378,74 @@ class Striplog(object):
         return data
 
     @classmethod
-    def from_petrel(cls, filename, points=False, null=None):
-        with open(filename, 'r') as f:
-            text = f.read()
+    def from_petrel(cls, fname,
+                    points=None,
+                    null=None,
+                    function=None,
+                    include=None,
+                    exclude=None,
+                    remap=None,
+                    ignore=None):
 
-        # Gather fieldnames from header.
-        s = re.search(r'BEGIN HEADER(.+?)END HEADER', text, flags=re.DOTALL)
-        fieldnames = list(filter(None, s.groups()[0].split('\n')))
+        points = points or False
+        null = null or None
 
-        def fixer(s):
-            # Make floats
-            try:
-                s = float(s)
-            except ValueError:
-                pass
-            # Correct strings
-            try:
-                s = s.strip(""" "'""")
-            except:
-                pass
-            if s == 'TRUE':
-                s = True
-            if s == 'FALSE':
-                s = False
-            return s
+        result = utils.read_petrel(fname,
+                                   function=function,
+                                   remap=remap,
+                                   )
 
-        # Gather data.
-        s = re.search(r'END HEADER\n(.+)', text, flags=re.DOTALL)
-        data = [list(map(fixer, shlex.split(i))) for i in s.groups()[0].split('\n')]
-        data = list(filter(None, data))
+        data = cls._clean_longitudinal_data(result,
+                                            points=points,
+                                            null=null
+                                            )
 
-        result = {}
-        for i, f in enumerate(fieldnames):
-            a = [d[i] for d in data]
-            result[f] = a
+        list_of_Intervals = cls._build_list_of_Intervals(data,
+                                                         ignore=ignore,
+                                                         include=include,
+                                                         exclude=exclude
+                                                         )
 
-        data = cls._clean_longitudinal_data(result, points, null=null)
+        return cls(list_of_Intervals)
 
-        return cls(cls._build_list_of_Intervals(data))
+    def _build_list_of_Intervals(data_dict,
+                                 include=None,
+                                 exclude=None,
+                                 ignore=None,
+                                 lexicon=None):
 
-    def _build_list_of_Intervals(data_dict, lexicon=None):
+        include = include or {}
+        exclude = exclude or {}
+        ignore = ignore or []
 
         # Reassemble as list of dicts
         all_data = []
         for data in zip(*data_dict.values()):
             all_data.append({k: v for k, v in zip(data_dict.keys(), data)})
 
+        # Filter down:
+        wanted_data = []
+        for dictionary in all_data:
+            keep = True
+            delete = []
+            for k, v in dictionary.items():
+                incl = include.get(k, utils.null_default(True))
+                excl = exclude.get(k, utils.null_default(False))
+                if k in ignore:
+                    delete.append(k)
+                if not incl(v):
+                    keep = False
+                if excl(v):
+                    keep = False
+            if delete:
+                for key in delete:
+                    _ = dictionary.pop(key, None)
+            if keep:
+                wanted_data.append(dictionary)
+
         # Build the list of intervals to pass to __init__()
         list_of_Intervals = []
-        for i in all_data:
+        for i in wanted_data:
             top = i.pop('top')
             base = i.pop('base', None)
             descr = i.pop('description', '')
@@ -437,7 +456,8 @@ class Striplog(object):
                         k = re.sub(r'comp(?:onent)? ', '', k, flags=re.I)
                         c[k] = v  # It's a component
                     else:
-                        d[k] = v  # It's data
+                        if v is not None:
+                            d[k] = v  # It's data
                 comp = [Component(c)] if c else None
                 iv = Interval(**{'top': top,
                                  'base': base,
@@ -478,15 +498,15 @@ class Striplog(object):
 
     @classmethod
     def from_descriptions(cls, text,
-                 lexicon=None,
-                 source='CSV',
-                 dlm=',',
-                 points=False,
-                 abbreviations=False,
-                 complete=False,
-                 order='depth',
-                 columns=None,
-                 ):
+                          lexicon=None,
+                          source='CSV',
+                          dlm=',',
+                          points=False,
+                          abbreviations=False,
+                          complete=False,
+                          order='depth',
+                          columns=None,
+                          ):
         """
         Convert a CSV string into a striplog. Expects 2 or 3 fields:
             top, description
