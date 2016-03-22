@@ -1056,6 +1056,8 @@ class Striplog(object):
                   ladder=False,
                   default_width=1,
                   match_only=None,
+                  colour=None,
+                  cmap='viridis',
                   **kwargs):
         """
         Plotting, but only the Rectangles. You have to set up the figure.
@@ -1069,7 +1071,9 @@ class Striplog(object):
                 Default 1.
             match_only (list): A list of strings matching the attributes you
                 want to compare when plotting.
-            **kwargs are passed through to matplotlib's ``patches.Rectangle``.
+             colour (str): Which data field to use for colours.
+            cmap (cmap): Matplotlib colourmap. Default ``viridis``.
+           **kwargs are passed through to matplotlib's ``patches.Rectangle``.
 
         Returns:
             axis: The matplotlib.pyplot axis.
@@ -1115,6 +1119,8 @@ class Striplog(object):
              match_only=None,
              ax=None,
              return_fig=False,
+             colour=None,
+             cmap='viridis',
              **kwargs):
         """
         Hands-free plotting.
@@ -1132,14 +1138,15 @@ class Striplog(object):
                 be returned. Optional.
             return_fig (bool): Whether or not to return the maplotlib ``fig``
                 object. Default False.
+            colour (str): Which data field to use for colours.
+            cmap (cmap): Matplotlib colourmap. Default ``viridis``.
             **kwargs are passed through to matplotlib's ``patches.Rectangle``.
 
         Returns:
             None. Unless you specify ``return_fig=True`` or pass in an ``ax``.
         """
-        if not legend:
-            # Build a random-coloured legend.
-            legend = Legend.random(self.components)
+        if (legend is None) and (colour is None):
+                legend = Legend.random(self.components)
 
         if ax is None:
             return_ax = False
@@ -1157,6 +1164,8 @@ class Striplog(object):
                                 ladder=ladder,
                                 default_width=width,
                                 match_only=match_only,
+                                colour=None,
+                                cmap=cmap,
                                 **kwargs
                                 )
 
@@ -1176,11 +1185,13 @@ class Striplog(object):
             ticks = (1, ticks)
 
         # Avoid MAXTICKS error.
-        while rng/ticks[0] > 1000:
+        while rng/ticks[0] > 250:
             mi, ma = 10*ticks[0], ticks[1]
             if ma <= mi:
                 ma = 10 * mi
             ticks = (mi, ma)
+
+        print(rng/ticks[0])
 
         # Carry on plotting...
         minorLocator = mpl.ticker.MultipleLocator(ticks[0])

@@ -408,7 +408,6 @@ class Legend(object):
         """
         Generate a random legend for a given list of components.
 
-
         Args:
             components (list or Striplog): A list of components. If you pass
                 a Striplog, it will use the primary components. If you pass a
