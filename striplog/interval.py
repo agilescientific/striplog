@@ -152,12 +152,6 @@ class Interval(object):
                 return self.top < other.top
             return self.top > other.top
 
-    # def __gt__(self, other):
-    #     if isinstance(other, self.__class__):
-    #         if self.order == 'elevation':
-    #             return self.top < other.top
-    #         return self.top > other.top
-
     def _repr_html_(self):
         """
         Jupyter Notebook magic repr function.
@@ -421,12 +415,22 @@ class Interval(object):
         Returns:
             dict. The blended data.
         """
-        data = dict(self.data)
-        for k, v in other.data.items():
-            if k in data:
-                v = utils.list_and_add(data[k], v)
-            data[k] = v
-        return data
+        self_data = getattr(self, 'data', None)
+        other_data = getattr(other, 'data', None)
+
+        if (self_data is None) and (other_data is None):
+            return {}
+        elif (self_data is not None) and (other_data is None):
+            return self_data
+        elif (self_data is None) and (other_data is not None):
+            return other_data
+        else:
+            data = {}
+            for k, v in other_data.items():
+                if k in self_data:
+                    v = utils.list_and_add(self_data[k], v)
+                data[k] = v
+            return data
 
     def _blend_descriptions(self, other):
         """

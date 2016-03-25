@@ -478,6 +478,7 @@ class Striplog(object):
     @classmethod
     def from_csv(cls, filename=None,
                  text=None,
+                 dlm=',',
                  lexicon=None,
                  points=False,
                  include=None,
@@ -485,33 +486,40 @@ class Striplog(object):
                  remap=None,
                  function=None,
                  null=None,
-                 ignore=None):
+                 ignore=None,
+                 source=None):
 
         if (filename is None) and (text is None):
             raise StriplogError("You must provide a filename or CSV text.")
 
         if (filename is not None):
-            with open(filename) as f:
+            if source is None:
+                source = filename
+            with open(filename, 'r') as f:
                 text = f.read()
+
+        source = source or 'CSV'
 
         try:
             f = StringIO(text)  # Python 3
         except TypeError:
             f = StringIO(unicode(text))  # Python 2
 
-        reader = csv.DictReader(f)
+        reader = csv.DictReader(f, delimiter=dlm)
 
         # Reorganize the data to make fixing it easier.
-        reorg = {k.strip(): [] for k in reader.fieldnames}
+        reorg = {k.strip(): [] for k in reader.fieldnames if k is not None}
         t = f.tell()
-        for k in reorg:
+        for key in reorg:
             f.seek(t)
             for r in reader:
                 s = {k.strip(): v.strip() for k, v in r.items()}
                 try:
-                    reorg[k].append(float(s[k]))
+                    reorg[key].append(float(s[key]))
                 except ValueError:
-                    reorg[k].append(s[k])
+                    reorg[key].append(s[key])
+
+        f.close()
 
         remap = remap or {}
         for k, v in remap.items():
@@ -525,7 +533,7 @@ class Striplog(object):
                                                          exclude=exclude,
                                                          ignore=ignore)
 
-        return cls(list_of_Intervals)
+        return cls(list_of_Intervals, source=source)
 
     @classmethod
     def from_descriptions(cls, text,
@@ -578,6 +586,7 @@ class Striplog(object):
         reader = csv.reader(f, delimiter=dlm, skipinitialspace=True)
         for row in reader:
             as_strings.append(row)
+        f.close()
 
         if not columns:
             if order[0].lower() == 'e':
@@ -744,11 +753,11 @@ class Striplog(object):
             interval[-1] = '"' + descr + '"'
             csv_text += ', '.join(interval) + '\n'
 
-        return cls.from_csv(csv_text,
-                            lexicon,
-                            source=source,
-                            points=points,
-                            abbreviations=abbreviations)
+        return cls.from_descriptions(csv_text,
+                                     lexicon,
+                                     source=source,
+                                     points=points,
+                                     abbreviations=abbreviations)
 
     @classmethod
     def from_log(cls, log,
@@ -856,10 +865,10 @@ class Striplog(object):
         if s:
             source = s.group(1).strip()
 
-        return cls.from_csv(text, lexicon,
-                            source=source,
-                            dlm=dlm,
-                            abbreviations=abbreviations)
+        return cls.from_descriptions(text, lexicon,
+                                     source=source,
+                                     dlm=dlm,
+                                     abbreviations=abbreviations)
 
     # Outputter
     def to_csv(self, use_descriptions=False, dlm=",", header=True):

@@ -66,13 +66,13 @@ csv_intervals = """   200.000,  230.329,  Anhydrite
                       296.286,  300.000,  Volcanic
                       """
 
-csv_points = """1200, 6.4
+csv_points = """top, porosity
+                1200, 6.4
                 1205, 7.3
                 1210, 8.2
                 1250, 9.2
                 1275, 4.3
-                1300, 2.2
-                """
+                1300, 2.2"""
 
 
 def test_error():
@@ -170,7 +170,7 @@ def test_from_image():
 
     # Extract log onto striplog.
     striplog.extract(log, basis=basis, name="Log", function=np.mean)
-    assert striplog[0].primary.Log == 2.0
+    assert striplog[0].data['Log'] == 2.0
 
     # Indexing.
     indices = [2, 7, 20]
@@ -188,18 +188,18 @@ def test_from_image():
     assert rock in striplog
 
 
-def test_from_csv():
+def test_from_descriptions():
     """Test the CSV route.
     """
     lexicon = Lexicon.default()
-    strip2 = Striplog.from_csv(csv_intervals, lexicon=lexicon)
+    strip2 = Striplog.from_descriptions(text=csv_intervals, lexicon=lexicon)
     assert len(strip2.top) == 7
 
 
 def test_points():
     """Test a striplog of points.
     """
-    points = Striplog.from_csv(csv_points, points=True)
+    points = Striplog.from_csv(text=csv_points, points=True)
     assert len(points) == 6
     assert points.order == 'none'
 
@@ -278,4 +278,4 @@ def test_histogram():
     lexicon = Lexicon.default()
     striplog = Striplog.from_las3(las3, lexicon=lexicon)
     _, counts = striplog.histogram()
-    assert counts == (123, 6, 6, 5, 3)
+    assert counts == (124, 6, 6, 5, 3)

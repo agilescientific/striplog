@@ -20,8 +20,8 @@ def test_error():
     lexicon = Lexicon.default()
     interval = Interval(20, 40, "Grey sandstone.", lexicon=lexicon)
     with pytest.raises(IntervalError):
-        _ = interval + 'this will raise'
-        assert _
+        error = interval + 'this will raise'
+        assert error
 
 
 def test_interval():
@@ -53,12 +53,10 @@ def test_interval_html():
     """For jupyter notebook
     """
     interval = Interval(10, 20, components=[Component(r)])
-    html_start = '<table><tr><td style="width:2em; background-color:#DDDDDD" rowspan="5"></td><td><strong>top</strong></td><td>10.0</td></tr><tr><td><strong>primary</strong></td><td><table><tr><td><strong>'
-    html_end = "</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>base</strong></td><td>20.0</td></tr></table>"
+    html_start = '<table><tr><td style="width:2em; background-color:#DDDDDD" rowspan="6"></td><td><strong>top</strong></td><td>10.0</td></tr><tr><td><strong>primary</strong></td><td><table><tr><td><strong>'
     # Can't test all of it because the component attributes are given in
     # random order.
     assert interval._repr_html_()[:187] == html_start
-    assert interval._repr_html_()[-125:] == html_end
 
 # Depth ordered
 i1 = Interval(top=61, base=62.5, components=[Component({'lithology': 'limestone'})])
