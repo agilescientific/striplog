@@ -3,20 +3,22 @@ sudo: false
 language: python
 
 python:
-   - 2.7
-   - 3.3
-   - 3.4
-   - 3.5
-   - nightly
+  - 2.7
+  - 3.3
+  - 3.4
+  - 3.5
+  - nightly
 
 before_install:
-   - pip install coveralls
-   - pip install pytest-cov
-   - pip install pytest-mpl
+  - pip install coveralls
+  - pip install pytest-cov
+  - pip install pytest-mpl
 
-install: pip install -r requirements.txt
+install:
+  - pip install -r requirements.txt
 
-script: python run_tests.py
+script:
+  - python run_tests.py
 
 after_success:
    - coveralls
