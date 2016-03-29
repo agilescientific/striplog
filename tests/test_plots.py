@@ -9,11 +9,13 @@ striplog/run_tests.py
 
 https://pypi.python.org/pypi/pytest-mpl/0.3
 """
-from striplog import Striplog
-from striplog import Legend, Component, Decor
+import random
 
 import matplotlib.pyplot as plt
 import pytest
+
+from striplog import Striplog
+from striplog import Legend, Component, Decor
 
 params = {'tolerance': 20,
           'savefig_kwargs': {'dpi': 100},
@@ -51,6 +53,68 @@ def test_striplog_ladder_plot():
     fig = striplog.thickest(n=5).plot(legend=legend,
                                       ladder=True,
                                       return_fig=True)
+    return fig
+
+
+@pytest.mark.mpl_image_compare(**params)
+def test_striplog_colour_plot():
+    """
+    Tests mpl image of striplog with the ladder option.
+    """
+    legend = Legend.builtin('NSDOE')
+
+    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+
+    striplog = Striplog.from_image(imgfile, 14.3, 135.9, legend=legend)
+
+    for iv in striplog:
+        iv.data['porosity'] = iv.top.z/100
+
+    fig = striplog.plot(colour='porosity', aspect=3, return_fig=True)
+
+    return fig
+
+
+@pytest.mark.mpl_image_compare(**params)
+def test_striplog_point_plot():
+    """
+    Tests mpl image of striplog with the points option.
+    """
+    legend = Legend.builtin('NSDOE')
+
+    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+
+    striplog = Striplog.from_image(imgfile, 14.3, 135.9, legend=legend)
+
+    for iv in striplog:
+        iv.data['porosity'] = iv.top.z/100
+
+    fig = striplog.plot(style='points',
+                        field='porosity',
+                        aspect=3,
+                        return_fig=True)
+
+    return fig
+
+
+@pytest.mark.mpl_image_compare(**params)
+def test_striplog_top_plot():
+    """
+    Tests mpl image of striplog with the tops option.
+    """
+    tops_csv = """top, Comp formation
+                   25, Escanilla Fm.
+                   35, San Vicente Fm.
+                   20, Sobrarbe Fm.
+                   50, Cretaceous"""
+
+    tops = Striplog.from_csv(text=tops_csv)
+
+    fig = tops.plot(style='tops',
+                    field='formation',
+                    aspect=1.5,
+                    return_fig=True)
+
     return fig
 
 

@@ -72,6 +72,8 @@ def read_petrel(filename, function=None, remap=None):
             func = function.get(f, null)
             result[f] = [func(d[i]) for d in data]
 
+        print(result)
+
         return result
 
 

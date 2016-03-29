@@ -279,3 +279,43 @@ def test_histogram():
     striplog = Striplog.from_las3(las3, lexicon=lexicon)
     _, counts = striplog.histogram()
     assert counts == (124, 6, 6, 5, 3)
+
+
+def test_petrel():
+    """Test we can load petrel text.
+    """
+    # What to include: only rows with Well = P-108
+    include = {'Well': lambda x: x == 'P-108'}
+
+    # Rename the Surface field as Name.
+    remap = {'Surface': 'Name'}
+
+    # What to exclude: any rows with Name = TD
+    exclude = {'Name': lambda x: x == 'TD'}
+
+    # What to transform before using.
+    function = {'Z': lambda x: -x,
+                'Name': lambda x: x.replace('Maguma', 'Meguma')}
+
+    # Which fields to leave out of the result, apart from those that are Null.
+    ignore = ['Edited by user',
+              'Locked to fault',
+              'Used by dep.conv.',
+              'Well', 'Symbol']
+
+    # Do the thing!
+    s = Striplog.from_petrel("tests/data/top.txt",
+                             include=include,
+                             exclude=exclude,
+                             remap=remap,
+                             ignore=ignore,
+                             function=function,
+                             points=False,
+                             null=-999.0
+                             )
+
+    print(s)
+
+    assert len(s) == 4
+    assert s[3].base.z == 1175
+    assert s[3].data['Name'] == 'Meguma'
