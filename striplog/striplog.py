@@ -355,7 +355,8 @@ class Striplog(object):
 
         return list_of_Intervals
 
-    def _clean_longitudinal_data(data, points, null=None):
+    @classmethod
+    def _clean_longitudinal_data(cls, data, points, null=None):
 
         # Rename 'depth' or 'MD'
         if ('top' not in data.keys()):
@@ -390,6 +391,12 @@ class Striplog(object):
                     remap=None,
                     ignore=None):
 
+        """
+        Makes a striplog from a Petrel text file.
+
+        Returns:
+            striplog.
+        """
         points = points or False
         null = null or None
 
@@ -410,11 +417,27 @@ class Striplog(object):
                                                          )
         return cls(list_of_Intervals)
 
-    def _build_list_of_Intervals(data_dict,
+    @classmethod
+    def _build_list_of_Intervals(cls,
+                                 data_dict,
                                  include=None,
                                  exclude=None,
                                  ignore=None,
                                  lexicon=None):
+        """
+        Private function. Takes a data dictionary and reconstructs a list
+        of Intervals from it.
+
+        Args:
+            data_dict (dict)
+            include (dict)
+            exclude (dict)
+            ignore (list)
+            lexicon (Lexicon)
+
+        Returns:
+            list.
+        """
 
         include = include or {}
         exclude = exclude or {}
