@@ -357,6 +357,9 @@ class Striplog(object):
 
     @classmethod
     def _clean_longitudinal_data(cls, data, points, null=None):
+        """
+        Private function. Make sure we have what we need to make a striplog.
+        """
 
         # Rename 'depth' or 'MD'
         if ('top' not in data.keys()):
@@ -511,7 +514,9 @@ class Striplog(object):
                  null=None,
                  ignore=None,
                  source=None):
-
+        """
+        Load from a CSV file or text.
+        """
         if (filename is None) and (text is None):
             raise StriplogError("You must provide a filename or CSV text.")
 
@@ -1103,6 +1108,29 @@ class Striplog(object):
 
         return ax
 
+    def plot_tops(self, ax, legend=None, field=None, **kwargs):
+        """
+        Plotting, but only for tops (as opposed to intervals).
+        """
+        if field is None:
+            raise StriplogError('You must provide a field to plot.')
+
+        ys = [iv.top.z for iv in self]
+
+        try:
+            try:
+                ts = [getattr(iv.primary, field) for iv in self]
+            except:
+                ts = [iv.data.get(field) for iv in self]
+        except:
+            raise StriplogError('Could not retrieve field.')
+
+        for y, t in zip(ys, ts):
+            ax.axhline(y, color='lightblue', lw=3, zorder=0)
+            ax.text(0.1, y-max(ys)/200, t, ha='left')
+
+        return ax
+
     def plot_axis(self,
                   ax,
                   legend,
@@ -1209,6 +1237,8 @@ class Striplog(object):
              colour=None,
              cmap='viridis',
              default=None,
+             style='intervals',
+             field=None,
              **kwargs):
         """
         Hands-free plotting.
@@ -1236,6 +1266,10 @@ class Striplog(object):
         if legend is None:
                 legend = Legend.random(self.components)
 
+        if style.lower() == 'tops':
+            # Make sure width is at least 3 for 'tops' style
+            width = max([3, width])
+
         if ax is None:
             return_ax = False
             fig = plt.figure(figsize=(width, aspect*width))
@@ -1243,9 +1277,12 @@ class Striplog(object):
         else:
             return_ax = True
 
-        if self.order == 'none':
+        if (self.order == 'none') or (style.lower() == 'points'):
             # Then this is a set of points.
-            ax = self.plot_points(ax=ax, **kwargs)
+            ax = self.plot_points(ax=ax, legend=legend, field=field, **kwargs)
+        elif style.lower() == 'tops':
+            ax = self.plot_tops(ax=ax, legend=legend, field=field)
+            ax.set_xticks([])
         else:
             ax = self.plot_axis(ax=ax,
                                 legend=legend,
