@@ -356,7 +356,7 @@ class Striplog(object):
         return list_of_Intervals
 
     @classmethod
-    def _clean_longitudinal_data(cls, data, points, null=None):
+    def _clean_longitudinal_data(cls, data, null=None):
         """
         Private function. Make sure we have what we need to make a striplog.
         """
@@ -370,10 +370,6 @@ class Striplog(object):
         values = sorted(zip(*data.values()), key=lambda x: x[idx])
         data = {k: list(v) for k, v in zip(data.keys(), zip(*values))}
 
-        # Fill down if needed.
-        if ('base' not in data.keys()) and (not points):
-            data['base'] = data['top'][1:] + [data['top'][-1] + 1]
-
         if data['top'] is None:
             raise StriplogError('Could not get tops.')
 
@@ -386,7 +382,7 @@ class Striplog(object):
 
     @classmethod
     def from_petrel(cls, fname,
-                    points=None,
+                    points=False,
                     null=None,
                     function=None,
                     include=None,
@@ -400,29 +396,27 @@ class Striplog(object):
         Returns:
             striplog.
         """
-        points = points or False
-        null = null or None
-
         result = utils.read_petrel(fname,
                                    function=function,
                                    remap=remap,
                                    )
 
         data = cls._clean_longitudinal_data(result,
-                                            points=points,
                                             null=null
                                             )
 
         list_of_Intervals = cls._build_list_of_Intervals(data,
-                                                         ignore=ignore,
+                                                         points=points,
                                                          include=include,
-                                                         exclude=exclude
+                                                         exclude=exclude,
+                                                         ignore=ignore
                                                          )
         return cls(list_of_Intervals)
 
     @classmethod
     def _build_list_of_Intervals(cls,
                                  data_dict,
+                                 points=False,
                                  include=None,
                                  exclude=None,
                                  ignore=None,
@@ -433,6 +427,7 @@ class Striplog(object):
 
         Args:
             data_dict (dict)
+            points (bool)
             include (dict)
             exclude (dict)
             ignore (list)
@@ -474,15 +469,25 @@ class Striplog(object):
             if keep:
                 wanted_data.append(dictionary)
 
+        # Fill in
+        if not points:
+            for i, iv in enumerate(wanted_data):
+                if iv.get('base', None) is None:
+                    try:  # To set from next interval
+                        iv['base'] = wanted_data[i+1]['top']
+                    except:
+                        # It's the last interval
+                        iv['base'] = iv['top'] + 1
+
         # Build the list of intervals to pass to __init__()
         list_of_Intervals = []
-        for i in wanted_data:
-            top = i.pop('top')
-            base = i.pop('base', None)
-            descr = i.pop('description', '')
-            if i:
+        for iv in wanted_data:
+            top = iv.pop('top')
+            base = iv.pop('base', None)
+            descr = iv.pop('description', '')
+            if iv:
                 c, d = {}, {}
-                for k, v in i.items():
+                for k, v in iv.items():
                     if (k[:5].lower() == 'comp ') or (k[:9].lower() == 'component'):
                         k = re.sub(r'comp(?:onent)? ', '', k, flags=re.I)
                         c[k] = v  # It's a component
@@ -490,14 +495,17 @@ class Striplog(object):
                         if v is not None:
                             d[k] = v  # It's data
                 comp = [Component(c)] if c else None
-                iv = Interval(**{'top': top,
-                                 'base': base,
-                                 'description': descr,
-                                 'data': d,
-                                 'components': comp})
+                this = Interval(**{'top': top,
+                                   'base': base,
+                                   'description': descr,
+                                   'data': d,
+                                   'components': comp})
             else:
-                iv = Interval(**{'top': top, 'base': base, 'description': descr, 'lexicon': lexicon})
-            list_of_Intervals.append(iv)
+                this = Interval(**{'top': top,
+                                   'base': base,
+                                   'description': descr,
+                                   'lexicon': lexicon})
+            list_of_Intervals.append(this)
 
         return list_of_Intervals
 
@@ -553,9 +561,10 @@ class Striplog(object):
         for k, v in remap.items():
             reorg[v] = reorg.pop(k)
 
-        data = cls._clean_longitudinal_data(reorg, points, null=null)
+        data = cls._clean_longitudinal_data(reorg, null=null)
 
         list_of_Intervals = cls._build_list_of_Intervals(data,
+                                                         points=points,
                                                          lexicon=lexicon,
                                                          include=include,
                                                          exclude=exclude,

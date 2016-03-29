@@ -304,7 +304,7 @@ def test_petrel():
               'Well', 'Symbol']
 
     # Do the thing!
-    s = Striplog.from_petrel("tests/data/top.txt",
+    s = Striplog.from_petrel("tests/data/tops.txt",
                              include=include,
                              exclude=exclude,
                              remap=remap,
@@ -317,5 +317,5 @@ def test_petrel():
     print(s)
 
     assert len(s) == 4
-    assert s[3].base.z == 1175
+    assert s[3].base.z == 1056
     assert s[3].data['Name'] == 'Meguma'
