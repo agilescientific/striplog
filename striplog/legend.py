@@ -82,6 +82,8 @@ class Decor(object):
             params = p
         for k, v in kwargs.items() or params.items():
             k = k.lower().replace(' ', '_')
+            if k in ['colour', 'color']:
+                k = 'colour'
             try:
                 v = v.lower()
             except AttributeError:
@@ -102,44 +104,6 @@ class Decor(object):
 
         # Make sure we have a hatch, even if it's None.
         self.hatch = getattr(self, 'hatch', None)
-
-        # Deal with American spelling.
-        a = getattr(self, 'color', None)
-        if a:
-            setattr(self, 'colour', a)
-            delattr(self, 'color')
-
-        # Make sure the colour is correctly formatted, and allow
-        # the use of matplotlib's English-language colour names.
-        c = getattr(self, 'colour', None)
-        if c is not None:
-            if type(c) in [list, tuple]:
-                try:
-                    colour = utils.rgb_to_hex(c)
-                except TypeError:
-                    raise LegendError("Colour not recognized: " + c)
-            elif c[0] in ['[', '(']:
-                try:
-                    x = list(map(float, c[1:-1].split(',')))
-                    colour = utils.rgb_to_hex(x)
-                except KeyError:
-                    raise LegendError("Colour not recognized: " + c)
-            elif c[0] != '#':
-                try:
-                    colour = utils.name_to_hex(c)
-                except KeyError:
-                    raise LegendError("Colour not recognized: " + c)
-            elif (c[0] == '#') and (len(c) == 4):
-                # Three-letter hex
-                colour = c[:2] + c[1] + 2*c[2] + 2*c[3]
-            elif (c[0] == '#') and (len(c) == 8):
-                # 8-letter hex
-                colour = c[:-2]
-            else:
-                colour = c
-            self.colour = colour.lower()
-        else:
-            self.colour = None
 
     def __repr__(self):
         s = repr(self.__dict__)
@@ -189,7 +153,8 @@ class Decor(object):
         s = '<tr><td><strong>{k}</strong></td><td style="{stl}">{v}</td></tr>'
         for k, v in self.__dict__.items():
 
-            if k == 'colour':
+            if k == '_colour':
+                k = 'colour'
                 c = utils.text_colour_for_hex(v)
                 style = 'color:{}; background-color:{}'.format(c, v)
             else:
@@ -212,6 +177,39 @@ class Decor(object):
         """
         colour = random.sample([i for i in range(256)], 3)
         return cls({'colour': colour, 'component': component})
+
+    @property
+    def colour(self):
+        return self._colour
+
+    @colour.setter
+    def colour(self, c):
+        if type(c) in [list, tuple]:
+            try:
+                colour = utils.rgb_to_hex(c)
+            except TypeError:
+                raise LegendError("Colour not recognized: " + c)
+        elif c[0] in ['[', '(']:
+            try:
+                x = list(map(float, c[1:-1].split(',')))
+                colour = utils.rgb_to_hex(x)
+            except KeyError:
+                raise LegendError("Colour not recognized: " + c)
+        elif c[0] != '#':
+            print('good, name-to-hex')
+            try:
+                colour = utils.name_to_hex(c)
+            except KeyError:
+                raise LegendError("Colour not recognized: " + c)
+        elif (c[0] == '#') and (len(c) == 4):
+            # Three-letter hex
+            colour = c[:2] + c[1] + 2*c[2] + 2*c[3]
+        elif (c[0] == '#') and (len(c) == 8):
+            # 8-letter hex
+            colour = c[:-2]
+        else:
+            colour = c
+        self._colour = colour
 
     @property
     def rgb(self):
@@ -567,6 +565,8 @@ class Legend(object):
         component_header = []
         for row in self:
             for j in row.__dict__.keys():
+                if j == '_colour':
+                    j = 'colour'
                 header.append(j)
             for k in row.component.__dict__.keys():
                 component_header.append(k)

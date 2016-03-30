@@ -178,7 +178,7 @@ def hex_to_name(hexx):
     """
     for n, h in defaults.COLOURS.items():
         if (len(n) > 1) and (h == hexx.upper()):
-            return n
+            return n.lower()
     return None
 
 
@@ -192,7 +192,7 @@ def name_to_hex(name):
     Returns:
         str: The hex code for the colour.
     """
-    return defaults.COLOURS[name.lower()].upper()
+    return defaults.COLOURS[name.lower()].lower()
 
 
 def rgb_to_hex(rgb):
@@ -217,7 +217,7 @@ def rgb_to_hex(rgb):
     else:
         rgb = (int(r), int(g), int(b))
     result = '#%02x%02x%02x' % rgb
-    return result.upper()
+    return result.lower()
 
 
 def hex_to_rgb(hexx):
@@ -253,7 +253,7 @@ def hex_is_dark(hexx, percent=50):
     return (luma < percent)
 
 
-def text_colour_for_hex(hexx, percent=50, dark='#000000', light='#FFFFFF'):
+def text_colour_for_hex(hexx, percent=50, dark='#000000', light='#ffffff'):
     """
     Function to decide what colour to use for a given hex colour.
 

@@ -38,7 +38,7 @@ def test_colours():
     """Test colour conversions.
     """
     assert rgb_to_hex([0, 0, 0]) == '#000000'
-    assert rgb_to_hex([255, 128, 128]) == '#FF8080'
+    assert rgb_to_hex([255, 128, 128]) == '#ff8080'
     assert hex_to_rgb('#000000') == (0, 0, 0)
     assert hex_to_rgb('#ff8080') == (255, 128, 128)  # case
 
@@ -46,9 +46,9 @@ def test_colours():
 def test_names():
     """Test colour names.
     """
-    assert name_to_hex('red') == '#FF0000'
-    assert name_to_hex('Red') == '#FF0000'
-    assert hex_to_name('#FF0000') == 'red'
+    assert name_to_hex('red') == '#ff0000'
+    assert name_to_hex('Red') == '#ff0000'
+    assert hex_to_name('#ff0000') == 'red'
     assert hex_to_name('#ff0000') == 'red'
     assert hex_to_name('cerulean') is None
 
@@ -56,7 +56,7 @@ def test_names():
 def test_hex_is_dark():
     """Test ability to recover correct colour for text.
     """
-    assert not hex_is_dark('#FFFF00')
+    assert not hex_is_dark('#ffff00')
     assert hex_is_dark('#330000')
-    assert text_colour_for_hex('#FFFF00') == '#000000'
-    assert text_colour_for_hex('#121111') == '#FFFFFF'
+    assert text_colour_for_hex('#ffff00') == '#000000'
+    assert text_colour_for_hex('#121111') == '#ffffff'
