@@ -52,12 +52,12 @@ def test_decor_html():
     decor = Decor(d)
     component_row = """<tr><td><strong>component</strong></td><td style="color:black; background-color:white"><table><tr><td><strong>lithology</strong></td><td>sand</td></tr></table></td></tr>"""
     hatch_row = """<tr><td><strong>hatch</strong></td><td style="color:black; background-color:white">None</td></tr>"""
-    colour_row = """<tr><td><strong>colour</strong></td><td style="color:#FFFFFF; background-color:#267022">#267022</td></tr>"""
+    colour_row = """<tr><td><strong>colour</strong></td><td style="color:#ffffff; background-color:#267022">#267022</td></tr>"""
     width_row = """<tr><td><strong>width</strong></td><td style="color:black; background-color:white">3.0</td></tr>"""
     html = decor._repr_html_()
     assert component_row in html
     assert hatch_row in html
-    #assert colour_row in html
+    assert colour_row in html
     assert width_row in html
 
 

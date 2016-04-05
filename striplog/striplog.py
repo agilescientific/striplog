@@ -117,12 +117,18 @@ class Striplog(object):
         if type(key) is slice:
             i = key.indices(len(self.__list))
             result = [self.__list[n] for n in range(*i)]
-            return Striplog(result)
+            if result:
+                return Striplog(result)
+            else:
+                return None
         elif type(key) is list:
             result = []
             for j in key:
                 result.append(self.__list[j])
-            return Striplog(result)
+            if result:
+                return Striplog(result)
+            else:
+                return None
         else:
             return self.__list[key]
 
@@ -323,7 +329,13 @@ class Striplog(object):
         return self.unique
 
     @classmethod
-    def __intervals_from_tops(self, tops, values, basis, components):
+    def __intervals_from_tops(self,
+                              tops,
+                              values,
+                              basis,
+                              components,
+                              field=None,
+                              ignore_nan=True):
         """
         Private method. Take a sequence of tops in an arbitrary dimension,
         and provide a list of intervals from which a striplog can be made.
@@ -347,10 +359,23 @@ class Striplog(object):
 
         list_of_Intervals = []
         for i, t in enumerate(tops):
-            c = [deepcopy(components[values[i]])]
-            if c[0] is None:
+
+            if components is not None:
+                c = [deepcopy(components[values[i]])]
+                if c[0] is None:
+                    c = []
+            else:
                 c = []
-            interval = Interval(t, bases[i], components=c)
+
+            if field is not None:
+                v = values[i]
+                if ignore_nan and np.isnan(v):
+                    continue
+                d = {field: v}
+            else:
+                d = {}
+
+            interval = Interval(t, bases[i], data=d, components=c)
             list_of_Intervals.append(interval)
 
         return list_of_Intervals
@@ -801,6 +826,7 @@ class Striplog(object):
                  cutoff=None,
                  components=None,
                  legend=None,
+                 field=None,
                  right=False,
                  basis=None,
                  source='Log'):
@@ -823,10 +849,9 @@ class Striplog(object):
         Returns:
             Striplog: The ``striplog`` object.
         """
-        if not components:
-            if not legend:
-                m = 'You must provide a legend or list of components'
-                raise StriplogError(m)
+        if (components is None) and (legend is None) and (field is None):
+            m = 'You must provide a list of components, and legend, or a field.'
+            raise StriplogError(m)
 
         if legend is not None:
             try:  # To treat it like a legend.
@@ -853,7 +878,7 @@ class Striplog(object):
                 a = np.digitize(log, [cutoff], right)
 
         else:
-            a = log
+            a = np.copy(log)
 
         tops, values = utils.tops_from_loglike(a)
 
@@ -864,7 +889,9 @@ class Striplog(object):
         list_of_Intervals = cls.__intervals_from_tops(tops,
                                                       values,
                                                       basis,
-                                                      components)
+                                                      components,
+                                                      field=field
+                                                      )
 
         return cls(list_of_Intervals, source=source)
 
@@ -1467,6 +1494,9 @@ class Striplog(object):
         Returns:
             Striplog: A striplog of all the gaps. A sort of anti-striplog.
         """
+        if len(self) == 1:
+            return
+
         hits = []
         intervals = []
 
