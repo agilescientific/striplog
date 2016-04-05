@@ -1058,8 +1058,11 @@ class Striplog(object):
         else:
             result = np.zeros_like(basis, dtype=np.int)
 
-        if undefined == np.nan:
-            result[:] = np.nan
+        if np.isnan(undefined):
+            try:
+                result[:] = np.nan
+            except:
+                pass  # array type is int
 
         # Make a look-up table for the log values.
         if legend:
@@ -1164,6 +1167,28 @@ class Striplog(object):
         for y, t in zip(ys, ts):
             ax.axhline(y, color='lightblue', lw=3, zorder=0)
             ax.text(0.1, y-max(ys)/200, t, ha='left')
+
+        return ax
+
+    def plot_field(self, ax, legend=None, field=None, **kwargs):
+        """
+        Plotting, but only for tops (as opposed to intervals).
+        """
+        if field is None:
+            raise StriplogError('You must provide a field to plot.')
+
+        try:
+            try:
+                xs = [getattr(iv.primary, field) for iv in self]
+            except:
+                xs = [iv.data.get(field) for iv in self]
+        except:
+            raise StriplogError('Could not retrieve field.')
+
+        for iv, x in zip(self.__list, xs):
+            _, ymin = utils.axis_transform(ax, 0, iv.base.z, ylim=(self.start.z, self.stop.z), inverse=True)
+            _, ymax = utils.axis_transform(ax, 0, iv.top.z, ylim=(self.start.z, self.stop.z), inverse=True)
+            ax.axvline(x, ymin=ymin, ymax=ymax)
 
         return ax
 
@@ -1316,6 +1341,10 @@ class Striplog(object):
         if (self.order == 'none') or (style.lower() == 'points'):
             # Then this is a set of points.
             ax = self.plot_points(ax=ax, legend=legend, field=field, **kwargs)
+        elif style.lower() == 'field':
+            if field is None:
+                raise StriplogError('You must provide a field to plot.')
+            ax = self.plot_field(ax=ax, legend=legend, field=field)
         elif style.lower() == 'tops':
             ax = self.plot_tops(ax=ax, legend=legend, field=field)
             ax.set_xticks([])

@@ -354,3 +354,28 @@ def list_and_add(a, b):
     if not isinstance(a, list):
         a = [a]
     return a + b
+
+
+def axis_transform(ax, x, y, xlim=None, ylim=None, inverse=False):
+    """
+    http://stackoverflow.com/questions/29107800
+
+    inverse = False : Axis => Data
+            = True  : Data => Axis
+    """
+    xlim = xlim or ax.get_xlim()
+    ylim = ylim or ax.get_ylim()
+
+    xdelta = xlim[1] - xlim[0]
+    ydelta = ylim[1] - ylim[0]
+
+    if not inverse:
+        xout = xlim[0] + x * xdelta
+        yout = ylim[0] + y * ydelta
+    else:
+        xdelta2 = x - xlim[0]
+        ydelta2 = y - ylim[0]
+        xout = xdelta2 / xdelta
+        yout = ydelta2 / ydelta
+
+    return xout, yout
