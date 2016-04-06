@@ -1192,6 +1192,9 @@ class Striplog(object):
 
         return ax
 
+    def max_field(self, field):
+        return max(filter(None, [iv.data.get(field) for iv in self]))
+
     def plot_axis(self,
                   ax,
                   legend,
@@ -1202,6 +1205,7 @@ class Striplog(object):
                   colour_function=None,
                   cmap=None,
                   default=None,
+                  width_field=None,
                   **kwargs):
         """
         Plotting, but only the Rectangles. You have to set up the figure.
@@ -1217,11 +1221,13 @@ class Striplog(object):
                 want to compare when plotting.
              colour (str): Which data field to use for colours.
             cmap (cmap): Matplotlib colourmap. Default ``viridis``.
-           **kwargs are passed through to matplotlib's ``patches.Rectangle``.
+            default ()
+            **kwargs are passed through to matplotlib's ``patches.Rectangle``.
 
         Returns:
             axis: The matplotlib.pyplot axis.
         """
+        default_c = None
         patches = []
         for iv in self.__list:
             origin = (0, iv.top.z)
@@ -1229,11 +1235,16 @@ class Striplog(object):
             thick = iv.base.z - iv.top.z
 
             if ladder:
-                w = d.width or default_width
-                try:
-                    w = default_width * w/legend.max_width
-                except:
-                    w = default_width
+                if width_field is not None:
+                    w = iv.data.get(width_field, 1)
+                    w = default_width * w/self.max_field(width_field)
+                    default_c = 'gray'
+                elif legend is not None:
+                    w = d.width or default_width
+                    try:
+                        w = default_width * w/legend.max_width
+                    except:
+                        w = default_width
             else:
                 w = default_width
 
@@ -1241,12 +1252,13 @@ class Striplog(object):
             this_patch_kwargs = kwargs.copy()
             lw = this_patch_kwargs.pop('lw', 0)
             ec = this_patch_kwargs.pop('ec', 'k')
+            fc = this_patch_kwargs.pop('fc', None) or default_c or d.colour
 
             if colour is None:
                 rect = mpl.patches.Rectangle(origin,
                                              w,
                                              thick,
-                                             fc=d.colour,
+                                             fc=fc,
                                              lw=lw,
                                              hatch=d.hatch,
                                              ec=ec,  # edgecolour for hatching
@@ -1357,6 +1369,7 @@ class Striplog(object):
                                 colour=colour,
                                 cmap=cmap,
                                 default=default,
+                                width_field=field,
                                 **kwargs
                                 )
 

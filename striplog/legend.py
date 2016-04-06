@@ -11,7 +11,7 @@ from io import StringIO
 import csv
 import warnings
 import random
-import math
+import re
 
 try:
     from functools import partialmethod
@@ -184,19 +184,23 @@ class Decor(object):
 
     @colour.setter
     def colour(self, c):
-        if type(c) in [list, tuple]:
+        numbers = r'([\.0-9]+), ?([\.0-9]+), ?([\.0-9]+)'
+        pattern = re.compile(r'[\(\[]?' + numbers + r'[\)\]]?')
+        x = pattern.search(c)
+        if x is not None:
+            try:
+                x = list(map(float, x.groups()))
+                if x[0] > 1 or x[1] > 1 or x[2] > 1:
+                    x = [int(i) for i in x]
+                colour = utils.rgb_to_hex(x)
+            except KeyError:
+                raise LegendError("Colour not recognized: " + c)
+        elif type(c) in [list, tuple]:
             try:
                 colour = utils.rgb_to_hex(c)
             except TypeError:
                 raise LegendError("Colour not recognized: " + c)
-        elif c[0] in ['[', '(']:
-            try:
-                x = list(map(float, c[1:-1].split(',')))
-                colour = utils.rgb_to_hex(x)
-            except KeyError:
-                raise LegendError("Colour not recognized: " + c)
         elif c[0] != '#':
-            print('good, name-to-hex')
             try:
                 colour = utils.name_to_hex(c)
             except KeyError:
@@ -719,7 +723,7 @@ class Legend(object):
         Returns:
            component. The component best matching the provided colour.
         """
-        if not (0 <= tolerance <= math.sqrt(195075)):
+        if not (0 <= tolerance <= np.sqrt(195075)):
             raise LegendError('Tolerance must be between 0 and 441.67')
 
         for decor in self.__list:
@@ -731,12 +735,12 @@ class Legend(object):
 
         # Start with a best match of black.
         best_match = '#000000'
-        best_match_dist = math.sqrt(r1**2. + g1**2. + b1**2.)
+        best_match_dist = np.sqrt(r1**2. + g1**2. + b1**2.)
 
         # Now compare to each colour in the legend.
         for decor in self.__list:
             r2, g2, b2 = decor.rgb
-            distance = math.sqrt((r2-r1)**2. + (g2-g1)**2. + (b2-b1)**2.)
+            distance = np.sqrt((r2-r1)**2. + (g2-g1)**2. + (b2-b1)**2.)
             if distance < best_match_dist:
                 best_match = decor.component
                 best_match_dist = distance
