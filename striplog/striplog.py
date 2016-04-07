@@ -360,20 +360,18 @@ class Striplog(object):
         list_of_Intervals = []
         for i, t in enumerate(tops):
 
+            v, c, d = values[i], [], {}
+
+            if ignore_nan and np.isnan(v):
+                continue
+
+            if (field is not None):
+                d = {field: v}
+
             if components is not None:
-                c = [deepcopy(components[values[i]])]
+                c = [deepcopy(components[int(v)])]
                 if c[0] is None:
                     c = []
-            else:
-                c = []
-
-            if field is not None:
-                v = values[i]
-                if ignore_nan and np.isnan(v):
-                    continue
-                d = {field: v}
-            else:
-                d = {}
 
             interval = Interval(t, bases[i], data=d, components=c)
             list_of_Intervals.append(interval)
@@ -826,6 +824,7 @@ class Striplog(object):
                  cutoff=None,
                  components=None,
                  legend=None,
+                 legend_field=None,
                  field=None,
                  right=False,
                  basis=None,
@@ -840,6 +839,11 @@ class Striplog(object):
             components (array-like): A list of components. Use this or
                 ``legend``.
             legend (``Legend``): A legend object. Use this or ``components``.
+            legend_field ('str'): If you're not trying to match against
+                components, then you can match the log values to this field in
+                the Decors.
+            field (str): The field in the Interval's ``data`` to store the log
+                values as.
             right (bool): Which side of the cutoff to send things that are
                 equal to, i.e. right on, the cutoff.
             basis (array-like): A depth basis for the log, so striplog knows
@@ -853,11 +857,17 @@ class Striplog(object):
             m = 'You must provide a list of components, and legend, or a field.'
             raise StriplogError(m)
 
-        if legend is not None:
+        if (legend is not None) and (legend_field is None):
             try:  # To treat it like a legend.
                 components = [deepcopy(decor.component) for decor in legend]
             except AttributeError:  # It's just a list of components.
                 pass
+
+        if legend_field is not None:
+            field_values = [getattr(d, legend_field, 0) for d in legend]
+            components = [Component() for i in range(int(max(field_values)+1))]
+            for i, decor in enumerate(legend):
+                components[i] = deepcopy(decor.component)
 
         if cutoff is not None:
 

@@ -37,7 +37,7 @@ r3 = {'colour': 'red',
 def test_legend():
     """Test all the basics.
     """
-    legend = Legend.from_csv(csv_text)
+    legend = Legend.from_csv(text=csv_text)
     assert legend[0].colour == '#f7e9a6'
     assert legend.max_width == 5
     assert legend.__str__() != ''
@@ -108,7 +108,7 @@ def test_legend_builtins():
 def test_tolerance_warning(recwarn):
     """Test warning triggers if tolerance too low.
     """
-    legend = Legend.from_csv(csv_text)
+    legend = Legend.from_csv(text=csv_text)
     legend.get_component('#f7e9a7', tolerance=0)
     w = recwarn.pop()
     assert issubclass(w.category, UserWarning)
@@ -119,7 +119,7 @@ def test_tolerance_warning(recwarn):
 def test_duplicate_warning(recwarn):
     """Test warning triggers if duplicate component in CSV.
     """
-    Legend.from_csv(csv_duplicate)
+    Legend.from_csv(text=csv_duplicate)
     w = recwarn.pop()
     assert issubclass(w.category, UserWarning)
     assert 'duplicate' in str(w.message)
@@ -132,7 +132,7 @@ def test_error():
     rock = Component(r)
 
     # Adding incompatible things
-    legend = Legend.from_csv(csv_text)
+    legend = Legend.from_csv(text=csv_text)
     with pytest.raises(LegendError):
         _ = legend + rock
         assert _

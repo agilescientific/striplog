@@ -12,6 +12,7 @@ import csv
 import warnings
 import random
 import re
+import itertools
 
 try:
     from functools import partialmethod
@@ -84,6 +85,8 @@ class Decor(object):
             k = k.lower().replace(' ', '_')
             if k in ['colour', 'color']:
                 k = 'colour'
+                if not v:
+                    v = '#eeeeee'
             try:
                 v = v.lower()
             except AttributeError:
@@ -170,13 +173,34 @@ class Decor(object):
         html = '<table>{}</table>'.format(rows)
         return html
 
-    @classmethod
-    def random(cls, component):
+    def _repr_html_row_(self, keys):
         """
-        Returns a minimal Decor with a random colour.
+        Jupyter Notebook magic repr function as a row – used by
+        ``Legend._repr_html_()``.
         """
-        colour = random.sample([i for i in range(256)], 3)
-        return cls({'colour': colour, 'component': component})
+        tr, th, c = '', '', ''
+        r = '<td style="{stl}">{v}</td>'
+        h = '<th>{k}</th>'
+        for k in keys:
+            v = self.__dict__.get(k)
+
+            if k == '_colour':
+                k = 'colour'
+                c = utils.text_colour_for_hex(v)
+                style = 'color:{}; background-color:{}'.format(c, v)
+            else:
+                style = 'color:black; background-color:white'
+
+            if k == 'component':
+                try:
+                    v = v._repr_html_(borders=False)
+                except AttributeError:
+                    v = v.__repr__()
+
+            tr += r.format(v=v, stl=style)
+            th += h.format(k=k)
+
+        return th, tr
 
     @property
     def colour(self):
@@ -186,7 +210,10 @@ class Decor(object):
     def colour(self, c):
         numbers = r'([\.0-9]+), ?([\.0-9]+), ?([\.0-9]+)'
         pattern = re.compile(r'[\(\[]?' + numbers + r'[\)\]]?')
-        x = pattern.search(c)
+        try:
+            x = pattern.search(c)
+        except:
+            x = None
         if x is not None:
             try:
                 x = list(map(float, x.groups()))
@@ -195,6 +222,8 @@ class Decor(object):
                 colour = utils.rgb_to_hex(x)
             except KeyError:
                 raise LegendError("Colour not recognized: " + c)
+        elif not c:
+            colour = '#eeeeee'
         elif type(c) in [list, tuple]:
             try:
                 colour = utils.rgb_to_hex(c)
@@ -221,6 +250,21 @@ class Decor(object):
         Returns an RGB triple equivalent to the hex colour.
         """
         return utils.hex_to_rgb(self.colour)
+
+    @property
+    def keys(self):
+        """
+        Returns the keys of the Decor's dict.
+        """
+        return list(self.__dict__.keys())
+
+    @classmethod
+    def random(cls, component):
+        """
+        Returns a minimal Decor with a random colour.
+        """
+        colour = random.sample([i for i in range(256)], 3)
+        return cls({'colour': colour, 'component': component})
 
     def plot(self, fmt=None, fig=None, ax=None):
         """
@@ -283,8 +327,9 @@ class Legend(object):
     Args:
         list_of_Decors (list): The decors to collect into a legend. In
             general, you will want to leave legend building to the constructor
-            class methods, `Legend.default()`, and `Legend.from_csv(string)`.
-            We can add others over time, such as `from_xls` and so on.
+            class methods, `Legend.default()`, and
+            `Legend.from_csv(text=string)`. We can add others over time, such
+            as `from_xls` and so on.
     """
 
     def __init__(self, list_of_Decors):
@@ -359,6 +404,19 @@ class Legend(object):
         else:
             raise LegendError("You can only add legends or decors.")
 
+    def _repr_html_(self):
+        """
+        Jupyter Notebook magic repr function.
+        """
+        all_keys = list(set(itertools.chain(*[d.keys for d in self])))
+        rows = ''
+        for decor in self:
+            th, tr = decor._repr_html_row_(keys=all_keys)
+            rows += '<tr>{}</tr>'.format(tr)
+        header = '<tr>{}</tr>'.format(th)
+        html = '<table>{}{}</table>'.format(header, rows)
+        return html
+
     @classmethod
     def builtin(cls, name):
         """
@@ -384,7 +442,7 @@ class Legend(object):
                  'nagmdm__4_3': LEGEND__NAGMDM__4_3,
                  'sgmc': LEGEND__SGMC,
                  }
-        return cls.from_csv(names[name.lower()])
+        return cls.from_csv(text=names[name.lower()])
 
     @classmethod
     def builtin_timescale(cls, name):
@@ -399,7 +457,7 @@ class Legend(object):
                  'usgs_isc': TIMESCALE__USGS_ISC,
                  'dnag': TIMESCALE__DNAG,
                  }
-        return cls.from_csv(names[name.lower()])
+        return cls.from_csv(text=names[name.lower()])
 
     # Curry.
     default = partialmethod(builtin, name="NAGMDM__6_2")
@@ -489,7 +547,7 @@ class Legend(object):
         return cls(list_of_Decors)
 
     @classmethod
-    def from_csv(cls, string):
+    def from_csv(cls, filename=None, text=None):
         """
         Read CSV text and generate a Legend.
 
@@ -510,12 +568,19 @@ class Legend(object):
 
             - `legend.to_csv()`
             - Edit the legend, call it `new_legend`.
-            - `legend = Legend.from_csv(new_legend)`
+            - `legend = Legend.from_csv(text=new_legend)`
         """
+        if (filename is None) and (text is None):
+            raise LegendError("You must provide a filename or CSV text.")
+
+        if (filename is not None):
+            with open(filename, 'r') as f:
+                text = f.read()
+
         try:
-            f = StringIO(string)  # Python 3
+            f = StringIO(text)  # Python 3
         except TypeError:
-            f = StringIO(unicode(string))  # Python 2
+            f = StringIO(unicode(text))  # Python 2
 
         r = csv.DictReader(f, skipinitialspace=True)
         list_of_Decors, components = [], []
@@ -523,9 +588,12 @@ class Legend(object):
         for row in r:
             d, component = {}, {}
             for (k, v) in row.items():
-                if k is None:
+                if (k in [None, '']):
                     continue
-                elif k[:4].lower() == 'comp':
+                if (v in [None, '']):
+                    if k.lower() not in ['color', 'colour']:
+                        continue
+                if k[:4].lower() == 'comp':
                     prop = ' '.join(k.split()[1:])
                     component[prop] = v.lower()
 
