@@ -193,7 +193,7 @@ class Decor(object):
 
             if k == 'component':
                 try:
-                    v = v._repr_html_(borders=False)
+                    v = v._repr_html_()
                 except AttributeError:
                     v = v.__repr__()
 
