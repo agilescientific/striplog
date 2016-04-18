@@ -439,6 +439,7 @@ class Striplog(object):
     @classmethod
     def _build_list_of_Intervals(cls,
                                  data_dict,
+                                 stop=None,
                                  points=False,
                                  include=None,
                                  exclude=None,
@@ -500,7 +501,11 @@ class Striplog(object):
                         iv['base'] = wanted_data[i+1]['top']
                     except:
                         # It's the last interval
-                        iv['base'] = iv['top'] + 1
+                        if stop is not None:
+                            thick = stop - iv['top']
+                        else:
+                            thick = 1
+                        iv['base'] = iv['top'] + thick
 
         # Build the list of intervals to pass to __init__()
         list_of_Intervals = []
@@ -544,7 +549,8 @@ class Striplog(object):
                  function=None,
                  null=None,
                  ignore=None,
-                 source=None):
+                 source=None,
+                 stop=None):
         """
         Load from a CSV file or text.
         """
@@ -591,7 +597,8 @@ class Striplog(object):
                                                          lexicon=lexicon,
                                                          include=include,
                                                          exclude=exclude,
-                                                         ignore=ignore)
+                                                         ignore=ignore,
+                                                         stop=stop)
 
         return cls(list_of_Intervals, source=source)
 
