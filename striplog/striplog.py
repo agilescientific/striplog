@@ -550,7 +550,8 @@ class Striplog(object):
                  null=None,
                  ignore=None,
                  source=None,
-                 stop=None):
+                 stop=None,
+                 fieldnames=None):
         """
         Load from a CSV file or text.
         """
@@ -564,6 +565,13 @@ class Striplog(object):
                 text = f.read()
 
         source = source or 'CSV'
+
+        # Deal with multiple spaces in space delimited file.
+        if dlm == ' ':
+            text = re.sub(r'[ \t]+', ' ', text)
+
+        if fieldnames is not None:
+            text = dlm.join(fieldnames) + '\n' + text
 
         try:
             f = StringIO(text)  # Python 3
