@@ -7,7 +7,6 @@ A striplog is a sequence of intervals.
 :license: Apache 2.0
 """
 import re
-import shlex
 from io import StringIO
 import csv
 import operator
@@ -23,6 +22,7 @@ import matplotlib.pyplot as plt
 from .interval import Interval, IntervalError
 from .component import Component
 from .legend import Legend
+from .canstrat import parse_canstrat
 from . import utils
 from . import templates
 
@@ -404,7 +404,7 @@ class Striplog(object):
         return data
 
     @classmethod
-    def from_petrel(cls, fname,
+    def from_petrel(cls, filename,
                     points=False,
                     null=None,
                     function=None,
@@ -419,7 +419,7 @@ class Striplog(object):
         Returns:
             striplog.
         """
-        result = utils.read_petrel(fname,
+        result = utils.read_petrel(filename,
                                    function=function,
                                    remap=remap,
                                    )
@@ -958,6 +958,27 @@ class Striplog(object):
                                      source=source,
                                      dlm=dlm,
                                      abbreviations=abbreviations)
+
+    @classmethod
+    def from_canstrat(cls, filename):
+        """
+        Eat a Canstrat DAT file and make a striplog.
+        """
+        with open(filename) as f:
+            dat = f.read()
+
+        data = parse_canstrat(dat)
+
+        list_of_Intervals = []
+        for d in data[7]:  # 7 is the 'card type' for lithology info.
+            top = d.pop('top')
+            base = d.pop('base')
+            comps = [Component({'lithology': d['rtc'],
+                                'colour': d['colour_name']
+                                })]
+            iv = Interval(top=top, base=base, components=comps, data=d)
+            list_of_Intervals.append(iv)
+        return Striplog(list_of_Intervals)
 
     # Outputter
     def to_csv(self, use_descriptions=False, dlm=",", header=True):

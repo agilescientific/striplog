@@ -166,6 +166,17 @@ def null_default(x):
     return null
 
 
+def skip(x):
+    """
+    Always returns None.
+    """
+    return
+
+
+def are_close(x, y):
+    return abs(x - y) < 0.00001
+
+
 def hex_to_name(hexx):
     """
     Convert hex to a color name, using matplotlib's colour names.
