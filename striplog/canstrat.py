@@ -34,14 +34,6 @@ def _colour_read(x):
     return ' '.join([m, c0, c1]).strip().replace('  ', ' ')
 
 
-def _get_field(text, coldict, key):
-    data = coldict[key]
-    strt = data['start']
-    stop = strt + data['len']
-    transform = data['read']
-    return transform(text[strt:stop])
-
-
 def _get_date(date_string):
     date = dt.datetime.strptime(date_string, "%y-%m-%d")
     if dt.datetime.today() < date:
@@ -56,7 +48,9 @@ columns_ = {
     # name: start, run, read, write
     'log':  [0,    6,   null, null],
     'card': [6,    1,   lambda x: int(x) if x else None, null],
-    'data': [7,    73,  null, null],
+    'skip': [7,    1,   lambda x: True if x == 'X' else False, lambda x: 'X' if x else ' '],
+    'core': [8,    1,   lambda x: True if x == 'C' else False, lambda x: 'C' if x else ' '],
+    'data': [9,    73,  null, null],
 }
 
 # Columns for card type 1
@@ -89,6 +83,8 @@ columns_8 = {
 
 
 columns_7 = {
+    'skip': [7, 1, lambda x: True if x == 'X' else False, lambda x: 'X' if x else ' '],
+    'core': [8, 1, lambda x: True if x == 'C' else False, lambda x: 'C' if x else ' '],
     'top': [9, 5, lambda x: float(x)/10, lambda x: '{:5.0f}'.format(10*x)],
     'base': [14, 5, lambda x: float(x)/10, lambda x: '{:5.0f}'.format(10*x)],
     'lithology': [19, 8, lambda x: x.replace(' ', '.'), skip],
@@ -111,6 +107,18 @@ columns = {
 }
 
 
+def _get_field(text, coldict, key):
+    data = coldict[key]
+    strt = data['start']
+    stop = strt + data['len']
+    transform = data['read']
+    fragment = text[strt:stop]
+    if fragment:
+        return transform(fragment)
+    else:
+        return
+
+
 def _process_row(text, columns):
     """
     Processes a single row from the file.
@@ -128,7 +136,9 @@ def _process_row(text, columns):
     # Now collect the item
     item = {}
     for field in coldict:
-        item[field] = _get_field(text, coldict, field)
+        value = _get_field(text, coldict, field)
+        if value is not None:
+            item[field] = value
 
     return item
 

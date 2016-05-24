@@ -971,6 +971,8 @@ class Striplog(object):
 
         list_of_Intervals = []
         for d in data[7]:  # 7 is the 'card type' for lithology info.
+            if d.pop('skip'):
+                continue
             top = d.pop('top')
             base = d.pop('base')
             comps = [Component({'lithology': d['rtc'],
