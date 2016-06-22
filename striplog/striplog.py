@@ -1119,6 +1119,20 @@ class Striplog(object):
             table = [j[0] for j in self.unique]
         table.insert(0, Component({}))
 
+        # Adjust the table if necessary. Go over all the components in the
+        # table list, and remove elements that are not in the match list.
+        # Careful! This results in a new table, with components that may not
+        # be in the original list of components.
+        if match_only:
+            table_new = []
+            for c in table:
+                c_new = Component({k: v for k, v in c.__dict__.items()
+                                   if k in match_only})
+                # Only add unique, and preserve order.
+                if c_new not in table_new:
+                    table_new.append(c_new)
+            table = table_new
+
         start_ix = self.read_at(start, index=True)
         stop_ix = self.read_at(stop, index=True)
         if stop_ix is not None:

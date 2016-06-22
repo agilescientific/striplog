@@ -46,10 +46,10 @@ def _put_date(date):
 
 columns_ = {
     # name: start, run, read, write
-    'log':  [0,    6,   null, null],
-    'card': [6,    1,   lambda x: int(x) if x else None, null],
-    'skip': [7,    1,   lambda x: True if x == 'X' else False, lambda x: 'X' if x else ' '],
-    'core': [8,    1,   lambda x: True if x == 'C' else False, lambda x: 'C' if x else ' '],
+    'log':  [0,    6, null, null],
+    'card': [6,    1, lambda x: int(x) if x else None, null],
+    'skip': [7,    1, lambda x: True if x == 'X' else False, lambda x: 'X' if x else ' '],
+    'core': [8,    1, lambda x: True if x == 'C' else False, lambda x: 'C' if x else ' '],
     'data': [9,    73,  null, null],
 }
 
@@ -96,7 +96,7 @@ columns_7 = {
     'colour': [24, 3, lambda x: x.replace(' ', '.'), lambda x: x.replace('.', ' ')],
     'colour_name': [24, 3, _colour_read, skip],
     'accessories': [27, 18, lambda x: x.strip(), lambda x: '{:18s}'.format(x)],
-    'porgrade': [45, 1,  lambda x: porgrade[x] if x.replace(' ', '') else 0, skip],
+    'porgrade': [45, 1, lambda x: porgrade[x] if x.replace(' ', '') else 0, skip],
 }
 
 columns = {
