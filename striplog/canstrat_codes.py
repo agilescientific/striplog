@@ -32,7 +32,7 @@ T ROC-C_T ROCKTP_SALT ROCK TYPE 37 Salt
 G ROC-C_G ROCKTP_GYP ROCK TYPE 39 Gypsum
 P ROC-C_P ROCKTP_PHOS ROCK TYPE 40 Phosphate"""
 
-rtc = {w[0]: w[6] for w in [r.split() for r in rtc_txt.split('\n')]}
+rtc = {w[0]: ' '.join(w[6:]) for w in [r.split() for r in rtc_txt.split('\n')]}
 
 
 # Code for grain size

@@ -1126,6 +1126,8 @@ class Striplog(object):
         if match_only:
             table_new = []
             for c in table:
+                if c == '':
+                    continue  # No idea why sometimes there's a ''
                 c_new = Component({k: v for k, v in c.__dict__.items()
                                    if k in match_only})
                 # Only add unique, and preserve order.
