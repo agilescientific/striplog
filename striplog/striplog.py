@@ -1123,6 +1123,9 @@ class Striplog(object):
         # table list, and remove elements that are not in the match list.
         # Careful! This results in a new table, with components that may not
         # be in the original list of components.
+        if not isinstance(match_only, (list, tuple, set,)):
+            raise StriplogError("match_only should be a list, not a string")
+
         if match_only:
             table_new = []
             for c in table:
