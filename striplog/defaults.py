@@ -165,6 +165,31 @@ COLOURS = {
 
 # LEGENDS
 
+# Canstrat
+LEGEND__Canstrat = """colour,int,data,hatch,width,component lithology
+,1.0,x,None,None,Igneous basic,
+,2.0,n,None,None,Igneous acidic,
+,3.0,z,None,None,Metamorphic,
+,4.0,v,None,None,Volcanic,
+,8.0,r,None,None,Siderite,
+,9.0,u,None,None,Glacial till,
+,12.0,e,None,None,Conglomerate,
+,13.0,f,None,None,Breccia,
+,16.0,h,None,None,Chert,
+,17.0,j,None,None,Sandstone,
+,18.0,i,None,None,Siltstone,
+,19.0,c,None,None,Clay,
+,20.0,s,None,None,Shale,
+,22.0,b,None,None,Bentonite,
+,24.0,q,None,None,Coal,
+,26.0,m,None,None,Marlstone,
+,27.0,l,None,None,Limestone,
+,30.0,d,None,None,Dolomite,
+,35.0,a,None,None,Anhydrite,
+,37.0,t,None,None,Salt,
+,39.0,g,None,None,Gypsum,
+,40.0,p,None,None,Phosphate,"""
+
 # The Nova Scotia Dept of Energy's legend
 
 LEGEND__NSDOE = """colour, width, comp lithology, comp colour, comp grainsize

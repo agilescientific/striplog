@@ -26,6 +26,7 @@ import matplotlib.pyplot as plt
 from .component import Component
 from . import utils
 from .defaults import LEGEND__NSDOE
+from .defaults import LEGEND__Canstrat
 from .defaults import LEGEND__NAGMDM__6_2
 from .defaults import LEGEND__NAGMDM__6_1
 from .defaults import LEGEND__NAGMDM__4_3
@@ -425,6 +426,7 @@ class Legend(object):
         Args:
             name (str): The name of the legend you want. Not case sensitive.
                  'nsdoe': Nova Scotia Dept. of Energy
+                 'canstrat': Canstrat
                  'nagmdm__6_2': USGS N. Am. Geol. Map Data Model 6.2
                  'nagmdm__6_1': USGS N. Am. Geol. Map Data Model 6.1
                  'nagmdm__4_3': USGS N. Am. Geol. Map Data Model 4.3
@@ -437,6 +439,7 @@ class Legend(object):
         """
         names = {
                  'nsdoe': LEGEND__NSDOE,
+                 'canstrat': LEGEND__Canstrat,
                  'nagmdm__6_2': LEGEND__NAGMDM__6_2,
                  'nagmdm__6_1': LEGEND__NAGMDM__6_1,
                  'nagmdm__4_3': LEGEND__NAGMDM__4_3,
