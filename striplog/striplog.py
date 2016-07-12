@@ -1137,6 +1137,8 @@ class Striplog(object):
                 if c_new not in table_new:
                     table_new.append(c_new)
             table = table_new
+        else:
+            match_only = []
 
         start_ix = self.read_at(start, index=True)
         stop_ix = self.read_at(stop, index=True)
