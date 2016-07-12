@@ -106,8 +106,10 @@ class Decor(object):
         except:
             self.width = None
 
-        # Make sure we have a hatch, even if it's None.
+        # Make sure we have a hatch, even if it's None. And correct 'none's.
         self.hatch = getattr(self, 'hatch', None)
+        if self.hatch == 'none':
+            self.hatch = None
 
     def __repr__(self):
         s = repr(self.__dict__)

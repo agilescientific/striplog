@@ -369,8 +369,12 @@ class Striplog(object):
                 d = {field: v}
 
             if components is not None:
-                c = [deepcopy(components[int(v)])]
-                if c[0] is None:
+                try:
+                    c = [deepcopy(components[int(v)])]
+                except IndexError:
+                    c = []
+
+                if c and (c[0] is None):
                     c = []
 
             interval = Interval(t, bases[i], data=d, components=c)
@@ -757,6 +761,16 @@ class Striplog(object):
 
         # Get the pixels and colour values at 'tops' (i.e. changes).
         tops, hexes = utils.tops_from_loglike(loglike, offset=row_offset)
+
+        # If there are consecutive tops, we assume it's because there is a
+        # single-pixel row that we don't want. So take the second one only.
+        # We used to do this reduction in ``utils.tops_from_loglike()`` but
+        # it was prventing us from making intervals only one sample thick.
+        nonconsecutive = np.append(np.diff(tops), 2)
+        tops = tops[nonconsecutive > 1]
+        hexes = hexes[nonconsecutive > 1]
+
+        # Get the set of unique colours.
         hexes_reduced = list(set(hexes))
 
         # Get the components corresponding to the colours.

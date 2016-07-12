@@ -166,29 +166,29 @@ COLOURS = {
 # LEGENDS
 
 # Canstrat
-LEGEND__Canstrat = """colour,int,data,hatch,width,component lithology
-,1.0,x,None,None,Igneous basic,
-,2.0,n,None,None,Igneous acidic,
-,3.0,z,None,None,Metamorphic,
-,4.0,v,None,None,Volcanic,
-,8.0,r,None,None,Siderite,
-,9.0,u,None,None,Glacial till,
-,12.0,e,None,None,Conglomerate,
-,13.0,f,None,None,Breccia,
-,16.0,h,None,None,Chert,
-,17.0,j,None,None,Sandstone,
-,18.0,i,None,None,Siltstone,
-,19.0,c,None,None,Clay,
-,20.0,s,None,None,Shale,
-,22.0,b,None,None,Bentonite,
-,24.0,q,None,None,Coal,
-,26.0,m,None,None,Marlstone,
-,27.0,l,None,None,Limestone,
-,30.0,d,None,None,Dolomite,
-,35.0,a,None,None,Anhydrite,
-,37.0,t,None,None,Salt,
-,39.0,g,None,None,Gypsum,
-,40.0,p,None,None,Phosphate,"""
+LEGEND__Canstrat = """colour,int,data,width,component lithology
+#d60000,1.0,x,None,Igneous basic,
+#d60000,2.0,n,None,Igneous acidic,
+#d60000,3.0,z,None,Metamorphic,
+#d60000,4.0,v,None,Volcanic,
+#f4db94,8.0,r,None,Siderite,
+#c8965a,9.0,u,None,Glacial till,
+#ff9000,12.0,e,None,Conglomerate,
+#ffc500,13.0,f,None,Breccia,
+#94c5c5,16.0,h,None,Chert,
+#ffff00,17.0,j,None,Sandstone,
+#ff863e,18.0,i,None,Siltstone,
+#c5ffff,19.0,c,None,Clay,
+#909090,20.0,s,None,Shale,
+#c5c5ff,22.0,b,None,Bentonite,
+#020202,24.0,q,None,Coal,
+#c5c5c5,26.0,m,None,Marlstone,
+#7d96ff,27.0,l,None,Limestone,
+#ff46ff,30.0,d,None,Dolomite,
+#aa6435,35.0,a,None,Anhydrite,
+#008200,37.0,t,None,Salt,
+#906e90,39.0,g,None,Gypsum,
+#c5ffc5,40.0,p,None,Phosphate,"""
 
 # The Nova Scotia Dept of Energy's legend
 

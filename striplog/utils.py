@@ -335,10 +335,10 @@ def tops_from_loglike(a, offset=0, null=None):
         except:
             transformed = False
 
-    all_edges = a[1:] == a[:-1]
-    edges = all_edges[1:] & (all_edges[:-1] == 0)
+    edges = a[1:] == a[:-1]
+    edges = np.append(True, edges)
 
-    tops = np.where(edges)[0] + 1
+    tops = np.where(~edges)[0]
     tops = np.append(0, tops)
 
     values = a[tops + offset]
