@@ -585,12 +585,12 @@ class Striplog(object):
         reader = csv.DictReader(f, delimiter=dlm)
 
         # Reorganize the data to make fixing it easier.
-        reorg = {k.strip(): [] for k in reader.fieldnames if k is not None}
+        reorg = {k.strip().lower(): [] for k in reader.fieldnames if k is not None}
         t = f.tell()
         for key in reorg:
             f.seek(t)
             for r in reader:
-                s = {k.strip(): v.strip() for k, v in r.items()}
+                s = {k.strip().lower(): v.strip() for k, v in r.items()}
                 try:
                     reorg[key].append(float(s[key]))
                 except ValueError:
@@ -974,7 +974,7 @@ class Striplog(object):
                                      abbreviations=abbreviations)
 
     @classmethod
-    def from_canstrat(cls, filename):
+    def from_canstrat(cls, filename, source='canstrat'):
         """
         Eat a Canstrat DAT file and make a striplog.
         """
@@ -994,7 +994,24 @@ class Striplog(object):
                                 })]
             iv = Interval(top=top, base=base, components=comps, data=d)
             list_of_Intervals.append(iv)
-        return Striplog(list_of_Intervals)
+
+        return cls(list_of_Intervals, source=source)
+
+    # Outputter
+    def to_canstrat(self, filename, params):
+        """
+        Write a Canstrat ASCII file.
+
+        Args:
+            filename (str)
+            params (dict): The well details. You can use a ``welly`` header
+                object.
+
+        Returns:
+
+        """
+
+        return None
 
     # Outputter
     def to_csv(self, use_descriptions=False, dlm=",", header=True):
@@ -1013,8 +1030,7 @@ class Striplog(object):
         data = ''
 
         if header:
-            data += '{0:12s}{1:12s}'.format('Top', 'Base')
-            data += '  {0:48s}\n'.format('Component')
+            data += '{},{},{}\n'.format('Top', 'Base', 'Component')
 
         for i in self.__list:
             if use_descriptions and i.description:
