@@ -1014,7 +1014,7 @@ class Striplog(object):
         return None
 
     # Outputter
-    def to_csv(self, use_descriptions=False, dlm=",", header=True):
+    def to_csv(self, filename=None, as_text=True, use_descriptions=False, dlm=",", header=True):
         """
         Returns a CSV string built from the summaries of the Intervals.
 
@@ -1027,10 +1027,25 @@ class Striplog(object):
         Returns:
             str: A string of comma-separated values.
         """
-        data = ''
+        if (filename is None):
+            if (not as_text):
+                raise StriplogError("You must provide a filename or set as_text to True.")
+        else:
+            as_text = False
+
+        if as_text:
+            output = StringIO()
+        else:
+            output = open(filename, 'w')
+
+        fieldnames = ['Top', 'Base', 'Component']
+        writer = csv.DictWriter(output,
+                                delimiter=dlm,
+                                fieldnames=fieldnames,
+                                quoting=csv.QUOTE_MINIMAL)
 
         if header:
-            data += '{},{},{}\n'.format('Top', 'Base', 'Component')
+            writer.writeheader()
 
         for i in self.__list:
             if use_descriptions and i.description:
@@ -1039,12 +1054,15 @@ class Striplog(object):
                 text = i.primary.summary()
             else:
                 text = ''
-            data += '{0:9.3f}'.format(i.top.z)
-            data += '{0}{1:9.3f}'.format(dlm, i.base.z)
-            data += '{0}  {1:48s}'.format(dlm, '"'+text+'"')
-            data += '\n'
+            data = {j: k for j, k in zip(fieldnames, [i.top.z, i.base.z, text])}
+            writer.writerow(data)
 
-        return data
+        if as_text:
+            return output.getvalue()
+            #return output
+        else:
+            output.close
+            return None
 
     # Outputter
     def to_las3(self, use_descriptions=False, dlm=",", source="Striplog"):
