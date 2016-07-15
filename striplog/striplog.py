@@ -1761,11 +1761,23 @@ class Striplog(object):
         # These were in-place operations so we don't return anything
         return
 
-    def fill(self, component):
+    def fill(self, component=None):
         """
         Fill gaps with the component provided.
+
+        Example
+            t = s.fill(Component({'lithology': 'cheese'}))
         """
-        raise NotImplementedError
+        c = [component] if component is not None else []
+
+        # Make the intervals to go in the gaps.
+        gaps = self.find_gaps()
+        if not gaps:
+            return self
+        for iv in gaps:
+            iv.components = c
+
+        return deepcopy(self) + gaps
 
     def union(self, other):
         """

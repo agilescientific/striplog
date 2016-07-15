@@ -152,6 +152,12 @@ class Interval(object):
                 return self.top < other.top
             return self.top > other.top
 
+    def __bool__(self):
+        if (not self.components) and (not self.data):
+            return False
+        else:
+            return True
+
     def _repr_html_(self):
         """
         Jupyter Notebook magic repr function.
