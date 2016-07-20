@@ -221,9 +221,10 @@ def rgb_to_hex(rgb):
             raise Exception("RGB values must all be 0-255 or 0-1")
     if (r > 255) or (g > 255) or (b > 255):
             raise Exception("RGB values must all be 0-255 or 0-1")
-    if (0 <= r <= 1) and (0 <= g <= 1) and (0 <= b <= 1):
+    if (0 < r < 1) or (0 < g < 1) or (0 < b < 1):
         if (r > 1) or (g > 1) or (b > 1):
             raise Exception("RGB values must all be 0-255 or 0-1")
+    if (0 <= r <= 1) and (0 <= g <= 1) and (0 <= b <= 1):
         rgb = tuple([int(round(val * 255)) for val in [r, g, b]])
     else:
         rgb = (int(r), int(g), int(b))

@@ -2,12 +2,16 @@
 """
 Define a suite a tests for the utils module.
 """
+import pytest
+import numpy as np
 
 from striplog.utils import null
 from striplog.utils import partialmethod
 from striplog.utils import rgb_to_hex, hex_to_rgb
 from striplog.utils import hex_to_name, name_to_hex
 from striplog.utils import hex_is_dark, text_colour_for_hex
+from striplog.utils import list_and_add
+from striplog.utils import tops_from_loglike
 
 
 def test_null():
@@ -38,9 +42,23 @@ def test_colours():
     """Test colour conversions.
     """
     assert rgb_to_hex([0, 0, 0]) == '#000000'
+    assert rgb_to_hex([0, 0.5, 0.5]) == '#008080'
     assert rgb_to_hex([255, 128, 128]) == '#ff8080'
     assert hex_to_rgb('#000000') == (0, 0, 0)
     assert hex_to_rgb('#ff8080') == (255, 128, 128)  # case
+
+    # And exceptions:
+    with pytest.raises(Exception):
+        _ = rgb_to_hex([0, 0, -1])
+        assert _
+
+    with pytest.raises(Exception):
+        _ = rgb_to_hex([0, 0, 256])
+        assert _
+
+    with pytest.raises(Exception):
+        _ = rgb_to_hex([0, 0.1, 2])
+        assert _
 
 
 def test_names():
@@ -60,3 +78,21 @@ def test_hex_is_dark():
     assert hex_is_dark('#330000')
     assert text_colour_for_hex('#ffff00') == '#000000'
     assert text_colour_for_hex('#121111') == '#ffffff'
+
+
+def test_list_and_add():
+    a = ['this', 'that', 'other']
+    b = 'those'
+    assert len(list_and_add(b, b)) == 2
+    assert len(list_and_add(a, b)) == 4
+    assert len(list_and_add(b, a)) == 4
+
+
+def test_tops_from_loglike():
+    a = [1,1,1,2,2,2,-1,-1,-1,np.nan,np.nan,-2,-2,-2]
+    tops, values = tops_from_loglike(a)
+    assert len(values) == 5
+
+    a = [1,1,1,2,2,2,-1,-1,-1,-2,-2,-2,-2,-2]
+    tops, values = tops_from_loglike(a)
+    assert len(values) == 4

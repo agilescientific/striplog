@@ -1014,7 +1014,12 @@ class Striplog(object):
         return None
 
     # Outputter
-    def to_csv(self, filename=None, as_text=True, use_descriptions=False, dlm=",", header=True):
+    def to_csv(self,
+               filename=None,
+               as_text=True,
+               use_descriptions=False,
+               dlm=",",
+               header=True):
         """
         Returns a CSV string built from the summaries of the Intervals.
 

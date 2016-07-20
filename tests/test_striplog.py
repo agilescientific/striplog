@@ -124,6 +124,8 @@ def test_striplog():
     assert len(s) == 4
     assert s.start.z == 80
     assert s.stop.z == 250
+    assert s._Striplog__strict()
+
 
     l = [iv.thickness for iv in s]
     assert len(l) == 4
@@ -270,6 +272,42 @@ def test_striplog_merge():
     assert lappy.merge_overlaps() is None
     assert lappy.find_overlaps() is None
     assert lappy.merge_overlaps() is None
+
+
+def test_striplog_union():
+    """Test union.
+    """
+    lappy = Striplog([Interval(**{'top': 0, 
+                                  'base': 60,
+                                  'components':[Component({'lithology': 'dolomite'}),]}),
+                      Interval(**{'top': 55,
+                                  'base': 75,
+                                  'components':[Component({'lithology': 'limestone'}),]}),
+                      ])
+    lippy = Striplog([Interval(**{'top': 0,
+                                  'base': 30,
+                                  'components':[Component({'lithology': 'marl'}),]}), 
+                      ])
+    u = lappy.union(lippy)
+    assert len(u) == 2
+    assert len(u[0].components) == 2
+
+
+def test_fill():
+    gappy = Striplog([Interval(**{'top': 0, 
+                                  'base': 60,
+                                  'components':[Component({'lithology': 'dolomite'}),]}),
+                      Interval(**{'top': 65,
+                                  'base': 75,
+                                  'components':[Component({'lithology': 'limestone'}),]}),
+                  ])
+
+    f = gappy.fill(Component({'lithology': 'marl'}))
+    assert len(f) == 3
+    assert f[1].primary == Component({'lithology': 'marl'})
+
+    f = gappy.fill()
+    assert not f[1]
 
 
 def test_histogram():
