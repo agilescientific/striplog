@@ -2020,3 +2020,40 @@ class Striplog(object):
         else:
             self.__list = new_list
             return
+
+    def quality(self, tests, alias=None):
+        """
+        Run a series of tests and return the corresponding results.
+
+        Based on curve testing for ``welly``.
+
+        Args:
+            tests (list): a list of functions.
+
+        Returns:
+            list. The results. Stick to booleans (True = pass) or ints.
+        """
+        # This is hacky... striplog should probably merge with welly...
+
+        # Ignore aliases
+        alias = alias or {}
+        alias = alias.get('striplog', alias.get('Striplog', []))
+
+        # Gather the tests.
+        # First, anything called 'all', 'All', or 'ALL'.
+        # Second, anything with the name of the curve we're in now.
+        # Third, anything that the alias list has for this curve.
+        # (This requires a reverse look-up so it's a bit messy.)
+        this_tests =\
+            tests.get('all', [])+tests.get('All', [])+tests.get('ALL', [])\
+            + tests.get('striplog', tests.get('Striplog', []))\
+            + utils.flatten_list([tests.get(a) for a in alias])
+        this_tests = filter(None, this_tests)
+
+        # If we explicitly set zero tests for a particular key, then this
+        # overrides the 'all' tests.
+        if not tests.get('striplog', tests.get('Striplog', 1)):
+            this_tests = []
+
+        return {test.__name__: test(self) for test in this_tests}
+

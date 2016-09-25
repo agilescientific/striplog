@@ -368,6 +368,25 @@ def list_and_add(a, b):
     return a + b
 
 
+def flatten_list(l):
+    """
+    Unpacks lists in a list:
+
+        [1, 2, [3, 4], [5, [6, 7]]]
+
+    becomes
+
+        [1, 2, 3, 4, 5, 6, 7]
+
+    http://stackoverflow.com/a/12472564/3381305
+    """
+    if (l == []) or (l is None):
+        return l
+    if isinstance(l[0], list):
+        return flatten_list(l[0]) + flatten_list(l[1:])
+    return l[:1] + flatten_list(l[1:])
+
+
 def axis_transform(ax, x, y, xlim=None, ylim=None, inverse=False):
     """
     http://stackoverflow.com/questions/29107800
