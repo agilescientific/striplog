@@ -8,7 +8,7 @@ Codes for Canstrat ASCII files; only used by canstrat.py.
 """
 
 
-# Codes for rtc
+# Codes for rtc.
 rtc_txt = """X ROC-C_X ROCKTP_IGNEB ROCK TYPE 1 Igneous Basic
 N ROC-C_N ROCKTP_IGNEA ROCK TYPE 2 Igneous Acidic
 Z ROC-C_Z ROCKTP_META ROCK TYPE 3 Metamorphic
@@ -35,7 +35,7 @@ P ROC-C_P ROCKTP_PHOS ROCK TYPE 40 Phosphate"""
 rtc = {w[0]: ' '.join(w[6:]) for w in [r.split() for r in rtc_txt.split('\n')]}
 
 
-# Code for grain size
+# Code for grain size.
 grains_txt = """X GRA-C_X GRAINS_CRYPTOX GRAIN, CRYSTAL OR 0.001 Cryptocrystalline (carbonate, chert, coal)
 L GRA-C_L GRAINS_LITHO GRAIN, CRYSTAL OR 0.001 Lithographic (carbonate, chert, coal)
 M GRA-C_M GRAINS_SHALE GRAIN, CRYSTAL OR 0.001 Shale, Clay, Marlstone, Bentonite
@@ -59,7 +59,7 @@ grains['V'] += 0.0003
 grains['X'] += 0.0004
 
 
-# Code for fwork
+# Code for fwork.
 fwork_txt = """** FRA-N_XX FRAMEW_-1 FRAMEWORK -1 uninterpretable
 00 FRA-N_00 FRAMEW_0 FRAMEWORK 0 0%
 01 FRA-N_01 FRAMEW_10 FRAMEWORK 10 10%
@@ -76,7 +76,7 @@ fwork_txt = """** FRA-N_XX FRAMEW_-1 FRAMEWORK -1 uninterpretable
 fwork = {w[0]: int(w[4]) for w in [r.split() for r in fwork_txt.split('\n')]}
 
 
-# Code for colour
+# Code for colour.
 colour_txt = """W COL-C_W COLOUR_WHITE COLOUR 1 White
 C COL-C_C COLOUR_CREAM COLOUR 2 Cream
 F COL-C_F COLOUR_BUFF COLOUR 3 Buff-Tan
@@ -96,7 +96,7 @@ colour = {w[0]: ' '.join(w[5:]) for w in [r.split() for r in colour_txt.split('\
 colour[' '] = ''
 
 
-# Code for colour modifier
+# Code for colour modifier.
 cmod_txt = """V COI-C_V COLOURINT_VLIGHT COLOUR INTENSITY 1 Very Light
 L COI-C_L COLOURINT_LIGHT COLOUR INTENSITY 3 Light
 M COI-C_M COLOURINT_MEDIUM COLOUR INTENSITY 5 Medium
@@ -107,7 +107,7 @@ cmod = {w[0]: ' '.join(w[6:]) for w in [r.split() for r in cmod_txt.split('\n')]
 cmod[' '] = ''
 
 
-# Code for porgrade
+# Code for porgrade.
 porg_txt = """1 POR-N_1 PORGRADE_3 POROSITY GRADE 3 3%
 2 POR-N_2 PORGRADE_6 POROSITY GRADE 6 6%
 3 POR-N_3 PORGRADE_9 POROSITY GRADE 9 9%
@@ -119,3 +119,14 @@ porg_txt = """1 POR-N_1 PORGRADE_3 POROSITY GRADE 3 3%
 9 POR-N_9 PORGRADE_39 POROSITY GRADE 39 >33%"""
 
 porgrade = {w[0]: float(w[5])/100 for w in [r.split() for r in porg_txt.split('\n')]}
+
+# Codes for oil stains.
+stain_txt = """Q OIL-C_Q OILSTN_QUEST OIL STAIN 1 Questionable stain
+D OIL-C_D OILSTN_DEAD OIL STAIN 2 Dead Stain
+M OIL-C_M OILSTN_MEDSPOT OIL STAIN 3 Medium-Spotted Stain
+G OIL-C_G OILSTN_GOOD OIL STAIN 4 Good Stain"""
+
+stain = {w[0]: w[2][7:].title() for w in [r.split() for r in stain_txt.split('\n')]}
+stain[' '] = 'None'
+
+oil = {' ': 0, 'Q': 1, 'D': 2, 'M': 3, 'G': 4}

@@ -432,6 +432,8 @@ class Striplog(object):
                                             null=null
                                             )
 
+        if 
+
         list_of_Intervals = cls._build_list_of_Intervals(data,
                                                          points=points,
                                                          include=include,
@@ -1487,7 +1489,7 @@ class Striplog(object):
                                 legend=legend,
                                 ladder=ladder,
                                 default_width=width,
-                                match_only=match_only,
+                                match_only=kwargs.get('match_only', match_only),
                                 colour=colour,
                                 cmap=cmap,
                                 default=default,
