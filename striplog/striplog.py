@@ -432,15 +432,15 @@ class Striplog(object):
                                             null=null
                                             )
 
-        if 
-
         list_of_Intervals = cls._build_list_of_Intervals(data,
                                                          points=points,
                                                          include=include,
                                                          exclude=exclude,
                                                          ignore=ignore
                                                          )
-        return cls(list_of_Intervals)
+        if list_of_Intervals:
+            return cls(list_of_Intervals)
+        return None
 
     @classmethod
     def _build_list_of_Intervals(cls,
