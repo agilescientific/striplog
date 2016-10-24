@@ -409,6 +409,7 @@ class Striplog(object):
 
     @classmethod
     def from_petrel(cls, filename,
+                    stop=None,
                     points=False,
                     null=None,
                     function=None,
@@ -433,6 +434,7 @@ class Striplog(object):
                                             )
 
         list_of_Intervals = cls._build_list_of_Intervals(data,
+                                                         stop=stop,
                                                          points=points,
                                                          include=include,
                                                          exclude=exclude,
@@ -457,6 +459,7 @@ class Striplog(object):
 
         Args:
             data_dict (dict)
+            stop (float): Where to end the last interval.
             points (bool)
             include (dict)
             exclude (dict)
