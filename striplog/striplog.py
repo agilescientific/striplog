@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf 8 -*-
 """
 A striplog is a sequence of intervals.
@@ -1105,6 +1104,8 @@ class Striplog(object):
                basis=None,
                field=None,
                field_function=None,
+               dtype=None,
+               table=None,
                legend=None,
                legend_field=None,
                match_only=None,
@@ -1160,7 +1161,7 @@ class Striplog(object):
             basis = np.linspace(start, stop, pts)
 
         if (field is not None) or (legend_field is not None):
-            result = np.zeros_like(basis)
+            result = np.zeros_like(basis, dtype=dtype)
         else:
             result = np.zeros_like(basis, dtype=np.int)
 
@@ -1170,18 +1171,21 @@ class Striplog(object):
             except:
                 pass  # array type is int
 
-        # Make a look-up table for the log values.
-        if legend:
-            table = [j.component for j in legend]
-        else:
-            table = [j[0] for j in self.unique]
-        table.insert(0, Component({}))
+        # If needed, make a look-up table for the log values.
+        if table is None:
+            table = [Component({})]
+            if legend:
+                table += [j.component for j in legend]
+            elif field:
+                s = set([iv.data.get(field) for iv in self])
+                table = [None] + list(filter(None, s))
+            else:
+                table += [j[0] for j in self.unique]
 
         # Adjust the table if necessary. Go over all the components in the
         # table list, and remove elements that are not in the match list.
         # Careful! This results in a new table, with components that may not
         # be in the original list of components.
-
         if match_only is not None:
             if not isinstance(match_only, (list, tuple, set,)):
                 raise StriplogError("match_only should be a list, not a string")
@@ -1219,7 +1223,8 @@ class Striplog(object):
             elif field:  # Get data directly from that field in iv.data.
                 f = field_function or utils.null
                 try:
-                    key = f(i.data.get(field, undefined)) or undefined
+                    v = f(i.data.get(field, undefined)) or undefined
+                    key = table.index(v)
                 except ValueError:
                     key = undefined
             else:  # Use the lookup table.

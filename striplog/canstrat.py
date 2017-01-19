@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf 8 -*-
 """
 Functions for importing Canstrat ASCII files.
@@ -48,6 +47,7 @@ def _get_date(date_string):
 
 def _put_date(date):
     return dt.datetime.strftime(date, '%y-%m-%d')
+
 
 columns_ = {
     # name: start, run, read, write
@@ -107,6 +107,7 @@ columns_7 = {
 }
 
 columns = {
+    0: columns_,   # Row header, applies to every row
     1: columns_1,  # Location, depth measure, well name, elev, td
     2: columns_2,  # Spud and completion data, status, UWI, Interval coded
     7: columns_7,  # Lithology
