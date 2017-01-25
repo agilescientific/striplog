@@ -160,6 +160,9 @@ def parse_canstrat(text):
         if not row:
             continue
 
+        if len(row) < 8:  # Not a real record.
+            continue
+
         # Read the metadata for this row/
         row_header = _process_row(row, columns_) or {'card': None}
         card = row_header['card']
