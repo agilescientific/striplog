@@ -102,8 +102,8 @@ columns_7 = {
     'colour_name': [24, 3, _colour_read, skip],
     'accessories': [27, 18, lambda x: x.strip(), lambda x: '{:18s}'.format(x)],
     'porgrade': [45, 1, lambda x: porgrade[x] if x.replace(' ', '') else 0, skip],
-    'stain': [49, 1,  lambda x: stain.get(x, ' '), lambda x: {v: k for k, v in stain.items()}.get(x, '')],
-    'oil': [49, 1,  lambda x: oil.get(x, 0), skip],
+    'stain': [48, 1,  lambda x: stain.get(x, ' '), lambda x: {v: k for k, v in stain.items()}.get(x, '')],
+    'oil': [48, 1,  lambda x: oil.get(x, 0), skip],
 }
 
 columns = {
