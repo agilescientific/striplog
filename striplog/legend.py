@@ -732,9 +732,10 @@ class Legend(object):
            obj. The specified attribute of the matching Decor in the Legend.
         """
         matching_decor = self.get_decor(c, match_only=match_only)
-        if matching_decor is not None:
+
+        try:
             return getattr(matching_decor, attr)
-        else:
+        except AttributeError:
             return default
 
     def get_colour(self, c, default='#eeeeee', match_only=None):
