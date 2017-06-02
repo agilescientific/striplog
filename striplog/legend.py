@@ -664,7 +664,7 @@ class Legend(object):
         result = header_row.strip(',') + '\n'
         for row in self:
             if has_colour:
-                result += row.__dict__.get('colour', '') + ','
+                result += row.__dict__.get('_colour', '') + ','
             for item in header:
                 result += str(row.__dict__.get(item, '')) + ','
             for item in component_header:
