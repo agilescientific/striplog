@@ -324,7 +324,7 @@ class Striplog(object):
         with warnings.catch_warnings():
             warnings.simplefilter("always")
             w = "Striplog.top is deprecated; please use Striplog.unique"
-            warnings.warn(w)
+            warnings.warn(w, DeprecationWarning, stacklevel=2)
         return self.unique
 
     @classmethod
@@ -835,7 +835,7 @@ class Striplog(object):
         with warnings.catch_warnings():
             warnings.simplefilter("always")
             w = "from_array() is deprecated."
-            warnings.warn(w)
+            warnings.warn(w, DeprecationWarning, stacklevel=2)
 
         csv_text = ''
         for interval in a:

@@ -126,7 +126,6 @@ def test_striplog():
     assert s.stop.z == 250
     assert s._Striplog__strict()
 
-
     l = [iv.thickness for iv in s]
     assert len(l) == 4
 
@@ -195,7 +194,7 @@ def test_from_descriptions():
     """
     lexicon = Lexicon.default()
     strip2 = Striplog.from_descriptions(text=csv_intervals, lexicon=lexicon)
-    assert len(strip2.top) == 7
+    assert len(strip2.unique) == 7
 
 
 def test_points():
@@ -209,12 +208,14 @@ def test_points():
 def test_from_las3():
     """Test the LAS3 route.
     """
-    s = Striplog.from_las3(las3)
+    lexicon = Lexicon.default()
+    s = Striplog.from_las3(las3, lexicon=lexicon)
     assert len(s) == 14
 
 
 def test_from_array():
     """Test the array route.
+    Deprecated.
     """
     lexicon = Lexicon.default()
 
@@ -222,7 +223,10 @@ def test_from_array():
          (200, 250, 'grey shale'),
          (200, 250, 'red sandstone with shale stringers'),
          ]
-    s = Striplog._from_array(a, lexicon=lexicon)
+
+    with pytest.warns(DeprecationWarning):
+        s = Striplog._from_array(a, lexicon=lexicon)
+
     assert s.__str__() != ''
 
 

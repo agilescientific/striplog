@@ -2,6 +2,8 @@
 """
 Define a suite a tests for the Component module.
 """
+import pytest
+
 from striplog.rock import Rock
 from striplog import Component
 from striplog import Lexicon
@@ -26,7 +28,8 @@ r6 = {'grainsize': 'Coarse',
 def test_init():
     """Test Rock() for backward compatibility.
     """
-    rock = Rock(r)
+    with pytest.warns(DeprecationWarning):
+        rock = Rock(r)
     assert rock
 
     rock = Component(r)
