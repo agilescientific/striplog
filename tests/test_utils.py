@@ -20,24 +20,6 @@ def test_null():
     assert null(null) == null
 
 
-def test_partial():
-    """Pretty sure this test doesn't test what I need. See coverage report.
-    """
-    def f(a, b):
-        return a + b
-
-    def g(a, b):
-        return b
-
-    p = partialmethod(f, b=0)
-    q = partialmethod(g, b=None)
-
-    # Can't see how to use utils.py lines 59-61.
-    assert p(1)
-    assert getattr(q, 'keywords', None)
-    assert q(1) is None
-
-
 def test_colours():
     """Test colour conversions.
     """
