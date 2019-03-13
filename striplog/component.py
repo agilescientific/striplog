@@ -33,12 +33,16 @@ class Component(object):
     def __init__(self, properties=None):
         if properties is not None:
             for k, v in properties.items():
-                try:  # To treat as number...
-                    setattr(self, k, float(v))
-                except ValueError:  # It's a string.
+                if v is True or v is False:
+                    # Cope with a boolean...
                     setattr(self, k, v)
-                except TypeError:  # It's probably None.
-                    continue
+                else:
+                    try:  # To treat as number...
+                        setattr(self, k, float(v))
+                    except ValueError:  # Just add it.
+                        setattr(self, k, v)
+                    except TypeError:  # It's probably None.
+                        continue
 
     def __str__(self):
         return self.__dict__.__str__()
@@ -74,6 +78,13 @@ class Component(object):
     __nonzero__ = __bool__
 
     def __eq__(self, other):
+        """
+        Equals
+
+        Definitely a debate to be had about what constitutes equality. Here,
+        we are ignoring numerical fields in the components, but not Boolean
+        ones.
+        """
         if not isinstance(other, self.__class__):
             return False
 
@@ -90,8 +101,8 @@ class Component(object):
             s = {k.lower(): v.lower() for k, v in ds if v}
             o = {k.lower(): v.lower() for k, v in do if v}
         except (AttributeError, ValueError):  # Dealing with numbers.
-            s = {k.lower(): v for k, v in ds if isinstance(v, strobj)}
-            o = {k.lower(): v for k, v in do if isinstance(v, strobj)}
+            s = {k.lower(): v for k, v in ds if isinstance(v, strobj) or isinstance(v, bool)}
+            o = {k.lower(): v for k, v in do if isinstance(v, strobj) or isinstance(v, bool)}
 
         # Compare.
         if s == o:
