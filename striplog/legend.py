@@ -102,7 +102,7 @@ class Decor(object):
         # Make sure we have a width, and it's a float, even if it's None.
         try:
             self.width = float(self.width)
-        except:
+        except ValueError:
             self.width = None
 
         # Make sure we have a hatch, even if it's None. And correct 'none's.
@@ -266,7 +266,7 @@ class Decor(object):
         Returns a minimal Decor with a random colour.
         """
         colour = random.sample([i for i in range(256)], 3)
-        return cls({'colour': colour, 'component': component})
+        return cls({'colour': colour, 'component': component, 'width': 1.0})
 
     def plot(self, fmt=None, fig=None, ax=None):
         """
@@ -494,8 +494,7 @@ class Legend(object):
                               ]
         except:
             try:
-                components.append('')  # Test for list.
-                list_of_Decors = [Decor.random(c) for c in components[:-1]]
+                list_of_Decors = [Decor.random(c) for c in components.copy()]
             except:
                 # It's a single component.
                 list_of_Decors = [Decor.random(components)]
@@ -599,7 +598,15 @@ class Legend(object):
                         continue
                 if k[:4].lower() == 'comp':
                     prop = ' '.join(k.split()[1:])
-                    component[prop] = v.lower()
+                    if v.lower() == 'true':
+                        component[prop] = True
+                    elif v.lower() == 'false':
+                        component[prop] = False
+                    else:
+                        try:
+                            component[prop] = float(v)
+                        except ValueError:
+                            component[prop] = v.lower()
 
                 elif k[:5].lower() == 'curve':
                     prop = ' '.join(k.split()[1:])
@@ -610,6 +617,7 @@ class Legend(object):
                         d[k] = float(v)
                     except ValueError:
                         d[k] = v.lower()
+
             this_component = Component(component)
             d[kind] = this_component
 
