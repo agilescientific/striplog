@@ -22,20 +22,6 @@ from unittest.mock import MagicMock
 sys.path.insert(0, os.path.abspath('..'))
 
 
-class Mock(MagicMock):
-    """
-    Required to get around having to install dependencies to build docs.
-    """
-    @classmethod
-    def __getattr__(cls, name):
-            return Mock()
-
-MOCK_MODULES = ['numpy',
-                'matplotlib',
-                'matplotlib.pyplot',
-                'matplotlib.patches']
-sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
-
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.

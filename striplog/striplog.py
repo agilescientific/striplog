@@ -2,7 +2,7 @@
 """
 A striplog is a sequence of intervals.
 
-:copyright: 2016 Agile Geoscience
+:copyright: 2019 Agile Geoscience
 :license: Apache 2.0
 """
 import re
@@ -10,7 +10,7 @@ from io import StringIO
 import csv
 import operator
 import warnings
-from collections import Counter
+from collections import defaultdict
 from functools import reduce
 from copy import deepcopy
 
@@ -104,9 +104,9 @@ class Striplog(object):
         self.__index = 0  # Set up iterable.
 
     def __repr__(self):
-        l = len(self.__list)
+        length = len(self.__list)
         details = "start={}, stop={}".format(self.start.z, self.stop.z)
-        return "Striplog({0} Intervals, {1})".format(l, details)
+        return "Striplog({0} Intervals, {1})".format(length, details)
 
     def __str__(self):
         s = [str(i) for i in self.__list]
@@ -507,7 +507,7 @@ class Striplog(object):
                 if iv.get('base', None) is None:
                     try:  # To set from next interval
                         iv['base'] = wanted_data[i+1]['top']
-                    except:
+                    except (IndexError, KeyError):
                         # It's the last interval
                         if stop is not None:
                             thick = stop - iv['top']
@@ -1001,6 +1001,12 @@ class Striplog(object):
 
         return cls(list_of_Intervals, source=source)
 
+    def copy(self):
+        """Returns a shallow copy."""
+        return Striplog([i.copy() for i in self],
+                        order=self.order,
+                        source=self.source)
+
     # Outputter
     def to_canstrat(self, filename, params):
         """
@@ -1110,7 +1116,8 @@ class Striplog(object):
                legend_field=None,
                match_only=None,
                undefined=0,
-               return_meta=False):
+               return_meta=False
+               ):
         """
         Return a fully sampled log from a striplog. Useful for crossplotting
         with log data, for example.
@@ -1144,9 +1151,11 @@ class Striplog(object):
 
         Returns:
             ndarray: If ``return_meta`` was ``True``, you get:
+
                   * The log data as an array of ints.
                   * The depth basis as an array of floats.
                   * A list of the components in the order matching the ints.
+
                 If ``return_meta`` was ``False`` (the default), you only get
                 the log data.
         """
@@ -1158,7 +1167,7 @@ class Striplog(object):
             start = start or self.start.z
             stop = stop or self.stop.z
             pts = np.ceil((stop - start)/step) + 1
-            basis = np.linspace(start, stop, pts)
+            basis = np.linspace(start, stop, int(pts))
 
         if (field is not None) or (legend_field is not None):
             result = np.zeros_like(basis, dtype=dtype)
@@ -1338,7 +1347,8 @@ class Striplog(object):
                   cmap=None,
                   default=None,
                   width_field=None,
-                  **kwargs):
+                  **kwargs
+                  ):
         """
         Plotting, but only the Rectangles. You have to set up the figure.
         Returns a matplotlib axis object.
@@ -1351,9 +1361,10 @@ class Striplog(object):
                 Default 1.
             match_only (list): A list of strings matching the attributes you
                 want to compare when plotting.
-             colour (str): Which data field to use for colours.
+            colour (str): Which data field to use for colours.
             cmap (cmap): Matplotlib colourmap. Default ``viridis``.
-            default ()
+            default (float): The default (null) value.
+            width_field (str): The field to use for the width of the patches.
             **kwargs are passed through to matplotlib's ``patches.Rectangle``.
 
         Returns:
@@ -1416,6 +1427,9 @@ class Striplog(object):
         return ax
 
     def get_data(self, field, function=None, default=None):
+        """
+        Get data from the striplog.
+        """
         f = function or utils.null
         data = []
         for iv in self:
@@ -1722,7 +1736,7 @@ class Striplog(object):
         """
         return self.__find_incongruities(op=operator.lt, index=index)
 
-    def prune(self, limit=None, n=None, percentile=None):
+    def prune(self, limit=None, n=None, percentile=None, keep_ends=False):
         """
         Remove intervals below a certain limit thickness. In place.
 
@@ -1731,21 +1745,32 @@ class Striplog(object):
             n (int): The n thinnest beds will be pruned.
             percentile (float): The thinnest specified percentile will be
                 pruned.
+            keep_ends (bool): Whether to keep the first and last, regardless
+                of whether they meet the pruning criteria.
         """
+        strip = self.copy()
+
         if not (limit or n or percentile):
             m = "You must provide a limit or n or percentile for pruning."
             raise StriplogError(m)
         if limit:
-            prune = [i for i, iv in enumerate(self) if iv.thickness < limit]
+            prune = [i for i, iv in enumerate(strip) if iv.thickness < limit]
         if n:
-            prune = self.thinnest(n=n, index=True)
+            prune = strip.thinnest(n=n, index=True)
         if percentile:
-            n = np.floor(len(self)*percentile/100)
-            prune = self.thinnest(n=n, index=True)
+            n = np.floor(len(strip)*percentile/100)
+            prune = strip.thinnest(n=n, index=True)
 
-        del self[prune]  # In place delete
+        if keep_ends:
+            first, last = 0, len(strip) - 1
+            if first in prune:
+                prune.remove(first)
+            if last in prune:
+                prune.remove(last)
 
-        return
+        del strip[prune]
+
+        return strip
 
     def anneal(self):
         """
@@ -1755,16 +1780,18 @@ class Striplog(object):
         about the ``Position`` (e.g. metadata associated with the top or base).
         See GitHub issue #54.
         """
-        gaps = self.find_gaps(index=True)
+        strip = self.copy()
+
+        gaps = strip.find_gaps(index=True)
 
         if not gaps:
             return
 
         for gap in gaps:
-            before = self[gap]
-            after = self[gap + 1]
+            before = strip[gap]
+            after = strip[gap + 1]
 
-            if self.order == 'depth':
+            if strip.order == 'depth':
                 t = (after.top.z-before.base.z)/2
                 before.base = before.base.z + t
                 after.top = after.top.z - t
@@ -1773,8 +1800,7 @@ class Striplog(object):
                 before.top = before.top.z + t
                 after.base = after.base.z - t
 
-        # These were in-place operations so we don't return anything
-        return
+        return strip
 
     def fill(self, component=None):
         """
@@ -1873,6 +1899,45 @@ class Striplog(object):
 
         return
 
+    def merge_neighbours(self, strict=True):
+        """
+        Makes a new striplog in which matching neighbours (for which the
+        components are the same) are unioned. That is, they are replaced by
+        a new Interval with the same top as the uppermost and the same bottom
+        as the lowermost.
+
+        Args
+            strict (bool): If True, then all of the components must match.
+                If False, then only the primary must match.
+
+        Returns:
+            Striplog. A new striplog.
+
+        TODO:
+            Might need to be tweaked to deal with 'binary striplogs' if those
+            aren't implemented with components.
+        """
+        new_strip = [self[0].copy()]
+
+        for lower in self[1:]:
+
+            # Determine if touching.
+            touching = new_strip[-1].touches(lower)
+
+            # Decide if match.
+            if strict:
+                similar = new_strip[-1].components == lower.components
+            else:
+                similar = new_strip[-1].primary == lower.primary
+
+            # Union if both criteria met.
+            if touching and similar:
+                new_strip[-1] = new_strip[-1].union(lower)
+            else:
+                new_strip.append(lower.copy())
+
+        return Striplog(new_strip)
+
     def thickest(self, n=1, index=False):
         """
         Returns the thickest interval(s) as a striplog.
@@ -1892,7 +1957,7 @@ class Striplog(object):
             return indices
         else:
             if n == 1:
-                # Then return an interval
+                # Then return an interval.
                 i = indices[0]
                 return self[i]
             else:
@@ -1926,20 +1991,30 @@ class Striplog(object):
             else:
                 return self[indices]
 
-    def histogram(self, interval=1.0, lumping=None, summary=False, sort=True):
+    def hist(self,
+             lumping=None,
+             summary=False,
+             sort=True,
+             plot=True,
+             legend=None,
+             ax=None
+             ):
         """
-        Returns the data for a histogram. Does not plot anything.
+        Plots a histogram and returns the data for it.
 
         Args:
-            interval (float): The sample interval; small numbers mean big bins.
             lumping (str): If given, the bins will be lumped based on this
-                attribute of the primary components of the intervals encount-
-                ered.
+                attribute of the primary components of the intervals
+                encountered.
             summary (bool): If True, the summaries of the components are
                 returned as the bins. Otherwise, the default behaviour is to
                 return the Components themselves.
             sort (bool): If True (default), the histogram is sorted by value,
                 starting with the largest.
+            plot (bool): If True (default), produce a bar plot.
+            legend (Legend): The legend with which to colour the bars.
+            ax (axis): An axis object, which will be returned if provided.
+                If you don't provide one, it will be created but not returned.
 
         Returns:
             Tuple: A tuple of tuples of entities and counts.
@@ -1947,28 +2022,104 @@ class Striplog(object):
         TODO:
             Deal with numeric properties, so I can histogram 'Vp' values, say.
         """
-        d_list = np.arange(self.start.z, self.stop.z, interval)
-        raw_readings = []
-        for d in d_list:
+        # This seems like overkill, but collecting all this stuff gives
+        # the user some choice about what they get back.
+        comps = []
+        labels = []
+        entries = defaultdict(int)
+        for i in self:
             if lumping:
-                x = self.read_at(d).primary[lumping]
+                k = i.primary[lumping]
             else:
-                x = self.read_at(d)
-                if not x:
-                    continue
                 if summary:
-                    x = x.primary.summary()
+                    k = i.primary.summary()
                 else:
-                    x = x.primary
-            raw_readings.append(x)
-        c = Counter(raw_readings)
-        ents, counts = tuple(c.keys()), tuple(c.values())
+                    k = i.primary
+            comps.append(i.primary)
+            labels.append(i.primary.summary())
+            entries[k] += i.thickness
 
         if sort:
-            z = zip(counts, ents)
-            counts, ents = zip(*sorted(z, key=lambda t: t[0], reverse=True))
+            allitems = sorted(entries.items(), key=lambda i: i[1], reverse=True)
+            ents, counts = zip(*allitems)
+        else:
+            ents, counts = tuple(entries.keys()), tuple(entries.values())
 
-        return ents, counts
+        # Make plot.
+        if plot:
+            if ax is None:
+                fig, ax = plt.subplots()
+                return_ax = False
+            else:
+                return_ax = True
+            ind = np.arange(len(ents))
+            bars = ax.bar(ind, counts, align='center')
+            ax.set_xticks(ind)
+            ax.set_xticklabels(labels)
+            if legend:
+                colours = [legend.get_colour(c) for c in comps]
+                for b, c in zip(bars, colours):
+                    b.set_color(c)
+            ax.set_ylabel('Thickness [m]')
+        else:
+            bars = []
+
+        if plot and return_ax:
+            return counts, ents, ax
+
+        return counts, ents, bars
+
+    histogram = hist
+
+    def bar(self, height='thickness', sort=False, reverse=False,
+            legend=None, ax=None, figsize=None, **kwargs):
+        """
+        Make a bar plot of thickness per interval.
+        
+        Args:
+            height (str): The property of the primary component to plot.
+            sort (bool or function): Either pass a boolean indicating whether
+                to reverse sort by thickness, or pass a function to be used as
+                the sort key.
+            reverse (bool): Reverses the sort order.
+            legend (Legend): The legend to plot with.
+            ax (axis): Optional axis to plot to.
+            figsize (tuple): A figure size, (width, height), optional.
+            **kwargs: passed to the matplotlib bar plot command, ax.bar().
+            
+        Returns:
+            axis: If you sent an axis in, you get it back.
+        """
+        if sort:
+            if sort is True:
+                def func(x): return x.thickness
+                reverse = True
+            data = sorted(self, key=func, reverse=reverse)
+        else:
+            data = self[:]
+
+        if ax is None:
+            fig, ax = plt.subplots(figsize=figsize)
+
+        heights = [getattr(i, height) for i in data]
+        
+        comps = [i[0] for i in self.unique]
+        
+        if legend is None:
+            legend = Legend.random(comps)
+            
+        colors = [legend.get_colour(i.primary) for i in data]
+
+        bars = ax.bar(range(len(data)), height=heights, color=colors, **kwargs)
+        
+        # Legend.
+        colourables = [i.primary.summary() for i in data]
+        unique_bars = dict(zip(colourables, bars))
+        ax.legend(unique_bars.values(), unique_bars.keys())
+
+        ax.set_ylabel(height.title())
+
+        return ax
 
     def invert(self, copy=False):
         """

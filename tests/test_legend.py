@@ -76,7 +76,7 @@ def test_legend():
     assert len(l) == 2
     assert getattr(l[-1], 'colour') != ''
     assert l.to_csv() != ''
-    assert l.max_width == 0
+    assert l.max_width == 1.0
 
     l = Legend.random([rock, rock3], width=True, colour='#abcdef')
     assert getattr(l[0], 'colour') == '#abcdef'

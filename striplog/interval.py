@@ -453,6 +453,9 @@ class Interval(object):
         total = thin.thickness + thick.thickness
         prop = 100 * thick.thickness / total
 
+        if self.components == other.components:
+            return self.description.strip(' .,')
+
         d1 = thick.description.strip(' .,') or thick.summary()
         d2 = thin.description.strip(' .,') or thin.summary()
         if d1:
@@ -476,7 +479,10 @@ class Interval(object):
             Interval. The combined description.
         """
         if blend:
-            self.components = old_self.components + other.components
+            self.components = old_self.components.copy()
+            for c in other.components:
+                if c not in self.components:
+                    self.components.append(c)
             self.description = old_self._blend_descriptions(other)
             self.data = old_self._combine_data(other)
         else:
