@@ -47,11 +47,11 @@ class Interval(object):
     TODO:
         Seems like I should be able to instantiate like this:
 
-            Interval({'top': 0, 'components':[Component({'age': 'Neogene'})
+            ``Interval({'top': 0, 'components':[Component({'age': 'Neogene'})``s
 
         I can get around it for now like this:
 
-            Interval(**{'top': 0, 'components':[Component({'age': 'Neogene'})
+            ``Interval(**{'top': 0, 'components':[Component({'age': 'Neogene'})``
 
         Question: should Interval itself cope with only being handed 'top' and
         either fill in down to the next or optionally create a point?
