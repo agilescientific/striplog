@@ -179,11 +179,14 @@ def test_from_image():
     assert len(striplog.find_gaps()) == len(indices)
 
     # Prune and anneal.
-    striplog.prune(limit=1.0)
+    striplog = striplog.prune(limit=1.0)
     assert len(striplog) == 14
 
-    striplog.anneal()
+    striplog = striplog.anneal()
     assert not striplog.find_gaps()  # Should be None
+
+    striplog = striplog.merge_neighbours()
+    assert len(striplog) == 11
 
     rock = striplog.find('sandstone')[1].components[0]
     assert rock in striplog
@@ -319,8 +322,9 @@ def test_histogram():
     """
     lexicon = Lexicon.default()
     striplog = Striplog.from_las3(las3, lexicon=lexicon)
-    _, counts = striplog.histogram()
-    assert counts == (124, 6, 6, 5, 3)
+    thicks, *_ = striplog.histogram(plot=False)  # See test_plots for plots.
+    t = [123.005, 7.919, 5.504, 4.022, 2.964]
+    assert np.allclose(t, thicks)
 
 
 def test_petrel():

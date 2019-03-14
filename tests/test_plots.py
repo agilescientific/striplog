@@ -14,8 +14,11 @@ import random
 import matplotlib.pyplot as plt
 import pytest
 
-from striplog import Striplog
+from striplog import Striplog, Lexicon
 from striplog import Legend, Component, Decor
+
+from .test_striplog import las3
+
 
 params = {'tolerance': 20,
           'savefig_kwargs': {'dpi': 100},
@@ -155,4 +158,27 @@ def test_pattern_fills():
     for i, d in enumerate(decors):
         ax = fig.add_subplot(len(decors), 1, i+1)
         ax = d.plot(ax=ax, fmt='')
+    return fig
+
+
+@pytest.mark.mpl_image_compare(**params)
+def test_histogram():
+    """Test histogram plot.
+    """
+    fig, ax = plt.subplots()
+    lexicon = Lexicon.default()
+    striplog = Striplog.from_las3(las3, lexicon=lexicon)
+    *_, ax = striplog.histogram(ax=ax)
+    return fig
+
+
+@pytest.mark.mpl_image_compare(**params)
+def test_bar():
+    """Test bar plot.
+    """
+    fig, ax = plt.subplots()
+    lexicon = Lexicon.default()
+    striplog = Striplog.from_las3(las3, lexicon=lexicon)
+    legend = Legend.builtin('nagmdm__6_2')
+    ax = striplog.bar(sort=True, legend=legend, ax=ax)
     return fig

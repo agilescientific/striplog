@@ -101,8 +101,8 @@ class Decor(object):
 
         # Make sure we have a width, and it's a float, even if it's None.
         try:
-            self.width = float(self.width)
-        except ValueError:
+            self.width = float(getattr(self, 'width', None))
+        except (TypeError, ValueError):
             self.width = None
 
         # Make sure we have a hatch, even if it's None. And correct 'none's.

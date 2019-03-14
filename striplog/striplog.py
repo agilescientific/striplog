@@ -507,7 +507,7 @@ class Striplog(object):
                 if iv.get('base', None) is None:
                     try:  # To set from next interval
                         iv['base'] = wanted_data[i+1]['top']
-                    except KeyError:
+                    except (IndexError, KeyError):
                         # It's the last interval
                         if stop is not None:
                             thick = stop - iv['top']
@@ -1164,7 +1164,7 @@ class Striplog(object):
             start = start or self.start.z
             stop = stop or self.stop.z
             pts = np.ceil((stop - start)/step) + 1
-            basis = np.linspace(start, stop, pts)
+            basis = np.linspace(start, stop, int(pts))
 
         if (field is not None) or (legend_field is not None):
             result = np.zeros_like(basis, dtype=dtype)
@@ -2053,11 +2053,10 @@ class Striplog(object):
                 for b, c in zip(bars, colours):
                     b.set_color(c)
             ax.set_ylabel('Thickness [m]')
-            plt.show()
         else:
             bars = []
 
-        if return_ax:
+        if plot and return_ax:
             return counts, ents, ax
 
         return counts, ents, bars
@@ -2093,9 +2092,6 @@ class Striplog(object):
 
         if ax is None:
             fig, ax = plt.subplots(figsize=figsize)
-            return_ax = False
-        else:
-            return_ax = True
 
         heights = [getattr(i, height) for i in data]
         
@@ -2115,10 +2111,7 @@ class Striplog(object):
 
         ax.set_ylabel(height.title())
 
-        if return_ax:
-            return ax
-
-        plt.show()
+        return ax
 
     def invert(self, copy=False):
         """
