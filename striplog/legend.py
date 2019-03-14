@@ -280,9 +280,9 @@ class Decor(object):
                 both.
 
         Returns:
-        fig or ax or None. If you pass in an ax, you get it back. If you pass
-            in a fig, you get it. If you pass nothing, the function creates a
-            plot object as a side-effect.
+            fig or ax or None. If you pass in an ax, you get it back. If you pass
+                in a fig, you get it. If you pass nothing, the function creates a
+                plot object as a side-effect.
         """
 
         u = 4     # aspect ratio of decor plot
@@ -772,18 +772,17 @@ class Legend(object):
         """
         Get the display width of a component. Wraps `getattr()`.
 
-        Development note:
-            Cannot define this as a `partial()` because I want
-            to maintain the order of arguments in `getattr()`.
+        Development note: Cannot define this as a `partial()` because I want
+        to maintain the order of arguments in `getattr()`.
 
         Args:
-        c (component): The component to look up.
-           default (float): The width to return in the event of no match.
-           match_only (list of str): The component attributes to include in the
-               comparison. Default: All of them.
+            c (component): The component to look up.
+            default (float): The width to return in the event of no match.
+            match_only (list of str): The component attributes to include in the
+                comparison. Default: All of them.
 
         Returns:
-           float. The width of the matching Decor in the Legend.
+            float. The width of the matching Decor in the Legend.
         """
         return self.getattr(c=c,
                             attr='width',

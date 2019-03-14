@@ -1116,7 +1116,8 @@ class Striplog(object):
                legend_field=None,
                match_only=None,
                undefined=0,
-               return_meta=False):
+               return_meta=False
+               ):
         """
         Return a fully sampled log from a striplog. Useful for crossplotting
         with log data, for example.
@@ -1150,9 +1151,11 @@ class Striplog(object):
 
         Returns:
             ndarray: If ``return_meta`` was ``True``, you get:
+
                   * The log data as an array of ints.
                   * The depth basis as an array of floats.
                   * A list of the components in the order matching the ints.
+
                 If ``return_meta`` was ``False`` (the default), you only get
                 the log data.
         """
@@ -1344,7 +1347,8 @@ class Striplog(object):
                   cmap=None,
                   default=None,
                   width_field=None,
-                  **kwargs):
+                  **kwargs
+                  ):
         """
         Plotting, but only the Rectangles. You have to set up the figure.
         Returns a matplotlib axis object.
@@ -1357,9 +1361,10 @@ class Striplog(object):
                 Default 1.
             match_only (list): A list of strings matching the attributes you
                 want to compare when plotting.
-             colour (str): Which data field to use for colours.
+            colour (str): Which data field to use for colours.
             cmap (cmap): Matplotlib colourmap. Default ``viridis``.
-            default ()
+            default (float): The default (null) value.
+            width_field (str): The field to use for the width of the patches.
             **kwargs are passed through to matplotlib's ``patches.Rectangle``.
 
         Returns:
@@ -1422,6 +1427,9 @@ class Striplog(object):
         return ax
 
     def get_data(self, field, function=None, default=None):
+        """
+        Get data from the striplog.
+        """
         f = function or utils.null
         data = []
         for iv in self:
