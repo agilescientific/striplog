@@ -4,11 +4,11 @@ Changelog
 0.8.0
 -----
 
-- New point release because of breaking changes
+- New point release because of breaking changes.
 - Breaking change: `Striplog.prune()` and `Striplog.anneal()` now return copies, so you can chain them.
 - `Striplog.bar()` makes a bar chart of the intervals, with optional sorting by thickness or any other key.
 - Breaking change: `Striplog.hist()` (which `histogram()` now calls) now makes a plot as well and returns the bars (or the axis, if you pass one in).
-- `Striplog.merge_neighbours()` performs a stepwise `Interval.union()` on all pairs of intervals, combining neighbours that have 
+- `Striplog.merge_neighbours()` performs a stepwise `Interval.union()` on all pairs of intervals, combining neighbours that have identical components. It is intended to be used after `Striplog.anneal()`.
 
 0.7.0 to 0.7.3
 --------------
