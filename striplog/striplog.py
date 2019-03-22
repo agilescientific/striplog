@@ -1145,7 +1145,7 @@ class Striplog(object):
                 the Components (e.g. lithology), provide a list of those
                 you want to match.
             undefined (number): What to fill in where no value can be
-                determined, e.g. ``-999.25`` or ``np.null``. Default 0.
+                determined, e.g. ``-999.25`` or ``np.nan``. Default 0.
             return_meta (bool): If ``True``, also return the depth basis
                 (np.linspace), and the component table.
 
@@ -1182,14 +1182,13 @@ class Striplog(object):
 
         # If needed, make a look-up table for the log values.
         if table is None:
-            table = [Component({})]
             if legend:
-                table += [j.component for j in legend]
+                table = [j.component for j in legend]
             elif field:
                 s = set([iv.data.get(field) for iv in self])
-                table = [None] + list(filter(None, s))
+                table = list(filter(None, s))
             else:
-                table += [j[0] for j in self.unique]
+                table = [j[0] for j in self.unique]
 
         # Adjust the table if necessary. Go over all the components in the
         # table list, and remove elements that are not in the match list.
@@ -1233,12 +1232,12 @@ class Striplog(object):
                 f = field_function or utils.null
                 try:
                     v = f(i.data.get(field, undefined)) or undefined
-                    key = table.index(v)
+                    key = (table.index(v) + 1) or undefined
                 except ValueError:
                     key = undefined
             else:  # Use the lookup table.
                 try:
-                    key = table.index(c) or undefined
+                    key = (table.index(c) + 1) or undefined
                 except ValueError:
                     key = undefined
 

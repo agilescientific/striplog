@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.8.1 (ongoing)
+-----
+
+- `dilate` and `erode` -- these offer another way to change intervals, and thus to simplify a binary striplog (one in which the principal component contains only a single binary 'flag').
+
 0.8.0
 -----
 
