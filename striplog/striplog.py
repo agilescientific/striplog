@@ -453,7 +453,7 @@ class Striplog(object):
                                  ignore=None,
                                  lexicon=None):
         """
-        Private function. Takes a data dictionary and reconstructs a list
+        Private function. Takes a data dictionary and constructs a list
         of Intervals from it.
 
         Args:
@@ -562,6 +562,24 @@ class Striplog(object):
                  fieldnames=None):
         """
         Load from a CSV file or text.
+
+        Args
+            filename (str): The filename, or use `text`.
+            text (str): CSV data as a string, or use `filename`.
+            dlm (str): The delimiter, default ','.
+            lexicon (Lexicon): The lexicon to use, optional. Only needed if
+                parsing descriptions (e.g. cuttings).
+            points (bool): Whether to make a point dataset (as opposed to
+                ordinary intervals with top and base. Default is False.
+            include: Default is None.
+            exclude: Default is None.
+            remap: Default is None.
+            function: Default is None.
+            null: Default is None.
+            ignore: Default is None.
+            source: Default is None.
+            stop: Default is None.
+            fieldnames: Default is None.
         """
         if (filename is None) and (text is None):
             raise StriplogError("You must provide a filename or CSV text.")
