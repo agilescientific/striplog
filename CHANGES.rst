@@ -5,6 +5,9 @@ Changelog
 -----
 
 - `dilate` and `erode` -- these offer another way to change intervals, and thus to simplify a binary striplog (one in which the principal component contains only a single binary 'flag').
+- Fixed a bug in `plot`: it assumed the first interval in a striplog was the 'shallowest' and the last the deepest. But if intervals can overlap (which they can), then this is not a safe assumption. Now uses `Striplog.start` and `Striplog.stop` to decide.
+- Added `append`, `extend` and `pop` methods to `Striplog`s.
+- Added `mode` keyword arg to anneal, allowing user to choose whether the gaps in the log are filled in by flooding upwards (that is, extend the interval below the gap upwards), flooding downwards (extend the upper interval), or flooding symmetrically into the middle from both above and below, meeting in the middle. (Note, you can also fill gaps with another component, using the `fill()` method.)
 
 0.8.0
 -----

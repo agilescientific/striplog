@@ -206,6 +206,34 @@ class Striplog(object):
         else:
             raise StriplogError("You can only add striplogs or intervals.")
 
+    def append(self, item):
+        """
+        Implements list-like `append()` method.
+        """
+        if isinstance(item, Interval):
+            self.__list.append(item)
+            return
+        else:
+            m = "You can only append an Interval to a Striplog."
+            raise StriplogError(m)
+
+    def extend(self, item):
+        """
+        Implements list-like `extend()` method.
+        """
+        if isinstance(item, self.__class__):
+            self.__list += item
+            return
+        else:
+            m = "You can only extend a Striplog with another Striplog."
+            raise StriplogError(m)
+
+    def pop(self, index):
+        """
+        Implements list-like `pop()` method.
+        """
+        self.__list.pop(index)
+
     @property
     def start(self):
         """
@@ -215,9 +243,11 @@ class Striplog(object):
             Position.
         """
         if self.order == 'depth':
-            return self[0].top
+            # Too naive if intervals can overlap:
+            # return self[0].top
+            return min(i.top for i in self)
         else:
-            return self[-1].base
+            return min(i.base for i in self)
 
     @property
     def stop(self):
@@ -228,9 +258,9 @@ class Striplog(object):
             Position.
         """
         if self.order == 'depth':
-            return self[-1].base
+            return max(i.base for i in self)
         else:
-            return self[0].top
+            return max(i.top for i in self)
 
     def __sort(self):
         """
@@ -524,7 +554,9 @@ class Striplog(object):
             if iv:
                 c, d = {}, {}
                 for k, v in iv.items():
-                    if (k[:5].lower() == 'comp ') or (k[:9].lower() == 'component'):
+                    match1 = (k[:9].lower() == 'component')
+                    match2 = (k[:5].lower() == 'comp ')
+                    if match1 or match2:
                         k = re.sub(r'comp(?:onent)? ', '', k, flags=re.I)
                         c[k] = v  # It's a component
                     else:
@@ -607,7 +639,9 @@ class Striplog(object):
         reader = csv.DictReader(f, delimiter=dlm)
 
         # Reorganize the data to make fixing it easier.
-        reorg = {k.strip().lower(): [] for k in reader.fieldnames if k is not None}
+        reorg = {k.strip().lower(): []
+                 for k in reader.fieldnames
+                 if k is not None}
         t = f.tell()
         for key in reorg:
             f.seek(t)
@@ -905,7 +939,7 @@ class Striplog(object):
             Striplog: The ``striplog`` object.
         """
         if (components is None) and (legend is None) and (field is None):
-            m = 'You must provide a list of components, and legend, or a field.'
+            m = 'You must provide a list of components and legend, or a field.'
             raise StriplogError(m)
 
         if (legend is not None) and (legend_field is None):
@@ -1062,7 +1096,8 @@ class Striplog(object):
         """
         if (filename is None):
             if (not as_text):
-                raise StriplogError("You must provide a filename or set as_text to True.")
+                m = "You must provide a filename or set as_text to True."
+                raise StriplogError(m)
         else:
             as_text = False
 
@@ -1087,12 +1122,11 @@ class Striplog(object):
                 text = i.primary.summary()
             else:
                 text = ''
-            data = {j: k for j, k in zip(fieldnames, [i.top.z, i.base.z, text])}
-            writer.writerow(data)
+            d = {j: k for j, k in zip(fieldnames, [i.top.z, i.base.z, text])}
+            writer.writerow(d)
 
         if as_text:
             return output.getvalue()
-            #return output
         else:
             output.close
             return None
@@ -1436,9 +1470,12 @@ class Striplog(object):
         if colour is not None:
             cmap = cmap or 'viridis'
             p = mpl.collections.PatchCollection(patches, cmap=cmap, lw=lw)
-            p.set_array(self.get_data(colour, colour_function, default=default))
+            p.set_array(self.get_data(colour,
+                                      colour_function,
+                                      default=default
+                                      ))
             ax.add_collection(p)
-            cb = plt.colorbar(p)  #  orientation='horizontal' only really works with ticks=[0, 0.1, 0.2] say
+            cb = plt.colorbar(p)
             cb.outline.set_linewidth(0)
 
         return ax
@@ -1500,7 +1537,7 @@ class Striplog(object):
             None. Unless you specify ``return_fig=True`` or pass in an ``ax``.
         """
         if legend is None:
-                legend = Legend.random(self.components)
+            legend = Legend.random(self.components)
 
         if style.lower() == 'tops':
             # Make sure width is at least 3 for 'tops' style
@@ -1528,7 +1565,8 @@ class Striplog(object):
                                 legend=legend,
                                 ladder=ladder,
                                 default_width=width,
-                                match_only=kwargs.get('match_only', match_only),
+                                match_only=kwargs.get('match_only',
+                                                      match_only),
                                 colour=colour,
                                 cmap=cmap,
                                 default=default,
@@ -1540,7 +1578,10 @@ class Striplog(object):
             ax.set_xticks([])
 
         # Rely on interval order.
-        lower, upper = self[-1].base.z, self[0].top.z
+        if self.order == 'depth':
+            upper, lower = self.start.z, self.stop.z
+        else:
+            upper, lower = self.stop.z, self.start.z
         rng = abs(upper - lower)
 
         ax.set_ylim([lower, upper])
@@ -1789,15 +1830,25 @@ class Striplog(object):
 
         return strip
 
-    def anneal(self):
+    def anneal(self, mode='middle'):
         """
         Fill in empty intervals by growing from top and base.
 
         Note that this operation happens in-place and destroys any information
         about the ``Position`` (e.g. metadata associated with the top or base).
         See GitHub issue #54.
+
+        If there are overlaps in your striplog, then this method may have
+        unexpected results.
+
+        Args
+            mode (str): One of ['down', 'middle', 'up']. Which way to 'flood'
+                into the gaps.
+
+        Returns
+            Striplog. A new instance of the Striplog class.
         """
-        strip = self.copy()
+        strip = deepcopy(self)
 
         gaps = strip.find_gaps(index=True)
 
@@ -1808,14 +1859,27 @@ class Striplog(object):
             before = strip[gap]
             after = strip[gap + 1]
 
-            if strip.order == 'depth':
-                t = (after.top.z-before.base.z)/2
-                before.base = before.base.z + t
-                after.top = after.top.z - t
-            else:
-                t = (after.base-before.top)/2
-                before.top = before.top.z + t
-                after.base = after.base.z - t
+            if mode == 'middle':
+                if strip.order == 'depth':
+                    t = (after.top.z-before.base.z)/2
+                    before.base = before.base.z + t
+                    after.top = after.top.z - t
+                else:
+                    t = (after.base-before.top)/2
+                    before.top = before.top.z + t
+                    after.base = after.base.z - t
+
+            elif mode == 'down':
+                if strip.order == 'depth':
+                    before.base = after.top.z
+                else:
+                    before.top = after.base.z
+
+            elif mode == 'up':
+                if strip.order == 'depth':
+                    after.top = before.base.z
+                else:
+                    after.base = before.top.z
 
         return strip
 
@@ -2057,7 +2121,10 @@ class Striplog(object):
             entries[k] += i.thickness
 
         if sort:
-            allitems = sorted(entries.items(), key=lambda i: i[1], reverse=True)
+            allitems = sorted(entries.items(),
+                              key=lambda i: i[1],
+                              reverse=True
+                              )
             ents, counts = zip(*allitems)
         else:
             ents, counts = tuple(entries.keys()), tuple(entries.values())
@@ -2092,7 +2159,7 @@ class Striplog(object):
             legend=None, ax=None, figsize=None, **kwargs):
         """
         Make a bar plot of thickness per interval.
-        
+
         Args:
             height (str): The property of the primary component to plot.
             sort (bool or function): Either pass a boolean indicating whether
@@ -2103,7 +2170,7 @@ class Striplog(object):
             ax (axis): Optional axis to plot to.
             figsize (tuple): A figure size, (width, height), optional.
             **kwargs: passed to the matplotlib bar plot command, ax.bar().
-            
+
         Returns:
             axis: If you sent an axis in, you get it back.
         """
@@ -2119,16 +2186,16 @@ class Striplog(object):
             fig, ax = plt.subplots(figsize=figsize)
 
         heights = [getattr(i, height) for i in data]
-        
+
         comps = [i[0] for i in self.unique]
-        
+
         if legend is None:
             legend = Legend.random(comps)
-            
+
         colors = [legend.get_colour(i.primary) for i in data]
 
         bars = ax.bar(range(len(data)), height=heights, color=colors, **kwargs)
-        
+
         # Legend.
         colourables = [i.primary.summary() for i in data]
         unique_bars = dict(zip(colourables, bars))
