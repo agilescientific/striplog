@@ -21,6 +21,19 @@ except:
     pass
 
 
+def hollow_matrix(M):
+    """
+    Return hollow matrix (zeros on diagonal).
+
+    Args
+        M (ndarray): a 2D, square array representing a matrix.
+
+    Returns
+        ndarray. The same array with zeros on the diagonal.
+    """
+    return (1 - np.eye(M.shape[0])) * M
+
+
 def inspect_petrel(filename):
     data = read_petrel(filename)
     data = {k: ', '.join(list(map(str, set(v)))) for k, v in data.items()}
