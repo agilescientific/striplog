@@ -1,4 +1,4 @@
-# -*- coding: utf 8 -*-
+# -*- coding: utf-8 -*-
 """
 Codes for Canstrat ASCII files; only used by canstrat.py.
 

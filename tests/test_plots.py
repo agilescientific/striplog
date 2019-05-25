@@ -1,4 +1,4 @@
-# -*- coding: utf 8 -*-
+# -*- coding: utf-8 -*-
 """
 Defines a suite a tests for images run with:
 

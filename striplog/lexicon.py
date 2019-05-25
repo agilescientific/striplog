@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf 8 -*-
+# -*- coding: utf-8 -*-
 """
 A vocabulary for parsing lithologic or stratigraphic decriptions.
 

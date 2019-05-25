@@ -1,4 +1,4 @@
-# -*- coding: utf 8 -*-
+# -*- coding: utf-8 -*-
 """
 Define a suite a tests for the Lexicon module.
 """
