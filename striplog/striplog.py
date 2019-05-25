@@ -2302,3 +2302,122 @@ class Striplog(object):
 
         return {test.__name__: test(self) for test in this_tests}
 
+    @property
+    def _table(self):
+        """
+        A table (list of tuples) of the tops and bases we encounter, starting
+        at the top. We will need to know 3 things: whether it's a top or a
+        base, the depth it's at, and which interval in the striplog it
+        corresponds to.
+        """
+        table = []
+        for i, interval in enumerate(self):
+            table.append(('T', interval.top.middle, i))
+            table.append(('B', interval.base.middle, i))
+        table = sorted(table, key=lambda x: x[1])
+        return table
+
+    def _merge_table(self, attr, reverse=False):
+        """
+        Do the merge operation on a table, and return a new table with
+        no nesting / overlaps.
+
+        Args
+            attr (str): The attribute of the component you want to use. You
+                must provide an attribute. 
+            reverse (bool): Whether to reverse the condition.
+
+        Returns
+            list: The merged table.
+        """
+        merged, stack = [], []
+        op = operator.le if reverse else operator.ge
+
+        for interface in self._table:
+
+            tb, depth, idx = interface
+
+            if stack:
+                # 'this' is the top or base we're on in this loop iteration.
+                this = getattr(self[idx].primary, attr)
+
+                # 'current' is the highest priority unit in the stack.
+                current = getattr(self[stack[-1]].primary, attr)
+
+                # Compare 'this' to 'current' to decide what to do.
+                merge = op(this, current)
+            else:
+                merge = True
+
+            if tb == 'T':
+
+                # If this one meets the condition, merge it.
+                if merge:
+                    # End the current unit, if any.
+                    if stack:
+                        merged.append(('B', depth, stack[-1]))
+                    # Start the new top.
+                    merged.append(interface)
+
+                # Insert this unit into stack and re-sort.
+                # (This is easier than trying to insert in the right place.)
+                stack.append(idx)
+                stack = sorted(stack,
+                               key=lambda i: getattr(self[i].primary, attr),
+                               reverse=reverse
+                               )
+
+            elif tb == 'B':
+                have_merged = False
+
+                # If this is the current unit's base, append it to the merge.
+                if idx == stack[-1]:
+                    merged.append(interface)
+                    have_merged = True
+
+                # End this unit in the stack.
+                stack.remove(idx)
+
+                # Add a top for the new current unit, if any, but only if we
+                # did a merge.
+                if stack and have_merged:
+                    merged.append(('T', depth, stack[-1]))
+
+        return merged
+
+    def _striplog_from_merge_table(self, table):
+        """
+        Make a merge table into a Striplog instance.
+
+        Returns
+            Striplog. A new Striplog instance.
+        """
+        m = []
+        for top, bot in zip(table[::2], table[1::2]):
+
+            # If zero thickness, discard.
+            if top[1] == bot[1]:
+                continue
+
+            i = s[top[2]].copy()
+            i.top = top[1]
+            i.base = bot[1]
+            m.append(i)
+
+        return Striplog(m)
+
+    def merge(self, attr, reverse=False):
+        """
+        Merge the intervals in a striplog, using an attribute of the primary
+        component for priority ordering.
+
+        Args
+            attr (str): The attribute of the component you want to use. You
+                must provide an attribute.
+            reverse (bool): Whether to reverse the condition.
+
+        Returns
+            Striplog: The merged striplog.
+        """
+        m = self._merge_table(attr, reverse=reverse)
+        return self._striplog_from_merge_table(m)
