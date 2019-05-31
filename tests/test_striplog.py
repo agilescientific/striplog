@@ -74,6 +74,20 @@ csv_points = """top, porosity
                 1275, 4.3
                 1300, 2.2"""
 
+lappy_list = [Interval(**{'top': 50,
+                                  'base': 60,
+                                  'components': [Component({'lithology': 'dolomite'}),]}),
+                      Interval(**{'top': 55,
+                                  'base': 75,
+                                  'components': [Component({'lithology': 'limestone'}),]}),
+                      Interval(**{'top': 75,
+                                  'base': 80,
+                                  'components': [Component({'lithology': 'volcanic'}),]}),
+                      Interval(**{'top': 78,
+                                  'base': 90,
+                                  'components': [Component({'lithology': 'anhydrite'}),]})
+                      ]
+
 
 def test_error():
     """Test the generic error.
@@ -102,15 +116,14 @@ def test_striplog():
     assert len(s) == 4
     assert s.start.z == 100
     assert s.stop.z == 200
-    assert s.__repr__() is not ''
-    assert s.__str__() is not ''
+    assert s.__repr__() != ''
+    assert s.__str__() != ''
 
     s_rev = s.invert(copy=True)
     assert s_rev.order == 'depth'
     x = s.invert()
     assert x is None
     assert s.order == 'depth'
-    assert s[0] == iv1
     assert s[0].top.z == 100
 
     # Top down: depth order
@@ -126,8 +139,8 @@ def test_striplog():
     assert s.stop.z == 250
     assert s._Striplog__strict()
 
-    l = [iv.thickness for iv in s]
-    assert len(l) == 4
+    listy = [iv.thickness for iv in s]
+    assert len(listy) == 4
 
     s[2] = Interval(180, 190, components=[r1, r2])
     assert len(s.find_gaps()) == 2
@@ -154,7 +167,7 @@ def test_from_image():
     assert striplog[-1].primary.summary() == 'Volcanic'
     assert np.floor(striplog.find('sandstone').cum) == 15
     assert striplog.read_at(260).primary.lithology == 'siltstone'
-    assert striplog.to_las3() is not ''
+    assert striplog.to_las3() != ''
     assert striplog.cum == 100.0
     assert striplog.thickest().primary.lithology == 'anhydrite'
     assert striplog.thickest(n=7)[1].primary.lithology == 'sandstone'
@@ -179,7 +192,7 @@ def test_from_image():
     assert len(striplog.find_gaps()) == len(indices)
 
     # Prune and anneal.
-    striplog = striplog.prune(limit=1.0)
+    striplog = striplog.prune(limit=1.0, keep_ends=True)
     assert len(striplog) == 14
 
     striplog = striplog.anneal()
@@ -190,6 +203,11 @@ def test_from_image():
 
     rock = striplog.find('sandstone')[1].components[0]
     assert rock in striplog
+
+    # Anneal up or down
+    s = striplog[[1, 3]]
+    assert s.anneal(mode='up')[1].top.z == s[0].base.z
+    assert s.anneal(mode='down')[0].base.z == s[1].top.z
 
 
 def test_from_descriptions():
@@ -259,41 +277,37 @@ def test_striplog_intersect():
     assert cret_sand.stop.z == 75
 
 
-def test_striplog_merge():
+def test_striplog_merge_overlaps():
     """Test merging. This example is from the tutorial.
     """
-    lappy = Striplog([Interval(**{'top': 0, 
-                                  'base': 60,
-                                  'components':[Component({'lithology': 'dolomite'}),]}),
-                      Interval(**{'top': 55,
-                                  'base': 75,
-                                  'components':[Component({'lithology': 'limestone'}),]}),
-                      Interval(**{'top': 75,
-                                  'base': 80,
-                                  'components':[Component({'lithology': 'volcanic'}),]}), 
-                      Interval(**{'top': 78,
-                                  'base': 100,
-                                  'components':[Component({'lithology': 'anhydrite'}),]})
-                      ])
+    lappy = Striplog(lappy_list)
     assert lappy.find_overlaps(index=True) == [0, 2]
     assert lappy.merge_overlaps() is None
     assert lappy.find_overlaps() is None
-    assert lappy.merge_overlaps() is None
+
+
+def test_striplog_merge():
+    """Test new merging. This example is from the tutorial.
+    """
+    lappy = Striplog(lappy_list)
+    assert len(lappy.merge('top')) == 4
+    assert lappy.merge('top')[0].base.z == 55
+    assert lappy.merge('top', reverse=True)[0].base.z == 60
 
 
 def test_striplog_union():
     """Test union.
     """
-    lappy = Striplog([Interval(**{'top': 0, 
+    lappy = Striplog([Interval(**{'top': 0,
                                   'base': 60,
-                                  'components':[Component({'lithology': 'dolomite'}),]}),
+                                  'components': [Component({'lithology': 'dolomite'}),]}),
                       Interval(**{'top': 55,
                                   'base': 75,
-                                  'components':[Component({'lithology': 'limestone'}),]}),
+                                  'components': [Component({'lithology': 'limestone'}),]}),
                       ])
     lippy = Striplog([Interval(**{'top': 0,
                                   'base': 30,
-                                  'components':[Component({'lithology': 'marl'}),]}), 
+                                  'components': [Component({'lithology': 'marl'}),]}),
                       ])
     u = lappy.union(lippy)
     assert len(u) == 2
@@ -301,12 +315,12 @@ def test_striplog_union():
 
 
 def test_fill():
-    gappy = Striplog([Interval(**{'top': 0, 
+    gappy = Striplog([Interval(**{'top': 0,
                                   'base': 60,
-                                  'components':[Component({'lithology': 'dolomite'}),]}),
+                                  'components': [Component({'lithology': 'dolomite'}),]}),
                       Interval(**{'top': 65,
                                   'base': 75,
-                                  'components':[Component({'lithology': 'limestone'}),]}),
+                                  'components': [Component({'lithology': 'limestone'}),]}),
                   ])
 
     f = gappy.fill(Component({'lithology': 'marl'}))
