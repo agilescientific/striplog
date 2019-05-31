@@ -48,6 +48,8 @@ class Striplog(object):
     """
     def __init__(self, list_of_Intervals, source=None, order='auto'):
 
+        list_of_Intervals = deepcopy(list_of_Intervals)
+
         if not list_of_Intervals:
             m = "Cannot create an empty Striplog."
             raise StriplogError(m)
@@ -142,16 +144,6 @@ class Striplog(object):
             del self.__list[key]
         return
 
-    def __insert(self, index, item):
-        if isinstance(item, self.__class__):
-            for i, iv in enumerate(item):
-                self.__list.insert(index+i, iv)
-        elif isinstance(item, Interval):
-            self.__list.insert(index, item)
-            return
-        else:
-            raise StriplogError("You can only insert striplogs or intervals.")
-
     def __len__(self):
         return len(self.__list)
 
@@ -205,6 +197,16 @@ class Striplog(object):
             return Striplog(result)
         else:
             raise StriplogError("You can only add striplogs or intervals.")
+
+    def insert(self, index, item):
+        if isinstance(item, self.__class__):
+            for i, iv in enumerate(item):
+                self.__list.insert(index+i, iv)
+        elif isinstance(item, Interval):
+            self.__list.insert(index, item)
+            return
+        else:
+            raise StriplogError("You can only insert striplogs or intervals.")
 
     def append(self, item):
         """
@@ -1248,7 +1250,7 @@ class Striplog(object):
         # be in the original list of components.
         if match_only is not None:
             if not isinstance(match_only, (list, tuple, set,)):
-                raise StriplogError("match_only should be a list, not a string")
+                raise StriplogError("match_only should be type list not str.")
             table_new = []
             for c in table:
                 if c == '':
@@ -1974,7 +1976,7 @@ class Striplog(object):
             new_segment = before.merge(after)
 
             # Insert it.
-            self.__insert(overlap, new_segment)
+            self.insert(overlap, new_segment)
 
             overlaps += 1
 
@@ -2266,6 +2268,29 @@ class Striplog(object):
             self.__list = new_list
             return
 
+    def net_to_gross(strip, attr):
+        """
+        Compute the ratio of intervals having that attribute as `True` to the
+        total thickness.
+
+        TODO
+            Allow user to give a cut-off value to apply to the attribute,
+            if it's a continuous scalar and not boolean.
+
+        Args
+            attr (str): Which attribute to use. Must have boolean values.
+
+        Returns
+            float. The net:gross ratio.
+        """
+        net = non = 0
+        for c, x in strip.unique:
+            if getattr(c, attr):
+                net = x
+            else:
+                non = x
+        return net / (net + non)
+
     def quality(self, tests, alias=None):
         """
         Run a series of tests and return the corresponding results.
@@ -2339,10 +2364,16 @@ class Striplog(object):
 
             if stack:
                 # 'this' is the top or base we're on in this loop iteration.
-                this = getattr(self[idx].primary, attr)
+                try:
+                    this = getattr(self[idx], attr)
+                except AttributeError:
+                    this = getattr(self[idx].primary, attr)
 
                 # 'current' is the highest priority unit in the stack.
-                current = getattr(self[stack[-1]].primary, attr)
+                try:
+                    current = getattr(self[stack[-1]], attr)
+                except AttributeError:
+                    current = getattr(self[stack[-1]].primary, attr)
 
                 # Compare 'this' to 'current' to decide what to do.
                 merge = op(this, current)
@@ -2362,10 +2393,14 @@ class Striplog(object):
                 # Insert this unit into stack and re-sort.
                 # (This is easier than trying to insert in the right place.)
                 stack.append(idx)
-                stack = sorted(stack,
-                               key=lambda i: getattr(self[i].primary, attr),
-                               reverse=reverse
-                               )
+                try:
+                    stack = sorted(stack,
+                                   key=lambda i: getattr(self[i], attr),
+                                   reverse=reverse)
+                except AttributeError:
+                    stack = sorted(stack,
+                                   key=lambda i: getattr(self[i].primary, attr),
+                                   reverse=reverse)
 
             elif tb == 'B':
                 have_merged = False
@@ -2399,7 +2434,7 @@ class Striplog(object):
             if top[1] == bot[1]:
                 continue
 
-            i = s[top[2]].copy()
+            i = self[top[2]].copy()
             i.top = top[1]
             i.base = bot[1]
             m.append(i)
