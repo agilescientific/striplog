@@ -2456,3 +2456,67 @@ class Striplog(object):
         """
         m = self._merge_table(attr, reverse=reverse)
         return self._striplog_from_merge_table(m)
+
+    def is_binary(self, attr=None):
+        """
+        Determine if `attr`, which must be an attribute of every primary
+        component, allows this striplog to be interpreted as a binary striplog.
+        If no `attr` is provided, the first attribute of the primary comp-
+        onent is used.
+        """
+        try:
+            primaries = [getattr(i.primary, attr) for i in self]
+        except:
+            primaries = [list(i.primary.__dict__.values())[0] for i in self]
+        return all(map(lambda x: isinstance(x, bool), primaries))
+
+    def to_binary_log(self, attr, step):
+        """
+        Adaptation of `to_log` but deals with binary attributes of striplogs.
+
+        Args
+            attr (str): Which attribute to make into a log.
+        """
+        log, basis, comps = self.to_log(step=step,
+                                        match_only=attr,
+                                        undefined=-1,
+                                        return_meta=True)
+        if -1 in log:
+            with warnings.catch_warnings():
+                warnings.simplefilter("always")
+                w = "We have undefined values, there might be a problem."
+                warnings.warn(w)
+        return log - 1, basis, comps
+
+    def binary_morphology(self, attr, operation, step=1.0, p=3):
+        """
+        Perform a discrete binary morphology operation on the striplog.
+
+        Args
+            attr (str): The attribute to use for the filtering. Must have
+                boolean values.
+            operation (str): One of `erosion`, `dilation`, `opening` or
+                `closing`.
+            step (float): The step size to use in discretization. Default is
+                1 but you might want to use something smaller, e.g. 0.1.
+            p (int): The length of the structuring element, in samples (not
+                natual units). Odd numbers are symmetrical and more intuitive.
+                Default is 3.
+
+        Returns
+            Striplog. A new striplog instance.
+        """
+        ops = {
+            'erosion': utils.binary_erosion,
+            'dilation': utils.binary_dilation,
+            'opening': utils.binary_opening,
+            'closing': utils.binary_closing,
+        }
+        if not self.is_binary():
+            print("Cannot interpret striplog as binary.")
+        log, basis, comps = self.to_binary_log(step=step, attr=attr)
+        proc = ops[operation](log, structure=np.ones(int(p)))
+        if operation == 'closing':
+            proc = proc | log
+
+        return Striplog.from_log(proc, components=comps, basis=basis)

@@ -16,9 +16,89 @@ from . import defaults
 try:
     from IPython.display import HTML
     ipy = True
-except:
+except ImportError:
     ipy = False
     pass
+
+
+def binary_dilation(arr, p):
+    """
+    1D binary morphology: dilation.
+
+    TODO
+        None of these operators work with 'greyscale' (i.e. non-binary) data.
+        And none of them work with non-boxcar structure elements. They could be
+        easily re-written to be much more general. (They are only here to avoid
+        dependency on SciPy, which probably is not that big a deal, so could
+        just revert to `scipy.morphology`.)
+
+    Args:
+        arr: A binary array (e.g. [1,0,0,1,0]).
+        p: Structuring element length.
+
+    Returns:
+        ndarray
+    """
+    structure = np.ones(p)
+    L = len(structure)
+    if L == 1:
+        return arr
+    out = (np.convolve(arr, structure, mode='full') > 0).astype(int)
+    start = L // 2
+
+    # Why is this so complicated??
+    if L % 2:  # if L is odd...
+        end = - (L // 2) if L > 3 else -1
+    else:
+        end = 1 - (L // 2) if L > 3 else None
+
+    return out[start:end]
+
+
+def binary_erosion(arr, p):
+    """
+    1D binary morphology: erosion.
+
+    Args:
+        arr: A binary array (e.g. [1,0,0,1,0]).
+        p: Structuring element length.
+
+    Returns:
+        ndarray
+    """
+    structure = np.ones(p)
+    L = len(structure)
+    return (np.convolve(arr, structure, mode='same') >= L).astype(int)
+
+
+def binary_opening(arr, p):
+    """
+    1D binary morphology: opening.
+
+    Args:
+        arr: A binary array (e.g. [1,0,0,1,0]).
+        p: Structuring element length.
+
+    Returns:
+        ndarray
+    """
+    structure = np.ones(p)
+    return binary_dilation(binary_erosion(arr, structure), structure)
+
+
+def binary_closing(arr, p):
+    """
+    1D binary morphology: closing.
+
+    Args:
+        arr: A binary array (e.g. [1,0,0,1,0]).
+        p: Structuring element length.
+
+    Returns:
+        ndarray
+    """
+    structure = np.ones(p)
+    return binary_erosion(binary_dilation(arr, structure), structure)
 
 
 def hollow_matrix(M):
