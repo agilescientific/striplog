@@ -14,14 +14,6 @@ Requirements
 * `NumPy`, which handles some of the numerics.
 * `matplotlib`, a plotting library.
 
-Tutorials
----------
-
-* :download:`The basic objects.<../tutorial/Basic_objects.html>`
-* :download:`The display objects.<../tutorial/Display_objects.html>`
-* :download:`Striplog basics.<../tutorial/Striplog_basics.html>`
-* :download:`Advanced striplogging.<../tutorial/Striplog_expert.html>`
-
 The code
 --------
 

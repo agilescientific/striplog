@@ -601,9 +601,9 @@ class Striplog(object):
             filename (str): The filename, or use `text`.
             text (str): CSV data as a string, or use `filename`.
             dlm (str): The delimiter, default ','.
-            lexicon (Lexicon): The lexicon to use, optional. Only needed if
+            lexicon (Lexicon): The lexicon to use, optional. Only needed if \
                 parsing descriptions (e.g. cuttings).
-            points (bool): Whether to make a point dataset (as opposed to
+            points (bool): Whether to make a point dataset (as opposed to \
                 ordinary intervals with top and base. Default is False.
             include: Default is None.
             exclude: Default is None.
@@ -614,6 +614,9 @@ class Striplog(object):
             source: Default is None.
             stop: Default is None.
             fieldnames: Default is None.
+
+        Returns
+            Striplog. A new instance.
         """
         if (filename is None) and (text is None):
             raise StriplogError("You must provide a filename or CSV text.")
@@ -2349,7 +2352,7 @@ class Striplog(object):
 
         Args
             attr (str): The attribute of the component you want to use. You
-                must provide an attribute. 
+                must provide an attribute.
             reverse (bool): Whether to reverse the condition.
 
         Returns
@@ -2424,6 +2427,9 @@ class Striplog(object):
         """
         Make a merge table into a Striplog instance.
 
+        Args
+            table (list). The table of tops and bases, represented as tuples.
+
         Returns
             Striplog. A new Striplog instance.
         """
@@ -2447,7 +2453,7 @@ class Striplog(object):
         component for priority ordering.
 
         Args
-            attr (str): The attribute of the component you want to use. You
+            attr (str): The attribute of the component you want to use. You \
                 must provide an attribute.
             reverse (bool): Whether to reverse the condition.
 
