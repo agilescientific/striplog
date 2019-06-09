@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.8.2 (next release)
+-----
+
+- Added `Striplog.shift()` to allow you to shift all the tops and bases by some `delta` or by setting a new `start`.
+- Fixed a bug in `Striplog.hist()` which produced the wrong colours and labels for the bars.
+
 0.8.1 (June 2019)
 -----
 

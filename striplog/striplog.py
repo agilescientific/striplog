@@ -796,7 +796,8 @@ class Striplog(object):
                    source="Image",
                    col_offset=0.1,
                    row_offset=2,
-                   tolerance=0):
+                   tolerance=0,
+                   background=None):
         """
         Read an image and generate Striplog.
 
@@ -813,12 +814,17 @@ class Striplog(object):
             tolerance (float): The Euclidean distance between hex colours,
                 which has a maximum (black to white) of 441.67 in base 10.
                 Default: 0.
+            background (array): A background colour (as hex) to ignore.
 
         Returns:
             Striplog: The ``striplog`` object.
         """
+        if background is None:
+            bg = "#xxxxxx"
+        else:
+            bg = background
         rgb = utils.loglike_from_image(filename, col_offset)
-        loglike = np.array([utils.rgb_to_hex(t) for t in rgb])
+        loglike = np.array([utils.rgb_to_hex(t) for t in rgb if utils.rgb_to_hex(t) != bg])
 
         # Get the pixels and colour values at 'tops' (i.e. changes).
         tops, hexes = utils.tops_from_loglike(loglike, offset=row_offset)
@@ -826,7 +832,7 @@ class Striplog(object):
         # If there are consecutive tops, we assume it's because there is a
         # single-pixel row that we don't want. So take the second one only.
         # We used to do this reduction in ``utils.tops_from_loglike()`` but
-        # it was prventing us from making intervals only one sample thick.
+        # it was preventing us from making intervals only one sample thick.
         nonconsecutive = np.append(np.diff(tops), 2)
         tops = tops[nonconsecutive > 1]
         hexes = hexes[nonconsecutive > 1]
@@ -1633,6 +1639,24 @@ class Striplog(object):
         else:
             return
 
+    def shift(self, delta=None, start=None):
+        """
+        Shift all the intervals by `delta` (negative numbers are 'up')
+        or by setting a new start depth.
+
+        Returns a copy of the striplog.
+        """
+        new_strip = self.copy()
+        if delta is None:
+            if start is None:
+                raise StriplogError("You must provide a delta or a new start.")
+            delta = start - self.start.z
+        for iv in new_strip:
+            iv.top = iv.top.z + delta
+            iv.base = iv.base.z + delta
+        return new_strip
+
+
     def read_at(self, d, index=False):
         """
         Get the index of the interval at a particular 'depth' (though this
@@ -2110,8 +2134,8 @@ class Striplog(object):
         """
         # This seems like overkill, but collecting all this stuff gives
         # the user some choice about what they get back.
-        comps = []
-        labels = []
+        comps = {}
+        labels = {}
         entries = defaultdict(int)
         for i in self:
             if lumping:
@@ -2121,8 +2145,8 @@ class Striplog(object):
                     k = i.primary.summary()
                 else:
                     k = i.primary
-            comps.append(i.primary)
-            labels.append(i.primary.summary())
+            comps[k] = i.primary
+            labels[k] = i.primary.summary()
             entries[k] += i.thickness
 
         if sort:
@@ -2144,9 +2168,9 @@ class Striplog(object):
             ind = np.arange(len(ents))
             bars = ax.bar(ind, counts, align='center')
             ax.set_xticks(ind)
-            ax.set_xticklabels(labels)
+            ax.set_xticklabels(labels.values())
             if legend:
-                colours = [legend.get_colour(c) for c in comps]
+                colours = [legend.get_colour(c) for c in comps.values()]
                 for b, c in zip(bars, colours):
                     b.set_color(c)
             ax.set_ylabel('Thickness [m]')
