@@ -5,7 +5,9 @@ Changelog
 -----
 
 - Added `Striplog.shift()` to allow you to shift all the tops and bases by some `delta` or by setting a new `start`.
+- Added `striplog.markov.Markov_chain()`. See the `Markov_chain.ipynb` notebook in `tutorial` to see how to use it. This is an experimental module. There might be an elegant way to add the Markov chain as an attribute/methods on `Striplog` objects, but I couldn't think of it.
 - Fixed a bug in `Striplog.hist()` which produced the wrong colours and labels for the bars.
+
 
 0.8.1 (June 2019)
 -----
@@ -20,7 +22,8 @@ Changelog
 - Added a couple of notebooks to `/tutorial`.
 - Fixed a bug that allowed lists of intervals used to instantiate striplogs to be mutated.
 
-0.8.0
+
+0.8.0 (March 2019)
 -----
 
 - New point release because of breaking changes.
@@ -28,6 +31,7 @@ Changelog
 - `Striplog.bar()` makes a bar chart of the intervals, with optional sorting by thickness or any other key.
 - Breaking change: `Striplog.hist()` (which `histogram()` now calls) now makes a plot as well and returns the bars (or the axis, if you pass one in).
 - `Striplog.merge_neighbours()` performs a stepwise `Interval.union()` on all pairs of intervals, combining neighbours that have identical components. It is intended to be used after `Striplog.anneal()`.
+
 
 0.7.0 to 0.7.3
 --------------

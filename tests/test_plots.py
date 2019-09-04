@@ -16,6 +16,7 @@ import pytest
 
 from striplog import Striplog, Lexicon
 from striplog import Legend, Component, Decor
+from striplog.markov import Markov_chain
 
 from .test_striplog import las3
 
@@ -180,5 +181,16 @@ def test_bar():
     lexicon = Lexicon.default()
     striplog = Striplog.from_las3(las3, lexicon=lexicon)
     legend = Legend.builtin('nagmdm__6_2')
-    ax = striplog.bar(sort=True, legend=legend, ax=ax)
+    ax = striplog.bar(sort=True, legend=legend, ax=ax, align='center')
+    return fig
+
+
+@pytest.mark.mpl_image_compare(**params)
+def test_markov():
+    """Test Markov plot.
+    """
+    fig, ax = plt.subplots()
+    data = "sssmmmlllmlmlsslsllsmmllllmssssllllssmmlllllssssssmmmmsmllllssslmslmsmmmslsllll"""
+    m = Markov_chain.from_sequence(data, include_self=True)
+    ax = m.plot_norm_diff(ax=ax)
     return fig

@@ -839,15 +839,31 @@ class Legend(object):
 
             return default
 
-    def plot(self, fmt=None):
+    def plot(self, fmt=None, ax=None):
         """
         Make a simple plot of the legend.
 
-        Simply calls Decor.plot() on all of its members.
+        Calls Decor.plot() on all of its members.
 
         TODO: Build a more attractive plot.
         """
-        for d in self.__list:
-            d.plot(fmt=fmt)
+        if ax is None:
+            fig, ax = plt.subplots()
+            return_ax = False
+        else:
+            return_ax = True
 
-        return None
+        height = width = (0.9 / len(self))
+        h_incr = 1 / len(self)
+        left_pos = 0.1
+        bot_pos = 0.0
+        for decor in self:
+            cax = utils.add_subplot_axes(ax, [left_pos, bot_pos, width, height])
+            cax = decor.plot(ax=cax)
+            bot_pos += h_incr
+        ax.axis('off')
+
+        if return_ax:
+            return ax
+        else:
+            plt.show()

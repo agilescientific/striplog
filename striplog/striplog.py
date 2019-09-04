@@ -22,6 +22,7 @@ from .interval import Interval, IntervalError
 from .component import Component
 from .legend import Legend
 from .canstrat import parse_canstrat
+from .markov import Markov_chain
 from . import utils
 from . import templates
 
@@ -1656,7 +1657,6 @@ class Striplog(object):
             iv.base = iv.base.z + delta
         return new_strip
 
-
     def read_at(self, d, index=False):
         """
         Get the index of the interval at a particular 'depth' (though this
@@ -2228,7 +2228,7 @@ class Striplog(object):
         # Legend.
         colourables = [i.primary.summary() for i in data]
         unique_bars = dict(zip(colourables, bars))
-        ax.legend(unique_bars.values(), unique_bars.keys())
+        ax.legend(list(unique_bars.values()), list(unique_bars.keys()))
 
         ax.set_ylabel(height.title())
 
