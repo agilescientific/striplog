@@ -2508,7 +2508,7 @@ class Striplog(object):
             attr (str): Which attribute to make into a log.
         """
         log, basis, comps = self.to_log(step=step,
-                                        match_only=attr,
+                                        match_only=[attr],
                                         undefined=-1,
                                         return_meta=True)
         if -1 in log:
@@ -2545,7 +2545,7 @@ class Striplog(object):
         if not self.is_binary():
             print("Cannot interpret striplog as binary.")
         log, basis, comps = self.to_binary_log(step=step, attr=attr)
-        proc = ops[operation](log, structure=np.ones(int(p)))
+        proc = ops[operation](log, p)
         if operation == 'closing':
             proc = proc | log
 

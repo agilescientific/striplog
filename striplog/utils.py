@@ -39,7 +39,7 @@ def binary_dilation(arr, p):
     Returns:
         ndarray
     """
-    structure = np.ones(p)
+    structure = np.ones(int(p))
     L = len(structure)
     if L == 1:
         return arr
@@ -66,7 +66,7 @@ def binary_erosion(arr, p):
     Returns:
         ndarray
     """
-    structure = np.ones(p)
+    structure = np.ones(int(p))
     L = len(structure)
     return (np.convolve(arr, structure, mode='same') >= L).astype(int)
 
@@ -82,8 +82,7 @@ def binary_opening(arr, p):
     Returns:
         ndarray
     """
-    structure = np.ones(p)
-    return binary_dilation(binary_erosion(arr, structure), structure)
+    return binary_dilation(binary_erosion(arr, p), p)
 
 
 def binary_closing(arr, p):
@@ -97,8 +96,7 @@ def binary_closing(arr, p):
     Returns:
         ndarray
     """
-    structure = np.ones(p)
-    return binary_erosion(binary_dilation(arr, structure), structure)
+    return binary_erosion(binary_dilation(arr, p), p)
 
 
 def hollow_matrix(M):
