@@ -3,6 +3,8 @@
 Markov chains for the striplog package.
 
 """
+from collections import namedtuple
+
 import numpy as np
 import scipy.stats
 import matplotlib.pyplot as plt
@@ -368,7 +370,7 @@ class Markov_chain(object):
             df = self.degrees_of_freedom
         return scipy.stats.chi2.cdf(x, df=df)
 
-    def chi_squared(self, return_crit=True, q=0.95, return_perc=True):
+    def chi_squared(self, q=0.95):
         """
         The chi-squared statistic for the given transition
         frequencies.
@@ -387,16 +389,11 @@ class Markov_chain(object):
         # Adjustment for divide-by-zero
         epsilon = 1e-12
         chi2 = np.sum((O - E)**2 / (E + epsilon))
+        crit = self._chi_squared_critical(q=q)
+        perc = self._chi_squared_percentile(x=chi2)
+        Chi2 = namedtuple('Chi2', ['chi2', 'crit', 'perc'])
 
-        result = chi2,
-
-        if return_crit:
-            result = result + (self._chi_squared_critical(q=q),)
-
-        if return_perc:
-            result = result + (self._chi_squared_percentile(x=chi2),)
-
-        return result
+        return Chi2(chi2, crit, perc)
 
     def as_graph(self, directed=True):
 
@@ -521,6 +518,9 @@ class Markov_chain(object):
         labels = [str(s) for s in self.states]
         ax.set_xticklabels(labels)
         ax.set_yticklabels(labels)
+
+        # Deal with probable bug in matplotlib 3.1.1
+        ax.set_ylim(reversed(ax.get_xlim()))
 
         if return_ax:
             return ax
