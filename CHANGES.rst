@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.8.3 (July 2019)
+----
+
+- Minor release. Updated tutorials and fixed some bugs.
+
 0.8.2 (July 2019)
 -----
 
