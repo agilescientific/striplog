@@ -16,14 +16,6 @@ striplog
 .. image:: https://img.shields.io/pypi/pyversions/striplog.svg
     :target: https://pypi.python.org/pypi/striplog/
     :alt: Python version
-    
-.. image:: https://coveralls.io/repos/agile-geoscience/striplog/badge.svg?branch=master&service=github
-    :target: https://coveralls.io/github/agile-geoscience/striplog?branch=master
-    :alt: Coveralls
-
-.. image:: https://img.shields.io/codacy/ad9af103cba14d33abd5b327727ff644.svg 
-    :target: https://www.codacy.com/app/matt/striplog/dashboard
-    :alt: Codacy code review
 
 .. image:: https://img.shields.io/pypi/l/striplog.svg
     :target: http://www.apache.org/licenses/LICENSE-2.0
