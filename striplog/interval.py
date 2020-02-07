@@ -192,6 +192,16 @@ class Interval(object):
             return None
 
     @property
+    def middle(self):
+        """
+        Returns the middle of the interval.
+
+        Returns:
+            Float: The middle.
+        """
+        return (self.base.z + self.top.z) / 2
+
+    @property
     def thickness(self):
         """
         Returns the thickness of the interval.

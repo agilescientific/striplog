@@ -1524,6 +1524,7 @@ class Striplog(object):
              default=None,
              style='intervals',
              field=None,
+             label=None,
              **kwargs):
         """
         Hands-free plotting.
@@ -1597,6 +1598,10 @@ class Striplog(object):
         rng = abs(upper - lower)
 
         ax.set_ylim([lower, upper])
+
+        if label is not None:
+            for iv in self.__list:
+                plt.text(1.6, iv.middle, iv.primary[label], ha='left', va='center', size=10)
 
         # Make sure ticks is a tuple.
         try:
