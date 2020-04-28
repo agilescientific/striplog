@@ -96,7 +96,7 @@ class Markov_chain(object):
         """
         self.step = step
         self.include_self = include_self
-        self.observed_counts = np.atleast_2d(observed_counts)
+        self.observed_counts = np.atleast_2d(observed_counts).astype(int)
 
         if states is not None:
             self.states = np.asarray(states)
@@ -218,7 +218,7 @@ class Markov_chain(object):
         if states is None:
             states = uniques
         else:
-            states = np.asarray(states)
+            states = np.asarray(list(states))
 
         O = np.zeros(tuple(states.size for _ in range(step+1)))
         for seq in seq_of_seqs:

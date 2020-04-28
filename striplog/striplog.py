@@ -11,6 +11,7 @@ import csv
 import operator
 import warnings
 from collections import defaultdict
+from collections import OrderedDict
 from functools import reduce
 from copy import deepcopy
 
@@ -2107,13 +2108,15 @@ class Striplog(object):
                 return self[indices]
 
     def hist(self,
-             lumping=None,
-             summary=False,
-             sort=True,
-             plot=True,
-             legend=None,
-             ax=None
-             ):
+            lumping=None,
+            summary=False,
+            sort=True,
+            plot=True,
+            legend=None,
+            ax=None,
+            rotation=0,
+            ha='center',
+            ):
         """
         Plots a histogram and returns the data for it.
 
@@ -2130,6 +2133,10 @@ class Striplog(object):
             legend (Legend): The legend with which to colour the bars.
             ax (axis): An axis object, which will be returned if provided.
                 If you don't provide one, it will be created but not returned.
+            rotation (int): The rotation angle of the x-axis tick labels.
+                Default is 0 but -45 is useful.
+            ha (str): The horizontal alignment of the x-axis tick labels.
+                Default is 'center' but 'left' is good for -ve rotation.
 
         Returns:
             Tuple: A tuple of tuples of entities and counts.
@@ -2139,9 +2146,7 @@ class Striplog(object):
         """
         # This seems like overkill, but collecting all this stuff gives
         # the user some choice about what they get back.
-        comps = {}
-        labels = {}
-        entries = defaultdict(int)
+        entries = OrderedDict()
         for i in self:
             if lumping:
                 k = i.primary[lumping]
@@ -2150,18 +2155,24 @@ class Striplog(object):
                     k = i.primary.summary()
                 else:
                     k = i.primary
-            comps[k] = i.primary
-            labels[k] = i.primary.summary()
-            entries[k] += i.thickness
+            v = entries.get(k, {'thick': 0}).get('thick', 0)
+            
+            entries[k] = {
+                        'label': i.primary.summary(),
+                        'colour': legend.get_colour(i.primary) if legend else None,
+                        'thick': v + i.thickness,
+                        }
 
         if sort:
             allitems = sorted(entries.items(),
-                              key=lambda i: i[1],
-                              reverse=True
-                              )
-            ents, counts = zip(*allitems)
+                            key=lambda i: i[1]['thick'],
+                            reverse=True
+                            )
+            ents, data = zip(*allitems)
         else:
-            ents, counts = tuple(entries.keys()), tuple(entries.values())
+            ents, data = tuple(entries.keys()), tuple(entries.values())
+            
+        counts = [d['thick'] for d in data]
 
         # Make plot.
         if plot:
@@ -2170,12 +2181,15 @@ class Striplog(object):
                 return_ax = False
             else:
                 return_ax = True
+
             ind = np.arange(len(ents))
             bars = ax.bar(ind, counts, align='center')
             ax.set_xticks(ind)
-            ax.set_xticklabels(labels.values())
+            ax.set_xticklabels([d['label'] for d in data],
+                            rotation=rotation,
+                            ha=ha)
             if legend:
-                colours = [legend.get_colour(c) for c in comps.values()]
+                colours = [d['colour'] for d in data]
                 for b, c in zip(bars, colours):
                     b.set_color(c)
             ax.set_ylabel('Thickness [m]')

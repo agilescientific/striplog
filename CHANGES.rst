@@ -1,14 +1,18 @@
 Changelog
 =========
 
-0.8.4 (current develop)
+0.8.4 (April 2020)
 ----
+
+- Added `label` kwarg to `striplog.plot()`. Give it the name of a field in the `primary` component and it will be added to the plot as text. Experimental feature; might break with some sizes of striplog. Feedback welcome.
+- Fixed a bug in ``Striplog.hist()`` which produced the wrong colours and labels for the bars.
 
 
 0.8.3 (July 2019)
 ----
 
 - Minor release. Updated tutorials and fixed some bugs.
+
 
 0.8.2 (July 2019)
 -----
