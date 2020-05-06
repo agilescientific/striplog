@@ -23,7 +23,10 @@ sys.path.insert(0, os.path.abspath('../striplog'))
 
 
 # -- Project information -----------------------------------------------------
+# The master toctree document.
+master_doc = 'index'
 
+# General information about the project.
 project = 'striplog'
 copyright = '2020, Agile Scientific'
 author = 'Agile Scientific'
