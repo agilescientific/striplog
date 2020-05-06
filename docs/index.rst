@@ -1,35 +1,25 @@
-.. striplog documentation master file, created by
-   sphinx-quickstart on Sat Mar  7 09:56:27 2015.
+.. Striplog documentation master file, created by
+   sphinx-quickstart on Wed May  6 15:35:03 2020.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to striplog!
-====================
-
+Welcome to striplog's documentation!
+====================================
 Striplog is a family of classes to facilitate the loading, processing, and analysis of striplogs and other sequential data in the subsurface (stratigraphy, chronostratigraphy, and so on). 
 
-Requirements
-------------
+.. include:: source/install.rst
 
-* `NumPy`, which handles some of the numerics.
-* `matplotlib`, a plotting library.
-
-The code
+Content
 --------
-
 .. toctree::
-   :maxdepth: 2
+   :caption: Table of Contents
+   :name: mastertoc
 
-   lexicon
-   component
-   position
-   interval
-   legend
-   striplog
+   Install <source/install>
+   API <api/api_toc>
+   Links <source/links>
+   Index <source/indices>
 
-Indices and tables
-------------------
+.. include:: source/links.rst
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. include:: source/indices.rst
