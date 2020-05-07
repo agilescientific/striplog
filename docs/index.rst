@@ -16,6 +16,7 @@ Content
    :name: mastertoc
 
    Install <source/install>
+   basic_objects
    API <api/api_toc>
    Links <source/links>
    Index <source/indices>

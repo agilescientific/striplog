@@ -56,6 +56,8 @@ release = verstr
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'nbsphinx',
+    'nbsphinx_link',
     'sphinxcontrib.apidoc',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
