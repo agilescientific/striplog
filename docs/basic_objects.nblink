@@ -1,3 +1,6 @@
 {
-  "path": "../tutorial/Basic_objects.ipynb"
+  "path": "../tutorial/Basic_objects.ipynb",
+  "extra-media": [
+    "../tutorial"
+  ]
 }
