@@ -1,8 +1,11 @@
 Changelog
 =========
 
-0.8.5 (current)
+0.8.5 (May 2020)
 ----
+
+- Fixed sphinx documentation.
+- Documentation now includes all tutorial notebooks.
 
 
 0.8.4 (April 2020)
