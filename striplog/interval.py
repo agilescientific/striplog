@@ -275,9 +275,9 @@ class Interval(object):
              for c in self.components]
         summary = " with ".join(s)
         if summary:
-            return "{0:.2f} m of {1}".format(self.thickness, summary)
+            return "{0:.2f} {1} of {2}".format(self.thickness, self.top.units, summary)
         elif self.description:
-            return "{0:.2f} m of {1}".format(self.thickness, self.description)
+            return "{0:.2f} {1} of {2}".format(self.thickness, self.top.units, self.description)
         else:
             return None
 

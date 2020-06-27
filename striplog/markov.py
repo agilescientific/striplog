@@ -381,6 +381,13 @@ class Markov_chain(object):
         If the first number is bigger than the second number,
         then you can reject the hypothesis that the sequence
         is randomly ordered.
+
+        Args:
+            q (float): The confidence level, as a float in the range 0 to 1.
+                Default: 0.95.
+
+        Returns:
+            float: The chi-squared statistic.
         """
         # Observed and Expected matrices:
         O = self.observed_counts
@@ -482,22 +489,32 @@ class Markov_chain(object):
             plt.show()
             return
 
-    def plot_norm_diff(self, ax=None, cmap='RdBu', center_zero=True):
+    def plot_norm_diff(self,
+                       ax=None,
+                       cmap='RdBu',
+                       center_zero=True,
+                       vminmax=None,
+                       rotation=-45,
+                      ):
+        """
+        A visualization of the normalized difference matrix.
 
+        Args
+        """
         if self.normalized_difference.ndim > 2:
             raise MarkovError("You can only plot one-step chains.")
 
         return_ax = True
         if ax is None:
-            fig, ax = plt.subplots(figsize=(1 + self.states.size/2, self.states.size/2))
+            fig, ax = plt.subplots(figsize=(1 + self.states.size/1.5, self.states.size/1.5))
             return_ax = False
 
-        ma = np.ceil(np.max(self.normalized_difference))
-
-        if center_zero:
+        if vminmax is None:
+            ma = np.ceil(np.max(np.abs(self.normalized_difference)))
             vmin, vmax = -ma, ma
         else:
-            vmin, vmax = None, None
+            vmin, vmax = vminmax
+
         im = ax.imshow(self.normalized_difference, cmap=cmap, vmin=vmin, vmax=vmax)
         plt.colorbar(im)
 
@@ -516,7 +533,7 @@ class Markov_chain(object):
         ax.set_xticks(ticks)
 
         labels = [str(s) for s in self.states]
-        ax.set_xticklabels(labels)
+        ax.set_xticklabels(labels, rotation=rotation)
         ax.set_yticklabels(labels)
 
         # Deal with probable bug in matplotlib 3.1.1
