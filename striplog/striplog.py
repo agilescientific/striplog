@@ -18,6 +18,8 @@ from copy import deepcopy
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from requests import get
+from json import loads
 
 from .interval import Interval, IntervalError
 from .component import Component
@@ -1071,6 +1073,10 @@ class Striplog(object):
         return Striplog([i.copy() for i in self],
                         order=self.order,
                         source=self.source)
+
+    
+
+
 
     # Outputter
     def to_canstrat(self, filename, params):
@@ -2569,3 +2575,149 @@ class Striplog(object):
             proc = proc | log
 
         return Striplog.from_log(proc, components=comps, basis=basis)
+
+
+# The following are support functions and a wrapper function to generate
+#   a chronostratigraphic column by using the MacroStrat API.
+def _area_geology_from_macrostrat(lng, lat, buffer_size=0.2):
+    """
+    Request data from MacroStrat within `buffer_size` of a given lng, lat pair.
+    We can do this by creating a WKT polygon, which is simply a square with
+        each side a `buffer_size` distance from the given lng, lat. 
+
+    Args:
+        lng (float): longitude in decimal degrees
+        lat (float): latitude in decimal degrees
+        buffer_size (float): distance in decimal degrees to add to lng
+                            and lat to request geology in.
+    
+    Returns:
+        polygon_request (requests.models.Response) 
+    """
+    _area = f'POLYGON(( {lng-buffer_size} {lat+buffer_size}, \
+        {lng+buffer_size} {lat+buffer_size}, \
+            {lng+buffer_size} {lat-buffer_size}, \
+                {lng-buffer_size} {lat-buffer_size}, \
+                    {lng-buffer_size} {lat+buffer_size}))'
+    polygon_request = get("https://macrostrat.org/api/carto/small",
+                    params={'shape':_area, 'format':"geojson_bare"})
+    return polygon_request
+    
+def _clean_component_strings(raw_components, columns):
+    """
+    Removes commas from data fields in the JSON downloaded from MacroStrat,
+        replacing them with semi-colons, while making the field lower case.
+        If the 'color' field is empty, skip.
+        If another required field is empty, insert 'none given'.
+        We also add the source (MacroStrat.org) as a field to the Component.
+    
+    Args:
+        raw_components (list): list of Components to be cleaned
+        columns (list): list of strings matching fields to be cleaned
+
+    Returns:
+        components (list): list of unique Components with no commas
+    """
+    components = []
+    for component in list(set(raw_components)):
+        for column in columns:
+            if component[column] == None:
+                if column == 'color': # skip if no colour
+                    continue
+                component[column] = 'none given' # Need a value to match on.
+                continue
+            if component[column]:
+                component[column] = component[column].replace(',', ';').lower()
+        component['source'] = 'MacroStrat.org (CC-BY)'
+        components.append(component)
+    return components 
+
+def _legend_from_macrostrat(components):
+    """
+    Creates a legend from a list of components retrieved using MacroStrat's
+        API. Only unique values will be used. Legends are made using the
+        color, lith and age fields in MacroStrat features.
+
+    Args:
+        components (list): list of components that need to be in the legend
+
+    Returns:
+        legend (striplog.Legend)
+    """
+    legend_string = u'color, width, component lith, component age'
+    for component in components:
+        # If the important features are not present, do not add them to 
+        #   our legend.
+        if None in ((component['color'], component['lith'], component['age'],
+                # We can also ignore features without top and bottom ages.
+                component['best_age_top'], component['best_age_bottom'],
+        )):
+            continue
+        to_add = ', '.join((str(component['color'] or ''),
+                            '1',
+                            str(component['lith'] or ''),
+                            str(component['age'] or '')))
+        legend_string = '\n'.join((legend_string, to_add))
+    return Legend.from_csv(text=legend_string)
+
+def from_macrostrat(lng, lat, buffer_size=0.2):
+    """
+    Create a striplog from components derived using the MacroStrat API.
+        This is simply a helper function to make things easier, but it
+        works because we know what our data looks like in advance.
+
+    Note: In order to plot this, you will need to add space for text and 
+        other decoration. This simply gives a Striplog back which _can_
+        be plotted.
+
+    Args:
+        components (list):
+
+    Returns:
+        Tuple of:
+            strip (striplog.Striplog)
+
+    Example:
+    lng = -64.3573186
+    lat = 44.4454632
+    buffer_size = 0.3
+    striplog.striplog.from_macrostrat(lng, lat, buffer_size)
+    {'top': Position({'middle': 358.9, 'units': 'm'}), 
+        'base': Position({'middle': 419.2, 'units': 'm'}), 
+        'description': '', 'data': {}, 'components': [Component({
+            'map_id': 948660.0, 'scale': 'small', 'source_id': 7.0,
+            'name': 'Devonian plutonic: undivided granitic rocks',
+            'age': 'devonian', 'lith': 'plutonic: undivided granitic rocks',
+            'best_age_top': 358.9, 'best_age_bottom': 419.2, 't_int': 94.0,
+            'b_int': 94.0, 'color': '#cb8c37', 'source': 'MacroStrat.org (CC-BY)})]}
+    {'top': Position({'middle': 358.9, 'units': 'm'}),
+        'base': Position({'middle': 541.0, 'units': 'm'}),
+        'description': '', 'data': {}, 'components': [Component({
+            'map_id': 948228.0, 'scale': 'small', 'source_id': 7.0,
+            'name': 'Cambrian-Devonian sedimentary', 'age': 'cambrian-devonian',
+            'lith': 'sedimentary', 'best_age_top': 358.9, 'best_age_bottom': 541.0,
+            't_int': 94.0, 'b_int': 122.0, 'color': '#99c08d',
+            'source': 'MacroStrat.org (CC-BY)})]}
+    {'top': Position({'middle': 443.8, 'units': 'm'}),
+        'base': Position({'middle': 541.0, 'units': 'm'}),
+        'description': '', 'data': {}, 'components': [Component({
+            'map_id': 973359.0, 'scale': 'small', 'source_id': 7.0,
+            'name': 'Cambrian-Ordovician sedimentary', 'age': 'cambrian-ordovician',
+            'lith': 'sedimentary', 'best_age_top': 443.8, 'best_age_bottom': 541.0,
+            't_int': 112.0, 'b_int': 122.0, 'color': '#409963',
+            'source': 'MacroStrat.org (CC-BY)})]}
+    """
+    geology = _area_geology_from_macrostrat(lng=lng, lat=lat, buffer_size=buffer_size)
+    raw_components = [Component(properties=feature['properties'])
+            for feature in loads(geology.text)['features']]
+    components = _clean_component_strings(raw_components, 
+                columns=('color', 'lith', 'age'))
+    legend = _legend_from_macrostrat(components)
+    intervals = []
+    for component in components:
+        intervals.append(Interval(
+                        top=component['best_age_top'],
+                        base=component['best_age_bottom'],
+                        components=[component], )
+                        )
+    return Striplog(intervals)
