@@ -2676,6 +2676,7 @@ def from_macrostrat(lng, lat, buffer_size=0.2):
     Returns:
         Tuple of:
             strip (striplog.Striplog)
+            legend (striplog.Legend)
 
     Example:
     lng = -64.3573186
@@ -2720,4 +2721,4 @@ def from_macrostrat(lng, lat, buffer_size=0.2):
                         base=component['best_age_bottom'],
                         components=[component], )
                         )
-    return Striplog(intervals)
+    return Striplog(intervals), legend
