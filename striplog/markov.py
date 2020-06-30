@@ -497,7 +497,7 @@ class Markov_chain(object):
                        cmap='RdBu',
                        center_zero=True,
                        vminmax=None,
-                       rotation=-45,
+                       rotation=0,
                        annotate=False,
                       ):
         """
@@ -519,7 +519,7 @@ class Markov_chain(object):
         else:
             vmin, vmax = vminmax
 
-        im = ax.imshow(self.normalized_difference, cmap=cmap, vmin=vmin, vmax=vmax)
+        im = ax.imshow(self.normalized_difference, cmap=cmap, vmin=vmin, vmax=vmax, interpolation='none')
         plt.colorbar(im)
 
         ax.tick_params(axis='x', which='both',
