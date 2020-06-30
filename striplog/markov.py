@@ -8,8 +8,11 @@ from collections import namedtuple
 import numpy as np
 import scipy.stats
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import matplotlib.colors as cols
 
 from .utils import hollow_matrix
+from .utils import rgb_is_dark
 
 
 class MarkovError(Exception):
@@ -495,6 +498,7 @@ class Markov_chain(object):
                        center_zero=True,
                        vminmax=None,
                        rotation=-45,
+                       annotate=False,
                       ):
         """
         A visualization of the normalized difference matrix.
@@ -533,8 +537,27 @@ class Markov_chain(object):
         ax.set_xticks(ticks)
 
         labels = [str(s) for s in self.states]
-        ax.set_xticklabels(labels, rotation=rotation)
         ax.set_yticklabels(labels)
+        if rotation == 0:
+            ax.set_xticklabels(labels)
+        else:
+            ha = 'right' if rotation < 0 else 'left'
+            ax.set_xticklabels(labels,
+                               rotation=rotation,
+                               ha=ha,
+                               rotation_mode='anchor'
+                               )
+
+        if annotate:
+            for i in range(self.states.size):
+                for j in range(self.states.size):
+                    norm = cols.Normalize(vmin=vmin, vmax=vmax)
+                    val = self.normalized_difference[i, j]
+                    lookup = cm.get_cmap(cmap)
+                    col = 'w' if rgb_is_dark(lookup(norm(val))) else 'k'
+                    fmt = annotate if isinstance(annotate, str) else '0.1f'
+                    s = format(val, fmt)
+                    text = ax.text(j, i, s, ha="center", va="center", color=col)
 
         # Deal with probable bug in matplotlib 3.1.1
         ax.set_ylim(reversed(ax.get_xlim()))
