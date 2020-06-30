@@ -168,6 +168,25 @@ class Component(object):
         else:
             return cls(component)
 
+    @classmethod
+    def from_macrostrat(cls, feature, columns=None):
+        """
+        Make a Component from a Macrostrat feature dictionary.
+        """
+        props = feature['properties']
+        if columns is None:
+            columns = []
+        for column in columns:
+            if props.get(column) is None:
+                if column == 'color': # skip if no colour
+                    continue
+                props[column] = '' # Need a value to match on.
+                continue
+            else:
+                props[column] = props[column].replace(',', ';').lower()
+        props['source'] = 'Macrostrat.org (CC-BY)'
+        return cls(props)
+
     def summary(self, fmt=None, initial=True, default=''):
         """
         Given a format string, return a summary description of a component.

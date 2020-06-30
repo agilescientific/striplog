@@ -550,6 +550,40 @@ class Legend(object):
         return cls(list_of_Decors)
 
     @classmethod
+    def from_striplog(cls, strip,
+                      colour='colour',
+                      width='width',
+                      hatch='hatch',
+                      fields=None,
+                     ):
+        """
+        Creates a legend for a striplog whose components already contain.
+
+        Args:
+            components (list): list of components that need to be in the legend
+
+        Returns:
+            legend (striplog.Legend)
+        """
+        components = [i.primary for i in strip]
+        list_of_Decors = []
+        for component in components:
+            f = {}
+            if fields is None:
+                fields = component.__dict__.keys()
+            for field in fields:
+                f[field] = component[field]
+
+            d = {'component': Component(properties=f)}
+            d['colour'] = component[colour]
+            d['width'] = component[width]
+            d['hatch'] = component[hatch]
+            decor = Decor(d)
+            if decor not in list_of_Decors:
+                list_of_Decors.append(decor)
+        return cls(list_of_Decors)
+
+    @classmethod
     def from_csv(cls, filename=None, text=None):
         """
         Read CSV text and generate a Legend.
