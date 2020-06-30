@@ -8,6 +8,7 @@ from functools import partial
 import re
 import shlex
 
+import requests
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -355,6 +356,13 @@ def hex_is_dark(hexx, percent=50):
     return (luma < percent)
 
 
+def rgb_is_dark(rgb, percent=50):
+    """
+    Helpful wrapper for hex_is_dark.
+    """
+    return hex_is_dark(rgb_to_hex(rgb))
+
+
 def text_colour_for_hex(hexx, percent=50, dark='#000000', light='#ffffff'):
     """
     Function to decide what colour to use for a given hex colour.
@@ -536,3 +544,31 @@ def add_subplot_axes(ax, rect, axisbg='w'):
     subax.xaxis.set_tick_params(labelsize=x_labelsize)
     subax.yaxis.set_tick_params(labelsize=y_labelsize)
     return subax
+
+
+def geology_from_macrostrat(lng, lat, buffer_size=0.2):
+    """
+    Request data from MacroStrat within `buffer_size` of a given lng, lat pair.
+    We can do this by creating a WKT polygon, which is simply a square with
+        each side a `buffer_size` distance from the given lng, lat. 
+
+    Args:
+        lng (float): longitude in decimal degrees.
+        lat (float): latitude in decimal degrees.
+        buffer_size (float): distance in decimal degrees to add to lng
+                            and lat to request geology in.
+    
+    Returns:
+        polygon_request (requests.models.Response) 
+    """
+    area = f'POLYGON(( {lng-buffer_size} {lat+buffer_size}, \
+        {lng+buffer_size} {lat+buffer_size}, \
+            {lng+buffer_size} {lat-buffer_size}, \
+                {lng-buffer_size} {lat-buffer_size}, \
+                    {lng-buffer_size} {lat+buffer_size}))'
+
+    url = 'https://macrostrat.org/api/carto/small'
+    params = {'shape': area, 'format': 'geojson_bare'}
+    r = requests.get(url, params=params)
+
+    return r.json()['features']
