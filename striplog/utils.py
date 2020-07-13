@@ -480,7 +480,7 @@ def flatten_list(l):
     """
     if (l == []) or (l is None):
         return l
-    if isinstance(l[0], list):
+    if isinstance(l[0], list) or isinstance(l[0], tuple):
         return flatten_list(l[0]) + flatten_list(l[1:])
     return l[:1] + flatten_list(l[1:])
 
@@ -572,3 +572,14 @@ def geology_from_macrostrat(lng, lat, buffer_size=0.2):
     r = requests.get(url, params=params)
 
     return r.json()['features']
+
+def get_liths_from_macrostrat(s):
+    """
+    Parse a Macrostrat 'lith' string into lithologies.
+    """
+    if 'Major' in s:
+        nested, = re.findall(r'Major:{(.+?)}, Minor{(.+?)}', s)
+        split = [i.split(',') for i in nested]
+        return flatten_list(split)
+    else:
+        return [s]

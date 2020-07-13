@@ -261,12 +261,21 @@ class Decor(object):
         return list(self.__dict__.keys())
 
     @classmethod
-    def random(cls, component):
+    def random(cls, component, match_only=None):
         """
         Returns a minimal Decor with a random colour.
         """
+        c = component.__dict__.copy()
+        if match_only is None:
+            match_only = c.keys()
+
+        for k in list(c.keys()):
+            if k not in match_only:
+                _ = c.pop(k)
+
         colour = random.sample([i for i in range(256)], 3)
-        return cls({'colour': colour, 'component': component, 'width': 1.0})
+
+        return cls({'colour': colour, 'component': Component(c), 'width': 1.0})
 
     def plot(self, fmt=None, fig=None, ax=None):
         """
@@ -468,7 +477,12 @@ class Legend(object):
     default_timescale = partialmethod(builtin_timescale, name='ISC')
 
     @classmethod
-    def random(cls, components, width=False, colour=None):
+    def random(cls,
+               components,
+               width=False,
+               colour=None,
+               match_only=None,
+              ):
         """
         Generate a random legend for a given list of components.
 
@@ -480,6 +494,7 @@ class Legend(object):
                 order in which they are encountered.
             colour (str): If you want to give the Decors all the same colour,
                 provide a hex string.
+            match_only (list): A list of Component properties to use.
         Returns:
             Legend or Decor: A legend (or Decor) with random colours.
         TODO:
@@ -488,16 +503,26 @@ class Legend(object):
             template, since it'll have the components in it already.
         """
         try:  # Treating as a Striplog.
-            list_of_Decors = [Decor.random(c)
+            list_of_Decors = [Decor.random(c, match_only=match_only)
                               for c
                               in [i[0] for i in components.unique if i[0]]
                               ]
         except:
             try:
-                list_of_Decors = [Decor.random(c) for c in components.copy()]
+                list_of_Decors = [Decor.random(c, match_only=match_only)
+                                  for c in components.copy()]
             except:
                 # It's a single component.
-                list_of_Decors = [Decor.random(components)]
+                list_of_Decors = [Decor.random(components, match_only=match_only)]
+
+        if match_only is not None:
+            # We might have duplicate components.
+            comps, keeps = [], []
+            for d in list_of_Decors:
+                if d.component not in comps:
+                    comps.append(d.component)
+                    keeps.append(d)
+            list_of_Decors = keeps
 
         if colour is not None:
             for d in list_of_Decors:

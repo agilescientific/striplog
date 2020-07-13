@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.8.6 (summer 2020) -- current revision
+
+- [Experimental new feature; feedback welcome!] Added `Striplog.from_macrostrat()` which takes a lat/lon location and returns a striplog in geological time or in depth below the surface at that location.
+- Added `match_only` argument to `Legend.random()` to allow you to keep only certain properties in the components.
+- `Component.from_text()` will now use `Lexicon.default()` if you don't pass one in.
+
 0.8.5 (May 2020)
 ----
 

@@ -2631,17 +2631,22 @@ class Striplog(object):
 
         columns = ('color', 'lith', 'age')
 
-        components = []
+        intervals = []
+
         for feature in features:
-            c = Component.from_macrostrat(feature, columns=columns)
-            if c not in components:
+            if feature['geometry'] is None:
+                continue
+
+            components = []
+            for lith in utils.get_liths_from_macrostrat(feature['properties']['lith']):
+                c = Component({'lithology': lith})
                 components.append(c)
 
-        intervals = []
-        for component in components:
             intervals.append(Interval(
-                            top=component['best_age_top'],
-                            base=component['best_age_bottom'],
-                            components=[component], )
+                            top=feature['properties']['best_age_top'],
+                            base=feature['properties']['best_age_bottom'],
+                            components=components,
+                            description=feature['properties']['descrip'])
                             )
-        return cls(intervals)
+
+        return cls(intervals, source='Macrostrat [CC-BY]', order='age')

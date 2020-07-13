@@ -7,6 +7,7 @@ Defines components for holding properties of rocks or samples or whatevers.
 """
 import json
 
+from .lexicon import Lexicon
 from .utils import CustomFormatter
 
 
@@ -53,6 +54,11 @@ class Component(object):
 
     def __len__(self):
         return len(self.__dict__)
+
+    def __copy__(self):
+        return Component(self.__dict__.copy())
+
+    copy = __copy__
 
     def __iter__(self):
         return iter(self.__dict__)
@@ -145,7 +151,7 @@ class Component(object):
         return json.dumps(self.__dict__)
 
     @classmethod
-    def from_text(cls, text, lexicon, required=None, first_only=True):
+    def from_text(cls, text, lexicon=None, required=None, first_only=True):
         """
         Generate a Component from a text string, using a Lexicon.
 
@@ -162,6 +168,8 @@ class Component(object):
             Component: A Component object, or None if there was no
                 must-have field.
         """
+        if lexicon is None:
+            lexicon = Lexicon.default()
         component = lexicon.get_component(text, first_only=first_only)
         if required and (required not in component):
             return None
