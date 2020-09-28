@@ -678,6 +678,62 @@ class Striplog(object):
         return cls(list_of_Intervals, source=source)
 
     @classmethod
+    def from_dict(cls, dict,
+                 lexicon=None,
+                 points=False,
+                 include=None,
+                 exclude=None,
+                 remap=None,
+                 function=None,
+                 null=None,
+                 ignore=None,
+                 source=None,
+                 stop=None,
+                 ):
+        """
+        Load from a CSV file or text.
+
+        Args
+            dict (dict): python dict containing the data.
+            lexicon (Lexicon): The lexicon to use, optional. Only needed if \
+                parsing descriptions (e.g. cuttings).
+            points (bool): Whether to make a point dataset (as opposed to \
+                ordinary intervals with top and base. Default is False.
+            include: Default is None.
+            exclude: Default is None.
+            remap: Default is None.
+            function: Default is None.
+            null: Default is None.
+            ignore: Default is None.
+            source: Default is None.
+            stop: Default is None.
+            fieldnames: Default is None.
+
+        Returns
+            Striplog. A new instance.
+        """
+
+        # Reorganize the data to make fixing it easier.
+        reorg = dict
+
+
+        remap = remap or {}
+        for k, v in remap.items():
+            reorg[v] = reorg.pop(k)
+
+        data = cls._clean_longitudinal_data(reorg, null=null)
+
+        list_of_Intervals = cls._build_list_of_Intervals(data,
+                                                         points=points,
+                                                         lexicon=lexicon,
+                                                         include=include,
+                                                         exclude=exclude,
+                                                         ignore=ignore,
+                                                         stop=stop)
+
+        return cls(list_of_Intervals, source=source)
+
+    @classmethod
     def from_descriptions(cls, text,
                           lexicon=None,
                           source='CSV',
