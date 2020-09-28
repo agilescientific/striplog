@@ -1888,7 +1888,7 @@ class Striplog(object):
         gaps = strip.find_gaps(index=True)
 
         if not gaps:
-            return
+            return strip
 
         for gap in gaps:
             before = strip[gap]
