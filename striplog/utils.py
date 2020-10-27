@@ -100,17 +100,35 @@ def binary_closing(arr, p):
     return binary_erosion(binary_dilation(arr, p), p)
 
 
+def observations(seq_of_seqs, states, step=1, include_self=False):
+    """
+    Compute observation matrix.
+    """
+    O = np.zeros(tuple(states.size for _ in range(step+1)))
+    for seq in seq_of_seqs:
+        seq = np.array(seq)
+        _, integer_seq = np.where(seq.reshape(-1, 1) == states)
+        for idx in zip(*[integer_seq[n:] for n in range(step+1)]):
+            if (not include_self) and (len(set(idx)) < (step + 1)):
+                continue
+            O[idx] += 1
+    return O
+
+
 def hollow_matrix(M):
     """
     Return hollow matrix (zeros on diagonal).
 
     Args
-        M (ndarray): a 2D, square array representing a matrix.
+        M (ndarray): a 'square' ndarray.
 
     Returns
         ndarray. The same array with zeros on the diagonal.
     """
-    return (1 - np.eye(M.shape[0])) * M
+    s = M.shape[0]
+    idx = np.unravel_index(np.arange(0, s**2, s + 1), M.shape)
+    M[idx] = 0
+    return M
 
 
 def inspect_petrel(filename):

@@ -12,6 +12,7 @@ import matplotlib.cm as cm
 import matplotlib.colors as cols
 
 from .utils import hollow_matrix
+from .utils import observations
 from .utils import rgb_is_dark
 
 
@@ -70,7 +71,6 @@ class Markov_chain(object):
     Markov_chain object.
 
     TODO
-    - Integrate into `striplog` or move into own project.
     - Pretty transition matrix printing with state names and row/col sums.
     - Allow self-transitions. See also this:
       https://stackoverflow.com/q/49340520/3381305
@@ -83,10 +83,10 @@ class Markov_chain(object):
                  observed_counts,
                  states=None,
                  step=1,
-                 include_self=False
+                 include_self=None,
                  ):
         """
-        Initialize the MarkovChain instance.
+        Initialize the Markov chain instance.
 
         Args
             observed_counts (ndarray): A 2-D array representing the counts
@@ -98,8 +98,15 @@ class Markov_chain(object):
             include_self (bool): Whether to include self-to-self transitions.
         """
         self.step = step
-        self.include_self = include_self
         self.observed_counts = np.atleast_2d(observed_counts).astype(int)
+
+        if include_self is not None:
+            self.include_self = include_self
+        else:
+            self.include_self = np.any(np.diagonal(self.observed_counts))
+
+        if not self.include_self:
+            self.observed_counts = hollow_matrix(self.observed_counts)
 
         if states is not None:
             self.states = np.asarray(states)
@@ -108,7 +115,10 @@ class Markov_chain(object):
         else:
             self.states = None
 
-        self.expected_counts = self._compute_expected()
+        if self.step > 1:
+            self.expected_counts = self._compute_expected_mc()
+        else:
+            self.expected_counts = self._compute_expected()
 
         return
 
@@ -179,12 +189,11 @@ class Markov_chain(object):
                       strings_are_states=False,
                       include_self=False,
                       step=1,
-                      ngram=False,
                       ):
         """
         Parse a sequence and make the transition matrix of the specified order.
 
-        **Provide sequence ordered in upwards direction.**
+        **Provide sequence(s) ordered in upwards direction.**
 
         Args
             sequence (list-like): A list-like, or list-like of list-likes.
@@ -204,17 +213,9 @@ class Markov_chain(object):
                 transitions (default is `False`: do not include them).
             step (integer): The distance to step. Default is 1: use
                 the previous state only. If 2, then the previous-but-
-                one state is used; but if ngram is true then both
-                the previous and the previous-but-one are used (and
-                the matrix is commensurately bigger).
-            ngram (bool): If True, we compute transitions from n-grams,
-                so the matrix will have one row for every combination
-                of n states. You will want to set return_states to
-                True to see the state n-grams.
+                one state is used as well as the previous state (and
+                the matrix has one more dimension).
             return_states (bool): Whether to return the states.
-
-        TODO:
-            - Use `states` to figure out whether 'strings_are_states'.
         """
         uniques, seq_of_seqs = regularize(sequence, strings_are_states=strings_are_states)
 
@@ -223,19 +224,15 @@ class Markov_chain(object):
         else:
             states = np.asarray(list(states))
 
-        O = np.zeros(tuple(states.size for _ in range(step+1)))
-        for seq in seq_of_seqs:
-            seq = np.array(seq)
-            _, integer_seq = np.where(seq.reshape(-1, 1) == states)
-            for idx in zip(*[integer_seq[n:] for n in range(step+1)]):
-                O[idx] += 1
+        O = observations(seq_of_seqs, states=states, step=step)
 
         if not include_self:
             O = hollow_matrix(O)
 
         return cls(observed_counts=np.array(O),
                    states=states,
-                   include_self=include_self
+                   include_self=include_self,
+                   step=step,
                    )
 
     def _conditional_probs(self, state):
@@ -294,23 +291,22 @@ class Markov_chain(object):
 
         return E
 
-    def _compute_expected_mc(self, n=100000, verbose=False):
+    def _compute_expected_mc(self, n=100000):
         """
         If we can't use Powers & Easterling's method, and it's possible there's
         a way to extend it to higher dimensions (which we have for step > 1),
         the next best thing might be to use brute force and just compute a lot
-        of random sequence transitions, given the observed proportions. If I'm
-        not mistaken, this is what P & E's method tries to estimate iteratively.
+        of random sequence transitions, given the observed proportions. This is
+        what P & E's method tries to estimate iteratively.
+
+        What to do about 'self transitions' is a bit of a problem here, since
+        there are a lot of n-grams that include at least one self-transition.
         """
         seq = np.random.choice(self.states, size=n, p=self._state_probs)
-
-        E = self.from_sequence(seq).observed_counts
-        E = np.sum(self.observed_counts) * E / np.sum(E)
-
+        E = observations(np.atleast_2d(seq), self.states, step=self.step, include_self=self.include_self)
         if not self.include_self:
-            return hollow_matrix(E)
-        else:
-            return E
+            E = hollow_matrix(E)
+        return np.sum(self.observed_counts) * E / np.sum(E)
 
     def _compute_expected_pe(self, max_iter=100, verbose=False):
         """
