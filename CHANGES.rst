@@ -1,11 +1,15 @@
 Changelog
 =========
 
-0.8.6 (summer 2020) -- current revision
+0.8.6 (October 2020)
 
-- [Experimental new feature; feedback welcome!] Added `Striplog.from_macrostrat()` which takes a lat/lon location and returns a striplog in geological time or in depth below the surface at that location.
+- Multi-step Markov chains now work properly, respecting 'self-transitions'.
+- Added `include_self` property to the repr of a Markov chain object.
 - Added `match_only` argument to `Legend.random()` to allow you to keep only certain properties in the components.
 - `Component.from_text()` will now use `Lexicon.default()` if you don't pass one in.
+
+We started adding an experimental new feature; feedback welcome! Added `Striplog.from_macrostrat()` which takes a lat/lon location and returns a striplog in geological time or in depth below the surface at that location.
+
 
 0.8.5 (May 2020)
 ----

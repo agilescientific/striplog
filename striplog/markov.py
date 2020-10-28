@@ -162,7 +162,9 @@ class Markov_chain(object):
     @property
     def _state_counts(self):
         s = self.observed_counts.copy()
-        for axis in range(self.observed_counts.ndim - 2):
+
+        # Deal with more than 2 dimensions.
+        for _ in range(self.observed_counts.ndim - 2):
             s = np.sum(s, axis=0)
 
         a = np.sum(s, axis=0)
