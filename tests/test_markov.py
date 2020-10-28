@@ -15,7 +15,7 @@ def test_basics():
 
     m = Markov_chain(data, states=['A', 'B', 'C', 'D'])
 
-    assert str(m) == "Markov_chain(179 transitions, states=['A', 'B', 'C', 'D'], step=1)"
+    assert str(m) == "Markov_chain(179 transitions, states=['A', 'B', 'C', 'D'], step=1, include_self=False)"
 
     ans = (35.73687369691601, 11.070497693516351, 0.9999989278539752)
     assert np.allclose(m.chi_squared(), ans)

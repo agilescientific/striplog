@@ -110,10 +110,8 @@ class Markov_chain(object):
 
         if states is not None:
             self.states = np.asarray(states)
-        elif self.observed_counts is not None:
-            self.states = np.arange(self.observed_counts.shape[0])
         else:
-            self.states = None
+            self.states = np.arange(self.observed_counts.shape[0])
 
         if self.step > 1:
             self.expected_counts = self._compute_expected_mc()
@@ -124,8 +122,8 @@ class Markov_chain(object):
 
     def __repr__(self):
         trans = f"Markov_chain({np.sum(self.observed_counts):.0f} transitions"
-        states = '[{}]'.format(", ".join("\'{}\'".format(s) for s in self.states))
-        return f"{trans}, states={states}, step={self.step})"
+        states = '[{}]'.format(", ".join(s.__repr__() for s in self.states))
+        return f"{trans}, states={states}, step={self.step}, include_self={self.include_self})"
 
     @staticmethod
     def _compute_freqs(C):
@@ -224,10 +222,7 @@ class Markov_chain(object):
         else:
             states = np.asarray(list(states))
 
-        O = observations(seq_of_seqs, states=states, step=step)
-
-        if not include_self:
-            O = hollow_matrix(O)
+        O = observations(seq_of_seqs, states=states, step=step, include_self=include_self)
 
         return cls(observed_counts=np.array(O),
                    states=states,

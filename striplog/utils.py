@@ -109,7 +109,7 @@ def observations(seq_of_seqs, states, step=1, include_self=False):
         seq = np.array(seq)
         _, integer_seq = np.where(seq.reshape(-1, 1) == states)
         for idx in zip(*[integer_seq[n:] for n in range(step+1)]):
-            if (not include_self) and (len(set(idx)) < (step + 1)):
+            if (not include_self) and (0 in np.diff(idx)):
                 continue
             O[idx] += 1
     return O
