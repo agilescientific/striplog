@@ -1,7 +1,16 @@
 Changelog
 =========
 
+0.8.7 (November 2020)
+----
+
+- Breaking change: `Striplog.extract()` now returns a copy of the striplog instead of changing the striplog in place.
+- Added option to send actual data to `Striplog.to_log()` instead of index from lookup table.
+- Added a tutorial, `Blocking_curves_with_striplog.ipynb`.
+
+
 0.8.6 (October 2020)
+----
 
 - Multi-step Markov chains now work properly, respecting 'self-transitions'.
 - Added `include_self` property to the repr of a Markov chain object.

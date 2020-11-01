@@ -1181,8 +1181,10 @@ class Striplog(object):
                basis=None,
                field=None,
                field_function=None,
-               dtype=None,
+               bins=True,
+               dtype='float',
                table=None,
+               sort_table=False,
                legend=None,
                legend_field=None,
                match_only=None,
@@ -1206,6 +1208,12 @@ class Striplog(object):
             field_function (function): Provide a function to apply to the field
                 you are asking for. It's up to you to make sure the function
                 does what you want.
+            bins (bool): Whether to return the index of the items from the
+                lookup table. If False, then the item itself will be returned. 
+            dtype (str): The NumPy dtype string for the output log.
+            table (list): Provide a look-up table of values if you want. If you
+                don't, then it will be constructed from the data.
+            sort_table (bool): Whether to sort the table or not. Default: False.
             legend (Legend): If you want the codes to come from a legend,
                 provide one. Otherwise the codes come from the log, using
                 integers in the order of prevalence. If you use a legend,
@@ -1281,6 +1289,9 @@ class Striplog(object):
         else:
             match_only = []
 
+        if sort_table:
+            table.sort()
+
         start_ix = self.read_at(start, index=True)
         stop_ix = self.read_at(stop, index=True)
         if stop_ix is not None:
@@ -1303,7 +1314,12 @@ class Striplog(object):
                 f = field_function or utils.null
                 try:
                     v = f(i.data.get(field, undefined)) or undefined
-                    key = (table.index(v) + 1) or undefined
+                    if bins:
+                        # Then return the bin we're in...
+                        key = (table.index(v) + 1) or undefined
+                    else:
+                        # ...else return the actual value.
+                        key = v
                 except ValueError:
                     key = undefined
             else:  # Use the lookup table.
@@ -1709,8 +1725,9 @@ class Striplog(object):
             function (function). A function that takes an array as the only
                 input, and returns whatever you want to store in the 'name'
                 attribute of the primary component.
+
         Returns:
-            None. The function works on the striplog in place.
+            A copy of the striplog.
         """
         # Build a dict of {index: [log values]} to keep track.
         intervals = {}
@@ -1726,12 +1743,13 @@ class Striplog(object):
             previous_ix = ix
 
         # Set the requested attribute in the primary comp of each interval.
+        new_strip = self.copy()
         for ix, data in intervals.items():
             f = function or utils.null
             d = f(np.array(data))
-            self[ix].data[name] = d
+            new_strip[ix].data[name] = d
 
-        return None
+        return new_strip
 
     def find(self, search_term, index=False):
         """
@@ -1747,6 +1765,7 @@ class Striplog(object):
             search_term (string or Component): The thing you want to search
                 for. Strings are treated as regular expressions.
             index (bool): Whether to return the index instead of the interval.
+
         Returns:
             Striplog: A striplog that contains only the 'hit' Intervals.
                 However, if ``index`` was ``True``, then that's what you get.
