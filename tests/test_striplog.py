@@ -183,7 +183,7 @@ def test_from_image():
     assert len(strip2) == 18
 
     # Extract log onto striplog.
-    striplog.extract(log, basis=basis, name="Log", function=np.mean)
+    striplog = striplog.extract(log, basis=basis, name="Log", function=np.mean)
     assert striplog[0].data['Log'] == 2.0
 
     # Indexing.
