@@ -680,6 +680,25 @@ class Striplog(object):
         return cls(list_of_Intervals, source=source)
 
     @classmethod
+    def from_dict(cls, dictionary):
+        """
+        Take a dictionary of the form name:depth and return a striplog of
+        complete intervals.
+        """
+        d_sorted = sorted(dictionary.items(), key=lambda i: i[1])
+        names = [i[0] for i in d_sorted]
+        tops_ = [i[1] for i in d_sorted]
+        bases_ = tops_[1:] + [tops_[-1]+1]
+        comps_ = [Component({'formation': name}) for name in names]
+
+        list_of_Intervals = []
+        for top, base, comp in zip(tops_, bases_, comps_):
+            iv = Interval(top=top, base=base, components=[comp])
+            list_of_Intervals.append(iv)
+
+        return cls(list_of_Intervals)
+
+    @classmethod
     def from_descriptions(cls, text,
                           lexicon=None,
                           source='CSV',

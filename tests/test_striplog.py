@@ -88,6 +88,15 @@ lappy_list = [Interval(**{'top': 50,
                                   'components': [Component({'lithology': 'anhydrite'}),]})
                       ]
 
+top_dict = {'Ardmore': 2510.03,
+            'Cody': 2521.61,
+            'Sussex Upper Top': 2521.61,
+            'Sussex Lower Top': 2527.71,
+            'Sussex Lower Base': 2528.62,
+            'Sussex Upper Base': 2529.54,
+            'Niobrara': 2530.75
+           }
+
 
 def test_error():
     """Test the generic error.
@@ -155,6 +164,15 @@ def test_striplog():
 
     # Add.
     assert len(s + iv4) == 5
+
+
+def test_from_dict():
+    """
+    Test gen from dictionary.
+    """
+    striplog = Striplog.from_dict(top_dict)
+    assert len(striplog) == 7
+    assert striplog.thinnest().summary() == '0.00 m of Cody'
 
 
 def test_from_image():
