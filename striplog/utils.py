@@ -141,6 +141,21 @@ def inspect_petrel(filename):
 
 
 def read_petrel(filename, function=None, remap=None):
+        """
+        Read a Petrel well tops ASCII export file.
+
+        Args:
+            filename (str): The name of the ASCII file.
+            function (function or dict): A function to apply to every field,
+                or a mapping of field name to function. The result of the
+                function will be used as the value for that field.
+            remap (dict): A mapping of field name to new field name. The
+                field name will be replaced.
+
+        Returns:
+            dict: A mapping of field names to lists of data. You can give this
+                straight to `pandas`.
+        """
         with open(filename, 'r') as f:
             text = f.read()
 
@@ -171,15 +186,16 @@ def read_petrel(filename, function=None, remap=None):
             return s
 
         # Gather data.
-        s = re.search(r'END HEADER\n(.+)', text, flags=re.DOTALL)
-        fields = s.groups()[0].split('\n')
-        data = [list(map(fixer, shlex.split(i))) for i in fields]
-        data = list(filter(None, data))  # Deals with null data items
+        end = 'END HEADER'
+        rows = filter(None, text[text.find(end) + len(end):].split('\n'))
+        data = [list(map(fixer, shlex.split(row))) for row in rows]
 
         result = {}
         for i, f in enumerate(fieldnames):
-            func = function.get(f, null)
-            result[f] = [func(d[i]) for d in data]
+            if not callable(function):
+                # Treat as mapping of fieldname to function.
+                function = function.get(f, identity)
+            result[f] = [function(d[i]) for d in data]
 
         return result
 
@@ -262,6 +278,8 @@ def null(x):
     supplied function to data before returning.
     """
     return x
+
+identity = null
 
 
 def null_default(x):
