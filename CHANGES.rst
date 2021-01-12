@@ -1,11 +1,14 @@
 Changelog
 =========
 
-0.8.8 (in development)
+0.8.8 (January 2021)
 ----
 
-- Added `Striplog.from_dict()` to create a striplog from a dictionary with items like name:depth.
+- Added `Striplog.from_dict()` to create a striplog from a dictionary with items like `name: depth`.
 - When reading a Petrel 'tops' file, you can pass a single function to apply to every quantity, not just a mapping of field names to functions. (You might do this to replace all `-999.25` with `np.nan`, for example.) There's no way to do both at present, but if there's a need, please file an issue.
+- Updated the default lexicon with some 'modifiers' like 'silty', 'sandy', etc.
+- `Lexicon._parse_description()` is now a private static method (it was previously mangled which was a mistake). It can be called without instantiating a class to parse a piece of text. See the notebook, `Parsing_a_description.ipynb`.
+- Fixed a bug causing the default Lexicon to be a shallow copy, which was annoying.
 
 
 0.8.7 (November 2020)
