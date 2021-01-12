@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Markov chains for the striplog package.
 

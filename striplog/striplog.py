@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 A striplog is a sequence of intervals.
 

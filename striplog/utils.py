@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Helper functions for the striplog package.
 

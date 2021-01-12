@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 A vocabulary for parsing lithologic or stratigraphic decriptions.
 
@@ -10,6 +9,7 @@ import json
 import warnings
 import re
 from itertools import islice
+from copy import deepcopy
 
 from . import defaults
 
@@ -65,7 +65,7 @@ class Lexicon(object):
         Returns:
             Lexicon: The default lexicon.
         """
-        return cls(defaults.LEXICON)
+        return cls(deepcopy(defaults.LEXICON))
 
     @classmethod
     def from_json_file(cls, filename):
@@ -284,3 +284,14 @@ class Lexicon(object):
         """
         keys = [k for k in self.__dict__.keys() if k not in SPECIAL]
         return keys
+
+    def parse_description(self, text):
+        """
+        Parse a single description into component-like dictionaries.
+        """
+        components = []
+        for descr in self.split_description(text):
+            expanded = self.expand_abbreviations(descr)
+            component = self.get_component(expanded)
+            components.append(component)
+        return components

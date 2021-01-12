@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 """
 Codes for Canstrat ASCII files; only used by canstrat.py.
 
 :copyright: 2016 Agile Geoscience
 :license: Apache 2.0
 """
-
-
 # Codes for rtc.
 rtc_txt = """X ROC-C_X ROCKTP_IGNEB ROCK TYPE 1 Igneous Basic
 N ROC-C_N ROCKTP_IGNEA ROCK TYPE 2 Igneous Acidic

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Define a suite a tests for the Striplog module.
 """
@@ -382,7 +381,7 @@ def test_petrel():
               'Well', 'Symbol']
 
     # Do the thing!
-    s = Striplog.from_petrel("tests/data/tops.txt",
+    s = Striplog.from_petrel("tests/data/petrel.dat",
                              include=include,
                              exclude=exclude,
                              remap=remap,

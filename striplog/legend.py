@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Defines a legend for displaying components.
 

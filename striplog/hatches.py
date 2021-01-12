@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Custom hatches for matplotlib. They have a geological flavour.
 
