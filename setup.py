@@ -21,7 +21,8 @@ else:
 
 REQUIREMENTS = ['numpy',
                 'matplotlib',
-                'scipy'
+                'scipy',
+                'requests',
                 ]
 
 TEST_REQUIREMENTS = ['pytest',

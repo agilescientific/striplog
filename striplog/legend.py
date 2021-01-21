@@ -872,7 +872,8 @@ class Legend(object):
         r1, g1, b1 = utils.hex_to_rgb(colour)
 
         # Start with a best match of black.
-        best_match = '#000000'
+        best_match = Component()
+        best_match_colour = '#000000'
         best_match_dist = np.sqrt(r1**2. + g1**2. + b1**2.)
 
         # Now compare to each colour in the legend.

@@ -876,6 +876,9 @@ class Striplog(object):
                                                       basis,
                                                       components)
 
+        list_of_Intervals = [iv for iv in list_of_Intervals
+                             if isinstance(iv.primary, Component)]
+
         return cls(list_of_Intervals, source="Image")
 
     @classmethod

@@ -475,12 +475,13 @@ def tops_from_loglike(a, offset=0, null=None):
     tops = np.where(~edges)[0]
     tops = np.append(0, tops)
 
-    values = a[tops + offset]
+    offs = tops + offset
+    values = a[offs[offs < a.size]]
 
     if contains_nans and transformed:
         values[values == _null] = np.nan
 
-    return tops, values
+    return tops[:values.size], values
 
 
 def list_and_add(a, b):
