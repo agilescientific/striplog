@@ -998,7 +998,7 @@ class Striplog(object):
             except TypeError:
                 n = 1
             if len(components) < n+1:
-                m = 'For n cutoffs, you need to provide at least'
+                m = 'For n cutoffs, you need to provide at least '
                 m += 'n+1 components.'
                 raise StriplogError(m)
 
