@@ -35,21 +35,13 @@ Docs
 ----
 
 * `Read The Docs <https://striplog.readthedocs.org/>`_
+* Check out `the tutorial </tutorial>`_
 
 
-Dependencies
+Installation
 ------------
 
-These are best installed with Anaconda, see **Install**, below.
-
-* `NumPy <http://www.numpy.org/>`_
-* `matplotlib <http://matplotlib.org/>`_
-
-
-Install
--------
-
-* ``pip install striplog``
+    pip install striplog
 
 I recommend setting up a virtual environment:
 
@@ -59,9 +51,15 @@ I recommend setting up a virtual environment:
     conda create -n myenv python=3.5 numpy matplotlib
     source activate myenv
 
-* Then you can do::
+* Then you can do ``pip install striplog``.
 
-    pip install striplog
+
+Getting started
+---------------
+
+    from striplog import Striplog
+
+    s = Striplog.from_log
 
 
 Development: setting up for testing
@@ -94,9 +92,3 @@ Then I use these commands, which you can join with `;` if you like, to keep the 
     /usr/bin/yes | pip uninstall striplog     # Of course you don't need this one if you didn't install it yet.
     python setup.py sdist
     pip install dist/striplog-0.6.1.tar.gz    # Or whatever was the last version to build.
-
-
-SciPy 2015
-----------
-
-`Here's a presentation about Striplog. <https://docs.google.com/presentation/d/16HJsJJQylb2_8D2NS1p2cjp1yzslqUl_51BN16J5Y2k/edit?usp=sharing>`_
