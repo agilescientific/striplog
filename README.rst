@@ -41,7 +41,7 @@ Docs
 Installation
 ------------
 
-.. code-block:: python
+.. code-block:: shell
 
     pip install striplog
 
@@ -50,7 +50,7 @@ I recommend setting up a virtual environment:
 * Install `Anaconda <http://docs.continuum.io/anaconda/install>`_ if you don't have it already
 * Then do this to create an environment called ``myenv`` (or whatever you like), answering Yes to the confirmation question::
 
-.. code-block:: python
+.. code-block:: shell
 
     conda create -n myenv python=3.5 numpy matplotlib
     source activate myenv
@@ -70,17 +70,17 @@ Getting started
 Development: setting up for testing
 -----------
 
-There are other requirements for testing, as listed in ``setup.py``. They should install with::
+There are other requirements for testing, as listed in ``setup.py``. They should install with
 
-.. code-block:: python
+.. code-block:: shell
 
     python setup.py test
 
 But I had better luck doing ``conda install pytest`` first.
 
-The tests can be run with::
+The tests can be run with
 
-.. code-block:: python
+.. code-block:: shell
 
     python run_tests.py
 
