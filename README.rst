@@ -35,7 +35,7 @@ Docs
 ----
 
 * `Read The Docs <https://striplog.readthedocs.org/>`_
-* Check out `the tutorial </tutorial>`_
+* Check out `the tutorial </tutorial>`_ notebooks.
 
 
 Installation

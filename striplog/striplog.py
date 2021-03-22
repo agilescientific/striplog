@@ -1264,8 +1264,8 @@ class Striplog(object):
             start, stop = basis[0], basis[-1]
             step = basis[1] - start
         else:
-            start = start or self.start.z
-            stop = stop or self.stop.z
+            start = self.start.z if start is None else start
+            stop = self.stop.z if stop is None else stop
             pts = np.ceil((stop - start)/step) + 1
             basis = np.linspace(start, stop, int(pts))
 
@@ -1351,6 +1351,8 @@ class Striplog(object):
 
             top_index = int(np.ceil((max(start, i.top.z)-start)/step))
             base_index = int(np.ceil((min(stop, i.base.z)-start)/step))
+            if top_index > base_index:
+                top_index, base_index = base_index, top_index
 
             try:
                 result[top_index:base_index+1] = key
