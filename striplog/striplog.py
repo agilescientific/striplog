@@ -1318,6 +1318,9 @@ class Striplog(object):
         if stop_ix is not None:
             stop_ix += 1
 
+        if self.order == 'elevation':
+            start_ix, stop_ix = stop_ix, start_ix
+
         # Assign the values.
         for i in self[start_ix:stop_ix]:
             c = i.primary
@@ -1351,7 +1354,9 @@ class Striplog(object):
 
             top_index = int(np.ceil((max(start, i.top.z)-start)/step))
             base_index = int(np.ceil((min(stop, i.base.z)-start)/step))
-            if top_index > base_index:
+
+            # Deal with bug where elevation order seems to be an issue.
+            if self.order == 'elevation':
                 top_index, base_index = base_index, top_index
 
             try:
