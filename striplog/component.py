@@ -36,13 +36,15 @@ class Component(object):
                 if v is True or v is False:
                     # Cope with a boolean...
                     setattr(self, k, v)
+                elif v is None:
+                    continue
                 else:
                     try:  # To treat as number...
                         setattr(self, k, float(v))
                     except ValueError:  # Just add it.
                         setattr(self, k, v)
-                    except TypeError:  # It's probably None.
-                        continue
+                    except TypeError:  # Add other objects that are not None
+                        setattr(self, k, v)
 
     def __str__(self):
         return self.__dict__.__str__()
