@@ -226,7 +226,7 @@ class Component(object):
         if fmt == '':
             return default
 
-        keys = [k for k, v in self.__dict__.items() if v is not '']
+        keys = [k for k, v in self.__dict__.items() if v != '']
 
         f = fmt or '{' + '}, {'.join(keys) + '}'
 
