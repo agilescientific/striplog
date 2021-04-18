@@ -416,8 +416,8 @@ class Striplog(object):
 
         return list_of_Intervals
 
-    @classmethod
-    def _clean_longitudinal_data(cls, data, null=None):
+    @staticmethod
+    def _clean_longitudinal_data(data, null=None):
         """
         Private function. Make sure we have what we need to make a striplog.
         """
@@ -1095,10 +1095,6 @@ class Striplog(object):
                         order=self.order,
                         source=self.source)
 
-    
-
-
-
     # Outputter
     def to_canstrat(self, filename, params):
         """
@@ -1583,7 +1579,7 @@ class Striplog(object):
         Args:
             legend (Legend): The Legend to use for colours, etc.
             width (int): The width of the plot, in inches. Default 1.
-            ladder (bool): Whether to use widths or not. Default False.
+            ladder (bool): Whether to use widths or not. Default `True`.
             aspect (int): The aspect ratio of the plot. Default 10.
             ticks (int or tuple): The (minor,major) tick interval for depth.
                 Only the major interval is labeled. Default (1,10).
@@ -1595,6 +1591,14 @@ class Striplog(object):
                 object. Default False.
             colour (str): Which data field to use for colours.
             cmap (cmap): Matplotlib colourmap. Default ``viridis``.
+            default (float): The default (null) value.
+            style (str): Can be 'tops', 'points' or 'field' for different types
+                of plot. If you use 'field', give the name of the field as the
+                `field` argument.
+            field (str): The name of the field to use for the width parameter.
+            label (str): Can be the name of a single Component attribute,
+                or a format string with multiple attributes, like
+                `"{colour} {lithology}"`.
             **kwargs are passed through to matplotlib's ``patches.Rectangle``.
 
         Returns:
@@ -1652,7 +1656,17 @@ class Striplog(object):
 
         if label is not None:
             for iv in self.__list:
-                plt.text(1.6, iv.middle, iv.primary[label], ha='left', va='center', size=10)
+                if '{' in label:
+                    label_text = iv.summary(fmt=label)
+                else:
+                    label_text = iv.primary[label]
+                plt.text(1.6,
+                         iv.middle,
+                         label_text,
+                         ha='left',
+                         va='center',
+                         size=10
+                         )
 
         # Make sure ticks is a tuple.
         try:
