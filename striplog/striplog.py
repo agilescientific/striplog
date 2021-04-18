@@ -583,7 +583,120 @@ class Striplog(object):
         return list_of_Intervals
 
     @classmethod
-    def from_csv(cls, filename=None,
+    def from_csv(cls, filename,
+                 order='depth',
+                 top=None, # integer position of column
+                 base=None, # integer position of column
+                 thickness=None, # integer position of column
+                 content=None, # tuple containing integer positions of columns
+                 usecols=None, # which columns to read, with 0 being the first
+                 source=None, # string - where you got the data from
+                 dlm=',',
+                 skip_header=0,
+                 names=None, # works the same way as np.genfromtxt
+                 points=False,
+                 lexicon=None,
+                 include=None,
+                 exclude=None,
+                 ignore=None,
+                 stop=None,
+                 **kwargs
+        ):
+        """
+        Read a csv file and generate a Striplog.
+        There are a number of cases that can be handled:
+            * Only tops are given - bases are inferred to be the next top.
+            * Only bases are given - tops are inferred to be the next base.
+            * Both bases and tops are given
+            * Either bases or tops are given along with a thickness -
+                the missing value is calculated using the thickness.
+
+            TODO: handle the missing cases when creating the list of intervals.
+
+        The easiest is to have the headers in the csv, and then use the 
+            `name` argument. If you do this, then the `top`, `base` and
+            `thickness` columns will be inferred if they are named that.
+        Alternatively, the columns to use
+
+        Args:
+            filename ([type]): Filename, a string, a list of strings, a generator 
+                or an open file-like object with a read method, for example,
+                a file or io.StringIO object. If a single string is provided,
+                it is assumed to be the name of a local or remote file. If a
+                list of strings or a generator returning strings is provided,
+                each string is treated as one line in a file. When the URL of
+                a remote file is passed, the file is automatically downloaded
+                to the current directory and opened. 
+            order (str, optional): Controls the direction of the striplogs.
+                Accepted values are 'depth' or 'elevation'. This is most important
+                when using a thickness, Defaults to 'depth'.
+            top ([type], optional): Column containing tops. Defaults to None.
+            base ([type], optional): Column containing bases. Defaults to None.
+            thickness ([type], optional): Column containing thicknesses. Defaults to None.
+            skip_header (int, optional): Number of rows to skip. Defaults to 0.
+            names ([type], optional): If True, uses first unskipped row to define
+                                        column headers.
+                                        Definitely the easiest approach.
+                                      If a list, uses the list for column names.
+                                        Defaults to None.
+            lexicon ([type], optional): [description]. Defaults to None.
+            include ([type], optional): [description]. Defaults to None.
+            exclude ([type], optional): [description]. Defaults to None.
+            ignore ([type], optional): [description]. Defaults to None.
+            stop ([type], optional): [description]. Defaults to None.
+
+        Returns:
+            [type]: [description]
+        """
+        if not ((order == 'depth') or (order == 'elevation')):
+            raise StriplogError(f'''`order` needs to be one of "depth" or "elevation", not "{order}"''')
+
+        data = np.genfromtxt(filename, delimiter=dlm, usecols=usecols,
+                             names=names, skip_header=skip_header,
+                             autostrip=True,
+                             **kwargs)
+
+        data_dict = {}
+        if names: #This is much easier. Worth saying that you need to use?
+            print('checking names')
+            for name in data.dtype.names:
+                if name == 'tops': # There might be other cases here?
+                    data_dict.update({'top': data[name]})
+                if name == 'bases': # There might be other cases here?
+                    data_dict.update({'base': data[name]})
+                else: # Everything else is handled here.
+                    data_dict.update({name: data[name]})
+
+        if not names:
+            if top != None:
+                data_dict.update({'top': data[:, top]})
+            if base != None:
+                data_dict.update({'base': data[:, base]})
+            if thickness != None:
+                data_dict.update({'thickness': data[:, thickness]})
+            if content:
+                try:
+                    for ii in content:
+                        data_dict.update({f'content_{ii}': data[:, ii]})
+                except TypeError:
+                    data_dict.update({f'content_{content}': data[:, content]})
+
+        # Now we make the intervals. We should use 'order' here to determine
+        # the direction that it runs in. Do we need a new build method to
+        # handle this?
+        list_of_Intervals = cls._build_list_of_Intervals(data_dict,
+                                                         points=points,
+                                                         lexicon=lexicon,
+                                                         include=include,
+                                                         exclude=exclude,
+                                                         ignore=ignore,
+                                                         stop=stop
+                                                         )
+
+        return cls(list_of_Intervals, source=source)
+
+    @classmethod
+    def from_csv_old(cls, filename=None,
                  text=None,
                  dlm=',',
                  lexicon=None,
@@ -631,6 +744,9 @@ class Striplog(object):
                 text = f.read()
 
         source = source or 'CSV'
+
+        with open(filename) as csvfile:
+            data = csv.reader(csvfile, delimiter=' ', quotechar='|')
 
         # Deal with multiple spaces in space delimited file.
         if dlm == ' ':
