@@ -1,6 +1,5 @@
 """
 Markov chains for the striplog package.
-
 """
 from collections import namedtuple
 
@@ -238,7 +237,7 @@ class Markov_chain(object):
         """
         return self.observed_freqs[self._index_dict[state]]
 
-    def _next_state(self, current_state: str) -> str:
+    def _next_state(self, current_state):
         """
         Returns the state of the random variable at the next time
         instance.
@@ -253,7 +252,7 @@ class Markov_chain(object):
                                 p=self._conditional_probs(current_state)
                                 )
 
-    def generate_states(self, n:int=10, current_state:str=None) -> list:
+    def generate_states(self, n=10, current_state=None):
         """
         Generates the next states of the system.
 
@@ -446,10 +445,10 @@ class Markov_chain(object):
             fig, ax = plt.subplots(figsize=figsize)
             return_ax = False
 
-        e_neg   = {(u, v):round(d['weight'],1) for (u, v, d) in G.edges(data=True) if        d['weight'] <= -1.0}
-        e_small = {(u, v):round(d['weight'],1) for (u, v, d) in G.edges(data=True) if -1.0 < d['weight'] <=  1.0}
-        e_med   = {(u, v):round(d['weight'],1) for (u, v, d) in G.edges(data=True) if  1.0 < d['weight'] <=  2.0}
-        e_large = {(u, v):round(d['weight'],1) for (u, v, d) in G.edges(data=True) if        d['weight'] >   2.0}
+        e_neg = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if d['weight'] <= -1.0}
+        e_small = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if -1.0 < d['weight'] <= 1.0}
+        e_med = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if 1.0 < d['weight'] <= 2.0}
+        e_large = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if d['weight'] > 2.0}
 
         pos = nx.spring_layout(G)
 
@@ -468,8 +467,8 @@ class Markov_chain(object):
                                    edge_color='k')
 
         if edge_labels:
-            nx.draw_networkx_edge_labels(G,pos,edge_labels=e_large)
-            nx.draw_networkx_edge_labels(G,pos,edge_labels=e_med)
+            nx.draw_networkx_edge_labels(G, pos, edge_labels=e_large)
+            nx.draw_networkx_edge_labels(G, pos, edge_labels=e_med)
 
         labels = nx.get_node_attributes(G, 'state')
         ax = nx.draw_networkx_labels(G, pos, labels=labels,
@@ -491,7 +490,7 @@ class Markov_chain(object):
                        vminmax=None,
                        rotation=0,
                        annotate=False,
-                      ):
+                       ):
         """
         A visualization of the normalized difference matrix.
 
@@ -502,7 +501,8 @@ class Markov_chain(object):
 
         return_ax = True
         if ax is None:
-            fig, ax = plt.subplots(figsize=(1 + self.states.size/1.5, self.states.size/1.5))
+            figsize = (1 + self.states.size/1.5, self.states.size/1.5)
+            fig, ax = plt.subplots(figsize=figsize)
             return_ax = False
 
         if vminmax is None:
@@ -511,18 +511,23 @@ class Markov_chain(object):
         else:
             vmin, vmax = vminmax
 
-        im = ax.imshow(self.normalized_difference, cmap=cmap, vmin=vmin, vmax=vmax, interpolation='none')
+        im = ax.imshow(self.normalized_difference,
+                       cmap=cmap,
+                       vmin=vmin,
+                       vmax=vmax,
+                       interpolation='none'
+                       )
         plt.colorbar(im)
 
         ax.tick_params(axis='x', which='both',
                        bottom=False, labelbottom=False,
                        top=False, labeltop=True,
-                      )
+                       )
 
         ax.tick_params(axis='y', which='both',
                        left=False, labelleft=True,
                        right=False, labelright=False,
-                      )
+                       )
 
         ticks = np.arange(self.states.size)
         ax.set_yticks(ticks)
@@ -549,7 +554,7 @@ class Markov_chain(object):
                     col = 'w' if rgb_is_dark(lookup(norm(val))) else 'k'
                     fmt = annotate if isinstance(annotate, str) else '0.1f'
                     s = format(val, fmt)
-                    text = ax.text(j, i, s, ha="center", va="center", color=col)
+                    _ = ax.text(j, i, s, ha="center", va="center", color=col)
 
         # Deal with probable bug in matplotlib 3.1.1
         ax.set_ylim(reversed(ax.get_xlim()))
