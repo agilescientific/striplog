@@ -52,7 +52,7 @@ I recommend setting up a virtual environment:
 
 .. code-block:: shell
 
-    conda create -n myenv python=3.5 numpy matplotlib
+    conda create -n myenv python=3.9 numpy matplotlib
     source activate myenv
 
 * Then you can do ``pip install striplog``.
@@ -64,7 +64,7 @@ Getting started
 .. code-block:: python
 
     from striplog import Striplog
-    s = Striplog.from_log
+    s = Striplog.from_log(arr)
 
 
 Development: setting up for testing
@@ -104,4 +104,4 @@ Then I use these commands, which you can join with `;` if you like, to keep the 
 
     /usr/bin/yes | pip uninstall striplog     # Of course you don't need this one if you didn't install it yet.
     python setup.py sdist
-    pip install dist/striplog-0.6.1.tar.gz    # Or whatever was the last version to build.
+    pip install dist/striplog-0.8.9.tar.gz    # Or whatever was the last version to build.
