@@ -9,6 +9,7 @@ striplog/run_tests.py
 https://pypi.python.org/pypi/pytest-mpl/0.3
 """
 import random
+import io
 
 import matplotlib.pyplot as plt
 import pytest
@@ -111,7 +112,7 @@ def test_striplog_top_plot():
                    20, Sobrarbe Fm.
                    50, Cretaceous"""
 
-    tops = Striplog.from_csv(text=tops_csv)
+    tops = Striplog.from_csv(io.StringIO(tops_csv), names=True)
 
     fig = tops.plot(style='tops',
                     field='formation',

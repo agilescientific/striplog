@@ -3,6 +3,7 @@ Define a suite a tests for the Striplog module.
 """
 import numpy as np
 import pytest
+import io
 
 from striplog import Component
 from striplog import Interval
@@ -238,7 +239,8 @@ def test_from_descriptions():
 def test_points():
     """Test a striplog of points.
     """
-    points = Striplog.from_csv(text=csv_points, points=True)
+    points = Striplog.from_csv(filename=io.StringIO(csv_points),
+        points=True, names=True)
     assert len(points) == 6
     assert points.order == 'none'
 
