@@ -586,10 +586,6 @@ class Striplog(object):
     def from_csv(cls, filename,
                  text=None,
                  order='depth',
-                 top=None, # integer position of column
-                 base=None, # integer position of column
-                 thickness=None, # integer position of column
-                 content=None, # tuple containing integer positions of columns
                  usecols=None, # which columns to read, with 0 being the first
                  source=None, # string - where you got the data from
                  dlm=',',
@@ -643,10 +639,6 @@ class Striplog(object):
             order (str, optional): Controls the direction of the striplogs.
                 Accepted values are 'depth' or 'elevation'. This is most important
                 when using a thickness, defaults to 'depth'.
-            top (int, optional): Column containing tops. Defaults to None.
-            base (int, optional): Column containing bases. Defaults to None.
-            thickness (int, optional): Column containing thicknesses. Defaults to None.
-            content (int, list of ints, optional): Columns containing components.
             usecols (int, list of ints, optional): Which columns to read. This
                 should be linked with the use of `names` in many cases.
             source (string, optional): The attribution or source of the file.
