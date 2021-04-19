@@ -584,6 +584,7 @@ class Striplog(object):
 
     @classmethod
     def from_csv(cls, filename,
+                 text=None,
                  order='depth',
                  top=None, # integer position of column
                  base=None, # integer position of column
@@ -595,6 +596,7 @@ class Striplog(object):
                  delimiter=',',
                  skip_header=0,
                  names=None, # works the same way as np.genfromtxt
+                 fieldnames=None,
                  points=False,
                  lexicon=None,
                  include=None,
@@ -602,8 +604,8 @@ class Striplog(object):
                  ignore=None,
                  stop=None,
                  function=None,
-                 fieldnames=None,
                  null=None,
+                 remap=None,
                  **kwargs
         ):
         """
@@ -640,32 +642,35 @@ class Striplog(object):
             text (str, optional): Deprecated.
             order (str, optional): Controls the direction of the striplogs.
                 Accepted values are 'depth' or 'elevation'. This is most important
-                when using a thickness, Defaults to 'depth'.
+                when using a thickness, defaults to 'depth'.
             top (int, optional): Column containing tops. Defaults to None.
             base (int, optional): Column containing bases. Defaults to None.
             thickness (int, optional): Column containing thicknesses. Defaults to None.
             content (int, list of ints, optional): Columns containing components.
-            skip_header (int, optional): Number of rows to skip. Defaults to 0.
+            usecols (int, list of ints, optional): Which columns to read. This
+                should be linked with the use of `names` in many cases.
+            source (string, optional): The attribution or source of the file.
             dlm (string, optional): Delimiter character between data entries in row of
                 file. Deprecated. Please use 'delimiter' instead. Defaults to ','.
             delimiter (string, optional): The string used to separate values. 
                 By default, a single comma (,) acts as delimiter. An integer or
                 sequence of integers can also be provided as width(s) of each field. 
+            skip_header (int, optional): Number of rows to skip. Defaults to 0.
             names (optional): If True, uses first unskipped row to define column
                 headers. Definitely the easiest and most reliable approach.
                 If a list, uses the list for column names. Defaults to None.
-            usecols (int, list of ints, optional): Which columns to read. This
-                should be linked with the use of `names` in many cases.
-            dlm (string, optional): Delimiter used to split rows.
+            fieldnames (str, sequence of strings, optional): [description].
+                Deprecated. See `names`. Defaults to None.
+            points ([], optional) [description]. Defaults to None.
             lexicon ([type], optional): [description]. Defaults to None.
             include ([type], optional): [description]. Defaults to None.
             exclude ([type], optional): [description]. Defaults to None.
             ignore ([type], optional): [description]. Defaults to None.
+            stop ([type], optional): [description]. Defaults to None.
             function (function, optional): Not currently used here, but will be.
                 Defaults to None.
-            stop ([type], optional): [description]. Defaults to None.
-            source (string, optional): The attribution or source of the file.
-            remap (string, optional): Deprecated.
+            null (string, optional): Deprecated. Defaults to None.
+            remap (string, optional): Deprecated. Defaults to None.
 
         Returns:
             Striplog: A Striplog, made of the intervals as defined in the CSV file.
@@ -673,12 +678,12 @@ class Striplog(object):
 
         # Some deprecation warnings to start with.
         # This should only be here for a couple of releases.
-        removed_by = 'This arg will be removed in version 0.9.'
+        removed_by = 'This arg will be removed in version 0.9.1'
         if (dlm != ','):
             delimiter = dlm
             w = f"'dlm' is deprecated; please use 'delimiter'. {removed_by}"
             warnings.warn(w, FutureWarning, stacklevel=2)
-      
+
         if (null != None):
             w1 = "'null' is deprecated; please use 'fill_values' or 'missing_values'."
             w2 = f"See numpy.genfromtxt for how these work."
@@ -688,7 +693,7 @@ class Striplog(object):
             names = fieldnames
             w = f"'fieldnames' is deprecated; please use 'names'. {removed_by}"
             warnings.warn(w, FutureWarning, stacklevel=2)
-        
+
         if (remap != None):
             w = f"'remap' is deprecated and no longer being used. {removed_by}"
             warnings.warn(w, FutureWarning, stacklevel=2)
