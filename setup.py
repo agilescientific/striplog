@@ -43,9 +43,13 @@ CLASSIFIERS = ['Development Status :: 4 - Beta',
                'Programming Language :: Python :: 3.9',
                ]
 
+with open('README.rst', 'r') as f:
+    long_description = f.read()
+
 setup(name='striplog',
       version=verstr,
       description='Tools for making and managing 1D subsurface data.',
+      long_description=long_description,
       url='http://github.com/agile-geoscience/striplog',
       author='Agile Scientific',
       author_email='hello@agilescientific.com',
