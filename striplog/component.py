@@ -37,9 +37,7 @@ class Component(object):
                     # Cope with a boolean...
                     setattr(self, k, v)
                 else:
-                    try:  # To treat as number...
-                        setattr(self, k, float(v))
-                    except ValueError:  # Just add it.
+                    try:
                         setattr(self, k, v)
                     except TypeError:  # It's probably None.
                         continue
