@@ -679,7 +679,7 @@ class Striplog(object):
         return cls(list_of_Intervals, source=source)
 
     @classmethod
-    def from_dict2(cls, dict,
+    def from_dict_advanced(cls, dict,
                  lexicon=None,
                  points=False,
                  include=None,
