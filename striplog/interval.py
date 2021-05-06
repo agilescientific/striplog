@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Defines intervals for holding components.
 
@@ -88,9 +87,11 @@ class Interval(object):
 
         if self.description and (not self.components):
             if lexicon:
-                comps = self.__parse_description(lexicon,
-                                                 max_component=max_component,
-                                                 abbreviations=abbreviations)
+                comps = self._parse_description(self.description,
+                                            lexicon,
+                                            max_component=max_component,
+                                            abbreviations=abbreviations
+                                           )
                 self.components = comps
             else:
                 with warnings.catch_warnings():
@@ -275,9 +276,9 @@ class Interval(object):
              for c in self.components]
         summary = " with ".join(s)
         if summary:
-            return "{0:.2f} m of {1}".format(self.thickness, summary)
+            return "{0:.2f} {1} of {2}".format(self.thickness, self.top.units, summary)
         elif self.description:
-            return "{0:.2f} m of {1}".format(self.thickness, self.description)
+            return "{0:.2f} {1} of {2}".format(self.thickness, self.top.units, self.description)
         else:
             return None
 
@@ -621,7 +622,8 @@ class Interval(object):
             else:  # They are equal
                 return None
 
-    def __parse_description(self, lexicon,
+    @staticmethod
+    def _parse_description(description, lexicon,
                             max_component=1,
                             abbreviations=False):
         """
@@ -638,10 +640,11 @@ class Interval(object):
         Returns:
             List. A list of Components extracted from the description text.
         """
+
         if abbreviations:
-            text = lexicon.expand_abbreviations(self.description)
+            text = lexicon.expand_abbreviations(description)
         else:
-            text = self.description
+            text = description
 
         components = []
         for p, part in enumerate(lexicon.split_description(text)):

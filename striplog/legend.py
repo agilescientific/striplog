@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Defines a legend for displaying components.
 
@@ -261,12 +260,21 @@ class Decor(object):
         return list(self.__dict__.keys())
 
     @classmethod
-    def random(cls, component):
+    def random(cls, component, match_only=None):
         """
         Returns a minimal Decor with a random colour.
         """
+        c = component.__dict__.copy()
+        if match_only is None:
+            match_only = c.keys()
+
+        for k in list(c.keys()):
+            if k not in match_only:
+                _ = c.pop(k)
+
         colour = random.sample([i for i in range(256)], 3)
-        return cls({'colour': colour, 'component': component, 'width': 1.0})
+
+        return cls({'colour': colour, 'component': Component(c), 'width': 1.0})
 
     def plot(self, fmt=None, fig=None, ax=None):
         """
@@ -468,7 +476,12 @@ class Legend(object):
     default_timescale = partialmethod(builtin_timescale, name='ISC')
 
     @classmethod
-    def random(cls, components, width=False, colour=None):
+    def random(cls,
+               components,
+               width=False,
+               colour=None,
+               match_only=None,
+              ):
         """
         Generate a random legend for a given list of components.
 
@@ -480,6 +493,7 @@ class Legend(object):
                 order in which they are encountered.
             colour (str): If you want to give the Decors all the same colour,
                 provide a hex string.
+            match_only (list): A list of Component properties to use.
         Returns:
             Legend or Decor: A legend (or Decor) with random colours.
         TODO:
@@ -488,16 +502,26 @@ class Legend(object):
             template, since it'll have the components in it already.
         """
         try:  # Treating as a Striplog.
-            list_of_Decors = [Decor.random(c)
+            list_of_Decors = [Decor.random(c, match_only=match_only)
                               for c
                               in [i[0] for i in components.unique if i[0]]
                               ]
         except:
             try:
-                list_of_Decors = [Decor.random(c) for c in components.copy()]
+                list_of_Decors = [Decor.random(c, match_only=match_only)
+                                  for c in components.copy()]
             except:
                 # It's a single component.
-                list_of_Decors = [Decor.random(components)]
+                list_of_Decors = [Decor.random(components, match_only=match_only)]
+
+        if match_only is not None:
+            # We might have duplicate components.
+            comps, keeps = [], []
+            for d in list_of_Decors:
+                if d.component not in comps:
+                    comps.append(d.component)
+                    keeps.append(d)
+            list_of_Decors = keeps
 
         if colour is not None:
             for d in list_of_Decors:
@@ -547,6 +571,40 @@ class Legend(object):
             d = Decor({'colour': hexes_reduced[i], 'component': c})
             list_of_Decors.append(d)
 
+        return cls(list_of_Decors)
+
+    @classmethod
+    def from_striplog(cls, strip,
+                      colour='colour',
+                      width='width',
+                      hatch='hatch',
+                      fields=None,
+                     ):
+        """
+        Creates a legend for a striplog whose components already contain.
+
+        Args:
+            components (list): list of components that need to be in the legend
+
+        Returns:
+            legend (striplog.Legend)
+        """
+        components = [i.primary for i in strip]
+        list_of_Decors = []
+        for component in components:
+            f = {}
+            if fields is None:
+                fields = component.__dict__.keys()
+            for field in fields:
+                f[field] = component[field]
+
+            d = {'component': Component(properties=f)}
+            d['colour'] = component[colour]
+            d['width'] = component[width]
+            d['hatch'] = component[hatch]
+            decor = Decor(d)
+            if decor not in list_of_Decors:
+                list_of_Decors.append(decor)
         return cls(list_of_Decors)
 
     @classmethod
@@ -814,7 +872,8 @@ class Legend(object):
         r1, g1, b1 = utils.hex_to_rgb(colour)
 
         # Start with a best match of black.
-        best_match = '#000000'
+        best_match = Component()
+        best_match_colour = '#000000'
         best_match_dist = np.sqrt(r1**2. + g1**2. + b1**2.)
 
         # Now compare to each colour in the legend.

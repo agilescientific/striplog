@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Helper functions for the striplog package.
 
@@ -8,6 +7,7 @@ from functools import partial
 import re
 import shlex
 
+import requests
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -99,17 +99,35 @@ def binary_closing(arr, p):
     return binary_erosion(binary_dilation(arr, p), p)
 
 
+def observations(seq_of_seqs, states, step=1, include_self=False):
+    """
+    Compute observation matrix.
+    """
+    O = np.zeros(tuple(states.size for _ in range(step+1)))
+    for seq in seq_of_seqs:
+        seq = np.array(seq)
+        _, integer_seq = np.where(seq.reshape(-1, 1) == states)
+        for idx in zip(*[integer_seq[n:] for n in range(step+1)]):
+            if (not include_self) and (0 in np.diff(idx)):
+                continue
+            O[idx] += 1
+    return O
+
+
 def hollow_matrix(M):
     """
     Return hollow matrix (zeros on diagonal).
 
     Args
-        M (ndarray): a 2D, square array representing a matrix.
+        M (ndarray): a 'square' ndarray.
 
     Returns
         ndarray. The same array with zeros on the diagonal.
     """
-    return (1 - np.eye(M.shape[0])) * M
+    s = M.shape[0]
+    idx = np.unravel_index(np.arange(0, s**2, s + 1), M.shape)
+    M[idx] = 0
+    return M
 
 
 def inspect_petrel(filename):
@@ -122,6 +140,21 @@ def inspect_petrel(filename):
 
 
 def read_petrel(filename, function=None, remap=None):
+        """
+        Read a Petrel well tops ASCII export file.
+
+        Args:
+            filename (str): The name of the ASCII file.
+            function (function or dict): A function to apply to every field,
+                or a mapping of field name to function. The result of the
+                function will be used as the value for that field.
+            remap (dict): A mapping of field name to new field name. The
+                field name will be replaced.
+
+        Returns:
+            dict: A mapping of field names to lists of data. You can give this
+                straight to `pandas`.
+        """
         with open(filename, 'r') as f:
             text = f.read()
 
@@ -152,15 +185,16 @@ def read_petrel(filename, function=None, remap=None):
             return s
 
         # Gather data.
-        s = re.search(r'END HEADER\n(.+)', text, flags=re.DOTALL)
-        fields = s.groups()[0].split('\n')
-        data = [list(map(fixer, shlex.split(i))) for i in fields]
-        data = list(filter(None, data))  # Deals with null data items
+        end = 'END HEADER'
+        rows = filter(None, text[text.find(end) + len(end):].split('\n'))
+        data = [list(map(fixer, shlex.split(row))) for row in rows]
 
         result = {}
         for i, f in enumerate(fieldnames):
-            func = function.get(f, null)
-            result[f] = [func(d[i]) for d in data]
+            if not callable(function):
+                # Treat as mapping of fieldname to function.
+                function = function.get(f, identity)
+            result[f] = [function(d[i]) for d in data]
 
         return result
 
@@ -243,6 +277,8 @@ def null(x):
     supplied function to data before returning.
     """
     return x
+
+identity = null
 
 
 def null_default(x):
@@ -355,6 +391,13 @@ def hex_is_dark(hexx, percent=50):
     return (luma < percent)
 
 
+def rgb_is_dark(rgb, percent=50):
+    """
+    Helpful wrapper for hex_is_dark.
+    """
+    return hex_is_dark(rgb_to_hex(rgb))
+
+
 def text_colour_for_hex(hexx, percent=50, dark='#000000', light='#ffffff'):
     """
     Function to decide what colour to use for a given hex colour.
@@ -432,12 +475,13 @@ def tops_from_loglike(a, offset=0, null=None):
     tops = np.where(~edges)[0]
     tops = np.append(0, tops)
 
-    values = a[tops + offset]
+    offs = tops + offset
+    values = a[offs[offs < a.size]]
 
     if contains_nans and transformed:
         values[values == _null] = np.nan
 
-    return tops, values
+    return tops[:values.size], values
 
 
 def list_and_add(a, b):
@@ -472,7 +516,7 @@ def flatten_list(l):
     """
     if (l == []) or (l is None):
         return l
-    if isinstance(l[0], list):
+    if isinstance(l[0], list) or isinstance(l[0], tuple):
         return flatten_list(l[0]) + flatten_list(l[1:])
     return l[:1] + flatten_list(l[1:])
 
@@ -536,3 +580,42 @@ def add_subplot_axes(ax, rect, axisbg='w'):
     subax.xaxis.set_tick_params(labelsize=x_labelsize)
     subax.yaxis.set_tick_params(labelsize=y_labelsize)
     return subax
+
+
+def geology_from_macrostrat(lng, lat, buffer_size=0.2):
+    """
+    Request data from MacroStrat within `buffer_size` of a given lng, lat pair.
+    We can do this by creating a WKT polygon, which is simply a square with
+        each side a `buffer_size` distance from the given lng, lat. 
+
+    Args:
+        lng (float): longitude in decimal degrees.
+        lat (float): latitude in decimal degrees.
+        buffer_size (float): distance in decimal degrees to add to lng
+                            and lat to request geology in.
+    
+    Returns:
+        polygon_request (requests.models.Response) 
+    """
+    area = f'POLYGON(( {lng-buffer_size} {lat+buffer_size}, \
+        {lng+buffer_size} {lat+buffer_size}, \
+            {lng+buffer_size} {lat-buffer_size}, \
+                {lng-buffer_size} {lat-buffer_size}, \
+                    {lng-buffer_size} {lat+buffer_size}))'
+
+    url = 'https://macrostrat.org/api/carto/small'
+    params = {'shape': area, 'format': 'geojson_bare'}
+    r = requests.get(url, params=params)
+
+    return r.json()['features']
+
+def get_liths_from_macrostrat(s):
+    """
+    Parse a Macrostrat 'lith' string into lithologies.
+    """
+    if 'Major' in s:
+        nested, = re.findall(r'Major:{(.+?)}, Minor{(.+?)}', s)
+        split = [i.split(',') for i in nested]
+        return flatten_list(split)
+    else:
+        return [s]

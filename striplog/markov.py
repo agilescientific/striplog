@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Markov chains for the striplog package.
 
@@ -8,8 +7,12 @@ from collections import namedtuple
 import numpy as np
 import scipy.stats
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import matplotlib.colors as cols
 
 from .utils import hollow_matrix
+from .utils import observations
+from .utils import rgb_is_dark
 
 
 class MarkovError(Exception):
@@ -67,7 +70,6 @@ class Markov_chain(object):
     Markov_chain object.
 
     TODO
-    - Integrate into `striplog` or move into own project.
     - Pretty transition matrix printing with state names and row/col sums.
     - Allow self-transitions. See also this:
       https://stackoverflow.com/q/49340520/3381305
@@ -80,10 +82,10 @@ class Markov_chain(object):
                  observed_counts,
                  states=None,
                  step=1,
-                 include_self=False
+                 include_self=None,
                  ):
         """
-        Initialize the MarkovChain instance.
+        Initialize the Markov chain instance.
 
         Args
             observed_counts (ndarray): A 2-D array representing the counts
@@ -95,24 +97,32 @@ class Markov_chain(object):
             include_self (bool): Whether to include self-to-self transitions.
         """
         self.step = step
-        self.include_self = include_self
         self.observed_counts = np.atleast_2d(observed_counts).astype(int)
+
+        if include_self is not None:
+            self.include_self = include_self
+        else:
+            self.include_self = np.any(np.diagonal(self.observed_counts))
+
+        if not self.include_self:
+            self.observed_counts = hollow_matrix(self.observed_counts)
 
         if states is not None:
             self.states = np.asarray(states)
-        elif self.observed_counts is not None:
-            self.states = np.arange(self.observed_counts.shape[0])
         else:
-            self.states = None
+            self.states = np.arange(self.observed_counts.shape[0])
 
-        self.expected_counts = self._compute_expected()
+        if self.step > 1:
+            self.expected_counts = self._compute_expected_mc()
+        else:
+            self.expected_counts = self._compute_expected()
 
         return
 
     def __repr__(self):
         trans = f"Markov_chain({np.sum(self.observed_counts):.0f} transitions"
-        states = '[{}]'.format(", ".join("\'{}\'".format(s) for s in self.states))
-        return f"{trans}, states={states}, step={self.step})"
+        states = '[{}]'.format(", ".join(s.__repr__() for s in self.states))
+        return f"{trans}, states={states}, step={self.step}, include_self={self.include_self})"
 
     @staticmethod
     def _compute_freqs(C):
@@ -151,7 +161,9 @@ class Markov_chain(object):
     @property
     def _state_counts(self):
         s = self.observed_counts.copy()
-        for axis in range(self.observed_counts.ndim - 2):
+
+        # Deal with more than 2 dimensions.
+        for _ in range(self.observed_counts.ndim - 2):
             s = np.sum(s, axis=0)
 
         a = np.sum(s, axis=0)
@@ -176,12 +188,11 @@ class Markov_chain(object):
                       strings_are_states=False,
                       include_self=False,
                       step=1,
-                      ngram=False,
                       ):
         """
         Parse a sequence and make the transition matrix of the specified order.
 
-        **Provide sequence ordered in upwards direction.**
+        **Provide sequence(s) ordered in upwards direction.**
 
         Args
             sequence (list-like): A list-like, or list-like of list-likes.
@@ -201,17 +212,9 @@ class Markov_chain(object):
                 transitions (default is `False`: do not include them).
             step (integer): The distance to step. Default is 1: use
                 the previous state only. If 2, then the previous-but-
-                one state is used; but if ngram is true then both
-                the previous and the previous-but-one are used (and
-                the matrix is commensurately bigger).
-            ngram (bool): If True, we compute transitions from n-grams,
-                so the matrix will have one row for every combination
-                of n states. You will want to set return_states to
-                True to see the state n-grams.
+                one state is used as well as the previous state (and
+                the matrix has one more dimension).
             return_states (bool): Whether to return the states.
-
-        TODO:
-            - Use `states` to figure out whether 'strings_are_states'.
         """
         uniques, seq_of_seqs = regularize(sequence, strings_are_states=strings_are_states)
 
@@ -220,19 +223,12 @@ class Markov_chain(object):
         else:
             states = np.asarray(list(states))
 
-        O = np.zeros(tuple(states.size for _ in range(step+1)))
-        for seq in seq_of_seqs:
-            seq = np.array(seq)
-            _, integer_seq = np.where(seq.reshape(-1, 1) == states)
-            for idx in zip(*[integer_seq[n:] for n in range(step+1)]):
-                O[idx] += 1
-
-        if not include_self:
-            O = hollow_matrix(O)
+        O = observations(seq_of_seqs, states=states, step=step, include_self=include_self)
 
         return cls(observed_counts=np.array(O),
                    states=states,
-                   include_self=include_self
+                   include_self=include_self,
+                   step=step,
                    )
 
     def _conditional_probs(self, state):
@@ -291,23 +287,22 @@ class Markov_chain(object):
 
         return E
 
-    def _compute_expected_mc(self, n=100000, verbose=False):
+    def _compute_expected_mc(self, n=100000):
         """
         If we can't use Powers & Easterling's method, and it's possible there's
         a way to extend it to higher dimensions (which we have for step > 1),
         the next best thing might be to use brute force and just compute a lot
-        of random sequence transitions, given the observed proportions. If I'm
-        not mistaken, this is what P & E's method tries to estimate iteratively.
+        of random sequence transitions, given the observed proportions. This is
+        what P & E's method tries to estimate iteratively.
+
+        What to do about 'self transitions' is a bit of a problem here, since
+        there are a lot of n-grams that include at least one self-transition.
         """
         seq = np.random.choice(self.states, size=n, p=self._state_probs)
-
-        E = self.from_sequence(seq).observed_counts
-        E = np.sum(self.observed_counts) * E / np.sum(E)
-
+        E = observations(np.atleast_2d(seq), self.states, step=self.step, include_self=self.include_self)
         if not self.include_self:
-            return hollow_matrix(E)
-        else:
-            return E
+            E = hollow_matrix(E)
+        return np.sum(self.observed_counts) * E / np.sum(E)
 
     def _compute_expected_pe(self, max_iter=100, verbose=False):
         """
@@ -381,6 +376,13 @@ class Markov_chain(object):
         If the first number is bigger than the second number,
         then you can reject the hypothesis that the sequence
         is randomly ordered.
+
+        Args:
+            q (float): The confidence level, as a float in the range 0 to 1.
+                Default: 0.95.
+
+        Returns:
+            float: The chi-squared statistic.
         """
         # Observed and Expected matrices:
         O = self.observed_counts
@@ -482,23 +484,34 @@ class Markov_chain(object):
             plt.show()
             return
 
-    def plot_norm_diff(self, ax=None, cmap='RdBu', center_zero=True):
+    def plot_norm_diff(self,
+                       ax=None,
+                       cmap='RdBu',
+                       center_zero=True,
+                       vminmax=None,
+                       rotation=0,
+                       annotate=False,
+                      ):
+        """
+        A visualization of the normalized difference matrix.
 
+        Args
+        """
         if self.normalized_difference.ndim > 2:
             raise MarkovError("You can only plot one-step chains.")
 
         return_ax = True
         if ax is None:
-            fig, ax = plt.subplots(figsize=(1 + self.states.size/2, self.states.size/2))
+            fig, ax = plt.subplots(figsize=(1 + self.states.size/1.5, self.states.size/1.5))
             return_ax = False
 
-        ma = np.ceil(np.max(self.normalized_difference))
-
-        if center_zero:
+        if vminmax is None:
+            ma = np.ceil(np.max(np.abs(self.normalized_difference)))
             vmin, vmax = -ma, ma
         else:
-            vmin, vmax = None, None
-        im = ax.imshow(self.normalized_difference, cmap=cmap, vmin=vmin, vmax=vmax)
+            vmin, vmax = vminmax
+
+        im = ax.imshow(self.normalized_difference, cmap=cmap, vmin=vmin, vmax=vmax, interpolation='none')
         plt.colorbar(im)
 
         ax.tick_params(axis='x', which='both',
@@ -516,8 +529,27 @@ class Markov_chain(object):
         ax.set_xticks(ticks)
 
         labels = [str(s) for s in self.states]
-        ax.set_xticklabels(labels)
         ax.set_yticklabels(labels)
+        if rotation == 0:
+            ax.set_xticklabels(labels)
+        else:
+            ha = 'right' if rotation < 0 else 'left'
+            ax.set_xticklabels(labels,
+                               rotation=rotation,
+                               ha=ha,
+                               rotation_mode='anchor'
+                               )
+
+        if annotate:
+            for i in range(self.states.size):
+                for j in range(self.states.size):
+                    norm = cols.Normalize(vmin=vmin, vmax=vmax)
+                    val = self.normalized_difference[i, j]
+                    lookup = cm.get_cmap(cmap)
+                    col = 'w' if rgb_is_dark(lookup(norm(val))) else 'k'
+                    fmt = annotate if isinstance(annotate, str) else '0.1f'
+                    s = format(val, fmt)
+                    text = ax.text(j, i, s, ha="center", va="center", color=col)
 
         # Deal with probable bug in matplotlib 3.1.1
         ax.set_ylim(reversed(ax.get_xlim()))

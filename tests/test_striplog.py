@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Define a suite a tests for the Striplog module.
 """
@@ -88,6 +87,15 @@ lappy_list = [Interval(**{'top': 50,
                                   'components': [Component({'lithology': 'anhydrite'}),]})
                       ]
 
+top_dict = {'Ardmore': 2510.03,
+            'Cody': 2521.61,
+            'Sussex Upper Top': 2521.61,
+            'Sussex Lower Top': 2527.71,
+            'Sussex Lower Base': 2528.62,
+            'Sussex Upper Base': 2529.54,
+            'Niobrara': 2530.75
+           }
+
 
 def test_error():
     """Test the generic error.
@@ -157,6 +165,15 @@ def test_striplog():
     assert len(s + iv4) == 5
 
 
+def test_from_dict():
+    """
+    Test gen from dictionary.
+    """
+    striplog = Striplog.from_dict(top_dict)
+    assert len(striplog) == 7
+    assert striplog.thinnest().summary() == '0.00 m of Cody'
+
+
 def test_from_image():
     """Test the generation of a striplog from an image.
     """
@@ -183,7 +200,7 @@ def test_from_image():
     assert len(strip2) == 18
 
     # Extract log onto striplog.
-    striplog.extract(log, basis=basis, name="Log", function=np.mean)
+    striplog = striplog.extract(log, basis=basis, name="Log", function=np.mean)
     assert striplog[0].data['Log'] == 2.0
 
     # Indexing.
@@ -364,7 +381,7 @@ def test_petrel():
               'Well', 'Symbol']
 
     # Do the thing!
-    s = Striplog.from_petrel("tests/data/tops.txt",
+    s = Striplog.from_petrel("tests/data/petrel.dat",
                              include=include,
                              exclude=exclude,
                              remap=remap,

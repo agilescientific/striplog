@@ -5,6 +5,10 @@ striplog
     :target: https://travis-ci.org/agile-geoscience/striplog
     :alt: Travis build status
     
+.. image:: https://readthedocs.org/projects/striplog/badge/?version=latest
+    :target: https://striplog.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+    
 .. image:: https://img.shields.io/pypi/status/striplog.svg
     :target: https://pypi.python.org/pypi/striplog/
     :alt: Development status
