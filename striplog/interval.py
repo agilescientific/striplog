@@ -243,7 +243,7 @@ class Interval(object):
         Returns:
             str: Either 'point' or 'interval'.
         """
-        if self.thickness > 0:
+        if self.thickness == 0:
             return 'point'
         return 'interval'
 
