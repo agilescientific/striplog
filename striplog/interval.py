@@ -7,6 +7,7 @@ Defines intervals for holding components.
 import operator
 import warnings
 from functools import total_ordering
+from collections import UserDict
 
 try:
     from functools import partialmethod
@@ -26,7 +27,7 @@ class IntervalError(Exception):
 
 
 @total_ordering
-class Interval(object):
+class Interval(UserDict):
     """
     Used to represent a lithologic or stratigraphic interval, or single point,
     such as a sample location.
@@ -55,6 +56,8 @@ class Interval(object):
         Question: should Interval itself cope with only being handed 'top' and
         either fill in down to the next or optionally create a point?
     """
+    __slots__ = ()
+
     def __init__(self, top, base=None,
                  description='',
                  lexicon=None,
@@ -62,24 +65,29 @@ class Interval(object):
                  components=None,
                  max_component=1,
                  abbreviations=False):
+        if (top is None) and (base is None):
+            m = 'Either `top` or `base` needs to be defined.'
+            raise AttributeError(m)
+        self.data = {}
+        self.update(data or {})
+        # Convert our depths to Positions.
 
-        if not isinstance(top, Position):
-            top = Position(middle=top)
+        if top is not None:  # Minor futureproofing: we may want to allow either
+                             # top or base or both. Doing that is a little bit awkward.
+            if not isinstance(top, Position):
+                top = Position(middle=top)
+            self.update({'top': top})
 
         if base is not None:
             if not isinstance(base, Position):
                 base = Position(middle=base)
-
-        self.top = top
-        if base is not None:
-            self.base = base
-        else:
-            self.base = top
+            self.update({'base': base})
 
         self.description = str(description)
+        self.top = self.data.get('top')
+        self.base = self.data.get('base')
 
-        self.data = data or {}
-
+        # Make our list of Components.
         if components:
             self.components = list(components)
         else:
@@ -92,29 +100,39 @@ class Interval(object):
                                             max_component=max_component,
                                             abbreviations=abbreviations
                                            )
-                self.components = comps
+                self.update(components = comps)
             else:
                 with warnings.catch_warnings():
                     w = "You must provide a lexicon to generate "
                     w += "components from descriptions."
                     warnings.warn(w)
-                self.components = []
+                self.update(components = [])
 
-    def __setattr__(self, name, value):
-        # If we were passed top or base, make sure it's a position.
-        if name in ['top', 'base']:
-            if not isinstance(value, Position):
-                value = Position(middle=value)
-        # Must now use the parent's setattr, or we go in circles.
-        super(Interval, self).__setattr__(name, value)
-        return
+    def __setitem__(self, k, v):
+        if k.lower() == 'components' and not isinstance(v, list):
+            with warnings.catch_warnings():
+                w = "Components have not been processed. "
+                w += "Create a new Interval passing in components or "
+                w += "a lexicon and description if you need a list of Components."
+                warnings.warn(w)
+        if (k.lower() == 'base' or k.lower() == 'top') and not isinstance(v, Position):
+            v = Position(v)
+        super().__setitem__(k, v)
+        if (k.lower() == 'top'):
+            self.top = v
+        elif (k.lower() == 'base'):
+            self.base = v
+
+    def __delitem__(self, k):
+        super().__delitem__(k)
 
     def __str__(self):
         return self.__dict__.__str__()
 
     def __repr__(self):
-        s = str(self)
+        s = str(self.__dict__.__str__())
         return "Interval({0})".format(s)
+        #return '{0}({1})'.format(type(self).__name__, str(self.data))
 
     def __add__(self, other):
         """
@@ -122,6 +140,10 @@ class Interval(object):
             If adding components, should take account of 'amount', if present.
             Or 'proportion'? ...Could be specified by lexicon??
         """
+        # print(type(self))
+        # print(type(other))
+        # print(isinstance(other, self.__class__))  # I have no idea why this is coming back as False.
+
         if isinstance(other, self.__class__):
             return self.union(other)
 
@@ -153,7 +175,7 @@ class Interval(object):
             return self.top > other.top
 
     def __bool__(self):
-        if (not self.components) and (not self.data):
+        if (not self.data.get('components')) and (not self.data.get('data')):
             return False
         else:
             return True
@@ -170,10 +192,16 @@ class Interval(object):
         for i, e in enumerate(items):
             row1 = extra.format(style, len(items)) if not i else ''
             v = getattr(self, e)
+            print(v)
             v = v._repr_html_() if (v and (e == 'primary')) else v
             v = self.summary() if e == 'summary' else v
             v = utils.dict_repr_html(self.data) if e == 'data' else v
-            v = v.z if e in ['top', 'base'] else v
+            try:
+                # This will get the `z` from a Position, if it is one, which we expect top and base to be.
+                v = v.z if e in ['top', 'base'] else v
+            except AttributeError:
+                # We have something other than a Position, so we just give it back.
+                v = v
             rows += row.format(row1=row1, e=e, v=v)
 
         html = '<table>{}</table>'.format(rows)
@@ -185,10 +213,10 @@ class Interval(object):
         Convenience function returning the first component.
 
         Returns:
-            Component. The first one in the list of components.
+            Component: The first in the list of components.
         """
-        if self.components:
-            return self.components[0]
+        if self.data.get('components'):
+            return self.data.get('components')[0]
         else:
             return None
 
@@ -200,7 +228,7 @@ class Interval(object):
         Returns:
             Float: The middle.
         """
-        return (self.base.z + self.top.z) / 2
+        return (self.data.get('base').z + self.data.get('top').z) / 2
 
     @property
     def thickness(self):
@@ -210,7 +238,21 @@ class Interval(object):
         Returns:
             Float: The thickness.
         """
-        return abs(self.base.z - self.top.z)
+        if isinstance(self.data.get('base'), Position) and isinstance(self.data.get('top'), Position):
+            try:
+                return abs(self.data.get('top')[0].z - self.data.get('base')[0].z)
+            except TypeError:
+                return abs(self.data.get('base').z - self.data.get('top').z)
+        else:
+            depth = self.data.get('top') or self.data.get('base')
+            if isinstance(depth, Position):
+                return abs(depth.z)
+            else:
+                return abs(depth[0].z)
+
+    @classmethod
+    def fromkeys(cls, keys, v=None):
+        return super(Interval, cls).fromkeys((k for k in keys), v)
 
     @property
     def min_thickness(self):
@@ -221,7 +263,7 @@ class Interval(object):
         Returns:
             Float: The minimum thickness.
         """
-        return abs(self.base.upper - self.top.lower)
+        return abs(self.data.get('base').upper - self.data.get('top').lower)
 
     @property
     def max_thickness(self):
@@ -232,7 +274,7 @@ class Interval(object):
         Returns:
             Float: The maximum thickness.
         """
-        return abs(self.base.lower - self.top.upper)
+        return abs(self.data.get('base').lower - self.data.get('top').upper)
 
     @property
     def kind(self):
@@ -253,8 +295,9 @@ class Interval(object):
         Gives the order of this interval, based on relative values of
         top & base.
         """
-        if self.top.z > self.base.z:
-            return 'elevation'
+        if self.data.get('top') > self.data.get('base'):
+            if self.data.get('top').z > self.data.get('base').z:
+                return 'elevation'
         else:
             return 'depth'
 
@@ -276,9 +319,9 @@ class Interval(object):
              for c in self.components]
         summary = " with ".join(s)
         if summary:
-            return "{0:.2f} {1} of {2}".format(self.thickness, self.top.units, summary)
+            return "{0:.2f} {1} of {2}".format(self.thickness, self.data.get('top').units, summary)
         elif self.description:
-            return "{0:.2f} {1} of {2}".format(self.thickness, self.top.units, self.description)
+            return "{0:.2f} {1} of {2}".format(self.thickness, self.data.get('top').units, self.description)
         else:
             return None
 
@@ -621,6 +664,7 @@ class Interval(object):
                 return self.split_at(other.base.z)[1]
             else:  # They are equal
                 return None
+
 
     @staticmethod
     def _parse_description(description, lexicon,
