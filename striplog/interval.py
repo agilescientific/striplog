@@ -90,6 +90,7 @@ class Interval(UserDict):
         # Make our list of Components.
         if components:
             self.components = list(components)
+            self.update(components=list(components))
         else:
             self.components = []
 
@@ -101,12 +102,14 @@ class Interval(UserDict):
                                             abbreviations=abbreviations
                                            )
                 self.update(components = comps)
+                self.components = comps
             else:
                 with warnings.catch_warnings():
                     w = "You must provide a lexicon to generate "
                     w += "components from descriptions."
                     warnings.warn(w)
                 self.update(components = [])
+                self.components = []
 
     def __setitem__(self, k, v):
         if k.lower() == 'components' and not isinstance(v, list):
@@ -120,8 +123,10 @@ class Interval(UserDict):
         super().__setitem__(k, v)
         if (k.lower() == 'top'):
             self.top = v
+            self.data['top'] = v
         elif (k.lower() == 'base'):
             self.base = v
+            self.data['base'] = v
 
     def __delitem__(self, k):
         super().__delitem__(k)
@@ -316,7 +321,7 @@ class Interval(UserDict):
             Allow formatting of the entire string, not just the rock.
         """
         s = [c.summary(fmt=fmt, initial=initial)
-             for c in self.components]
+             for c in self.data.get('components')]
         summary = " with ".join(s)
         if summary:
             return "{0:.2f} {1} of {2}".format(self.thickness, self.data.get('top').units, summary)
@@ -637,8 +642,8 @@ class Interval(UserDict):
             bot = max(self.base.z, other.base.z)
 
         result = self.copy()
-        result.top = top
-        result.base = bot
+        result['top'] = Position(top)
+        result['base'] = Position(bot)
 
         return result._combine(self, other, blend=blend)
 

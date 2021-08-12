@@ -271,7 +271,7 @@ class Lexicon(object):
         pattern = re.compile(r'(?:' + r'|'.join(words) + r')', flags=f)
         parts = filter(None, pattern.split(t))
 
-        return [i.strip() for i in parts]
+        return [i.strip().casefold() for i in parts]
 
     @property
     def categories(self):
