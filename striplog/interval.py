@@ -300,11 +300,16 @@ class Interval(UserDict):
         Gives the order of this interval, based on relative values of
         top & base.
         """
-        if self.data.get('top') > self.data.get('base'):
+        try:
             if self.data.get('top').z > self.data.get('base').z:
                 return 'elevation'
-        else:
-            return 'depth'
+            else:
+                return 'depth'
+        except AttributeError:
+            if self.data.get('top') > self.data.get('base'):
+                return 'elevation'
+            else:
+                return 'depth'
 
     def summary(self, fmt=None, initial=False):
         """
@@ -349,9 +354,9 @@ class Interval(UserDict):
         else:
             self.base.invert()
             self.top.invert()
-            old_base = self.base
-            self.base = self.top
-            self.top = old_base
+            old_base = self.data.get('base')
+            self.update(base=self.data.get('top'))
+            self.update(top=old_base)
             return
 
     def copy(self):
