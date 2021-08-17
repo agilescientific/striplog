@@ -112,7 +112,7 @@ def test_interval_binary_operations():
     assert i1.intersect(i2, blend=False).description == ''
 
     x = i4.merge(i5)
-    x[-1].base = 65
+    x[-1]['base'] = 65
     assert len(x) == 3
     assert x.stop.z == 65.0
 
