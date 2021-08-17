@@ -64,7 +64,8 @@ class Interval(UserDict):
                  data=None,
                  components=None,
                  max_component=1,
-                 abbreviations=False):
+                 abbreviations=False,
+                 **kwargs):
         if (top is None) and (base is None):
             m = 'Either `top` or `base` needs to be defined.'
             raise AttributeError(m)
@@ -83,16 +84,14 @@ class Interval(UserDict):
                 base = Position(middle=base)
             self.update({'base': base})
 
-        self.description = str(description)
-        self.top = self.data.get('top')
-        self.base = self.data.get('base')
+        self.update(description = str(description))
+        print(kwargs)
 
         # Make our list of Components.
         if components:
-            self.components = list(components)
             self.update(components=list(components))
         else:
-            self.components = []
+            self.update(components = [])
 
         if self.description and (not self.components):
             if lexicon:
@@ -102,14 +101,12 @@ class Interval(UserDict):
                                             abbreviations=abbreviations
                                            )
                 self.update(components = comps)
-                self.components = comps
             else:
                 with warnings.catch_warnings():
                     w = "You must provide a lexicon to generate "
                     w += "components from descriptions."
                     warnings.warn(w)
                 self.update(components = [])
-                self.components = []
 
     def __setitem__(self, k, v):
         if k.lower() == 'components' and not isinstance(v, list):
@@ -120,13 +117,9 @@ class Interval(UserDict):
                 warnings.warn(w)
         if (k.lower() == 'base' or k.lower() == 'top') and not isinstance(v, Position):
             v = Position(v)
+            self.data[k.lower] = v
+            return None
         super().__setitem__(k, v)
-        if (k.lower() == 'top'):
-            self.top = v
-            self.data['top'] = v
-        elif (k.lower() == 'base'):
-            self.base = v
-            self.data['base'] = v
 
     def __delitem__(self, k):
         super().__delitem__(k)
@@ -311,6 +304,28 @@ class Interval(UserDict):
             else:
                 return 'depth'
 
+    @property
+    def description(self):
+        """
+        Returns the current description.
+
+        Returns:
+            str: description or None
+        """
+        return self.data.get('description')
+
+    @property
+    def top(self):
+        return self.data.get('top')
+
+    @property
+    def base(self):
+        return self.data.get('base')
+
+    @property
+    def components(self):
+        return self.data.get('components')
+
     def summary(self, fmt=None, initial=False):
         """
         Returns a summary of the interval.
@@ -328,10 +343,14 @@ class Interval(UserDict):
         s = [c.summary(fmt=fmt, initial=initial)
              for c in self.data.get('components')]
         summary = " with ".join(s)
+        try:
+            units = self.data.get('top').units
+        except AttributeError:
+            units = None
         if summary:
-            return "{0:.2f} {1} of {2}".format(self.thickness, self.data.get('top').units, summary)
+            return "{0:.2f} {1} of {2}".format(self.thickness, units, summary)
         elif self.description:
-            return "{0:.2f} {1} of {2}".format(self.thickness, self.data.get('top').units, self.description)
+            return "{0:.2f} {1} of {2}".format(self.thickness, units, self.description)
         else:
             return None
 
@@ -346,8 +365,6 @@ class Interval(UserDict):
         """
         if copy:
             d = self.__dict__.copy()
-            del(d['top'])
-            del(d['base'])
             self.base.invert()
             self.top.invert()
             return Interval(top=self.base, base=self.top, **d)
@@ -364,7 +381,7 @@ class Interval(UserDict):
         Returns a shallow copy of the interval.
 
         """
-        return Interval(**self.__dict__.copy())
+        return Interval(**self.__dict__.copy().get('data'))
 
     def relationship(self, other):
         """
@@ -422,7 +439,10 @@ class Interval(UserDict):
             bool. Whether the depth is in the interval.
         """
         o = {'depth': operator.le, 'elevation': operator.ge}[self.order]
-        return (o(d, self.base.z) and o(self.top.z, d))
+        try:
+            return (o(d, self.data.get('base').z) and o(self.data.get('top').z, d))
+        except AttributeError:
+            return (o(d, self.data.get('base')) and o(self.data.get('top'), d))
 
     def split_at(self, d):
         """
@@ -440,8 +460,8 @@ class Interval(UserDict):
 
         int1, int2 = self.copy(), self.copy()
 
-        int1.base = d
-        int2.top = d
+        int1.update(base = d)
+        int2.update(top = d)
 
         return int1, int2  # upper, lower
 
@@ -543,16 +563,16 @@ class Interval(UserDict):
             Interval. The combined description.
         """
         if blend:
-            self.components = old_self.components.copy()
+            self.update(components = old_self.components.copy())
             for c in other.components:
                 if c not in self.components:
                     self.components.append(c)
-            self.description = old_self._blend_descriptions(other)
-            self.data = old_self._combine_data(other)
+            self.update(description = old_self._blend_descriptions(other))
+            self.update(data = old_self._combine_data(other))
         else:
-            self.components = other.components
-            self.description = other.description
-            self.data = other.data
+            self.update(components = other.components)
+            self.update(description = other.description)
+            self.update(data = other.data)
 
         return self
 
