@@ -85,13 +85,12 @@ class Interval(UserDict):
             self.update({'base': base})
 
         self.update(description = str(description))
-        print(kwargs)
 
         # Make our list of Components.
         if components:
             self.update(components=list(components))
         else:
-            self.update(components = [])
+            self.update(components=[])
 
         if self.description and (not self.components):
             if lexicon:
@@ -100,13 +99,13 @@ class Interval(UserDict):
                                             max_component=max_component,
                                             abbreviations=abbreviations
                                            )
-                self.update(components = comps)
+                self.update(components=comps)
             else:
                 with warnings.catch_warnings():
                     w = "You must provide a lexicon to generate "
                     w += "components from descriptions."
                     warnings.warn(w)
-                self.update(components = [])
+                self.update(components=[])
 
     def __setitem__(self, k, v):
         if k.lower() == 'components' and not isinstance(v, list):
@@ -117,7 +116,7 @@ class Interval(UserDict):
                 warnings.warn(w)
         if (k.lower() == 'base' or k.lower() == 'top') and not isinstance(v, Position):
             v = Position(v)
-            self.data[k.lower] = v
+            self.data[k.lower()] = v
             return None
         super().__setitem__(k, v)
 
@@ -190,7 +189,6 @@ class Interval(UserDict):
         for i, e in enumerate(items):
             row1 = extra.format(style, len(items)) if not i else ''
             v = getattr(self, e)
-            print(v)
             v = v._repr_html_() if (v and (e == 'primary')) else v
             v = self.summary() if e == 'summary' else v
             v = utils.dict_repr_html(self.data) if e == 'data' else v
@@ -381,7 +379,7 @@ class Interval(UserDict):
         Returns a shallow copy of the interval.
 
         """
-        return Interval(**self.__dict__.copy().get('data'))
+        return Interval(**self.__dict__.copy().get('data', {}))
 
     def relationship(self, other):
         """
@@ -460,8 +458,8 @@ class Interval(UserDict):
 
         int1, int2 = self.copy(), self.copy()
 
-        int1.update(base = d)
-        int2.update(top = d)
+        int1.update(base=d)
+        int2.update(top=d)
 
         return int1, int2  # upper, lower
 
@@ -563,16 +561,16 @@ class Interval(UserDict):
             Interval. The combined description.
         """
         if blend:
-            self.update(components = old_self.components.copy())
+            self.update(components=old_self.components.copy())
             for c in other.components:
                 if c not in self.components:
                     self.components.append(c)
-            self.update(description = old_self._blend_descriptions(other))
-            self.update(data = old_self._combine_data(other))
+            self.update(description=old_self._blend_descriptions(other))
+            self.update(data=old_self._combine_data(other))
         else:
-            self.update(components = other.components)
-            self.update(description = other.description)
-            self.update(data = other.data)
+            self.update(components=other.components)
+            self.update(description=other.description)
+            self.update(data=other.data)
 
         return self
 
