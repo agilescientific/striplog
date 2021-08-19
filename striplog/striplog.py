@@ -1723,8 +1723,8 @@ class Striplog(object):
                 raise StriplogError("You must provide a delta or a new start.")
             delta = start - self.start.z
         for iv in new_strip:
-            iv.top = iv.top.z + delta
-            iv.base = iv.base.z + delta
+            iv.update(top = iv.top.z + delta)
+            ivupdate(base = iv.base.z + delta)
         return new_strip
 
     def read_at(self, d, index=False):
@@ -1964,24 +1964,24 @@ class Striplog(object):
             if mode == 'middle':
                 if strip.order == 'depth':
                     t = (after.top.z-before.base.z)/2
-                    before.base = before.base.z + t
-                    after.top = after.top.z - t
+                    before['base'] = before.base.z + t
+                    after['top'] = after.top.z - t
                 else:
                     t = (after.base-before.top)/2
-                    before.top = before.top.z + t
-                    after.base = after.base.z - t
+                    before['top'] = before.top.z + t
+                    after['base'] = after.base.z - t
 
             elif mode == 'down':
                 if strip.order == 'depth':
-                    before.base = after.top.z
+                    before['base'] = after.top.z
                 else:
-                    before.top = after.base.z
+                    before['top'] = after.base.z
 
             elif mode == 'up':
                 if strip.order == 'depth':
-                    after.top = before.base.z
+                    after['top'] = before.base.z
                 else:
-                    after.base = before.top.z
+                    after['base'] = before.top.z
 
         return strip
 
@@ -1999,7 +1999,7 @@ class Striplog(object):
         if not gaps:
             return self
         for iv in gaps:
-            iv.components = c
+            iv['components'] = c
 
         return deepcopy(self) + gaps
 
@@ -2115,6 +2115,7 @@ class Striplog(object):
 
             # Union if both criteria met.
             if touching and similar:
+                print(new_strip[-1], type(new_strip[-1]))
                 new_strip[-1] = new_strip[-1].union(lower)
             else:
                 new_strip.append(lower.copy())
@@ -2551,8 +2552,8 @@ class Striplog(object):
                 continue
 
             i = self[top[2]].copy()
-            i.top = top[1]
-            i.base = bot[1]
+            i['top'] = top[1]
+            i['base'] = bot[1]
             m.append(i)
 
         return Striplog(m)
