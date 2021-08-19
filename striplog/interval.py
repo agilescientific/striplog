@@ -514,7 +514,7 @@ class Interval(UserDict):
         else:
             data = {}
             for k, v in other_data.items():
-                if k in self_data:
+                if k in self_data and k not in ('top', 'base'):
                     v = utils.list_and_add(self_data[k], v)
                 data[k] = v
             return data
