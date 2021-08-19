@@ -83,6 +83,8 @@ class Interval(UserDict):
             if not isinstance(base, Position):
                 base = Position(middle=base)
             self.update({'base': base})
+        else:
+            self.update({'base': Position(middle=top.z)})
 
         self.update(description = str(description))
 
