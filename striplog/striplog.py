@@ -1745,7 +1745,7 @@ class Striplog(object):
             delta = start - self.start.z
         for iv in new_strip:
             iv.update(top = iv.top.z + delta)
-            ivupdate(base = iv.base.z + delta)
+            iv.update(base = iv.base.z + delta)
         return new_strip
 
     def read_at(self, d, index=False):
@@ -2143,7 +2143,6 @@ class Striplog(object):
 
             # Union if both criteria met.
             if touching and similar:
-                print(new_strip[-1], type(new_strip[-1]))
                 new_strip[-1] = new_strip[-1].union(lower)
             else:
                 new_strip.append(lower.copy())
