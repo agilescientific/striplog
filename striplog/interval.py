@@ -139,9 +139,6 @@ class Interval(UserDict):
             If adding components, should take account of 'amount', if present.
             Or 'proportion'? ...Could be specified by lexicon??
         """
-        # print(type(self))
-        # print(type(other))
-        # print(isinstance(other, self.__class__))  # I have no idea why this is coming back as False.
 
         if isinstance(other, self.__class__):
             return self.union(other)
@@ -237,6 +234,8 @@ class Interval(UserDict):
         Returns:
             Float: The thickness.
         """
+        return abs(self.base.z - self.top.z)
+        '''
         if isinstance(self.base, Position) and isinstance(self.top, Position):
             try:
                 return abs(self.top[0].z - self.base[0].z)
@@ -247,7 +246,7 @@ class Interval(UserDict):
             if isinstance(depth, Position):
                 return abs(depth.z)
             else:
-                return abs(depth[0].z)
+                return abs(depth[0].z)'''
 
     @classmethod
     def fromkeys(cls, keys, v=None):
@@ -295,6 +294,11 @@ class Interval(UserDict):
         Gives the order of this interval, based on relative values of
         top & base.
         """
+        if self.top.z > self.base.z:
+            return 'elevation'
+        else:
+            return 'depth'
+        '''
         try:
             if self.top.z > self.base.z:
                 return 'elevation'
@@ -304,7 +308,7 @@ class Interval(UserDict):
             if self.top > self.base:
                 return 'elevation'
             else:
-                return 'depth'
+                return 'depth'''
 
     @property
     def description(self):
@@ -345,14 +349,14 @@ class Interval(UserDict):
         s = [c.summary(fmt=fmt, initial=initial)
              for c in self.data.get('components')]
         summary = " with ".join(s)
-        try:
+        '''try:
             units = self.data.get('top').units
         except AttributeError:
-            units = None
+            units = None'''
         if summary:
-            return "{0:.2f} {1} of {2}".format(self.thickness, units, summary)
+            return "{0:.2f} {1} of {2}".format(self.thickness, self.top.units, summary)
         elif self.description:
-            return "{0:.2f} {1} of {2}".format(self.thickness, units, self.description)
+            return "{0:.2f} {1} of {2}".format(self.thickness, self.top.units, self.description)
         else:
             return None
 
