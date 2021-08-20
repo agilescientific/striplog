@@ -226,7 +226,8 @@ class Interval(UserDict):
         Returns:
             Float: The middle.
         """
-        return (self.data.get('base').z + self.data.get('top').z) / 2
+        return (self.base.z + self.top.z) / 2
+        # return (self.data.get('base').z + self.data.get('top').z) / 2
 
     @property
     def thickness(self):
@@ -236,13 +237,13 @@ class Interval(UserDict):
         Returns:
             Float: The thickness.
         """
-        if isinstance(self.data.get('base'), Position) and isinstance(self.data.get('top'), Position):
+        if isinstance(self.base, Position) and isinstance(self.top, Position):
             try:
-                return abs(self.data.get('top')[0].z - self.data.get('base')[0].z)
+                return abs(self.top[0].z - self.base[0].z)
             except TypeError:
-                return abs(self.data.get('base').z - self.data.get('top').z)
+                return abs(self.base.z - self.top.z)
         else:
-            depth = self.data.get('top') or self.data.get('base')
+            depth = self.top or self.base
             if isinstance(depth, Position):
                 return abs(depth.z)
             else:
@@ -261,7 +262,7 @@ class Interval(UserDict):
         Returns:
             Float: The minimum thickness.
         """
-        return abs(self.data.get('base').upper - self.data.get('top').lower)
+        return abs(self.base.upper - self.top.lower)
 
     @property
     def max_thickness(self):
@@ -272,7 +273,8 @@ class Interval(UserDict):
         Returns:
             Float: The maximum thickness.
         """
-        return abs(self.data.get('base').lower - self.data.get('top').upper)
+        return abs(self.base.lower - self.top.upper)
+        #return abs(self.data.get('base').lower - self.data.get('top').upper)
 
     @property
     def kind(self):
@@ -294,12 +296,12 @@ class Interval(UserDict):
         top & base.
         """
         try:
-            if self.data.get('top').z > self.data.get('base').z:
+            if self.top.z > self.base.z:
                 return 'elevation'
             else:
                 return 'depth'
         except AttributeError:
-            if self.data.get('top') > self.data.get('base'):
+            if self.top > self.base:
                 return 'elevation'
             else:
                 return 'depth'
@@ -371,7 +373,7 @@ class Interval(UserDict):
         else:
             self.base.invert()
             self.top.invert()
-            old_base = self.data.get('base')
+            old_base = self.base
             self.update(base=self.data.get('top'))
             self.update(top=old_base)
             return
@@ -440,9 +442,9 @@ class Interval(UserDict):
         """
         o = {'depth': operator.le, 'elevation': operator.ge}[self.order]
         try:
-            return (o(d, self.data.get('base').z) and o(self.data.get('top').z, d))
+            return (o(d, self.base.z) and o(self.top.z, d))
         except AttributeError:
-            return (o(d, self.data.get('base')) and o(self.data.get('top'), d))
+            return (o(d, self.base) and o(self.top, d))
 
     def split_at(self, d):
         """
