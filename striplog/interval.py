@@ -224,7 +224,6 @@ class Interval(UserDict):
             Float: The middle.
         """
         return (self.base.z + self.top.z) / 2
-        # return (self.data.get('base').z + self.data.get('top').z) / 2
 
     @property
     def thickness(self):
@@ -235,18 +234,6 @@ class Interval(UserDict):
             Float: The thickness.
         """
         return abs(self.base.z - self.top.z)
-        '''
-        if isinstance(self.base, Position) and isinstance(self.top, Position):
-            try:
-                return abs(self.top[0].z - self.base[0].z)
-            except TypeError:
-                return abs(self.base.z - self.top.z)
-        else:
-            depth = self.top or self.base
-            if isinstance(depth, Position):
-                return abs(depth.z)
-            else:
-                return abs(depth[0].z)'''
 
     @classmethod
     def fromkeys(cls, keys, v=None):
@@ -298,17 +285,6 @@ class Interval(UserDict):
             return 'elevation'
         else:
             return 'depth'
-        '''
-        try:
-            if self.top.z > self.base.z:
-                return 'elevation'
-            else:
-                return 'depth'
-        except AttributeError:
-            if self.top > self.base:
-                return 'elevation'
-            else:
-                return 'depth'''
 
     @property
     def description(self):
@@ -349,10 +325,6 @@ class Interval(UserDict):
         s = [c.summary(fmt=fmt, initial=initial)
              for c in self.data.get('components')]
         summary = " with ".join(s)
-        '''try:
-            units = self.data.get('top').units
-        except AttributeError:
-            units = None'''
         if summary:
             return "{0:.2f} {1} of {2}".format(self.thickness, self.top.units, summary)
         elif self.description:
