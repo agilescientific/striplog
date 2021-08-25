@@ -5,6 +5,7 @@ Defines positions, eg for top and base of an interval.
 :license: Apache 2.0
 """
 from functools import total_ordering
+from collections import UserDict
 
 
 class PositionError(Exception):
@@ -25,7 +26,7 @@ class Meta(object):
 
 
 @total_ordering
-class Position(object):
+class Position(UserDict):
     """
     Used to represent a position: a top or base.
 
@@ -96,6 +97,9 @@ class Position(object):
     def __lt__(self, other):
         if isinstance(other, self.__class__):
             return self.middle < other.middle
+
+    def __len__(self):
+        return len(self.__dict__)
 
     def _repr_html_(self):
         """
