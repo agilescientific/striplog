@@ -91,11 +91,11 @@ class Position(object):
         the total_ordering function to provide the others.
         """
         if isinstance(other, self.__class__):
-            return self.middle == other.middle
+            return self.z == other.z
 
     def __lt__(self, other):
         if isinstance(other, self.__class__):
-            return self.middle < other.middle
+            return self.z < other.z
 
     def _repr_html_(self):
         """
