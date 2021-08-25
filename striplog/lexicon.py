@@ -10,6 +10,7 @@ import warnings
 import re
 from itertools import islice
 from copy import deepcopy
+from collections import UserDict
 
 from . import defaults
 
@@ -23,7 +24,7 @@ class LexiconError(Exception):
     pass
 
 
-class Lexicon(object):
+class Lexicon(UserDict):
     """
     A Lexicon is a dictionary of 'types' and regex patterns.
 
@@ -49,13 +50,20 @@ class Lexicon(object):
         return str(self.__dict__)
 
     def __str__(self):
-        keys = self.__dict__.keys()
+        keys = self.data.keys()
         counts = [len(v) for k, v in self.__dict__.items() if v]
         s = "Lexicon("
         for i in zip(keys, counts):
             s += "'{0}': {1} items, ".format(*i)
         s += ")"
         return s
+
+    @property
+    def data(self):
+        '''Access the underlying dictionary representation through
+        `my_lexicon.data` pattern.
+        '''
+        return self.__dict__
 
     @classmethod
     def default(cls):
