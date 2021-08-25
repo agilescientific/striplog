@@ -68,7 +68,7 @@ class Interval(UserDict):
                  **kwargs):
         if (top is None) and (base is None):
             m = 'Either `top` or `base` needs to be defined.'
-            raise AttributeError(m)
+            raise IntervalError(m)
         self.data = {}
         self.update(data or {})
         # Convert our depths to Positions.
@@ -307,6 +307,15 @@ class Interval(UserDict):
     @property
     def components(self):
         return self.data.get('components')
+
+    def items(self):
+        return self.data.items()
+
+    def keys(self):
+        return self.data.keys()
+
+    def values(self):
+        return self.data.values()
 
     def summary(self, fmt=None, initial=False):
         """
