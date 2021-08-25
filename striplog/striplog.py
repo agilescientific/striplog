@@ -1268,7 +1268,7 @@ class Striplog(object):
         if (field is not None) or (legend_field is not None):
             result = np.zeros_like(basis, dtype=dtype)
         else:
-            result = np.zeros_like(basis, dtype=np.int)
+            result = np.zeros_like(basis, dtype=int)
 
         if np.isnan(undefined):
             try:
