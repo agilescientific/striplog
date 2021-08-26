@@ -679,6 +679,62 @@ class Striplog(object):
         return cls(list_of_Intervals, source=source)
 
     @classmethod
+    def from_dict_advanced(cls, dict,
+                 lexicon=None,
+                 points=False,
+                 include=None,
+                 exclude=None,
+                 remap=None,
+                 function=None,
+                 null=None,
+                 ignore=None,
+                 source=None,
+                 stop=None,
+                 ):
+        """
+        Load from a dictionary reusing `from_csv` post processing.
+
+        Args
+            dict (dict): python dict containing the data.
+            lexicon (Lexicon): The lexicon to use, optional. Only needed if \
+                parsing descriptions (e.g. cuttings).
+            points (bool): Whether to make a point dataset (as opposed to \
+                ordinary intervals with top and base. Default is False.
+            include: Default is None.
+            exclude: Default is None.
+            remap: Default is None.
+            function: Default is None.
+            null: Default is None.
+            ignore: Default is None.
+            source: Default is None.
+            stop: Default is None.
+            fieldnames: Default is None.
+
+        Returns
+            Striplog. A new instance.
+        """
+
+        # Reorganize the data to make fixing it easier.
+        reorg = dict
+
+
+        remap = remap or {}
+        for k, v in remap.items():
+            reorg[v] = reorg.pop(k)
+
+        data = cls._clean_longitudinal_data(reorg, null=null)
+
+        list_of_Intervals = cls._build_list_of_Intervals(data,
+                                                         points=points,
+                                                         lexicon=lexicon,
+                                                         include=include,
+                                                         exclude=exclude,
+                                                         ignore=ignore,
+                                                         stop=stop)
+
+        return cls(list_of_Intervals, source=source)
+
+    @classmethod
     def from_dict(cls, dictionary):
         """
         Take a dictionary of the form name:depth and return a striplog of
@@ -1095,7 +1151,7 @@ class Striplog(object):
                         order=self.order,
                         source=self.source)
 
-    
+
 
 
 
@@ -1230,7 +1286,7 @@ class Striplog(object):
                 you are asking for. It's up to you to make sure the function
                 does what you want.
             bins (bool): Whether to return the index of the items from the
-                lookup table. If False, then the item itself will be returned. 
+                lookup table. If False, then the item itself will be returned.
             dtype (str): The NumPy dtype string for the output log.
             table (list): Provide a look-up table of values if you want. If you
                 don't, then it will be constructed from the data.
@@ -2623,7 +2679,7 @@ class Striplog(object):
             This is simply a helper function to make things easier, but it
             works because we know what our data looks like in advance.
 
-        Note: In order to plot this, you will need to add space for text and 
+        Note: In order to plot this, you will need to add space for text and
             other decoration. This simply gives a Striplog back which _can_
             be plotted.
 
@@ -2640,8 +2696,8 @@ class Striplog(object):
         lat = 44.4454632
         buffer_size = 0.3
         striplog.striplog.from_macrostrat(lng, lat, buffer_size)
-        {'top': Position({'middle': 358.9, 'units': 'm'}), 
-            'base': Position({'middle': 419.2, 'units': 'm'}), 
+        {'top': Position({'middle': 358.9, 'units': 'm'}),
+            'base': Position({'middle': 419.2, 'units': 'm'}),
             'description': '', 'data': {}, 'components': [Component({
                 'map_id': 948660.0, 'scale': 'small', 'source_id': 7.0,
                 'name': 'Devonian plutonic: undivided granitic rocks',
@@ -2665,7 +2721,7 @@ class Striplog(object):
                 't_int': 112.0, 'b_int': 122.0, 'color': '#409963',
                 'source': 'MacroStrat.org (CC-BY)})]}
         """
-        # Get the 
+        # Get the
         features = utils.geology_from_macrostrat(lng=lng, lat=lat,
                                                  buffer_size=buffer_size)
 

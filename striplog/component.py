@@ -37,9 +37,7 @@ class Component(object):
                     # Cope with a boolean...
                     setattr(self, k, v)
                 else:
-                    try:  # To treat as number...
-                        setattr(self, k, float(v))
-                    except ValueError:  # Just add it.
+                    try:
                         setattr(self, k, v)
                     except TypeError:  # It's probably None.
                         continue
@@ -106,8 +104,8 @@ class Component(object):
             s = {k.lower(): v.lower() for k, v in ds if v}
             o = {k.lower(): v.lower() for k, v in do if v}
         except (AttributeError, ValueError):  # Dealing with numbers.
-            s = {k.lower(): v for k, v in ds if isinstance(v, strobj) or isinstance(v, bool)}
-            o = {k.lower(): v for k, v in do if isinstance(v, strobj) or isinstance(v, bool)}
+            s = {k.lower(): v for k, v in ds if isinstance(v, strobj) or isinstance(v, bool) or isinstance(v, int)}
+            o = {k.lower(): v for k, v in do if isinstance(v, strobj) or isinstance(v, bool) or isinstance(v, int)}
 
         # Compare.
         if s == o:

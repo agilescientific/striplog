@@ -90,3 +90,8 @@ def test_from_text():
     assert rock3 == rock4
     rock5 = Component.from_text(s, lexicon, required='not there')
     assert not rock5  # Should be None
+
+def test_integer_comparison():
+    formations = range(1, 3)
+    table = [Component({'lith': l}) for l in formations]
+    assert (table[0] == table[1]) is False
