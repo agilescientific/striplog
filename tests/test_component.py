@@ -23,6 +23,10 @@ r6 = {'grainsize': 'Coarse',
       'colour': 'Grey',
       'lithology': None}
 
+r7 = {'coords': (123, 456)}
+
+r8 = {'coords': (123, 456),
+      'None value': None}
 
 def test_init():
     """Test Rock() for backward compatibility.
@@ -90,3 +94,17 @@ def test_from_text():
     assert rock3 == rock4
     rock5 = Component.from_text(s, lexicon, required='not there')
     assert not rock5  # Should be None
+
+def test_None():
+    """
+    Test generation with None
+    """
+    rock8 = Component(r8)
+    assert rock8 == Component({'coords': (123, 456)})
+
+def test_tuple():
+    """
+    Test generation from tuples
+    """
+    rock7 = Component(r7)
+    assert rock7 == Component({'coords': (123, 456)})

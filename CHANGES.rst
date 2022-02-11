@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.8.9 (in progress)
+----
+
+- No longer supporting versions of Python before 3.6 (because I like f-strings).
+- Reorganized the tutorial notebooks make them a bit easier to follow.
+
+
 0.8.8 (January 2021)
 ----
 

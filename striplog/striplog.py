@@ -416,8 +416,8 @@ class Striplog(object):
 
         return list_of_Intervals
 
-    @classmethod
-    def _clean_longitudinal_data(cls, data, null=None):
+    @staticmethod
+    def _clean_longitudinal_data(data, null=None):
         """
         Private function. Make sure we have what we need to make a striplog.
         """
@@ -998,7 +998,7 @@ class Striplog(object):
             except TypeError:
                 n = 1
             if len(components) < n+1:
-                m = 'For n cutoffs, you need to provide at least'
+                m = 'For n cutoffs, you need to provide at least '
                 m += 'n+1 components.'
                 raise StriplogError(m)
 
@@ -1094,10 +1094,6 @@ class Striplog(object):
         return Striplog([i.copy() for i in self],
                         order=self.order,
                         source=self.source)
-
-    
-
-
 
     # Outputter
     def to_canstrat(self, filename, params):
@@ -1264,8 +1260,8 @@ class Striplog(object):
             start, stop = basis[0], basis[-1]
             step = basis[1] - start
         else:
-            start = start or self.start.z
-            stop = stop or self.stop.z
+            start = self.start.z if start is None else start
+            stop = self.stop.z if stop is None else stop
             pts = np.ceil((stop - start)/step) + 1
             basis = np.linspace(start, stop, int(pts))
 
@@ -1318,6 +1314,9 @@ class Striplog(object):
         if stop_ix is not None:
             stop_ix += 1
 
+        if self.order == 'elevation':
+            start_ix, stop_ix = stop_ix, start_ix
+
         # Assign the values.
         for i in self[start_ix:stop_ix]:
             c = i.primary
@@ -1351,6 +1350,10 @@ class Striplog(object):
 
             top_index = int(np.ceil((max(start, i.top.z)-start)/step))
             base_index = int(np.ceil((min(stop, i.base.z)-start)/step))
+
+            # Deal with bug where elevation order seems to be an issue.
+            if self.order == 'elevation':
+                top_index, base_index = base_index, top_index
 
             try:
                 result[top_index:base_index+1] = key
@@ -1576,7 +1579,7 @@ class Striplog(object):
         Args:
             legend (Legend): The Legend to use for colours, etc.
             width (int): The width of the plot, in inches. Default 1.
-            ladder (bool): Whether to use widths or not. Default False.
+            ladder (bool): Whether to use widths or not. Default `True`.
             aspect (int): The aspect ratio of the plot. Default 10.
             ticks (int or tuple): The (minor,major) tick interval for depth.
                 Only the major interval is labeled. Default (1,10).
@@ -1588,6 +1591,14 @@ class Striplog(object):
                 object. Default False.
             colour (str): Which data field to use for colours.
             cmap (cmap): Matplotlib colourmap. Default ``viridis``.
+            default (float): The default (null) value.
+            style (str): Can be 'tops', 'points' or 'field' for different types
+                of plot. If you use 'field', give the name of the field as the
+                `field` argument.
+            field (str): The name of the field to use for the width parameter.
+            label (str): Can be the name of a single Component attribute,
+                or a format string with multiple attributes, like
+                `"{colour} {lithology}"`.
             **kwargs are passed through to matplotlib's ``patches.Rectangle``.
 
         Returns:
@@ -1645,7 +1656,17 @@ class Striplog(object):
 
         if label is not None:
             for iv in self.__list:
-                plt.text(1.6, iv.middle, iv.primary[label], ha='left', va='center', size=10)
+                if '{' in label:
+                    label_text = iv.summary(fmt=label)
+                else:
+                    label_text = iv.primary[label]
+                plt.text(1.6,
+                         iv.middle,
+                         label_text,
+                         ha='left',
+                         va='center',
+                         size=10
+                         )
 
         # Make sure ticks is a tuple.
         try:
