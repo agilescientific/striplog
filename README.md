@@ -7,8 +7,8 @@ Lithology and stratigraphic logs for wells and outcrop.
 
 ## Docs
 
-* Read striplog's documentation
-* Check out the tutorial notebooks
+* [Read striplog's documentation](https://code.agilescientific.com/striplog)
+* [Check out the tutorial notebooks](./docs/tutorial/)
 
 ## Dependencies
 
