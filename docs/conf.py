@@ -28,7 +28,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'striplog'
-copyright = '2020, Agile Scientific'
+copyright = '2022, Agile Scientific'
 author = 'Agile Scientific'
 
 # The full version, including alpha/beta/rc tags
@@ -56,8 +56,7 @@ release = verstr
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'nbsphinx',
-    'nbsphinx_link',
+    'myst_nb',
     'sphinxcontrib.apidoc',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
@@ -92,15 +91,21 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
+# https://sphinx-themes.org/sample-sites/furo/
+html_theme = 'furo'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-# Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_css_files = [
+    'custom.css',
+]
+
+html_theme_options = {
+    "sidebar_hide_name": True,
+}
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'striplogdoc'
@@ -182,3 +187,7 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+# Branding
+html_favicon = '_static/favicon.ico'
+html_logo = '_static/striplog_logo.png'
