@@ -1,0 +1,33 @@
+striplog package
+================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   striplog.canstrat
+   striplog.canstrat_codes
+   striplog.component
+   striplog.defaults
+   striplog.description
+   striplog.hatches
+   striplog.interval
+   striplog.legend
+   striplog.lexicon
+   striplog.logo
+   striplog.markov
+   striplog.position
+   striplog.rock
+   striplog.striplog
+   striplog.templates
+   striplog.utils
+
+Module contents
+---------------
+
+.. automodule:: striplog
+   :members:
+   :undoc-members:
+   :show-inheritance:

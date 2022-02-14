@@ -1,0 +1,7 @@
+striplog.rock module
+====================
+
+.. automodule:: striplog.rock
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,1143 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Display objects" href="03_Display_objects.html" /><link rel="prev" title="Striplog basics" href="01_Basics.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
+        <title>Basic objects - striplog documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">striplog  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/striplog_logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="00_Read_me_first.html">Read me first!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Striplog basics</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Basic objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_Display_objects.html">Display objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_Beyond_basics.html">Striplog expert functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html">Striplog for abstracting curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#random-curve-data">Random curve data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-data-from-the-curve-into-the-striplog">Extract data from the curve into the striplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-and-reduce-data">Extract and reduce data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">Parsing a description into components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_Moving_sand_proportion.html">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_Binary_morphologies.html">Binary morphologies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">Striplog merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_Markov_chains.html">Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">Blocking curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/striplog.html">striplog package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.canstrat.html">striplog.canstrat module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.canstrat_codes.html">striplog.canstrat_codes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.component.html">striplog.component module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.defaults.html">striplog.defaults module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.description.html">striplog.description module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.hatches.html">striplog.hatches module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.interval.html">striplog.interval module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.legend.html">striplog.legend module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.lexicon.html">striplog.lexicon module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.logo.html">striplog.logo module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.markov.html">striplog.markov module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.position.html">striplog.position module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.rock.html">striplog.rock module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.striplog.html">striplog.striplog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.templates.html">striplog.templates module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/striplog.utils.html">striplog.utils module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/striplog/">PyPI releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/agile-geoscience/striplog">Code in GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/agile-geoscience/striplog/issues">Issue tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://code.agilescientific.com/community">Community guidelines</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://code.agilescientific.com">Agile's software</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.agilescientific.com">Agile's website</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="basic-objects">
+<h1>Basic objects<a class="headerlink" href="#basic-objects" title="Permalink to this headline">#</a></h1>
+<p>A <code class="docutils literal notranslate"><span class="pre">striplog</span></code> depends on a hierarchy of objects. This notebook shows the objects and their basic functionality.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="#Lexicon">Lexicon</a>: A dictionary containing the words and word categories to use for rock descriptions.</p></li>
+<li><p><a class="reference external" href="#Component">Component</a>: A set of attributes.</p></li>
+<li><p><a class="reference external" href="#Interval">Interval</a>: One element from a Striplog — consists of a top, base, a description, one or more Components, and a source.</p></li>
+</ul>
+<p>Striplogs (a set of <code class="docutils literal notranslate"><span class="pre">Interval</span></code>s) are described in <a class="reference internal" href="01_Basics.html"><span class="doc std std-doc">a separate notebook</span></a>.</p>
+<p>Decors and Legends are also described in <a class="reference internal" href="03_Display_objects.html"><span class="doc std std-doc">another notebook</span></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">striplog</span>
+<span class="n">striplog</span><span class="o">.</span><span class="n">__version__</span>
+
+<span class="c1"># If you get a lot of warnings here, just run it again.</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'unknown'
+</pre></div>
+</div>
+</div>
+</div>
+<hr/><section id="lexicon">
+<h2>Lexicon<a class="headerlink" href="#lexicon" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Lexicon</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Lexicon</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    A Lexicon is a dictionary of 'types' and regex patterns.
+
+    Most commonly you will just load the default one.
+
+    Args:
+        params (dict): The dictionary to use. For an example, refer to the
+            default lexicon in ``defaults.py``.
+    
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">Lexicon</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on class Lexicon in module striplog.lexicon:
+
+class Lexicon(builtins.object)
+ |  Lexicon(params)
+ |  
+ |  A Lexicon is a dictionary of 'types' and regex patterns.
+ |  
+ |  Most commonly you will just load the default one.
+ |  
+ |  Args:
+ |      params (dict): The dictionary to use. For an example, refer to the
+ |          default lexicon in ``defaults.py``.
+ |  
+ |  Methods defined here:
+ |  
+ |  __init__(self, params)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |  
+ |  __repr__(self)
+ |      Return repr(self).
+ |  
+ |  __str__(self)
+ |      Return str(self).
+ |  
+ |  expand_abbreviations(self, text)
+ |      Parse a piece of text and replace any abbreviations with their full
+ |      word equivalents. Uses the lexicon.abbreviations dictionary to find
+ |      abbreviations.
+ |      
+ |      Args:
+ |          text (str): The text to parse.
+ |      
+ |      Returns:
+ |          str: The text with abbreviations replaced.
+ |  
+ |  find_synonym(self, word)
+ |      Given a string and a dict of synonyms, returns the 'preferred'
+ |      word. Case insensitive.
+ |      
+ |      Args:
+ |          word (str): A word.
+ |      
+ |      Returns:
+ |          str: The preferred word, or the input word if not found.
+ |      
+ |      Example:
+ |          &gt;&gt;&gt; syn = {'snake': ['python', 'adder']}
+ |          &gt;&gt;&gt; find_synonym('adder', syn)
+ |          'snake'
+ |          &gt;&gt;&gt; find_synonym('rattler', syn)
+ |          'rattler'
+ |      
+ |      TODO:
+ |          Make it handle case, returning the same case it received.
+ |  
+ |  find_word_groups(self, text, category, proximity=2)
+ |      Given a string and a category, finds and combines words into
+ |      groups based on their proximity.
+ |      
+ |      Args:
+ |          text (str): Some text.
+ |          tokens (list): A list of regex strings.
+ |      
+ |      Returns:
+ |          list. The combined strings it found.
+ |      
+ |      Example:
+ |          COLOURS = [r"red(?:dish)?", r"grey(?:ish)?", r"green(?:ish)?"]
+ |          s = 'GREYISH-GREEN limestone with RED or GREY sandstone.'
+ |          find_word_groups(s, COLOURS) --&gt; ['greyish green', 'red', 'grey']
+ |  
+ |  get_component(self, text, required=False, first_only=True)
+ |      Takes a piece of text representing a lithologic description for one
+ |      component, e.g. "Red vf-f sandstone" and turns it into a dictionary
+ |      of attributes.
+ |      
+ |      TODO:
+ |          Generalize this so that we can use any types of word, as specified
+ |          in the lexicon.
+ |  
+ |  parse_description(self, text)
+ |      Parse a single description into component-like dictionaries.
+ |  
+ |  split_description(self, text)
+ |      Split a description into parts, each of which can be turned into
+ |      a single component.
+ |  
+ |  ----------------------------------------------------------------------
+ |  Class methods defined here:
+ |  
+ |  default() from builtins.type
+ |      Makes the default lexicon, as provided in ``defaults.py``.
+ |      
+ |      Returns:
+ |          Lexicon: The default lexicon.
+ |  
+ |  from_json_file(filename) from builtins.type
+ |      Load a lexicon from a JSON file.
+ |      
+ |      Args:
+ |          filename (str): The path to a JSON dump.
+ |  
+ |  ----------------------------------------------------------------------
+ |  Readonly properties defined here:
+ |  
+ |  categories
+ |      Lists the categories in the lexicon, except the
+ |      optional categories.
+ |      
+ |      Returns:
+ |          list: A list of strings of category names.
+ |  
+ |  ----------------------------------------------------------------------
+ |  Data descriptors defined here:
+ |  
+ |  __dict__
+ |      dictionary for instance variables (if defined)
+ |  
+ |  __weakref__
+ |      list of weak references to the object (if defined)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lexicon</span> <span class="o">=</span> <span class="n">Lexicon</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
+<span class="n">lexicon</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{'lithology': ['overburden', 'sandstone', 'siltstone', 'shale', 'conglomerate', 'mudstone', 'limestone', 'dolomite', 'salt', 'halite', 'anhydrite', 'gypsum', 'sylvite', 'clay', 'mud', 'silt', 'sand', 'gravel', 'boulders'], 'modifier': ['silty', 'sandy', 'shale?y', 'muddy', 'pebbly', 'gravell?y'], 'amount': ['streaks?', 'veins?', 'stringers?', 'interbed(?:s|ded)?', 'blotch(?:es)?', 'bands?', 'fragments?', 'impurit(?:y|ies)', 'abundant', 'minor', 'some', 'rare', 'flakes?', 'trace', '[-.\\d]+%', '[-.\\d]+pc', '[-.\\d]+per ?cent'], 'grainsize': ['vf(?:-)?', 'f(?:-)?', 'm(?:-)?', 'c(?:-)?', 'vc', 'very fine(?: to)?', 'fine(?: to)?', 'medium(?: to)?', 'coarse(?: to)?', 'very coarse', 'v fine(?: to)?', 'med(?: to)?', 'med.(?: to)?', 'v coarse', 'grains?', 'granules?', 'pebbles?', 'cobbles?', 'boulders?'], 'colour': ['red(?:dish)?', 'gray(?:ish)?', 'grey(?:ish)?', 'black(?:ish)?', 'whit(?:e|ish)', 'blu(?:e|ish)', 'purpl(?:e|ish)', 'yellow(?:ish)?', 'green(?:ish)?', 'brown(?:ish)?', 'light', 'dark', 'sandy'], 'synonyms': {'Overburden': ['Drift'], 'Anhydrite': ['Gypsum'], 'Salt': ['Halite', 'Sylvite']}, 'splitters': [' with ', ' contain(?:s|ing) ', '\\. '], 'parts_of_speech': {'noun': ['lithology'], 'adjective': ['colour', 'grainsize', 'modifier'], 'subordinate': ['amount']}, 'abbreviations': {'gt': 'gritty', 'dist': 'distillate', 'gr': 'grained', 'LSD': 'legal subdivision', 'ptg': 'parting', 'alg': 'algal', 'mnr': 'minor', 'Assem': 'Assem', 'Vad': 'vadose', 'MCW': 'mud cut water', 'Pch': 'patch', 'gd': 'good', '/': 'with', 'ga': 'gauged', 'bulb': 'bulbous', 'Var': 'variation', 'gn': 'green', 'alt': 'altering', 'Gil': 'gilsonite', 'Oyst': 'oyster', 'sch': 'schist', 'Clst': 'claystone', 'ves': 'vesicular', 'Nod': 'nodules', 'tt': 'tightly', 'V.P.S.': 'very poor sample V.P.S.', 'asph': 'asphaltic', 'SIP': 'shut in pressure', 'tn': 'tan', 'G&amp;OCM': 'gas and oil cut mud', 'DI': 'dual induction log', 'Mol': 'mollusca', 'Inoc': 'inoceramus*', 'spec': 'speckled', '@': 'at', 'Amph': 'amphipora*', 'vert': 'vertical', 'lrg': 'larger', 'md': 'muddy', 'wthrd': 'weathered', 'Brec': 'breccia', 'D &amp; A': 'dry and abandoned', 'fau': 'fauna', 'depau': 'depauperate', 'shad': 'shadow', 'DF': 'derrick floor', 'gy': 'gray', 'Elev': 'elevation', 'indst': 'indistinct', 'Syring': 'syringopora*', 'fac': 'faceted', 'GL': 'guard log', 'brhg': 'branching', 'Gt': 'grit', 'Gr': 'grains', 'FIt': 'fault', 'Tas': 'tasmanites*', 'Spr': 'spore', 'fenst': 'fenestral', 'plag': 'plagioclase', 'p': 'poorly', 'Spk': 'speck', 'Spl': 'sampole', 'SNP': 'sidewall neutron porosity log', 'n.s.': 'no sample', 'Clcar': 'calcarenite', 'pbl': 'pebble (4-64 mm)', 'cmt': 'cemented', 'Spg': 'sponge', 'Grv': 'gravel', 'Cyp': 'cypridopsis*', 'Grt': 'granite', 'SP': 'spontaneous potential', 'Res': 'residue', 'Bioh': 'bioherm', 'Biost': 'biostrom', 'tex': 'texture', 'Brach': 'brachiopod', 'hydc': 'hydrocarbon', 'Ren': 'renalcis*', 'Biot': 'biotite', 'Peld': 'pelletoid', 'Bld': 'boulder', 'ter': 'terriginous', 'splty': 'splintery', 'acic': 'acicular', 'sug': 'sugary', 'bdd': 'bedded', 'bdg': 'bedding', 'gl': 'glassy', 'abd': 'abundant', 'Intst': 'intersticies', 'Micr': 'micrite', 'O str': 'Ostracod', 'Clcsp': 'calcisphere', 'bl': 'bluish', 'abs': 'absent', 'abt': 'about', 'conspic': 'conspicuous', 'Spfool': 'superficial olite', 'sli': 'slightly', 'med': 'medium', 'O&amp;SW': 'oil and salt water', 'biocl': 'bioclastic', 'Agg': 'aggregate', 'DST': 'drill stem test', 'Mn': 'manganese', 'psdo': 'pseudo', 'len': 'lentilcular', 'rug': 'rugosa', 'Wd': 'wood', 'hkl': 'hackly', 'DLL': 'dual laterolog', 't.s.': 'thin section', 'Mtrx': 'matrix', 'crpxln': 'crystocrystalline', 'Zn': 'zone', 'Anthr': 'anthracite', 'altg': 'alternating', 'blksh': 'blackish', 'bor': 'boreding', 'dru': 'drusy', 'ctd': 'coated', 'Conc': 'concretion', 'wtr cush': 'water cushion', 'ctc': 'contact', 'micropor': 'microporosity', 'Zr': 'zircon', 'Cono': 'conodont', 'sft': 'soft', 'Piso': 'pisoid', 'LL': 'laterolog', 'lmn': 'limonitic', 'volc': 'volcanics', 'Ctgs': 'cuttings', 'apr': 'apparent', 'tr': 'trace', 'app': 'appear', 'brt': 'bright', 'ls': 'limestone', 'Slt': 'silt', 'Circ': 'circulate', 'aph': 'aphanitic', 'oomol': 'oomoldic', 'brk': 'brackish', 'vit': 'vitreous', 'org': 'organic', 'n.v.p.': 'no visible porosity', 'w/': 'with', 'brd': 'bored', 'intxln': 'intercrystalline', 'Para': 'paraparchites*', 'Fp': 'flowing pressure', 'Ft': 'foot', 'perf': 'perforated', '&amp;': 'and', 'fen': 'fenestraal', 'pred': 'predominantly', 'Phlog': 'phloaopite', 'perm': 'permeability', 'fibr': 'fibrous', 'msm': 'metasomatic', 'cht': 'chert', 'Fe': 'iron-ferruginous', 'dns': 'denser', 'vi': 'violet', 'fros': 'frosted', 'calc': 'calcitareous', 'Fm': 'formation', 'pres': 'preservation', 'cntrt': 'contorted', 'wvy': 'wavy', 'vps': 'very poor samples', 'ooc': 'oocastic', 'musc': 'muscovite', 'glas': 'glassy', 'Sh': 'shale', 'lchd': 'leached', 'rhb': 'rhombic', 'glau': 'glauconitic', 'Brac': 'brachiopod', 'choc': 'chocolate', 'chit': 'chitinous', 'Str': 'structure', 'Sl': 'slate', 'clus': 'cluster', 'Sa': 'salt', 'Cmt': 'cement', 'lmpy': 'lumpy', 'Sd': 'sand', 'intrapar': 'intraparticle', 'phos': 'phosphatic', 'prly': 'pearly', 'Lstr': 'lustre', 'tns': 'tension', 'f': 'finely', 'fls': 'flesh', 'des': 'descript', 'SW': 'salt water', 'flt': 'faulted', 'Cbl': 'cobble', 'plty': 'platy', 'lithgr': 'lithographic', 'flk': 'flake', 'W.R.': 'washed residue', 'SO': 'show of oil', 'v': 'very', 'deb': 'debris', 'slty': 'silty', 'fld': 'feldsparthic', 'flg': 'flaggy', 'ptch': 'patches', 'Lig': 'lignite', 'mica': 'micaeous', 'bent': 'bentonitic', 'Min': 'mineral', 'sy-Ca': 'sparry calcite', 'Lim': 'limonite', 'Invtb': 'invertebrate', 'sps': 'sparsly', 'Mid': 'middle', 'yelsh': 'ish', 'sph': 'spherules', 'spl': 'sample', 'Ls': 'limestone', 'tab': 'tabular', 'Plcy': 'palecypod', 'scat': 'scattered', 'psool': 'pseudo oolitic', 'GR': 'gamma ray', 'spsly': 'sparsly', 'Bdeye': 'birdseye', 'purp': 'purple', 'Pyr': 'pyrite', 'hom': 'homogeneous', 'Kao': 'kaolin', 'Spic': 'spicule', 'hor': 'horizontal', 'Belm': 'belemnites*', 'sid': 'sideritic', 'aft': 'after', 'Rhb': 'rhomb', 'Typ': 'type', 'sim': 'similar', 'sil': 'siliceous', 'frag': 'fragmental', 'lam': 'laminated', 'fr': 'fair', 'mar': 'maroon', 'frac': 'fractured', 'srt': 'sorting', 'Dol': 'dolomite', 'I.P.': 'in part', 'cpct': 'compact', 'max': 'maximum', 'insl': 'insoluble', 'lac': 'lacustrine', 'Mrl': 'marl', 'mag': 'magnetic', 'Ctc': 'contact', 'ireg': 'irregular', 'lav': 'lavender', 'IAB': 'initial air blow', 'fl': 'filled', 'Tril': 'trilobite', 'Foram': 'foraminifera', 'MMCFG': 'million cubic feet of gas', 'Clvg': 'cleavage', 'Alg': 'algal', 'sp': 'spotty', 'Deer': 'decrease', 'Microspr': 'microspar', 'su': 'sulphurous', 'or': 'orangish', 'strk': 'streaked', 'stri': 'striated', 'sh': 'shale', 'Moll': 'mollusc', 'spkld': 'speckled', 'sm': 'smooth', 'sl': 'slightly', 'sc': 'scales', 'sb': 'sub', 'sa': 'salt', 'strg': 'stringer', 'Trip': 'tripoli', 'Equiv': 'equivalent', 'lse': 'loose', 'mnut': 'minute', 'BHCS': 'bore hole compensated sonic', 'Cal': 'caliper', 'Chk': 'chalk', 'Biomi': 'biomicrite', 'brit': 'brittle', 'coln': 'colonial', 'Smwt': 'somewhat', 'Rf': 'reef', 'Cht': 'chert', '(D)': 'development', 'decr': 'decreasing', 'Rk': 'rock', 'RT': 'rotary table', 'fis': 'fissile', 'cln': 'clean', 'xl': 'crystalline', 'cbl': 'cobble (64-256 mm)', 'Aglm': 'agglomerate', 'Evap': 'evapourite', 'sa-c': 'salt castic', 'fib': 'fibrous', 'imp': 'impression', 'lt': 'lighter', 'eux': 'euxinic', 'cren': 'crenulated', 'gty': 'gravity', 'dess': 'dessiccation', 'clr': 'clear', 'TSTM': 'too small to measure', 'Bas': 'basalt', 'Shw': 'show', 'nod': 'nodule', 'uncons': 'unconsolidated', 'rexl': 'recrystallization', 'Cav': 'cavernous', 'FAB': 'fair air blow', 'aprox': 'approximately', '₵': 'core', 'Schm': 'schist', 'Shl': 'shell', 'xln': 'crystalline', 'Rad': 'radial', 'Oomol': 'oomold', 'Dist': 'distillate', 'extr': 'extremely', 'l': 'lower', 'Anhy': 'anhydrite', 'intv': 'interval', 'Stach': 'stachyodes*', 'crpxl': 'cryptocrystalline', 'Poln': 'pollen', 'Chtz': 'chitinozoa', 'MCFG': 'thousand cubic feet of gas', 'frmwk': 'framework', 'Lith': 'lithology', 'Macrofos': 'macrofossil', 'prphy': 'porphyry', 'Lut': 'lutite', 'OFM': 'oil flecked mud', 'Asph': 'assemblage', 'intpar': 'interparticle', 'Perm': 'permeability', 'Bdst': 'boundstone', 'chty': 'cherty', 'meta': 'metamorphic', 'ex': 'excellent', 'hrtl': 'horizontal', 'p-p': 'pin point', 'zeo': 'zeolite', 'n/s': 'no show', 'nac': 'nacerous', 'Wtr': 'water', 'apprx': 'approximate', 'rr': 'rare', 'Musc': 'muscovite', 'intclas': 'intraclastic', 'rep': 'replacedment', 'porcel': 'porcelaneous', 'BOPH': 'barrels of oil per hour', 'rd': 'rounded', 'rf': 'reefoid', 'sml': 'small', 'blk': 'black', 'IP': 'initial production', 'bld': 'bladed', 'Tub': 'tube', 'Pisol': 'pisolite', 'mtx': 'matrix', 'lmy': 'limy', 'Phos': 'phosphate', 'crd': 'cored', 'G': 'gas', 'Spo': 'spore', 'GCM': 'gas cut mud', 'SGCM': 'slight gas cut mud', 'OWWO': 'old well worked over', 'Novac': 'novaculite', 'rhmb': 'rhombic', 'argl': 'argillate', 'W': 'west', 'carb': 'carbonaceous', 'Frac': 'fracture', 'freq': 'frequent', 'ES': 'electric', 'Pyrxn': 'pyroxene', 'g': 'good', 'Contam': 'contamination', 'srtg': 'Sorteding', 'Chal': 'chalcedony', 'fspr': 'feldsparathic', 'Char': 'charophyte', 'SSO': 'slight show of oil', 'Hyde': 'hydrocarbon', 'w': 'well', 'intgn': 'inter grown', 'vrtb': 'vertebrate', 'Sphal': 'sphalerite', 'intpt': 'interpretation', 'cche': 'caliche', 'Frg': 'fringe', 'sacc': 'saccharoidal', 'onc': 'oncolites', 'Slick slick': 'slickenside', 'Diagn': 'diagenesis', 'zn': 'zone', 'Imp': 'impression', 'sblit': 'sublithic', 'Prod': 'production', 'Incl': 'inclusion', 'Frag': 'fragment', 'sphal': 'sphalerite', 'Iran': 'granule', 'dtrl': 'detritalus', 'wthd': 'weathered', 'WCM': 'water cut mud', 'GCW': 'gas cut water', 'Pet': 'petroleum', 'Microstyl': 'microstylolite', 'Volc': 'volcanic', 'BWPH': 'barrels of water per hour', 'thru': 'throughout', 'intcl': 'intraclasts', 'Biosp': 'biosparite', 'Girv': 'girvanella*', 'OWDD': 'oil well drilled deeper', 'consol': 'consolidated', 'Fus': 'fusulinid', 'sz': 'size', 'grysh': 'greyish', 'mrlst': 'marlstone', 'Strk': 'streak', 'SGCW': 'slight gas cut water', 'crnk': 'crinkled', 'Rbl': 'rubble', 'Fuc': 'fucoid', 'bdeye': 'birdseye', 'gyp': 'gypsumiferous', 'orng': 'orange', 'Endo': 'endothyra*', 'BHFP': 'bottom hole flow pressure', 'Xl': 'crystal', 'stn': 'staining', 'Qtz': 'quartz', 'csg': 'casing', 'Chlor': 'chlorite', 'r': 'rare', 'mky': 'milky', 'str': 'streak', 'Onc': 'oncolite', 'Btm': 'bottom', 'Slst': 'siltstone', 'dissem': 'disseminated', 'spr': 'sparry', 'Pap': 'paper', 'grnt': 'granite', 'Par': 'particle', 'ang': 'angular', 'Descr': 'description', 'intgwn': 'intergrown', 'Stylio': 'styliolina*', 'Intclas': 'intraclast', 'Rem': 'remains', 'chlor': 'chlorite', 'euhd': 'euhedral', 'Pend': 'pendularous', 'Rec': 'recovery', 'grnl': 'granule (2-4 mm)', 'Calc': 'calcite', 'p.d': 'pressure deformation', 'recem': 'recemented', 'strgr': 'stringer', 'lig': 'lignitic', 'Glauc': 'glauconite', 'intbd': 'interbedded', 'lim': 'itic', 'mic': 'micro', 'Db': 'diabase', 'Port por': 'porosity', 'Ech': 'echinoid', 'lit': 'lithic', 'Fluor': 'fluoresceince', 'vrvd': 'varved', 'Arag': 'aragonite', 'vgt': 'varigated', 'Clus': 'cluster', 'mot': 'mottled', 'surf': 'surface', 'pos': 'possibility', 'plas': 'plastic', 'pyr': 'pyritized', 'In': 'inch', 'kao': 'kaolin', 'Orbit': 'Orbitolina', 'MLL': 'microlaterolog', 'sdy': 'sandy', 'Mic': 'micaceous', 'Plt': 'plant', 'assoc': 'associated', 'rthy': 'earthy', 'Ivan': 'ivanovia*', 'suc': 'sucrosic', 'intercal': 'intercalated', 'glos': 'glossy', 'typ': 'typical', 'abv': 'above', 'MCO': 'mud cut oil', 'Unconf': 'unconformity', 'Bent': 'bentonite', 'dol': 'dolomitic', 'dom': 'dominant', 'flor': 'fluorescence', 'sltst': 'siltstone', 'brec': 'brecciated', 'Stri': 'striae', 'dism': 'disseminated', 'BHT': 'bottom hole temperature', 'exv': 'extrusive', 'Pol': 'polish', 'GTS': 'gas to surface', 'Mbr': 'member', 'exp': 'exposed', 'Pybit': 'pyrobitumen', 'a.a.': 'same as above sample', 'intlam': 'interlaminated', 'sd': 'sand (1/16-2 mm)', 'Rpl': 'ripple', 'dend': 'dendritic', 'pkr': 'packer', 'drlg': 'drilling', 'Spher': 'spherule', 'Hal': 'halitiferous', 'lstr': 'lustre', 'Exclas': 'extraclast', 'ML': 'microlog, minilog', 'anhy': 'anhydritic', 'drlr': 'driller', 'Rud': 'rudist', 'grapst': 'grapestone', 'Bubl': 'bubble', 'pris': 'prismatic', 'Bnd': 'band', 'och': 'ochre', 'spher': 'spherulitic', 'Jt': 'joint', 'occ': 'occasional', 'Wl': 'well', 'varic': 'varicolored', 'intrlam': 'interlaminated', 'O&amp;G': 'oil and gas', 'mnrl': 'mineralized', 'Shlt por': 'shelter porosity', 'AOF': 'absolute open flow', 'Gyp': 'gypsumiferous', 'Bit': 'bitumen', 'Gast': 'gastropod', 'Pst': 'pumice-stone', 'PB': 'plugged back', 'Stromlt': 'stromatolite', 'BO': 'barrels of oil', 'dk': 'darker', 'CN': 'compensated neutron', 'KB': 'kelly bushing', 'dd': 'dead', 'Intvl': 'interval', 'stromlt': 'stromatolite', 'Fspr': 'feldspar', 'Milid': 'miliolid', 'cotg': 'coateding', 'cotd': 'coateding', 'repl': 'replacement', 'slily': 'slightly', 'struc': 'structure', 'SO&amp;G': 'show of oil and gas', 'gen': 'generally', 'hetr': 'heterogeneous', 'crs': 'coarse', 'bar': 'baritic', 'bas': 'basaltic', '(W)': 'wildcat', 'shy': 'shaly', 'FDL': 'formation density log', 'w/o': 'without w/o', 'BW': 'barrels of water', 'rsns': 'resinous', 'PL': 'proximity log', 'gran': 'granular', 'BWPD': 'barrels of water per day', 'x': 'cross', 'grad': 'grading', 'Qtzt': 'quartzite', 'crm': 'cream', 'res': 'residuual', 'Pt': 'part', 'OTD': 'old total depth', 'contam': 'contaminated', 'S.W.C.': 'sidewall core', 'qtz': 'quartz', 'magnt': 'magnetite', 'Pel': 'pellet', 'num': 'numerous', 'sec': 'secondary', 'fnly': 'finly', 'arg': 'argillaceous', 'ark': 'arkosic', 'rmn': 'remainant', 'prim': 'primary', 'volat': 'volatile', 'SOCW': 'slight oil cut water', 'piso': 'pisolitic', 'pkish': 'pinkish', 'metaph': 'metamorphosed', 'trnsp': 'transparent', 'irr': 'irregular', 'hornbd': 'hornblend', "'' or do": 'ditto', 'biost': 'biostromal', 'gept': 'geopetal', 'trnsl': 'translucent', 'PD': 'per day', 'PH': 'per hour', 'SO&amp;W': 'show of oil and water', 'Vnlet': 'veinlet', 'Tham': 'thamnopora*', 'wg': 'vuggy', 'C': 'coal', 'men': 'meniscus', 'exclas': 'extraclastic', 'lg': 'long', 'jt': 'jointing', 'comp': 'completion', 'gnsh': 'greenish', 'wk': 'weak', 'wi': 'with', 'wh': 'white', 'Exv': 'extrusive rock', 'S': 'sonic, acoustilog', 'magn': 'magnetic', 'gywk': 'graywacke', 'G.W.': 'granite wash', 'Satm sat': 'saturation', 'tub': 'tubular', 'tuf': 'tuffaceous', 'coq': 'coquina', 'vug': 'vugular', 'c': 'coarsely', 'fnt': 'faintly', 'dkr': 'darker', 'cov': 'covered', 'conch': 'conchoidal', 'intgran': 'intergranular', 'SI': 'shut in', 'Chit': 'chitinous', 's': 'small', 'Meta': 'metamorphic rock', 'Sst': 'sandstone', 'brak': 'brackish', 'uni': 'uniform', 'com': 'common', 'cotd gn': 'coated grains', 'Het': 'Heterostegina', 'foram': 'foraminiferal', 'chky': 'chalky', 'cl': 'clastic', 'cb': 'carbonized', 'Glas': 'glass', 'rad': 'radiating', 'poly': 'polygonal', 'hvy': 'heavy', 'pol': 'polished', 'Pent': 'pentamerus*', 'Hem': 'hematite', 'tgh': 'tough', 'cp': 'compare', 'Surf': 'surface', 'ps': 'pseudo-', 'frg': 'fringing', 'pt': 'partly', 'Bur': 'burrow', 'fri': 'friable', 'blsh': 'bluish', 'pch': 'patchy', 'stmg': 'streaming', 'frs': 'fresh', 'skel': 'skeletal', 'pyrbit': 'pyrobitumen', 'pk': 'pink', 'devit': 'devitrified', 'authg': 'authigenic', 'pl': 'plant', 'cly': 'clayey', 't.b.': 'thin-bedded', 'Tr': 'trace', 'IES': 'induction electric', 'WAB': 'weak air blow', 'lge': 'large', 'spic': 'spicular', 'psi': 'pounds per square inch', 'crbnt': 'carbonate', 'Tp': 'top', 'Pkst': 'packstone', 'Sedm': 'sediment', 'Cont': 'content', 'xbdg': 'cross-bedding', 'gns': 'gneiss', 'micgr': 'micrograined', 'Cl': 'clay', 'slt': 'silt', 'vcol': 'varicolored', 'undly': 'underlying', 'grnt.w': 'granite wash', 'n': 'no, none, non', 'contm': 'contaminated', 'sln': 'solution', 'rbl': 'rubblbly', 'fuc': 'fucoidal', 'Intr': 'intrusive', 'cvg': 'cavings', 'k': 'permeabilityable', 'slb': 'slabby', 'FTAB': 'faint air blow', 'DIL': 'dual induction laterolog', 'pyrcl': 'pyroclastic', 'cons': 'considerable', 'rndd': 'rounded', 'bot': 'botryoidal', 'Sel': 'selenite', 'vn': 'vein', 'Tf': 'tuffaceous', 'styl': 'stylotitic', 'conc': 'concretionary', 'mott': 'mottled', 'xlam': 'cross-laminated', 'x-strat': 'cross-stratified', 'Strom': 'stromatoporoid', 'ig': 'igneous', 'pap': 'papery', 'incr': 'increasing', 'litt': 'littoral', 'intstl': 'interstitial', 'bioturb': 'bioturbated', 'PPM': 'parts per million', 'GAP': 'good air blow', 'Repl': 'replaced', 'lith': 'lithographic', 'elong': 'elongate', 'Chara': 'charophytes', 'sat': 'saturated', 'incl': 'inclusion', 'Coq': 'coquina', 'Vug': 'vug', 'Cor': 'coral', 'intst': 'intersticitial', 'cncn': 'concentric', 'rng': 'range', 'orth': 'orthoclase', 'rdsh': 'redish', 'syn': 'syntaxial', 'Microfos': 'microfossilferous', 'phr': 'phreatic', 'Wkst': 'wackestone', 'pisol': 'pisolitic', 'Col': 'color', 'Jasp': 'jasper', 'Mat': 'material', 'Mbl': 'marble', 'intxl': 'intercrystalline', 'detr': 'detrital', 'sed': 'sedimentary', 'x-bd': 'cross-bedded', 'gsy': 'grasy', 'OWPB': 'oil well plugged back', 'min': 'mineralized', 'Sol': 'Soution', 'Vn': 'vein', 'col': 'colored', 'x-lam': 'cross-laminated', 'thn': 'thin', 'thk': 'thick', 'fltg': 'floating', 'Ig': 'igneous rock', 'imbd': 'imbedded', 'ck': 'choke', 'BHP': 'bottom hole pressure', 'yel': 'yellow', 'Orth': 'orthoclase', 'sptd': 'spottedy', 'spty': 'spottedy', 'Sphaer': 'sphaerocodium*', 'Pbl': 'pebble', 'intfrag': 'interfragmental', 'Scaph': 'scaphopod', 'resd': 'residual', 'Bd': 'bed', 'Fe-mag': 'ferro-magnesian', 'sks': 'slickensided', 'rexlzd': 'recrystallized', 'Bm': 'basement', 'Glob': 'globigerina*', 'elg': 'elongate', 'unident': 'unidentifiable', 'Fau': 'fauna', 'Gal': 'galeolaria*', 'cub': 'cubic', 'Fac': 'facet', 'Glos': 'gloss', 'Gab': 'gabbro', 'bnd': 'banded', 'Oo': 'ooid', 'Gns': 'gneiss', 'amb': 'amber', 'strat': 'strataified', 'amm': 'ammonite', 'vis': 'visible', 'mos': 'mosaic', 'por': 'poroussity', 'uncons.': 'unconsolidated', 'embd': 'embedded', 'Dia': 'diameter', 'rnd': 'rounded', 'sbang': 'subangular', 'cntr': 'centered', 'mol': 'moldic', 'Cvg': 'caving', 'bit': 'bitumeninous', 'Micropor': 'micropore', 'S.W.': 'salt water', 'amt': 'amount', 'mod': 'moderate', 'Crin': 'crinoidal', 'Lyr': 'layer', 'brn': 'brown', 'boudg': 'boudinage', 'OC': 'oil cut', 'Microol': 'micro-oolite', 'Ltl': 'little', 'V.op': 'valve open', 'amor': 'amorphous', 'Ark': 'arkose', 'clas': 'clastic', 'Psool': 'pseudo oolite', 'Strat': 'strata', 'Bdg': 'bedding', 'bri': 'bright', 'drsy': 'drusy', 'tstg': 'testing', 'Scol': 'scolecodonts', 'crpld': 'crumpled', 'SOCM': 'slight oil cut mud', 'rec': 'recovered', 'Fvst': 'favosites*', 'sbrndd': 'sub rounded', 'p.p.': 'pin-poin', 'HO': 'heavy oil', 'olv': 'olive', 'Mdst': 'mudstone', 's &amp; p': 'salt and pepper', 'venn': 'vermillon', 'u': 'upper', 'gvl': 'gravel', 'fos': 'fossiliferous', 'pet': 'petroleumiferous', 'Clclt': 'calcilutite', 'OSR': 'oil source rock', 'Len': 'lens', 'pel': 'pellet', 'circ': 'circulation', 'prom': 'prominently', 'fol': 'foliated', 'peld': 'pelletoidal', 'Tent': 'tentaculites*', 'prob': 'probably', 'bd': 'bed', 'flky': 'flaky', 'bf': 'buff', 'LL8': 'laterolog-8', 'cgl': 'conglomerate', 'Gwke': 'graywacke', 'slky': 'silky', 'Grap': 'graptolite', 'Bor': 'bored', 'bo': 'bophaceous', 'Bot': 'botryoid', 'phen': 'phenocrysts', 'posa': 'possible', 'bu': 'buff', 'sel': 'selenite', 'Gran': 'granule', 'r.f.p': 'rounded frosted pitted', 'Clslt': 'calcisiltite', 'ss': 'sandstone', 'Uc': 'underclay', 'oo': 'ooidal', 'GOR': 'gas-to-oil ratio', 'Clcrd': 'calcirudite', 'euhed': 'euhedral', 'Solen': 'solenopora*', 'Euryamph': 'euryamphipora*', 'Ptg': 'parting', 'od': 'odor', 'eqnt': 'equant', 'Ost': 'ostracod', 'o': 'oil', 'Ceph': 'cephalopod', 'irid': 'iridescent', 'ox': 'oxidized', 'Casph': 'calcisphaera*', 'ti': 'tight', 'Foss': 'fossiliferous', 'sept': 'septate', 'marn': 'marine', 'Scs': 'scarce', 'op': 'open', 'chk': 'chalky', 'ahd': 'anhedral', 'Fen': 'fenestra', 'qtzc': 'quartzitic', 'sol': 'solitary', 'corln': 'coralline', 'mas': 'massive', 'ferr': 'ferruginous', 'Cub': 'cube', 'intr': 'intrusionive', 'Chaet': 'chaetetes*', 'OCM': 'oil cut mud', 'qtzs': 'quartzose', 'qtzt': 'quartzite', 'GIP': 'good initial puff', 'loc': 'location', 'blky': 'blocky', 'phyl': 'phyllitic', 'vrtl': 'vertical', 'Ooc': 'oolicast', 'anhed': 'anhedral', 'aren': 'arenaceous', 'Ool': 'oolite', 'bioh': 'biohermal', 'diagn': 'diagenesisetic', 'Pelec': 'pelecypod', 'biot': 'biotite', 'abnt': 'abundant', 'var': 'variable', 'hem': 'hematitic', 'gil': 'gilsonite', 'calctc': 'calcitic', 'clyst': 'claystone', 'fl/': 'flowing', 'bur': 'burrowed', 'ea': 'earthy', 'micr': 'micritic', 'grdg': 'grading', 'Flk': 'flake', 'hi': 'high', 's&amp;p': 'salt &amp; pepper', 'Flo': 'flora', 'Deb': 'debris', 'Splin': 'splintery', 'hd': 'hard', 'coqid': 'coquinaoid', 'Grst': 'grainstone', 'Phyl': 'phyllite', 'med.': 'medium', 'microxln': 'microcrystalline', 'Plag': 'plagioclase', 'mat': 'material, matter', 'bldr': 'boulder', 'up': 'upper', 'Tex': 'texture', 'mdy': 'muddy', 'WIP': 'weak initial puff', 'olvn': 'olivine', 'ab': 'above', 'mrl': 'marly', 'orsh': 'orangish', 'Allo': 'allochem', 'm': 'medium', 'deer': 'decreasing', 'chal': 'chalcedony', 'ovgth': 'overgrowth', 'ap': 'appears', 'Sid': 'siderite', 'ind': 'indurated', 'pit': 'pitted', 'trip': 'tripolic', 'DL': 'density log', 'Sil': 'silica', 'Lam': 'laminations', 'F.Q.G.': 'frosted quartz  grains', 'Cgl': 'conglomerate', 'hex': 'hexagonal', 'wxy': 'waxy', 'gry': 'greyish', 'Fe-st': 'ironstone', 'oom': 'oomoldic', 'grd': 'graded', 'BHSIP': 'bottom hole shut in pressure', 'Mag': 'magnetite', 'ool': 'oolitic', 'Lat': 'laterite', 'mass': 'massive', 'T.D.': 'total depth', 'Stn': 'stain', 'sqz': 'squeezed', 'E': 'east', 'BOPD': 'barrels of oil per day', 'aglm': 'agglomerate', 'evap': 'evapourititic', 'fluor': 'fluoresceincent', 'est': 'estimated', 'Su': 'sulphur', 'lent': 'lenticular', 'stal': 'stalactitic', 'N': 'Neutron', 'wtr': 'water', 'dolst': 'dolostone', 'bcm': 'becoming', 'OTS': 'oil to surface', 'SAB': 'strong air blow', 'Bry': 'bryozoa', 'O-Qtz': 'orthoquartzite', 'Styl': 'stylolite', 'crinal': 'crinoidal', 'Brk': 'break', 'mrly': 'marly', 'Av': 'average', 'xbd': 'cross-bedded', 'Radax': 'radiaxial', 'swbd': 'swabbed'}}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lexicon</span><span class="o">.</span><span class="n">synonyms</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{'Overburden': ['Drift'],
+ 'Anhydrite': ['Gypsum'],
+ 'Salt': ['Halite', 'Sylvite']}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Most of the lexicon works ‘behind the scenes’ when processing descriptions into <code class="docutils literal notranslate"><span class="pre">Rock</span></code> components.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lexicon</span><span class="o">.</span><span class="n">find_synonym</span><span class="p">(</span><span class="s1">'Halite'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'salt'
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="s2">"grysh gn ss w/ sp gy sh"</span>
+<span class="n">lexicon</span><span class="o">.</span><span class="n">expand_abbreviations</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'greyish green sandstone with spotty gray shale'
+</pre></div>
+</div>
+</div>
+</div>
+<hr/></section>
+<section id="component">
+<h2>Component<a class="headerlink" href="#component" title="Permalink to this headline">#</a></h2>
+<p>A set of attributes. All are optional.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Component</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">Component</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Initialize with a dictionary of properties. You can use any
+    properties you want e.g.:
+
+        - lithology: a simple one-word rock type
+        - colour, e.g. 'grey'
+        - grainsize or range, e.g. 'vf-f'
+        - modifier, e.g. 'rippled'
+        - quantity, e.g. '35%', or 'stringers'
+        - description, e.g. from cuttings
+    
+</pre></div>
+</div>
+</div>
+</div>
+<p>We define a new rock with a Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> object:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'colour'</span><span class="p">:</span> <span class="s1">'grey'</span><span class="p">,</span>
+     <span class="s1">'grainsize'</span><span class="p">:</span> <span class="s1">'vf-f'</span><span class="p">,</span>
+     <span class="s1">'lithology'</span><span class="p">:</span> <span class="s1">'sand'</span><span class="p">}</span>
+<span class="n">rock</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="n">rock</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>lithology</strong></td><td>sand</td></tr></table></div></div></div>
+</div>
+<p>The Rock has a colour:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rock</span><span class="p">[</span><span class="s1">'colour'</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'grey'
+</pre></div>
+</div>
+</div>
+</div>
+<p>And it has a summary, which is generated from its attributes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rock</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'Grey, vf-f, sand'
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can format the summary if we wish:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rock</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">"My rock: </span><span class="si">{lithology}</span><span class="s2"> (</span><span class="si">{colour}</span><span class="s2">, {grainsize!u})"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'My rock: sand (grey, VF-F)'
+</pre></div>
+</div>
+</div>
+</div>
+<p>The formatting supports the usual <code class="docutils literal notranslate"><span class="pre">s</span></code>, <code class="docutils literal notranslate"><span class="pre">r</span></code>, and <code class="docutils literal notranslate"><span class="pre">a</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r</span></code>: <code class="docutils literal notranslate"><span class="pre">repr</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code>: <code class="docutils literal notranslate"><span class="pre">ascii</span></code></p></li>
+</ul>
+<p>Also some string functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">u</span></code>: <code class="docutils literal notranslate"><span class="pre">str.upper</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">l</span></code>: <code class="docutils literal notranslate"><span class="pre">str.lower</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">c</span></code>: <code class="docutils literal notranslate"><span class="pre">str.capitalize</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t</span></code>: <code class="docutils literal notranslate"><span class="pre">str.title</span></code></p></li>
+</ul>
+<p>And some numerical ones, for arrays of numbers:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">+</span></code> or <code class="docutils literal notranslate"><span class="pre">∑</span></code>: <code class="docutils literal notranslate"><span class="pre">np.sum</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">m</span></code> or <code class="docutils literal notranslate"><span class="pre">µ</span></code>: <code class="docutils literal notranslate"><span class="pre">np.mean</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v</span></code>: <code class="docutils literal notranslate"><span class="pre">np.var</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">d</span></code>: <code class="docutils literal notranslate"><span class="pre">np.std</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: <code class="docutils literal notranslate"><span class="pre">np.product</span></code></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'colour'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Grey'</span><span class="p">,</span> <span class="s1">'Brown'</span><span class="p">],</span>
+     <span class="s1">'bogosity'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.51</span><span class="p">,</span> <span class="mf">0.66</span><span class="p">],</span>
+     <span class="s1">'porosity'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2003</span><span class="p">,</span> <span class="mf">0.1998</span><span class="p">,</span> <span class="mf">0.2112</span><span class="p">,</span> <span class="mf">0.2013</span><span class="p">,</span> <span class="mf">0.1990</span><span class="p">],</span>
+     <span class="s1">'grainsize'</span><span class="p">:</span> <span class="s1">'VF-F'</span><span class="p">,</span>
+     <span class="s1">'lithology'</span><span class="p">:</span> <span class="s1">'Sand'</span><span class="p">,</span>
+     <span class="p">}</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># This is not working at the moment.</span>
+<span class="c1">#fmt  = 'The {colour[0]!u} {lithology!u} has a total of {bogosity!∑:.2f} bogons'</span>
+<span class="c1">#fmt += 'and a mean porosity of {porosity!µ:2.0%}.'</span>
+
+<span class="n">fmt</span>  <span class="o">=</span> <span class="s1">'The {lithology!u} is {colour[0]!u}.'</span>
+
+<span class="n">X</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'The SAND is GREY.'
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'{"colour": ["Grey", "Brown"], "bogosity": [0.45, 0.51, 0.66], "porosity": [0.2003, 0.1998, 0.2112, 0.2013, 0.199], "grainsize": "VF-F", "lithology": "Sand"}'
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can compare rocks with the usual <code class="docutils literal notranslate"><span class="pre">==</span></code> operator:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rock2</span> <span class="o">=</span> <span class="n">Component</span><span class="p">({</span><span class="s1">'grainsize'</span><span class="p">:</span> <span class="s1">'VF-F'</span><span class="p">,</span>
+                   <span class="s1">'colour'</span><span class="p">:</span> <span class="s1">'Grey'</span><span class="p">,</span>
+                   <span class="s1">'lithology'</span><span class="p">:</span> <span class="s1">'Sand'</span><span class="p">})</span>
+<span class="n">rock</span> <span class="o">==</span> <span class="n">rock2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rock</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>lithology</strong></td><td>sand</td></tr></table></div></div></div>
+</div>
+<p>In order to create a Component object from text, we need a lexicon to compare the text against. The lexicon describes the language we want to extract, and what it means.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rock3</span> <span class="o">=</span> <span class="n">Component</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="s1">'Grey fine sandstone.'</span><span class="p">,</span> <span class="n">lexicon</span><span class="p">)</span>
+<span class="n">rock3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>grainsize</strong></td><td>fine</td></tr><tr><td><strong>colour</strong></td><td>grey</td></tr></table></div></div></div>
+</div>
+<p>Components support double-star-unpacking:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="s2">"My rock: </span><span class="si">{lithology}</span><span class="s2"> (</span><span class="si">{colour}</span><span class="s2">, </span><span class="si">{grainsize}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">rock3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'My rock: sandstone (grey, fine)'
+</pre></div>
+</div>
+</div>
+</div>
+<hr/></section>
+<section id="position">
+<h2>Position<a class="headerlink" href="#position" title="Permalink to this headline">#</a></h2>
+<p>Positions define points in the earth, like a top, but with uncertainty. You can define:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">upper</span></code> — the highest possible location</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">middle</span></code> — the most likely location</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lower</span></code> — the lowest possible location</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">units</span></code> — the units of measurement</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> — the <em>x</em> and <em>y</em> location (these don’t have uncertainty, sorry)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">meta</span></code> — a Python dictionary containing anything you want</p></li>
+</ul>
+<p>Positions don’t have a ‘way up’.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Position</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Position</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Used to represent a position: a top or base.
+
+    Not sure whether to go with upper-middle-lower or z_max, z_mid, z_min.
+    Sticking to upper and lower, because ordering in Intervals is already
+    based on 'above' and 'below'.
+    
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'upper'</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
+          <span class="s1">'middle'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+          <span class="s1">'lower'</span><span class="p">:</span> <span class="mi">110</span><span class="p">,</span>
+          <span class="s1">'meta'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'kind'</span><span class="p">:</span> <span class="s1">'erosive'</span><span class="p">,</span> <span class="s1">'source'</span><span class="p">:</span> <span class="s1">'DOE'</span><span class="p">}</span>
+          <span class="p">}</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">Position</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+<span class="n">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td><strong>upper</strong></td><td>95.0</td></tr><tr><td><strong>middle</strong></td><td>100.0</td></tr><tr><td><strong>lower</strong></td><td>110.0</td></tr></table></div></div></div>
+</div>
+<p>Even if you don’t give a <code class="docutils literal notranslate"><span class="pre">middle</span></code>, you can always get <code class="docutils literal notranslate"><span class="pre">z</span></code>: the central, most likely position:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'upper'</span><span class="p">:</span> <span class="mi">75</span><span class="p">,</span> <span class="s1">'lower'</span><span class="p">:</span> <span class="mi">85</span><span class="p">}</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Position</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+<span class="n">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td><strong>upper</strong></td><td>75.0</td></tr><tr><td><strong>middle</strong></td><td></td></tr><tr><td><strong>lower</strong></td><td>85.0</td></tr></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">z</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>80.0
+</pre></div>
+</div>
+</div>
+</div>
+<hr/></section>
+<section id="interval">
+<h2>Interval<a class="headerlink" href="#interval" title="Permalink to this headline">#</a></h2>
+<p>Intervals are where it gets interesting. An interval can have:</p>
+<ul class="simple">
+<li><p>a top</p></li>
+<li><p>a base</p></li>
+<li><p>a description (in natural language)</p></li>
+<li><p>a list of <code class="docutils literal notranslate"><span class="pre">Component</span></code>s</p></li>
+</ul>
+<p>Intervals don’t have a ‘way up’, it’s implied by the order of <code class="docutils literal notranslate"><span class="pre">top</span></code> and <code class="docutils literal notranslate"><span class="pre">base</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Interval</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Interval</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Used to represent a lithologic or stratigraphic interval, or single point,
+    such as a sample location.
+
+    Initialize with a top (and optional base) and a description and/or
+    an ordered list of components.
+
+    Args:
+        top (float): Required top depth. Required.
+        base (float): Base depth. Optional.
+        description (str): Textual description.
+        lexicon (dict): A lexicon. See documentation. Optional unless you only
+            provide descriptions, because it's needed to extract components.
+        max_component (int): The number of components to extract. Default 1.
+        abbreviations (bool): Whether to parse for abbreviations.
+
+    TODO:
+        Seems like I should be able to instantiate like this:
+
+            ``Interval({'top': 0, 'components':[Component({'age': 'Neogene'})``s
+
+        I can get around it for now like this:
+
+            ``Interval(**{'top': 0, 'components':[Component({'age': 'Neogene'})``
+
+        Question: should Interval itself cope with only being handed 'top' and
+        either fill in down to the next or optionally create a point?
+    
+</pre></div>
+</div>
+</div>
+</div>
+<p>I might make an <code class="docutils literal notranslate"><span class="pre">Interval</span></code> explicitly from a Component…</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Interval</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">rock</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>10.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>lithology</strong></td><td>sand</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>10.00 m of grey, vf-f, sand</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>20.0</td></tr></table></div></div></div>
+</div>
+<p>… or I might pass a description and a <code class="docutils literal notranslate"><span class="pre">lexicon</span></code> and Striplog will parse the description and attempt to extract structured <code class="docutils literal notranslate"><span class="pre">Component</span></code> objects from it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Interval</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="s2">"Grey sandstone with shale flakes."</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">=</span><span class="n">lexicon</span><span class="p">)</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>"Interval({'top': Position({'middle': 20.0, 'units': 'm'}), 'base': Position({'middle': 40.0, 'units': 'm'}), 'description': 'Grey sandstone with shale flakes.', 'data': {}, 'components': [Component({'lithology': 'sandstone', 'colour': 'grey'})]})"
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice I only got one <code class="docutils literal notranslate"><span class="pre">Component</span></code>, even though the description contains a subordinate lithology. This is the default behaviour, we have to ask for more components:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interval</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="s2">"Grey sandstone with black shale flakes."</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">=</span><span class="n">lexicon</span><span class="p">,</span> <span class="n">max_component</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{'top': Position({'middle': 20.0, 'units': 'm'}), 'base': Position({'middle': 40.0, 'units': 'm'}), 'description': 'Grey sandstone with black shale flakes.', 'data': {}, 'components': [Component({'lithology': 'sandstone', 'colour': 'grey'}), Component({'lithology': 'shale', 'amount': 'flakes', 'colour': 'black'})]}
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Interval</span></code>s have a <code class="docutils literal notranslate"><span class="pre">primary</span></code> attribute, which holds the first component, no matter how many components there are.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interval</span><span class="o">.</span><span class="n">primary</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>colour</strong></td><td>grey</td></tr></table></div></div></div>
+</div>
+<p>Ask for the summary to see the thickness and a <code class="docutils literal notranslate"><span class="pre">Rock</span></code> summary of the primary component. Note that the format code only applies to the <code class="docutils literal notranslate"><span class="pre">Rock</span></code> part of the summary.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interval</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">"</span><span class="si">{colour}</span><span class="s2"> </span><span class="si">{lithology}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'20.00 m of grey sandstone with black shale'
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can change an interval’s properties:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interval</span><span class="o">.</span><span class="n">top</span> <span class="o">=</span> <span class="mi">18</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interval</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>18.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>colour</strong></td><td>grey</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>22.00 m of sandstone, grey with shale, flakes, black</td></tr><tr><td><strong>description</strong></td><td>Grey sandstone with black shale flakes.</td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>40.0</td></tr></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interval</span><span class="o">.</span><span class="n">top</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td><strong>upper</strong></td><td>18.0</td></tr><tr><td><strong>middle</strong></td><td>18.0</td></tr><tr><td><strong>lower</strong></td><td>18.0</td></tr></table></div></div></div>
+</div>
+<hr/>
+</section>
+<section id="comparing-and-combining-intervals">
+<h2>Comparing and combining intervals<a class="headerlink" href="#comparing-and-combining-intervals" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Depth ordered</span>
+<span class="n">i1</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">62.5</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s1">'lithology'</span><span class="p">:</span> <span class="s1">'limestone'</span><span class="p">})])</span>
+<span class="n">i2</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">62</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">63</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s1">'lithology'</span><span class="p">:</span> <span class="s1">'sandstone'</span><span class="p">})])</span>
+<span class="n">i3</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">62.5</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">63.5</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s1">'lithology'</span><span class="p">:</span> <span class="s1">'siltstone'</span><span class="p">})])</span>
+<span class="n">i4</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">63</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s1">'lithology'</span><span class="p">:</span> <span class="s1">'shale'</span><span class="p">})])</span>
+<span class="n">i5</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">63.1</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">63.4</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s1">'lithology'</span><span class="p">:</span> <span class="s1">'dolomite'</span><span class="p">})])</span>
+
+<span class="c1"># Elevation ordered</span>
+<span class="n">i8</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s1">'lithology'</span><span class="p">:</span> <span class="s1">'sandstone'</span><span class="p">})])</span>
+<span class="n">i7</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s1">'lithology'</span><span class="p">:</span> <span class="s1">'limestone'</span><span class="p">})])</span>
+<span class="n">i6</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">Component</span><span class="p">({</span><span class="s1">'lithology'</span><span class="p">:</span> <span class="s1">'siltstone'</span><span class="p">})])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">i2</span><span class="o">.</span><span class="n">order</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'depth'
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Technical aside:</strong> The <code class="docutils literal notranslate"><span class="pre">Interval</span></code> class is a <code class="docutils literal notranslate"><span class="pre">functools.total_ordering</span></code>, so providing <code class="docutils literal notranslate"><span class="pre">__eq__</span></code> and one other comparison (such as <code class="docutils literal notranslate"><span class="pre">__lt__</span></code>) in the class definition means that instances of the class have implicit order. So you can use <code class="docutils literal notranslate"><span class="pre">sorted</span></code> on a Striplog, for example.</p>
+<p>It wasn’t clear to me whether this should compare tops (say), so that ‘&gt;’ might mean ‘above’, or if it should be keyed on thickness. I chose the former, and implemented other comparisons instead.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">i3</span> <span class="o">==</span> <span class="n">i2</span><span class="p">)</span>  <span class="c1"># False, they don't have the same top</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">i1</span> <span class="o">&gt;</span> <span class="n">i4</span><span class="p">)</span>   <span class="c1"># True, i1 is above i4</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">,</span> <span class="n">i5</span><span class="p">)</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>  <span class="c1"># 0.3 m of dolomite</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+True
+0.30 m of dolomite
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">i2</span> <span class="o">&gt;</span> <span class="n">i4</span> <span class="o">&gt;</span> <span class="n">i5</span>  <span class="c1"># True</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can combine intervals with the <code class="docutils literal notranslate"><span class="pre">+</span></code> operator. (However, you cannot subtract intervals.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">i2</span> <span class="o">+</span> <span class="n">i3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>62.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>1.50 m of sandstone with siltstone</td></tr><tr><td><strong>description</strong></td><td>50.0% 1.00 m of siltstone with 50.0% 1.00 m of sandstone</td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>63.5</td></tr></table></div></div></div>
+</div>
+<p>Adding a rock adds a (minor) component and adds to the description.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interval</span> <span class="o">+</span> <span class="n">rock3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>18.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>colour</strong></td><td>grey</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>22.00 m of sandstone, grey with shale, flakes, black with sandstone, fine, grey</td></tr><tr><td><strong>description</strong></td><td>Grey sandstone with black shale flakes. with Sandstone, fine, grey</td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>40.0</td></tr></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">i6</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span><span class="n">i7</span><span class="p">),</span> <span class="n">i5</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span><span class="n">i4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>('partially', 'containedby')
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">i1</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i2</span><span class="p">))</span>  <span class="c1"># True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">i2</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i3</span><span class="p">))</span>  <span class="c1"># True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">i2</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i4</span><span class="p">))</span>  <span class="c1"># False</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">i6</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i7</span><span class="p">))</span>  <span class="c1"># True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">i7</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i6</span><span class="p">))</span>  <span class="c1"># True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">i6</span><span class="o">.</span><span class="n">partially_overlaps</span><span class="p">(</span><span class="n">i8</span><span class="p">))</span>  <span class="c1"># False</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">i5</span><span class="o">.</span><span class="n">is_contained_by</span><span class="p">(</span><span class="n">i3</span><span class="p">))</span>  <span class="c1"># True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">i5</span><span class="o">.</span><span class="n">is_contained_by</span><span class="p">(</span><span class="n">i4</span><span class="p">))</span>  <span class="c1"># True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">i5</span><span class="o">.</span><span class="n">is_contained_by</span><span class="p">(</span><span class="n">i2</span><span class="p">))</span>  <span class="c1"># False</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+True
+False
+
+True
+True
+False
+
+True
+True
+False
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">i4</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">i5</span><span class="p">)</span>
+<span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="mi">65</span>
+<span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(3 Intervals, start=63.0, stop=65.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">i1</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">i2</span><span class="p">,</span> <span class="n">blend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>62.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>0.50 m of sandstone</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>62.5</td></tr></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">i1</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">i2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>62.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>limestone</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>0.50 m of limestone with sandstone</td></tr><tr><td><strong>description</strong></td><td>60.0% 1.50 m of limestone with 40.0% 1.00 m of sandstone</td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>62.5</td></tr></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">i1</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">i3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>61.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>limestone</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>2.50 m of limestone with siltstone</td></tr><tr><td><strong>description</strong></td><td>60.0% 1.50 m of limestone with 40.0% 1.00 m of siltstone</td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>63.5</td></tr></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">i3</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">i5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Interval({'top': Position({'middle': 62.5, 'units': 'm'}), 'base': Position({'middle': 63.1, 'units': 'm'}), 'description': '', 'data': {}, 'components': [Component({'lithology': 'siltstone'})]}),
+ Interval({'top': Position({'middle': 63.4, 'units': 'm'}), 'base': Position({'middle': 63.5, 'units': 'm'}), 'description': '', 'data': {}, 'components': [Component({'lithology': 'siltstone'})]}))
+</pre></div>
+</div>
+</div>
+</div>
+<hr/>
+<p style="color:gray">©2015 Agile Geoscience. Licensed CC-BY. <a href="https://github.com/agile-geoscience/striplog">striplog.py</a></p></section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="03_Display_objects.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Display objects</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="01_Basics.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Striplog basics</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, The Striplog Authors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Basic objects</a><ul>
+<li><a class="reference internal" href="#lexicon">Lexicon</a></li>
+<li><a class="reference internal" href="#component">Component</a></li>
+<li><a class="reference internal" href="#position">Position</a></li>
+<li><a class="reference internal" href="#interval">Interval</a></li>
+<li><a class="reference internal" href="#comparing-and-combining-intervals">Comparing and combining intervals</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    </body>
+</html>

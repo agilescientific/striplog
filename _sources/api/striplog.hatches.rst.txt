@@ -1,0 +1,7 @@
+striplog.hatches module
+=======================
+
+.. automodule:: striplog.hatches
+   :members:
+   :undoc-members:
+   :show-inheritance:

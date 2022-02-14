@@ -1,0 +1,7 @@
+striplog.legend module
+======================
+
+.. automodule:: striplog.legend
+   :members:
+   :undoc-members:
+   :show-inheritance:

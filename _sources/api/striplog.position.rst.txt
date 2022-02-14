@@ -1,0 +1,7 @@
+striplog.position module
+========================
+
+.. automodule:: striplog.position
+   :members:
+   :undoc-members:
+   :show-inheritance:

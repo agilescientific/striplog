@@ -1,0 +1,69 @@
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/asyncio/base_events.py", line 641, in run_until_complete
+    return future.result()
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+s.extract(curve, basis=basis, name='GR')
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mValueError[0m                                Traceback (most recent call last)
+File [0;32m/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/pandas/core/indexes/range.py:385[0m, in [0;36mRangeIndex.get_loc[0;34m(self, key, method, tolerance)[0m
+[1;32m    384[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 385[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_range[49m[38;5;241;43m.[39;49m[43mindex[49m[43m([49m[43mnew_key[49m[43m)[49m
+[1;32m    386[0m [38;5;28;01mexcept[39;00m [38;5;167;01mValueError[39;00m [38;5;28;01mas[39;00m err:
+
+[0;31mValueError[0m: 100 is not in range
+
+The above exception was the direct cause of the following exception:
+
+[0;31mKeyError[0m                                  Traceback (most recent call last)
+Input [0;32mIn [8][0m, in [0;36m<module>[0;34m[0m
+[0;32m----> 1[0m [43ms[49m[38;5;241;43m.[39;49m[43mextract[49m[43m([49m[43mcurve[49m[43m,[49m[43m [49m[43mbasis[49m[38;5;241;43m=[39;49m[43mbasis[49m[43m,[49m[43m [49m[43mname[49m[38;5;241;43m=[39;49m[38;5;124;43m'[39;49m[38;5;124;43mGR[39;49m[38;5;124;43m'[39;49m[43m)[49m
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/striplog/striplog.py:1784[0m, in [0;36mStriplog.extract[0;34m(self, log, basis, name, function)[0m
+[1;32m   1782[0m         intervals[ix][38;5;241m.[39mappend(log[i])
+[1;32m   1783[0m     [38;5;28;01melse[39;00m:
+[0;32m-> 1784[0m         intervals[ix] [38;5;241m=[39m [[43mlog[49m[43m[[49m[43mi[49m[43m][49m]
+[1;32m   1785[0m     previous_ix [38;5;241m=[39m ix
+[1;32m   1787[0m [38;5;66;03m# Set the requested attribute in the primary comp of each interval.[39;00m
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/welly/curve.py:125[0m, in [0;36mCurve.__getitem__[0;34m(self, index)[0m
+[1;32m    121[0m [38;5;124;03m"""[39;00m
+[1;32m    122[0m [38;5;124;03mIndex into pd.DataFrame that holds the curve data.[39;00m
+[1;32m    123[0m [38;5;124;03m"""[39;00m
+[1;32m    124[0m curve [38;5;241m=[39m copy[38;5;241m.[39mdeepcopy([38;5;28mself[39m)
+[0;32m--> 125[0m [38;5;28msetattr[39m(curve, [38;5;124m'[39m[38;5;124mdf[39m[38;5;124m'[39m, [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mdf[49m[43m[[49m[43mindex[49m[43m][49m)
+[1;32m    126[0m [38;5;28;01mreturn[39;00m curve
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/pandas/core/frame.py:3505[0m, in [0;36mDataFrame.__getitem__[0;34m(self, key)[0m
+[1;32m   3503[0m [38;5;28;01mif[39;00m [38;5;28mself[39m[38;5;241m.[39mcolumns[38;5;241m.[39mnlevels [38;5;241m>[39m [38;5;241m1[39m:
+[1;32m   3504[0m     [38;5;28;01mreturn[39;00m [38;5;28mself[39m[38;5;241m.[39m_getitem_multilevel(key)
+[0;32m-> 3505[0m indexer [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mcolumns[49m[38;5;241;43m.[39;49m[43mget_loc[49m[43m([49m[43mkey[49m[43m)[49m
+[1;32m   3506[0m [38;5;28;01mif[39;00m is_integer(indexer):
+[1;32m   3507[0m     indexer [38;5;241m=[39m [indexer]
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/pandas/core/indexes/range.py:387[0m, in [0;36mRangeIndex.get_loc[0;34m(self, key, method, tolerance)[0m
+[1;32m    385[0m         [38;5;28;01mreturn[39;00m [38;5;28mself[39m[38;5;241m.[39m_range[38;5;241m.[39mindex(new_key)
+[1;32m    386[0m     [38;5;28;01mexcept[39;00m [38;5;167;01mValueError[39;00m [38;5;28;01mas[39;00m err:
+[0;32m--> 387[0m         [38;5;28;01mraise[39;00m [38;5;167;01mKeyError[39;00m(key) [38;5;28;01mfrom[39;00m [38;5;21;01merr[39;00m
+[1;32m    388[0m [38;5;28mself[39m[38;5;241m.[39m_check_indexing_error(key)
+[1;32m    389[0m [38;5;28;01mraise[39;00m [38;5;167;01mKeyError[39;00m(key)
+
+[0;31mKeyError[0m: 100
+KeyError: 100
+

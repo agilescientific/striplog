@@ -1,0 +1,7 @@
+striplog.interval module
+========================
+
+.. automodule:: striplog.interval
+   :members:
+   :undoc-members:
+   :show-inheritance:

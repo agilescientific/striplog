@@ -1,0 +1,7 @@
+striplog.component module
+=========================
+
+.. automodule:: striplog.component
+   :members:
+   :undoc-members:
+   :show-inheritance:

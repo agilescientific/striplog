@@ -1,0 +1,713 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Development" href="../development.html" /><link rel="prev" title="striplog.templates module" href="striplog.templates.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
+        <title>striplog.utils module - striplog documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">striplog  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/striplog_logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/00_Read_me_first.html">Read me first!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/01_Basics.html">Striplog basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/02_Basic_objects.html">Basic objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/03_Display_objects.html">Display objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/04_Beyond_basics.html">Striplog expert functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/10_Handling_curve_data.html">Striplog for abstracting curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/10_Handling_curve_data.html#random-curve-data">Random curve data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/10_Handling_curve_data.html#extract-data-from-the-curve-into-the-striplog">Extract data from the curve into the striplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/10_Handling_curve_data.html#extract-and-reduce-data">Extract and reduce data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/11_Parsing_descriptions.html">Parsing a description into components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/12_Moving_sand_proportion.html">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/13_Binary_morphologies.html">Binary morphologies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/14_Merge.html">Striplog merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/15_Markov_chains.html">Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/16_Blocked_logs.html">Blocking curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="striplog.html">striplog package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="striplog.canstrat.html">striplog.canstrat module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.canstrat_codes.html">striplog.canstrat_codes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.component.html">striplog.component module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.defaults.html">striplog.defaults module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.description.html">striplog.description module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.hatches.html">striplog.hatches module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.interval.html">striplog.interval module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.legend.html">striplog.legend module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.lexicon.html">striplog.lexicon module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.logo.html">striplog.logo module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.markov.html">striplog.markov module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.position.html">striplog.position module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.rock.html">striplog.rock module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.striplog.html">striplog.striplog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="striplog.templates.html">striplog.templates module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">striplog.utils module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/striplog/">PyPI releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/agile-geoscience/striplog">Code in GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/agile-geoscience/striplog/issues">Issue tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://code.agilescientific.com/community">Community guidelines</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://code.agilescientific.com">Agile's software</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.agilescientific.com">Agile's website</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="module-striplog.utils">
+<span id="striplog-utils-module"></span><h1>striplog.utils module<a class="headerlink" href="#module-striplog.utils" title="Permalink to this headline">#</a></h1>
+<p>Helper functions for the striplog package.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="striplog.utils.CustomFormatter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">CustomFormatter</span></span><a class="headerlink" href="#striplog.utils.CustomFormatter" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">string.Formatter</span></code></p>
+<p>Extends the Python string formatter to some new functions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="striplog.utils.CustomFormatter.convert_field">
+<span class="sig-name descname"><span class="pre">convert_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.CustomFormatter.convert_field" title="Permalink to this definition">#</a></dt>
+<dd><p>Define some extra field conversion functions.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="striplog.utils.CustomFormatter.get_field">
+<span class="sig-name descname"><span class="pre">get_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.CustomFormatter.get_field" title="Permalink to this definition">#</a></dt>
+<dd><p>Return an underscore if the attribute is absent.
+Not all components have the same attributes.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.add_subplot_axes">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">add_subplot_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axisbg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.add_subplot_axes" title="Permalink to this definition">#</a></dt>
+<dd><p>Facilitates the addition of a small subplot within another plot.
+From: <a class="reference external" href="http://stackoverflow.com/questions/17458580/">http://stackoverflow.com/questions/17458580/</a>
+embedding-small-plots-inside-subplots-in-matplotlib
+License: CC-BY-SA
+:param ax: A matplotlib axis.
+:type ax: axis
+:param rect: A rect specifying [left pos, bot pos, width, height]
+:type rect: list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The sub-axis in the specified position.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>axis</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.are_close">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">are_close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.are_close" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.axis_transform">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">axis_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.axis_transform" title="Permalink to this definition">#</a></dt>
+<dd><p><a class="reference external" href="http://stackoverflow.com/questions/29107800">http://stackoverflow.com/questions/29107800</a></p>
+<dl class="simple">
+<dt>inverse = False<span class="classifier">Axis =&gt; Data</span></dt><dd><p>= True  : Data =&gt; Axis</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.binary_closing">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">binary_closing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.binary_closing" title="Permalink to this definition">#</a></dt>
+<dd><p>1D binary morphology: closing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> – A binary array (e.g. [1,0,0,1,0]).</p></li>
+<li><p><strong>p</strong> – Structuring element length.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.binary_dilation">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">binary_dilation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.binary_dilation" title="Permalink to this definition">#</a></dt>
+<dd><p>1D binary morphology: dilation.</p>
+<dl class="simple">
+<dt>TODO</dt><dd><p>None of these operators work with ‘greyscale’ (i.e. non-binary) data.
+And none of them work with non-boxcar structure elements. They could be
+easily re-written to be much more general. (They are only here to avoid
+dependency on SciPy, which probably is not that big a deal, so could
+just revert to <cite>scipy.morphology</cite>.)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> – A binary array (e.g. [1,0,0,1,0]).</p></li>
+<li><p><strong>p</strong> – Structuring element length.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.binary_erosion">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">binary_erosion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.binary_erosion" title="Permalink to this definition">#</a></dt>
+<dd><p>1D binary morphology: erosion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> – A binary array (e.g. [1,0,0,1,0]).</p></li>
+<li><p><strong>p</strong> – Structuring element length.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.binary_opening">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">binary_opening</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.binary_opening" title="Permalink to this definition">#</a></dt>
+<dd><p>1D binary morphology: opening.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> – A binary array (e.g. [1,0,0,1,0]).</p></li>
+<li><p><strong>p</strong> – Structuring element length.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.dict_repr_html">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">dict_repr_html</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.dict_repr_html" title="Permalink to this definition">#</a></dt>
+<dd><p>Jupyter Notebook magic repr function.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.flatten_list">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">flatten_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.flatten_list" title="Permalink to this definition">#</a></dt>
+<dd><p>Unpacks lists in a list:</p>
+<blockquote>
+<div><p>[1, 2, [3, 4], [5, [6, 7]]]</p>
+</div></blockquote>
+<p>becomes</p>
+<blockquote>
+<div><p>[1, 2, 3, 4, 5, 6, 7]</p>
+</div></blockquote>
+<p><a class="reference external" href="http://stackoverflow.com/a/12472564/3381305">http://stackoverflow.com/a/12472564/3381305</a></p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.geology_from_macrostrat">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">geology_from_macrostrat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.geology_from_macrostrat" title="Permalink to this definition">#</a></dt>
+<dd><p>Request data from MacroStrat within <cite>buffer_size</cite> of a given lng, lat pair.
+We can do this by creating a WKT polygon, which is simply a square with</p>
+<blockquote>
+<div><p>each side a <cite>buffer_size</cite> distance from the given lng, lat.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lng</strong> (<em>float</em>) – longitude in decimal degrees.</p></li>
+<li><p><strong>lat</strong> (<em>float</em>) – latitude in decimal degrees.</p></li>
+<li><p><strong>buffer_size</strong> (<em>float</em>) – distance in decimal degrees to add to lng
+and lat to request geology in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>polygon_request (requests.models.Response)</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.get_liths_from_macrostrat">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">get_liths_from_macrostrat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.get_liths_from_macrostrat" title="Permalink to this definition">#</a></dt>
+<dd><p>Parse a Macrostrat ‘lith’ string into lithologies.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.hex_is_dark">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">hex_is_dark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hexx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.hex_is_dark" title="Permalink to this definition">#</a></dt>
+<dd><p>Function to decide if a hex colour is dark.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hexx</strong> (<em>str</em>) – A hexadecimal colour, starting with ‘#’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The colour’s brightness is less than the given percent.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.hex_to_name">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">hex_to_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hexx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.hex_to_name" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert hex to a color name, using matplotlib’s colour names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hexx</strong> (<em>str</em>) – A hexadecimal colour, starting with ‘#’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The name of the colour, or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.hex_to_rgb">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">hex_to_rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hexx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.hex_to_rgb" title="Permalink to this definition">#</a></dt>
+<dd><p>Utility function to convert hex to (r,g,b) triples.
+<a class="reference external" href="http://ageo.co/1CFxXpO">http://ageo.co/1CFxXpO</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hexx</strong> (<em>str</em>) – A hexadecimal colour, starting with ‘#’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The equivalent RGB triple, in the range 0 to 255.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.hollow_matrix">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">hollow_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.hollow_matrix" title="Permalink to this definition">#</a></dt>
+<dd><p>Return hollow matrix (zeros on diagonal).</p>
+<dl class="simple">
+<dt>Args</dt><dd><p>M (ndarray): a ‘square’ ndarray.</p>
+</dd>
+<dt>Returns</dt><dd><p>ndarray. The same array with zeros on the diagonal.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.identity">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">identity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.identity" title="Permalink to this definition">#</a></dt>
+<dd><p>Null function. Used for default in functions that can apply a user-
+supplied function to data before returning.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.inspect_petrel">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">inspect_petrel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.inspect_petrel" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.list_and_add">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">list_and_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.list_and_add" title="Permalink to this definition">#</a></dt>
+<dd><p>Coerce to lists and concatenate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – A thing.</p></li>
+<li><p><strong>b</strong> – A thing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List. All the things.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.loglike_from_image">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">loglike_from_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.loglike_from_image" title="Permalink to this definition">#</a></dt>
+<dd><p>Get a log-like stream of RGB values from an image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The filename of a PNG image.</p></li>
+<li><p><strong>offset</strong> (<em>Number</em>) – If &lt; 1, interpreted as proportion of way across
+the image. If &gt; 1, interpreted as pixels from left.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A 2d array (a column of RGB triples) at the specified
+offset.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.name_to_hex">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">name_to_hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.name_to_hex" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert a color name to hex, using matplotlib’s colour names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of a colour, e.g. ‘red’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The hex code for the colour.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.null">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.null" title="Permalink to this definition">#</a></dt>
+<dd><p>Null function. Used for default in functions that can apply a user-
+supplied function to data before returning.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.null_default">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">null_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.null_default" title="Permalink to this definition">#</a></dt>
+<dd><p>Null function. Used for default in functions that can apply a user-
+supplied function to data before returning.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.observations">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_of_seqs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_self</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.observations" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute observation matrix.</p>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="striplog.utils.partialmethod">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">partialmethod</span></span><a class="headerlink" href="#striplog.utils.partialmethod" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">functools.partial</span></code></p>
+<p>Extends partial to work on class methods.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.read_petrel">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">read_petrel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.read_petrel" title="Permalink to this definition">#</a></dt>
+<dd><p>Read a Petrel well tops ASCII export file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the ASCII file.</p></li>
+<li><p><strong>function</strong> (<em>function</em><em> or </em><em>dict</em>) – A function to apply to every field,
+or a mapping of field name to function. The result of the
+function will be used as the value for that field.</p></li>
+<li><p><strong>remap</strong> (<em>dict</em>) – A mapping of field name to new field name. The
+field name will be replaced.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A mapping of field names to lists of data. You can give this</dt><dd><p>straight to <cite>pandas</cite>.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.rgb_is_dark">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">rgb_is_dark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.rgb_is_dark" title="Permalink to this definition">#</a></dt>
+<dd><p>Helpful wrapper for hex_is_dark.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.rgb_to_hex">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">rgb_to_hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.rgb_to_hex" title="Permalink to this definition">#</a></dt>
+<dd><p>Utility function to convert (r,g,b) triples to hex.
+<a class="reference external" href="http://ageo.co/1CFxXpO">http://ageo.co/1CFxXpO</a>
+:param rgb: A sequence of RGB values in the</p>
+<blockquote>
+<div><p>range 0-255 or 0-1.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The hex code for the colour.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.skip">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">skip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.skip" title="Permalink to this definition">#</a></dt>
+<dd><p>Always returns None.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.text_colour_for_hex">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">text_colour_for_hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hexx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dark</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#000000'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#ffffff'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.text_colour_for_hex" title="Permalink to this definition">#</a></dt>
+<dd><p>Function to decide what colour to use for a given hex colour.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hexx</strong> (<em>str</em>) – A hexadecimal colour, starting with ‘#’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The colour’s brightness is less than the given percent.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="striplog.utils.tops_from_loglike">
+<span class="sig-prename descclassname"><span class="pre">striplog.utils.</span></span><span class="sig-name descname"><span class="pre">tops_from_loglike</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.utils.tops_from_loglike" title="Permalink to this definition">#</a></dt>
+<dd><p>Take a log-like stream of numbers or strings, and return two arrays:
+one of the tops (changes), and one of the values from the stream.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loglike</strong> (<em>array-like</em>) – The input stream of loglike data.</p></li>
+<li><p><strong>offset</strong> (<em>int</em>) – Offset (down) from top at which to get lithology,
+to be sure of getting ‘clean’ pixels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Two arrays, tops and values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../development.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Development</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="striplog.templates.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">striplog.templates module</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, The Striplog Authors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    </body>
+</html>

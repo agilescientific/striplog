@@ -1,0 +1,7 @@
+striplog.canstrat module
+========================
+
+.. automodule:: striplog.canstrat
+   :members:
+   :undoc-members:
+   :show-inheritance:

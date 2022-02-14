@@ -1,0 +1,7 @@
+striplog.markov module
+======================
+
+.. automodule:: striplog.markov
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+striplog.templates module
+=========================
+
+.. automodule:: striplog.templates
+   :members:
+   :undoc-members:
+   :show-inheritance:

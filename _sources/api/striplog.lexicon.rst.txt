@@ -1,0 +1,7 @@
+striplog.lexicon module
+=======================
+
+.. automodule:: striplog.lexicon
+   :members:
+   :undoc-members:
+   :show-inheritance:

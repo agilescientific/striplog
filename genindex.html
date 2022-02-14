@@ -1,0 +1,1573 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/><title>Index - striplog documentation</title>
+<link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">striplog  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/striplog_logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/00_Read_me_first.html">Read me first!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/01_Basics.html">Striplog basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/02_Basic_objects.html">Basic objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/03_Display_objects.html">Display objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/04_Beyond_basics.html">Striplog expert functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/10_Handling_curve_data.html">Striplog for abstracting curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/10_Handling_curve_data.html#random-curve-data">Random curve data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/10_Handling_curve_data.html#extract-data-from-the-curve-into-the-striplog">Extract data from the curve into the striplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/10_Handling_curve_data.html#extract-and-reduce-data">Extract and reduce data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/11_Parsing_descriptions.html">Parsing a description into components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/12_Moving_sand_proportion.html">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/13_Binary_morphologies.html">Binary morphologies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/14_Merge.html">Striplog merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/15_Markov_chains.html">Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/16_Blocked_logs.html">Blocking curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/striplog.html">striplog package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.canstrat.html">striplog.canstrat module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.canstrat_codes.html">striplog.canstrat_codes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.component.html">striplog.component module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.defaults.html">striplog.defaults module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.description.html">striplog.description module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.hatches.html">striplog.hatches module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.interval.html">striplog.interval module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.legend.html">striplog.legend module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.lexicon.html">striplog.lexicon module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.logo.html">striplog.logo module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.markov.html">striplog.markov module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.position.html">striplog.position module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.rock.html">striplog.rock module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.striplog.html">striplog.striplog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.templates.html">striplog.templates module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.utils.html">striplog.utils module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/striplog/">PyPI releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/agile-geoscience/striplog">Code in GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/agile-geoscience/striplog/issues">Issue tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://code.agilescientific.com/community">Community guidelines</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://code.agilescientific.com">Agile's software</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.agilescientific.com">Agile's website</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+<section class="genindex-section">
+  <h1 id="index">Index</h1>
+  <div class="genindex-jumpbox"><a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#J"><strong>J</strong></a> | <a href="#K"><strong>K</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#Q"><strong>Q</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#V"><strong>V</strong></a> | <a href="#Z"><strong>Z</strong></a></div>
+</section>
+<section id="A" class="genindex-section">
+  <h2>A</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.utils.html#striplog.utils.add_subplot_axes">add_subplot_axes() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.anneal">anneal() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.anneal">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.append">append() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.append">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.utils.html#striplog.utils.are_close">are_close() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.markov.html#striplog.markov.Markov_chain.as_graph">as_graph() (striplog.markov.Markov_chain method)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Markov_chain.as_graph">(striplog.Markov_chain method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.axis_transform">axis_transform() (in module striplog.utils)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="B" class="genindex-section">
+  <h2>B</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Striplog.bar">bar() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.bar">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.binary_closing">binary_closing() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.utils.html#striplog.utils.binary_dilation">binary_dilation() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.utils.html#striplog.utils.binary_erosion">binary_erosion() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.binary_morphology">binary_morphology() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.binary_morphology">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.utils.html#striplog.utils.binary_opening">binary_opening() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.hatches.html#striplog.hatches.Bricks">Bricks (class in striplog.hatches)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Legend.builtin">builtin() (striplog.Legend class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.builtin">(striplog.legend.Legend class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Legend.builtin_timescale">builtin_timescale() (striplog.Legend class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.builtin_timescale">(striplog.legend.Legend class method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="C" class="genindex-section">
+  <h2>C</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Lexicon.categories">categories (striplog.Lexicon property)</a>
+
+        <ul>
+          <li><a href="api/striplog.lexicon.html#striplog.lexicon.Lexicon.categories">(striplog.lexicon.Lexicon property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.markov.html#striplog.markov.Markov_chain.chi_squared">chi_squared() (striplog.markov.Markov_chain method)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Markov_chain.chi_squared">(striplog.Markov_chain method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Decor.colour">colour (striplog.Decor property)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Decor.colour">(striplog.legend.Decor property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Component">Component (class in striplog)</a>
+
+        <ul>
+          <li><a href="api/striplog.component.html#striplog.component.Component">(class in striplog.component)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.component.html#striplog.component.ComponentError">ComponentError</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.components">components (striplog.Striplog property)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.components">(striplog.striplog.Striplog property)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.utils.html#striplog.utils.CustomFormatter.convert_field">convert_field() (striplog.utils.CustomFormatter method)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Interval.copy">copy() (striplog.Interval method)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.copy">(striplog.interval.Interval method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Striplog.copy">(striplog.Striplog method)</a>
+</li>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.copy">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.crop">crop() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.crop">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.hatches.html#striplog.hatches.Crosses">Crosses (class in striplog.hatches)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.cum">cum (striplog.Striplog property)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.cum">(striplog.striplog.Striplog property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.CustomFormatter">CustomFormatter (class in striplog.utils)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="D" class="genindex-section">
+  <h2>D</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.hatches.html#striplog.hatches.Dashes">Dashes (class in striplog.hatches)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Decor">Decor (class in striplog)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Decor">(class in striplog.legend)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Legend.default">default() (striplog.Legend method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.default">(striplog.legend.Legend method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Lexicon.default">(striplog.Lexicon class method)</a>
+</li>
+          <li><a href="api/striplog.lexicon.html#striplog.lexicon.Lexicon.default">(striplog.lexicon.Lexicon class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Legend.default_timescale">default_timescale() (striplog.Legend method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.default_timescale">(striplog.legend.Legend method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.markov.html#striplog.markov.Markov_chain.degrees_of_freedom">degrees_of_freedom (striplog.markov.Markov_chain property)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Markov_chain.degrees_of_freedom">(striplog.Markov_chain property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.depth">depth() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.depth">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.description.html#striplog.description.Description">Description (class in striplog.description)</a>
+</li>
+        <li><a href="api/striplog.description.html#striplog.description.DescriptionError">DescriptionError</a>
+</li>
+        <li><a href="api/striplog.utils.html#striplog.utils.dict_repr_html">dict_repr_html() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Interval.difference">difference() (striplog.Interval method)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.difference">(striplog.interval.Interval method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="E" class="genindex-section">
+  <h2>E</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.hatches.html#striplog.hatches.Ells">Ells (class in striplog.hatches)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Lexicon.expand_abbreviations">expand_abbreviations() (striplog.Lexicon method)</a>
+
+        <ul>
+          <li><a href="api/striplog.lexicon.html#striplog.lexicon.Lexicon.expand_abbreviations">(striplog.lexicon.Lexicon method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.markov.html#striplog.markov.Markov_chain.expected_freqs">expected_freqs (striplog.markov.Markov_chain property)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Markov_chain.expected_freqs">(striplog.Markov_chain property)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Striplog.extend">extend() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.extend">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.extract">extract() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.extract">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="F" class="genindex-section">
+  <h2>F</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Striplog.fill">fill() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.fill">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.find">find() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.find">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.find_gaps">find_gaps() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.find_gaps">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.find_overlaps">find_overlaps() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.find_overlaps">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Lexicon.find_synonym">find_synonym() (striplog.Lexicon method)</a>
+
+        <ul>
+          <li><a href="api/striplog.lexicon.html#striplog.lexicon.Lexicon.find_synonym">(striplog.lexicon.Lexicon method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Lexicon.find_word_groups">find_word_groups() (striplog.Lexicon method)</a>
+
+        <ul>
+          <li><a href="api/striplog.lexicon.html#striplog.lexicon.Lexicon.find_word_groups">(striplog.lexicon.Lexicon method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.flatten_list">flatten_list() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.from_canstrat">from_canstrat() (striplog.Striplog class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.from_canstrat">(striplog.striplog.Striplog class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Legend.from_csv">from_csv() (striplog.Legend class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.from_csv">(striplog.legend.Legend class method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Striplog.from_csv">(striplog.Striplog class method)</a>
+</li>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.from_csv">(striplog.striplog.Striplog class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.from_descriptions">from_descriptions() (striplog.Striplog class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.from_descriptions">(striplog.striplog.Striplog class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.from_dict">from_dict() (striplog.Striplog class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.from_dict">(striplog.striplog.Striplog class method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Legend.from_image">from_image() (striplog.Legend class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.from_image">(striplog.legend.Legend class method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Striplog.from_image">(striplog.Striplog class method)</a>
+</li>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.from_image">(striplog.striplog.Striplog class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.from_img">from_img() (striplog.Striplog class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.from_img">(striplog.striplog.Striplog class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Lexicon.from_json_file">from_json_file() (striplog.Lexicon class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.lexicon.html#striplog.lexicon.Lexicon.from_json_file">(striplog.lexicon.Lexicon class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.from_las3">from_las3() (striplog.Striplog class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.from_las3">(striplog.striplog.Striplog class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.from_log">from_log() (striplog.Striplog class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.from_log">(striplog.striplog.Striplog class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Component.from_macrostrat">from_macrostrat() (striplog.Component class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.component.html#striplog.component.Component.from_macrostrat">(striplog.component.Component class method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Striplog.from_macrostrat">(striplog.Striplog class method)</a>
+</li>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.from_macrostrat">(striplog.striplog.Striplog class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.from_petrel">from_petrel() (striplog.Striplog class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.from_petrel">(striplog.striplog.Striplog class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.markov.html#striplog.markov.Markov_chain.from_sequence">from_sequence() (striplog.markov.Markov_chain class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Markov_chain.from_sequence">(striplog.Markov_chain class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Legend.from_striplog">from_striplog() (striplog.Legend class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.from_striplog">(striplog.legend.Legend class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Component.from_text">from_text() (striplog.Component class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.component.html#striplog.component.Component.from_text">(striplog.component.Component class method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="G" class="genindex-section">
+  <h2>G</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.markov.html#striplog.markov.Markov_chain.generate_states">generate_states() (striplog.markov.Markov_chain method)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Markov_chain.generate_states">(striplog.Markov_chain method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.geology_from_macrostrat">geology_from_macrostrat() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Legend.get_colour">get_colour() (striplog.Legend method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.get_colour">(striplog.legend.Legend method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Legend.get_component">get_component() (striplog.Legend method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.get_component">(striplog.legend.Legend method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Lexicon.get_component">(striplog.Lexicon method)</a>
+</li>
+          <li><a href="api/striplog.lexicon.html#striplog.lexicon.Lexicon.get_component">(striplog.lexicon.Lexicon method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.get_data">get_data() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.get_data">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Legend.get_decor">get_decor() (striplog.Legend method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.get_decor">(striplog.legend.Legend method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.CustomFormatter.get_field">get_field() (striplog.utils.CustomFormatter method)</a>
+</li>
+        <li><a href="api/striplog.utils.html#striplog.utils.get_liths_from_macrostrat">get_liths_from_macrostrat() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.templates.html#striplog.templates.get_template">get_template() (in module striplog.templates)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Legend.get_width">get_width() (striplog.Legend method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.get_width">(striplog.legend.Legend method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Legend.getattr">getattr() (striplog.Legend method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.getattr">(striplog.legend.Legend method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="H" class="genindex-section">
+  <h2>H</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.utils.html#striplog.utils.hex_is_dark">hex_is_dark() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.utils.html#striplog.utils.hex_to_name">hex_to_name() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.utils.html#striplog.utils.hex_to_rgb">hex_to_rgb() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.hist">hist() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.hist">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Striplog.histogram">histogram() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.histogram">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.hollow_matrix">hollow_matrix() (in module striplog.utils)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="I" class="genindex-section">
+  <h2>I</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.utils.html#striplog.utils.identity">identity() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.insert">insert() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.insert">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.inspect_petrel">inspect_petrel() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Interval.intersect">intersect() (striplog.Interval method)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.intersect">(striplog.interval.Interval method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Striplog.intersect">(striplog.Striplog method)</a>
+</li>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.intersect">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Interval">Interval (class in striplog)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval">(class in striplog.interval)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.interval.html#striplog.interval.IntervalError">IntervalError</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Interval.invert">invert() (striplog.Interval method)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.invert">(striplog.interval.Interval method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Position.invert">(striplog.Position method)</a>
+</li>
+          <li><a href="api/striplog.position.html#striplog.position.Position.invert">(striplog.position.Position method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Striplog.invert">(striplog.Striplog method)</a>
+</li>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.invert">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.hatches.html#striplog.hatches.InvertedVees">InvertedVees (class in striplog.hatches)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.is_binary">is_binary() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.is_binary">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="J" class="genindex-section">
+  <h2>J</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Component.json">json() (striplog.Component method)</a>
+
+        <ul>
+          <li><a href="api/striplog.component.html#striplog.component.Component.json">(striplog.component.Component method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="K" class="genindex-section">
+  <h2>K</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Decor.keys">keys (striplog.Decor property)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Decor.keys">(striplog.legend.Decor property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Component.keys">keys() (striplog.Component method)</a>
+
+        <ul>
+          <li><a href="api/striplog.component.html#striplog.component.Component.keys">(striplog.component.Component method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Interval.kind">kind (striplog.Interval property)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.kind">(striplog.interval.Interval property)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="L" class="genindex-section">
+  <h2>L</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Legend">Legend (class in striplog)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend">(class in striplog.legend)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.legend.html#striplog.legend.LegendError">LegendError</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Lexicon">Lexicon (class in striplog)</a>
+
+        <ul>
+          <li><a href="api/striplog.lexicon.html#striplog.lexicon.Lexicon">(class in striplog.lexicon)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.lexicon.html#striplog.lexicon.LexiconError">LexiconError</a>
+</li>
+        <li><a href="api/striplog.utils.html#striplog.utils.list_and_add">list_and_add() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.utils.html#striplog.utils.loglike_from_image">loglike_from_image() (in module striplog.utils)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="M" class="genindex-section">
+  <h2>M</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Markov_chain">Markov_chain (class in striplog)</a>
+
+        <ul>
+          <li><a href="api/striplog.markov.html#striplog.markov.Markov_chain">(class in striplog.markov)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.markov.html#striplog.markov.MarkovError">MarkovError</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.max_field">max_field() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.max_field">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Interval.max_thickness">max_thickness (striplog.Interval property)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.max_thickness">(striplog.interval.Interval property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Legend.max_width">max_width (striplog.Legend property)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.max_width">(striplog.legend.Legend property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.mean">mean (striplog.Striplog property)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.mean">(striplog.striplog.Striplog property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Interval.merge">merge() (striplog.Interval method)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.merge">(striplog.interval.Interval method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Striplog.merge">(striplog.Striplog method)</a>
+</li>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.merge">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.merge_neighbours">merge_neighbours() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.merge_neighbours">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.merge_overlaps">merge_overlaps() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.merge_overlaps">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.position.html#striplog.position.Meta">Meta (class in striplog.position)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Interval.middle">middle (striplog.Interval property)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.middle">(striplog.interval.Interval property)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Interval.min_thickness">min_thickness (striplog.Interval property)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.min_thickness">(striplog.interval.Interval property)</a>
+</li>
+        </ul></li>
+        <li>
+    module
+
+        <ul>
+          <li><a href="api/striplog.html#module-striplog">striplog</a>
+</li>
+          <li><a href="api/striplog.canstrat.html#module-striplog.canstrat">striplog.canstrat</a>
+</li>
+          <li><a href="api/striplog.canstrat_codes.html#module-striplog.canstrat_codes">striplog.canstrat_codes</a>
+</li>
+          <li><a href="api/striplog.component.html#module-striplog.component">striplog.component</a>
+</li>
+          <li><a href="api/striplog.defaults.html#module-striplog.defaults">striplog.defaults</a>
+</li>
+          <li><a href="api/striplog.description.html#module-striplog.description">striplog.description</a>
+</li>
+          <li><a href="api/striplog.hatches.html#module-striplog.hatches">striplog.hatches</a>
+</li>
+          <li><a href="api/striplog.interval.html#module-striplog.interval">striplog.interval</a>
+</li>
+          <li><a href="api/striplog.legend.html#module-striplog.legend">striplog.legend</a>
+</li>
+          <li><a href="api/striplog.lexicon.html#module-striplog.lexicon">striplog.lexicon</a>
+</li>
+          <li><a href="api/striplog.logo.html#module-striplog.logo">striplog.logo</a>
+</li>
+          <li><a href="api/striplog.markov.html#module-striplog.markov">striplog.markov</a>
+</li>
+          <li><a href="api/striplog.position.html#module-striplog.position">striplog.position</a>
+</li>
+          <li><a href="api/striplog.rock.html#module-striplog.rock">striplog.rock</a>
+</li>
+          <li><a href="api/striplog.striplog.html#module-striplog.striplog">striplog.striplog</a>
+</li>
+          <li><a href="api/striplog.templates.html#module-striplog.templates">striplog.templates</a>
+</li>
+          <li><a href="api/striplog.utils.html#module-striplog.utils">striplog.utils</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="N" class="genindex-section">
+  <h2>N</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.utils.html#striplog.utils.name_to_hex">name_to_hex() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.net_to_gross">net_to_gross() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.net_to_gross">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Legend.next">next() (striplog.Legend method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.next">(striplog.legend.Legend method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Striplog.next">(striplog.Striplog method)</a>
+</li>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.next">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.markov.html#striplog.markov.Markov_chain.normalized_difference">normalized_difference (striplog.markov.Markov_chain property)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Markov_chain.normalized_difference">(striplog.Markov_chain property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.null">null() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.utils.html#striplog.utils.null_default">null_default() (in module striplog.utils)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="O" class="genindex-section">
+  <h2>O</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.utils.html#striplog.utils.observations">observations() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.markov.html#striplog.markov.Markov_chain.observed_freqs">observed_freqs (striplog.markov.Markov_chain property)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Markov_chain.observed_freqs">(striplog.Markov_chain property)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Interval.order">order (striplog.Interval property)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.order">(striplog.interval.Interval property)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="P" class="genindex-section">
+  <h2>P</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.canstrat.html#striplog.canstrat.parse_canstrat">parse_canstrat() (in module striplog.canstrat)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Lexicon.parse_description">parse_description() (striplog.Lexicon method)</a>
+
+        <ul>
+          <li><a href="api/striplog.lexicon.html#striplog.lexicon.Lexicon.parse_description">(striplog.lexicon.Lexicon method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.partialmethod">partialmethod (class in striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.logo.html#striplog.logo.plot">plot() (in module striplog.logo)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Decor.plot">(striplog.Decor method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Legend.plot">(striplog.Legend method)</a>
+</li>
+          <li><a href="api/striplog.legend.html#striplog.legend.Decor.plot">(striplog.legend.Decor method)</a>
+</li>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.plot">(striplog.legend.Legend method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Striplog.plot">(striplog.Striplog method)</a>
+</li>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.plot">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.plot_axis">plot_axis() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.plot_axis">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.plot_field">plot_field() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.plot_field">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.markov.html#striplog.markov.Markov_chain.plot_graph">plot_graph() (striplog.markov.Markov_chain method)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Markov_chain.plot_graph">(striplog.Markov_chain method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.markov.html#striplog.markov.Markov_chain.plot_norm_diff">plot_norm_diff() (striplog.markov.Markov_chain method)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Markov_chain.plot_norm_diff">(striplog.Markov_chain method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.plot_points">plot_points() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.plot_points">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.plot_tops">plot_tops() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.plot_tops">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.hatches.html#striplog.hatches.Pluses">Pluses (class in striplog.hatches)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.pop">pop() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.pop">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Position">Position (class in striplog)</a>
+
+        <ul>
+          <li><a href="api/striplog.position.html#striplog.position.Position">(class in striplog.position)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.position.html#striplog.position.PositionError">PositionError</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Interval.primary">primary (striplog.Interval property)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.primary">(striplog.interval.Interval property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.prune">prune() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.prune">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="Q" class="genindex-section">
+  <h2>Q</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Striplog.quality">quality() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.quality">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="R" class="genindex-section">
+  <h2>R</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Decor.random">random() (striplog.Decor class method)</a>
+
+        <ul>
+          <li><a href="api/striplog.html#striplog.Legend.random">(striplog.Legend class method)</a>
+</li>
+          <li><a href="api/striplog.legend.html#striplog.legend.Decor.random">(striplog.legend.Decor class method)</a>
+</li>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.random">(striplog.legend.Legend class method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.read_at">read_at() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.read_at">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.read_petrel">read_petrel() (in module striplog.utils)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.markov.html#striplog.markov.regularize">regularize() (in module striplog.markov)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Interval.relationship">relationship() (striplog.Interval method)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.relationship">(striplog.interval.Interval method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Decor.rgb">rgb (striplog.Decor property)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Decor.rgb">(striplog.legend.Decor property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.rgb_is_dark">rgb_is_dark() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.utils.html#striplog.utils.rgb_to_hex">rgb_to_hex() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.rock.html#striplog.rock.Rock">Rock() (in module striplog.rock)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="S" class="genindex-section">
+  <h2>S</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Striplog.shift">shift() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.shift">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.skip">skip() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.hatches.html#striplog.hatches.SlantBricks">SlantBricks (class in striplog.hatches)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Position.span">span (striplog.Position property)</a>
+
+        <ul>
+          <li><a href="api/striplog.position.html#striplog.position.Position.span">(striplog.position.Position property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Interval.spans">spans() (striplog.Interval method)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.spans">(striplog.interval.Interval method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Interval.split_at">split_at() (striplog.Interval method)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.split_at">(striplog.interval.Interval method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Lexicon.split_description">split_description() (striplog.Lexicon method)</a>
+
+        <ul>
+          <li><a href="api/striplog.lexicon.html#striplog.lexicon.Lexicon.split_description">(striplog.lexicon.Lexicon method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.start">start (striplog.Striplog property)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.start">(striplog.striplog.Striplog property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.stop">stop (striplog.Striplog property)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.stop">(striplog.striplog.Striplog property)</a>
+</li>
+        </ul></li>
+        <li>
+    striplog
+
+        <ul>
+          <li><a href="api/striplog.html#module-striplog">module</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog">Striplog (class in striplog)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog">(class in striplog.striplog)</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.canstrat
+
+        <ul>
+          <li><a href="api/striplog.canstrat.html#module-striplog.canstrat">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.canstrat_codes
+
+        <ul>
+          <li><a href="api/striplog.canstrat_codes.html#module-striplog.canstrat_codes">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.component
+
+        <ul>
+          <li><a href="api/striplog.component.html#module-striplog.component">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.defaults
+
+        <ul>
+          <li><a href="api/striplog.defaults.html#module-striplog.defaults">module</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li>
+    striplog.description
+
+        <ul>
+          <li><a href="api/striplog.description.html#module-striplog.description">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.hatches
+
+        <ul>
+          <li><a href="api/striplog.hatches.html#module-striplog.hatches">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.interval
+
+        <ul>
+          <li><a href="api/striplog.interval.html#module-striplog.interval">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.legend
+
+        <ul>
+          <li><a href="api/striplog.legend.html#module-striplog.legend">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.lexicon
+
+        <ul>
+          <li><a href="api/striplog.lexicon.html#module-striplog.lexicon">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.logo
+
+        <ul>
+          <li><a href="api/striplog.logo.html#module-striplog.logo">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.markov
+
+        <ul>
+          <li><a href="api/striplog.markov.html#module-striplog.markov">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.position
+
+        <ul>
+          <li><a href="api/striplog.position.html#module-striplog.position">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.rock
+
+        <ul>
+          <li><a href="api/striplog.rock.html#module-striplog.rock">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.striplog
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#module-striplog.striplog">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.templates
+
+        <ul>
+          <li><a href="api/striplog.templates.html#module-striplog.templates">module</a>
+</li>
+        </ul></li>
+        <li>
+    striplog.utils
+
+        <ul>
+          <li><a href="api/striplog.utils.html#module-striplog.utils">module</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.striplog.html#striplog.striplog.StriplogError">StriplogError</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Component.summary">summary() (striplog.Component method)</a>
+
+        <ul>
+          <li><a href="api/striplog.component.html#striplog.component.Component.summary">(striplog.component.Component method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Interval.summary">(striplog.Interval method)</a>
+</li>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.summary">(striplog.interval.Interval method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="T" class="genindex-section">
+  <h2>T</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.utils.html#striplog.utils.text_colour_for_hex">text_colour_for_hex() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.thickest">thickest() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.thickest">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Interval.thickness">thickness (striplog.Interval property)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.thickness">(striplog.interval.Interval property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.thinnest">thinnest() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.thinnest">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.hatches.html#striplog.hatches.Ticks">Ticks (class in striplog.hatches)</a>
+</li>
+        <li><a href="api/striplog.html#striplog.Striplog.to_binary_log">to_binary_log() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.to_binary_log">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.to_canstrat">to_canstrat() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.to_canstrat">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Legend.to_csv">to_csv() (striplog.Legend method)</a>
+
+        <ul>
+          <li><a href="api/striplog.legend.html#striplog.legend.Legend.to_csv">(striplog.legend.Legend method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Striplog.to_csv">(striplog.Striplog method)</a>
+</li>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.to_csv">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Striplog.to_flag">to_flag() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.to_flag">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.to_las3">to_las3() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.to_las3">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.to_log">to_log() (striplog.Striplog method)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.to_log">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Striplog.top">top (striplog.Striplog property)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.top">(striplog.striplog.Striplog property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.utils.html#striplog.utils.tops_from_loglike">tops_from_loglike() (in module striplog.utils)</a>
+</li>
+        <li><a href="api/striplog.hatches.html#striplog.hatches.Triangles">Triangles (class in striplog.hatches)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="U" class="genindex-section">
+  <h2>U</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Position.uncertainty">uncertainty (striplog.Position property)</a>
+
+        <ul>
+          <li><a href="api/striplog.position.html#striplog.position.Position.uncertainty">(striplog.position.Position property)</a>
+</li>
+        </ul></li>
+        <li><a href="api/striplog.html#striplog.Interval.union">union() (striplog.Interval method)</a>
+
+        <ul>
+          <li><a href="api/striplog.interval.html#striplog.interval.Interval.union">(striplog.interval.Interval method)</a>
+</li>
+          <li><a href="api/striplog.html#striplog.Striplog.union">(striplog.Striplog method)</a>
+</li>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.union">(striplog.striplog.Striplog method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Striplog.unique">unique (striplog.Striplog property)</a>
+
+        <ul>
+          <li><a href="api/striplog.striplog.html#striplog.striplog.Striplog.unique">(striplog.striplog.Striplog property)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="V" class="genindex-section">
+  <h2>V</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.hatches.html#striplog.hatches.Vees">Vees (class in striplog.hatches)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="Z" class="genindex-section">
+  <h2>Z</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/striplog.html#striplog.Position.z">z (striplog.Position property)</a>
+
+        <ul>
+          <li><a href="api/striplog.position.html#striplog.position.Position.z">(striplog.position.Position property)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, The Striplog Authors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    </body>
+</html>

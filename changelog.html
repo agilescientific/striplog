@@ -1,0 +1,460 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="License" href="license.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
+        <title>Changelog - striplog documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">striplog  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/striplog_logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/00_Read_me_first.html">Read me first!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/01_Basics.html">Striplog basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/02_Basic_objects.html">Basic objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/03_Display_objects.html">Display objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/04_Beyond_basics.html">Striplog expert functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/10_Handling_curve_data.html">Striplog for abstracting curves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/10_Handling_curve_data.html#random-curve-data">Random curve data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/10_Handling_curve_data.html#extract-data-from-the-curve-into-the-striplog">Extract data from the curve into the striplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/10_Handling_curve_data.html#extract-and-reduce-data">Extract and reduce data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/11_Parsing_descriptions.html">Parsing a description into components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/12_Moving_sand_proportion.html">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/13_Binary_morphologies.html">Binary morphologies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/14_Merge.html">Striplog merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/15_Markov_chains.html">Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/16_Blocked_logs.html">Blocking curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/striplog.html">striplog package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.canstrat.html">striplog.canstrat module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.canstrat_codes.html">striplog.canstrat_codes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.component.html">striplog.component module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.defaults.html">striplog.defaults module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.description.html">striplog.description module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.hatches.html">striplog.hatches module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.interval.html">striplog.interval module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.legend.html">striplog.legend module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.lexicon.html">striplog.lexicon module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.logo.html">striplog.logo module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.markov.html">striplog.markov module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.position.html">striplog.position module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.rock.html">striplog.rock module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.striplog.html">striplog.striplog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.templates.html">striplog.templates module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/striplog.utils.html">striplog.utils module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other resources</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Changelog</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/striplog/">PyPI releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/agile-geoscience/striplog">Code in GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/agile-geoscience/striplog/issues">Issue tracker</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://code.agilescientific.com/community">Community guidelines</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://code.agilescientific.com">Agile's software</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.agilescientific.com">Agile's website</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">#</a></h1>
+<section id="coming-february-2022">
+<h2>0.9.0 (coming February 2022)<a class="headerlink" href="#coming-february-2022" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>No longer supporting versions of Python before 3.6 (because I like f-strings).</p></li>
+<li><p>Reorganized and moved <code class="docutils literal notranslate"><span class="pre">the</span> <span class="pre">documentation</span> <span class="pre">&lt;https://code.agilescientific.com/striplog&gt;</span></code>_ to make it a bit easier to follow.</p></li>
+<li><p>You can now pass format string labels to <code class="docutils literal notranslate"><span class="pre">striplog.plot()</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">'{colour}</span> <span class="pre">{lithology}'</span></code>. These are passed to the Component summary method.</p></li>
+<li><p>You can plot Striplog’s logo with <code class="docutils literal notranslate"><span class="pre">striplog.logo.plot()</span></code> (requires Snare Drum font).</p></li>
+</ul>
+</section>
+<section id="january-2021">
+<h2>0.8.8 (January 2021)<a class="headerlink" href="#january-2021" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">Striplog.from_dict()</span></code> to create a striplog from a dictionary with items like <code class="docutils literal notranslate"><span class="pre">name:</span> <span class="pre">depth</span></code>.</p></li>
+<li><p>When reading a Petrel ‘tops’ file, you can pass a single function to apply to every quantity, not just a mapping of field names to functions. (You might do this to replace all <code class="docutils literal notranslate"><span class="pre">-999.25</span></code> with <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>, for example.) There’s no way to do both at present, but if there’s a need, please file an issue.</p></li>
+<li><p>Updated the default lexicon with some ‘modifiers’ like ‘silty’, ‘sandy’, etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Lexicon._parse_description()</span></code> is now a private static method (it was previously mangled which was a mistake). It can be called without instantiating a class to parse a piece of text. See the notebook, <code class="docutils literal notranslate"><span class="pre">Parsing_a_description.ipynb</span></code>.</p></li>
+<li><p>Fixed a bug causing the default Lexicon to be a shallow copy, which was annoying.</p></li>
+</ul>
+</section>
+<section id="november-2020">
+<h2>0.8.7 (November 2020)<a class="headerlink" href="#november-2020" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Breaking change: <code class="docutils literal notranslate"><span class="pre">Striplog.extract()</span></code> now returns a copy of the striplog instead of changing the striplog in place.</p></li>
+<li><p>Added option to send actual data to <code class="docutils literal notranslate"><span class="pre">Striplog.to_log()</span></code> instead of index from lookup table.</p></li>
+<li><p>Added a tutorial, <code class="docutils literal notranslate"><span class="pre">Blocking_curves_with_striplog.ipynb</span></code>.</p></li>
+</ul>
+</section>
+<section id="october-2020">
+<h2>0.8.6 (October 2020)<a class="headerlink" href="#october-2020" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Multi-step Markov chains now work properly, respecting ‘self-transitions’.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">include_self</span></code> property to the repr of a Markov chain object.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">match_only</span></code> argument to ``Legend.random()``` to allow you to keep only certain properties in the components.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Component.from_text()</span></code> will now use <code class="docutils literal notranslate"><span class="pre">Lexicon.default()</span></code> if you don’t pass one in.</p></li>
+</ul>
+<p>We started adding an experimental new feature; feedback welcome! Added <code class="docutils literal notranslate"><span class="pre">Striplog.from_macrostrat()</span></code> which takes a lat/lon location and returns a striplog in geological time or in depth below the surface at that location.</p>
+</section>
+<section id="may-2020">
+<h2>0.8.5 (May 2020)<a class="headerlink" href="#may-2020" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Fixed sphinx documentation.</p></li>
+<li><p>Documentation now includes all tutorial notebooks.</p></li>
+</ul>
+</section>
+<section id="april-2020">
+<h2>0.8.4 (April 2020)<a class="headerlink" href="#april-2020" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">label</span></code> kwarg to <code class="docutils literal notranslate"><span class="pre">striplog.plot()</span></code>. Give it the name of a field in the <code class="docutils literal notranslate"><span class="pre">primary</span></code> component and it will be added to the plot as text. Experimental feature; might break with some sizes of striplog. Feedback welcome.</p></li>
+<li><p>Fixed a bug in <code class="docutils literal notranslate"><span class="pre">Striplog.hist()</span></code> which produced the wrong colours and labels for the bars.</p></li>
+</ul>
+</section>
+<section id="july-2019">
+<h2>0.8.3 (July 2019)<a class="headerlink" href="#july-2019" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Minor release. Updated tutorials and fixed some bugs.</p></li>
+</ul>
+</section>
+<section id="id1">
+<h2>0.8.2 (July 2019)<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">Striplog.shift()</span></code> to allow you to shift all the tops and bases by some <code class="docutils literal notranslate"><span class="pre">delta</span></code> or by setting a new <code class="docutils literal notranslate"><span class="pre">start</span></code>.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">striplog.markov.Markov_chain()</span></code>. See the <code class="docutils literal notranslate"><span class="pre">Markov_chain.ipynb</span></code> notebook in <code class="docutils literal notranslate"><span class="pre">tutorial</span></code> to see how to use it. This is an experimental module. There might be an elegant way to add the Markov chain as an attribute/methods on <code class="docutils literal notranslate"><span class="pre">Striplog</span></code> objects, but I couldn’t think of it.</p></li>
+<li><p>Fixed a bug in <code class="docutils literal notranslate"><span class="pre">Striplog.hist()</span></code> which produced the wrong colours and labels for the bars.</p></li>
+</ul>
+</section>
+<section id="june-2019">
+<h2>0.8.1 (June 2019)<a class="headerlink" href="#june-2019" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">append</span></code>, <code class="docutils literal notranslate"><span class="pre">extend</span></code> and <code class="docutils literal notranslate"><span class="pre">pop</span></code> methods to <code class="docutils literal notranslate"><span class="pre">Striplog</span></code> objects.</p></li>
+<li><p>Breaking change: Changed the name of <code class="docutils literal notranslate"><span class="pre">Striplog.__insert()</span></code> to <code class="docutils literal notranslate"><span class="pre">Striplog.insert()</span></code> to match <code class="docutils literal notranslate"><span class="pre">append()</span></code>, <code class="docutils literal notranslate"><span class="pre">extend()</span></code> and <code class="docutils literal notranslate"><span class="pre">pop()</span></code>.</p></li>
+<li><p>Added binary morphology filters to <code class="docutils literal notranslate"><span class="pre">Striplog</span></code> object. These offer another way to filter intervals, and thus to simplify a binary striplog (one in which an attribute of the components contains only a single binary ‘flag’). Operations include <code class="docutils literal notranslate"><span class="pre">dilation</span></code>, <code class="docutils literal notranslate"><span class="pre">erosion</span></code>, <code class="docutils literal notranslate"><span class="pre">opening</span></code>, and <code class="docutils literal notranslate"><span class="pre">closing</span></code>.</p></li>
+<li><p>Fixed a bug in <code class="docutils literal notranslate"><span class="pre">plot</span></code>: it assumed the first interval in a striplog was the ‘shallowest’ and the last the deepest. But if intervals can overlap (which they can), then this is not a safe assumption. Now uses <code class="docutils literal notranslate"><span class="pre">Striplog.start</span></code> and <code class="docutils literal notranslate"><span class="pre">Striplog.stop</span></code> to decide.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">mode</span></code> keyword arg to anneal, allowing user to choose whether the gaps in the log are filled in by flooding upwards (that is, extend the interval below the gap upwards), flooding downwards (extend the upper interval), or flooding symmetrically into the middle from both above and below, meeting in the middle. (Note, you can also fill gaps with another component, using the <code class="docutils literal notranslate"><span class="pre">fill()</span></code> method.)</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">merge</span></code> method to the <code class="docutils literal notranslate"><span class="pre">Striplog</span></code>. This allows you to merge overlapping intervals by precedence (rather than by blending the contents of the intervals). For example, you can choose to keep the thickest interval in all overlaps. If intervals have a date, you could keep the latest interval.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">net_to_gross</span></code> method to <code class="docutils literal notranslate"><span class="pre">Striplog</span></code> object. Give it a binary attribute and it will compute the ratio of intervals having that attribute as <code class="docutils literal notranslate"><span class="pre">True</span></code> to the total thickness.</p></li>
+<li><p>Added a couple of notebooks to <code class="docutils literal notranslate"><span class="pre">/tutorial</span></code>.</p></li>
+<li><p>Fixed a bug that allowed lists of intervals used to instantiate striplogs to be mutated.</p></li>
+</ul>
+</section>
+<section id="march-2019">
+<h2>0.8.0 (March 2019)<a class="headerlink" href="#march-2019" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>New point release because of breaking changes.</p></li>
+<li><p>Breaking change: <code class="docutils literal notranslate"><span class="pre">Striplog.prune()</span></code> and <code class="docutils literal notranslate"><span class="pre">Striplog.anneal()</span></code> now return copies, so you can chain them.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Striplog.bar()</span></code> makes a bar chart of the intervals, with optional sorting by thickness or any other key.</p></li>
+<li><p>Breaking change: <code class="docutils literal notranslate"><span class="pre">Striplog.hist()</span></code> (which <code class="docutils literal notranslate"><span class="pre">histogram()</span></code> now calls) now makes a plot as well and returns the bars (or the axis, if you pass one in).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Striplog.merge_neighbours()</span></code> performs a stepwise <code class="docutils literal notranslate"><span class="pre">Interval.union()</span></code> on all pairs of intervals, combining neighbours that have identical components. It is intended to be used after <code class="docutils literal notranslate"><span class="pre">Striplog.anneal()</span></code>.</p></li>
+</ul>
+</section>
+<section id="to-0-7-3">
+<h2>0.7.0 to 0.7.3<a class="headerlink" href="#to-0-7-3" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Improved test coverage.</p></li>
+<li><p>Improved CSV writing.</p></li>
+<li><p>Canstrat legend and ASCII file writing.</p></li>
+<li><p>Striplog quality method.</p></li>
+</ul>
+</section>
+<section id="to-0-6-1">
+<h2>0.6.0 to 0.6.1<a class="headerlink" href="#to-0-6-1" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Introduced <code class="docutils literal notranslate"><span class="pre">Position</span></code> object for expressing depths of intervals.</p></li>
+<li><p>Custom string formatting for using with <code class="docutils literal notranslate"><span class="pre">format()</span></code>.</p></li>
+<li><p>Lots of new built-in legends.</p></li>
+<li><p>Random legends for when you’re in a hurry.</p></li>
+<li><p>Lots more superpowers for intervals, including intersect, merge and union.</p></li>
+<li><p>Hatching in decors.</p></li>
+<li><p>HTML repr for legends and intervals.</p></li>
+</ul>
+</section>
+<section id="to-0-5-6">
+<h2>0.5.0 to 0.5.6<a class="headerlink" href="#to-0-5-6" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Rocks are now Components.</p></li>
+<li><p>Python 3 support.</p></li>
+<li><p>Many bug fixes.</p></li>
+<li><p>Test coverage.</p></li>
+<li><p>Continuous integration.</p></li>
+<li><p>Updated documentation.</p></li>
+<li><p>Histograms (buggy).</p></li>
+<li><p>Plot tests working.</p></li>
+</ul>
+</section>
+<section id="and-earlier">
+<h2>0.4.7 and earlier<a class="headerlink" href="#and-earlier" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>First releases for client.</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="license.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">License</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, The Striplog Authors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Changelog</a><ul>
+<li><a class="reference internal" href="#coming-february-2022">0.9.0 (coming February 2022)</a></li>
+<li><a class="reference internal" href="#january-2021">0.8.8 (January 2021)</a></li>
+<li><a class="reference internal" href="#november-2020">0.8.7 (November 2020)</a></li>
+<li><a class="reference internal" href="#october-2020">0.8.6 (October 2020)</a></li>
+<li><a class="reference internal" href="#may-2020">0.8.5 (May 2020)</a></li>
+<li><a class="reference internal" href="#april-2020">0.8.4 (April 2020)</a></li>
+<li><a class="reference internal" href="#july-2019">0.8.3 (July 2019)</a></li>
+<li><a class="reference internal" href="#id1">0.8.2 (July 2019)</a></li>
+<li><a class="reference internal" href="#june-2019">0.8.1 (June 2019)</a></li>
+<li><a class="reference internal" href="#march-2019">0.8.0 (March 2019)</a></li>
+<li><a class="reference internal" href="#to-0-7-3">0.7.0 to 0.7.3</a></li>
+<li><a class="reference internal" href="#to-0-6-1">0.6.0 to 0.6.1</a></li>
+<li><a class="reference internal" href="#to-0-5-6">0.5.0 to 0.5.6</a></li>
+<li><a class="reference internal" href="#and-earlier">0.4.7 and earlier</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    </body>
+</html>

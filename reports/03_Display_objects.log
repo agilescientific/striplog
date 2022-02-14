@@ -1,0 +1,110 @@
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/asyncio/base_events.py", line 641, in run_until_complete
+    return future.result()
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+hatchy = """colour,width,hatch,component colour,component grainsize,component lithology
+#dddddd,1,+,,,siltstone,
+#dddddd,1,+++,,,greywacke,
+#dddddd,2,x,,,anhydrite,
+#dddddd,2,xxx,,,gypsum,
+#dddddd,3,/,,,missing,
+#dddddd,4,..,,,sandstone,
+#dddddd,5,o,,,conglomerate,
+#dddddd,5,0,,,till,
+#dddddd,6,---,,,mudstone,
+#dddddd,7,,,,limestone,
+"""
+Legend.from_csv(text=hatchy).plot()
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mTypeError[0m                                 Traceback (most recent call last)
+Input [0;32mIn [37][0m, in [0;36m<module>[0;34m[0m
+[1;32m      1[0m hatchy [38;5;241m=[39m [38;5;124m"""[39m[38;5;124mcolour,width,hatch,component colour,component grainsize,component lithology[39m
+[1;32m      2[0m [38;5;124m#dddddd,1,+,,,siltstone,[39m
+[1;32m      3[0m [38;5;124m#dddddd,1,+++,,,greywacke,[39m
+[0;32m   (...)[0m
+[1;32m     11[0m [38;5;124m#dddddd,7,,,,limestone,[39m
+[1;32m     12[0m [38;5;124m"""[39m
+[0;32m---> 13[0m [43mLegend[49m[38;5;241;43m.[39;49m[43mfrom_csv[49m[43m([49m[43mtext[49m[38;5;241;43m=[39;49m[43mhatchy[49m[43m)[49m[38;5;241;43m.[39;49m[43mplot[49m[43m([49m[43m)[49m
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/striplog/legend.py:923[0m, in [0;36mLegend.plot[0;34m(self, fmt, ax)[0m
+[1;32m    921[0m [38;5;28;01mfor[39;00m decor [38;5;129;01min[39;00m [38;5;28mself[39m:
+[1;32m    922[0m     cax [38;5;241m=[39m utils[38;5;241m.[39madd_subplot_axes(ax, [left_pos, bot_pos, width, height])
+[0;32m--> 923[0m     cax [38;5;241m=[39m [43mdecor[49m[38;5;241;43m.[39;49m[43mplot[49m[43m([49m[43max[49m[38;5;241;43m=[39;49m[43mcax[49m[43m)[49m
+[1;32m    924[0m     bot_pos [38;5;241m+[39m[38;5;241m=[39m h_incr
+[1;32m    925[0m ax[38;5;241m.[39maxis([38;5;124m'[39m[38;5;124moff[39m[38;5;124m'[39m)
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/striplog/legend.py:311[0m, in [0;36mDecor.plot[0;34m(self, fmt, fig, ax)[0m
+[1;32m    308[0m [38;5;28;01melse[39;00m:
+[1;32m    309[0m     r [38;5;241m=[39m ax
+[0;32m--> 311[0m rect1 [38;5;241m=[39m [43mpatches[49m[38;5;241;43m.[39;49m[43mRectangle[49m[43m([49m[43m([49m[38;5;241;43m0[39;49m[43m,[49m[43m [49m[38;5;241;43m0[39;49m[43m)[49m[43m,[49m
+[1;32m    312[0m [43m                          [49m[43mu[49m[38;5;241;43m*[39;49m[43mv[49m[43m,[49m[43m [49m[43mu[49m[38;5;241;43m*[39;49m[43mv[49m[43m,[49m
+[1;32m    313[0m [43m                          [49m[43mcolor[49m[38;5;241;43m=[39;49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mcolour[49m[43m,[49m
+[1;32m    314[0m [43m                          [49m[43mlw[49m[38;5;241;43m=[39;49m[38;5;241;43m1[39;49m[43m,[49m
+[1;32m    315[0m [43m                          [49m[43mhatch[49m[38;5;241;43m=[39;49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mhatch[49m[43m,[49m
+[1;32m    316[0m [43m                          [49m[43mec[49m[38;5;241;43m=[39;49m[38;5;124;43m'[39;49m[38;5;124;43mk[39;49m[38;5;124;43m'[39;49m[43m)[49m
+[1;32m    317[0m ax[38;5;241m.[39madd_patch(rect1)
+[1;32m    318[0m ax[38;5;241m.[39mtext([38;5;241m1.0[39m[38;5;241m+[39m[38;5;241m0.1[39m[38;5;241m*[39mv[38;5;241m*[39mu, u[38;5;241m*[39mv[38;5;241m*[39m[38;5;241m0.5[39m,
+[1;32m    319[0m         [38;5;28mself[39m[38;5;241m.[39mcomponent[38;5;241m.[39msummary(fmt[38;5;241m=[39mfmt),
+[1;32m    320[0m         fontsize[38;5;241m=[39m[38;5;28mmax[39m(u, [38;5;241m15[39m),
+[1;32m    321[0m         verticalalignment[38;5;241m=[39m[38;5;124m'[39m[38;5;124mcenter[39m[38;5;124m'[39m,
+[1;32m    322[0m         horizontalalignment[38;5;241m=[39m[38;5;124m'[39m[38;5;124mleft[39m[38;5;124m'[39m)
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/matplotlib/patches.py:727[0m, in [0;36mRectangle.__init__[0;34m(self, xy, width, height, angle, **kwargs)[0m
+[1;32m    708[0m [38;5;129m@docstring[39m[38;5;241m.[39mdedent_interpd
+[1;32m    709[0m [38;5;28;01mdef[39;00m [38;5;21m__init__[39m([38;5;28mself[39m, xy, width, height, angle[38;5;241m=[39m[38;5;241m0.0[39m, [38;5;241m*[39m[38;5;241m*[39mkwargs):
+[1;32m    710[0m     [38;5;124;03m"""[39;00m
+[1;32m    711[0m [38;5;124;03m    Parameters[39;00m
+[1;32m    712[0m [38;5;124;03m    ----------[39;00m
+[0;32m   (...)[0m
+[1;32m    725[0m [38;5;124;03m        %(Patch:kwdoc)s[39;00m
+[1;32m    726[0m [38;5;124;03m    """[39;00m
+[0;32m--> 727[0m     [38;5;28;43msuper[39;49m[43m([49m[43m)[49m[38;5;241;43m.[39;49m[38;5;21;43m__init__[39;49m[43m([49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
+[1;32m    728[0m     [38;5;28mself[39m[38;5;241m.[39m_x0 [38;5;241m=[39m xy[[38;5;241m0[39m]
+[1;32m    729[0m     [38;5;28mself[39m[38;5;241m.[39m_y0 [38;5;241m=[39m xy[[38;5;241m1[39m]
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/matplotlib/patches.py:108[0m, in [0;36mPatch.__init__[0;34m(self, edgecolor, facecolor, color, linewidth, linestyle, antialiased, hatch, fill, capstyle, joinstyle, **kwargs)[0m
+[1;32m    106[0m [38;5;28mself[39m[38;5;241m.[39mset_linewidth(linewidth)
+[1;32m    107[0m [38;5;28mself[39m[38;5;241m.[39mset_antialiased(antialiased)
+[0;32m--> 108[0m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mset_hatch[49m[43m([49m[43mhatch[49m[43m)[49m
+[1;32m    109[0m [38;5;28mself[39m[38;5;241m.[39mset_capstyle(capstyle)
+[1;32m    110[0m [38;5;28mself[39m[38;5;241m.[39mset_joinstyle(joinstyle)
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/matplotlib/patches.py:540[0m, in [0;36mPatch.set_hatch[0;34m(self, hatch)[0m
+[1;32m    512[0m [38;5;124mr[39m[38;5;124;03m"""[39;00m
+[1;32m    513[0m [38;5;124;03mSet the hatching pattern.[39;00m
+[1;32m    514[0m 
+[0;32m   (...)[0m
+[1;32m    537[0m [38;5;124;03mhatch : {'/', '\\', '|', '-', '+', 'x', 'o', 'O', '.', '*'}[39;00m
+[1;32m    538[0m [38;5;124;03m"""[39;00m
+[1;32m    539[0m [38;5;66;03m# Use validate_hatch(list) after deprecation.[39;00m
+[0;32m--> 540[0m [43mmhatch[49m[38;5;241;43m.[39;49m[43m_validate_hatch_pattern[49m[43m([49m[43mhatch[49m[43m)[49m
+[1;32m    541[0m [38;5;28mself[39m[38;5;241m.[39m_hatch [38;5;241m=[39m hatch
+[1;32m    542[0m [38;5;28mself[39m[38;5;241m.[39mstale [38;5;241m=[39m [38;5;28;01mTrue[39;00m
+
+File [0;32m/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/matplotlib/hatch.py:185[0m, in [0;36m_validate_hatch_pattern[0;34m(hatch)[0m
+[1;32m    183[0m valid_hatch_patterns [38;5;241m=[39m [38;5;28mset[39m([38;5;124mr[39m[38;5;124m'[39m[38;5;124m-+|/[39m[38;5;124m\[39m[38;5;124mxXoO.*[39m[38;5;124m'[39m)
+[1;32m    184[0m [38;5;28;01mif[39;00m hatch [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[0;32m--> 185[0m     invalids [38;5;241m=[39m [38;5;28;43mset[39;49m[43m([49m[43mhatch[49m[43m)[49m[38;5;241m.[39mdifference(valid_hatch_patterns)
+[1;32m    186[0m     [38;5;28;01mif[39;00m invalids:
+[1;32m    187[0m         valid [38;5;241m=[39m [38;5;124m'[39m[38;5;124m'[39m[38;5;241m.[39mjoin([38;5;28msorted[39m(valid_hatch_patterns))
+
+[0;31mTypeError[0m: 'float' object is not iterable
+TypeError: 'float' object is not iterable
+
