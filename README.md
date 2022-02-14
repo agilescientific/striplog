@@ -1,21 +1,16 @@
 # Striplog
 
+[![Build and test](https://github.com/agile-geoscience/striplog/actions/workflows/run-tests.yml/badge.svg)](https://github.com/agile-geoscience/striplog/actions/workflows/run-tests.yml)
+[![Build docs](https://github.com/agile-geoscience/striplog/actions/workflows/build-docs.yml/badge.svg)](https://github.com/agile-geoscience/striplog/actions/workflows/build-docs.yml)
+[![PyPI version](https://img.shields.io/pypi/v/striplog.svg)](https://pypi.org/project/striplog/)
+[![PyPI versions](https://img.shields.io/pypi/pyversions/striplog.svg)](https://pypi.org/project/striplog/)
+[![PyPI license](https://img.shields.io/pypi/l/striplog.svg)](https://pypi.org/project/striplog/)
+
 Lithology and stratigraphic logs for wells and outcrop.
 
 * [A blog post about striplog](http://www.agilegeoscience.com/blog/2015/4/15/striplog)
 * [Another one, with a video](http://www.agilegeoscience.com/blog/2015/7/10/geophysics-at-scipy-2015)
 
-## Docs
-
-* [Read striplog's documentation](https://code.agilescientific.com/striplog)
-* [Check out the tutorial notebooks](./docs/tutorial/)
-
-## Dependencies
-
-These are best installed with Anaconda, see **Install**, below.
-
-* Numpy
-* matplotlib
 
 ## Install
 
@@ -24,42 +19,16 @@ These are best installed with Anaconda, see **Install**, below.
 We recommend setting up a virtual environment:
 
 * Install Anaconda if you don't have it already
-* Then create an environment called `myenv` (or whatever you like), answering Yes to the confirmation question:
+* Then create an environment called `myenv` (or whatever you like):
 
-    conda create -n myenv python=3.9 numpy matplotlib
+    conda create -n myenv python=3.9 numpy scipy matplotlib
     conda activate myenv
 
 * Then you can do:
 
     pip install striplog
 
-## Development
-### Setting up for testing
 
-There are other requirements for testing, which you can install by navigating to the folder in which you cloned this repository. Then install `striplog` with
+## Docs
 
-    pip install .[test]
-
-The tests can be run with
-
-    python run_tests.py
-
-### Running the bleeding edge version
-
-To run the latest version of striplog, you should be on the `develop` branch:
-
-    git clone https://github.com/agile-geoscience/striplog.git
-    cd striplog
-    git checkout develop
-
-We recommend working in a virtual environment (see above).
-
-You can then install striplog by navigating to the `striplog` folder and running:
-
-    pip install .
-
-Remember to run `pip uninstall striplog` if you have already installed it.
-
-## SciPy 2015
-
-[Here's a presentation about Striplog](https://docs.google.com/presentation/d/16HJsJJQylb2_8D2NS1p2cjp1yzslqUl_51BN16J5Y2k/edit?usp=sharing)
+[Read striplog's documentation.](https://code.agilescientific.com/striplog)

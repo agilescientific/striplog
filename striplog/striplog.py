@@ -2649,42 +2649,42 @@ class Striplog(object):
             be plotted.
 
         Args:
-            components (list):
+            lng (float): The longitude of the site.
+            lat (float): The latitude of the site.
+            buffer_size (float): The size of the buffer to use, in degrees.
 
         Returns:
-            Tuple of:
-                strip (striplog.Striplog)
-                legend (striplog.Legend)
+            Striplog. A new striplog instance.
 
         Example:
-        lng = -64.3573186
-        lat = 44.4454632
-        buffer_size = 0.3
-        striplog.striplog.from_macrostrat(lng, lat, buffer_size)
-        {'top': Position({'middle': 358.9, 'units': 'm'}), 
-            'base': Position({'middle': 419.2, 'units': 'm'}), 
-            'description': '', 'data': {}, 'components': [Component({
-                'map_id': 948660.0, 'scale': 'small', 'source_id': 7.0,
-                'name': 'Devonian plutonic: undivided granitic rocks',
-                'age': 'devonian', 'lith': 'plutonic: undivided granitic rocks',
-                'best_age_top': 358.9, 'best_age_bottom': 419.2, 't_int': 94.0,
-                'b_int': 94.0, 'color': '#cb8c37', 'source': 'MacroStrat.org (CC-BY)})]}
-        {'top': Position({'middle': 358.9, 'units': 'm'}),
-            'base': Position({'middle': 541.0, 'units': 'm'}),
-            'description': '', 'data': {}, 'components': [Component({
-                'map_id': 948228.0, 'scale': 'small', 'source_id': 7.0,
-                'name': 'Cambrian-Devonian sedimentary', 'age': 'cambrian-devonian',
-                'lith': 'sedimentary', 'best_age_top': 358.9, 'best_age_bottom': 541.0,
-                't_int': 94.0, 'b_int': 122.0, 'color': '#99c08d',
-                'source': 'MacroStrat.org (CC-BY)})]}
-        {'top': Position({'middle': 443.8, 'units': 'm'}),
-            'base': Position({'middle': 541.0, 'units': 'm'}),
-            'description': '', 'data': {}, 'components': [Component({
-                'map_id': 973359.0, 'scale': 'small', 'source_id': 7.0,
-                'name': 'Cambrian-Ordovician sedimentary', 'age': 'cambrian-ordovician',
-                'lith': 'sedimentary', 'best_age_top': 443.8, 'best_age_bottom': 541.0,
-                't_int': 112.0, 'b_int': 122.0, 'color': '#409963',
-                'source': 'MacroStrat.org (CC-BY)})]}
+            >>> lng = -64.3573186
+            >>> lat = 44.4454632
+            >>> buffer_size = 0.3
+            >>> striplog.striplog.from_macrostrat(lng, lat, buffer_size)
+            {'top': Position({'middle': 358.9, 'units': 'm'}), 
+                'base': Position({'middle': 419.2, 'units': 'm'}), 
+                'description': '', 'data': {}, 'components': [Component({
+                    'map_id': 948660.0, 'scale': 'small', 'source_id': 7.0,
+                    'name': 'Devonian plutonic: undivided granitic rocks',
+                    'age': 'devonian', 'lith': 'plutonic: undivided granitic rocks',
+                    'best_age_top': 358.9, 'best_age_bottom': 419.2, 't_int': 94.0,
+                    'b_int': 94.0, 'color': '#cb8c37', 'source': 'MacroStrat.org (CC-BY)})]}
+            {'top': Position({'middle': 358.9, 'units': 'm'}),
+                'base': Position({'middle': 541.0, 'units': 'm'}),
+                'description': '', 'data': {}, 'components': [Component({
+                    'map_id': 948228.0, 'scale': 'small', 'source_id': 7.0,
+                    'name': 'Cambrian-Devonian sedimentary', 'age': 'cambrian-devonian',
+                    'lith': 'sedimentary', 'best_age_top': 358.9, 'best_age_bottom': 541.0,
+                    't_int': 94.0, 'b_int': 122.0, 'color': '#99c08d',
+                    'source': 'MacroStrat.org (CC-BY)})]}
+            {'top': Position({'middle': 443.8, 'units': 'm'}),
+                'base': Position({'middle': 541.0, 'units': 'm'}),
+                'description': '', 'data': {}, 'components': [Component({
+                    'map_id': 973359.0, 'scale': 'small', 'source_id': 7.0,
+                    'name': 'Cambrian-Ordovician sedimentary', 'age': 'cambrian-ordovician',
+                    'lith': 'sedimentary', 'best_age_top': 443.8, 'best_age_bottom': 541.0,
+                    't_int': 112.0, 'b_int': 122.0, 'color': '#409963',
+                    'source': 'MacroStrat.org (CC-BY)})]}
         """
         # Get the 
         features = utils.geology_from_macrostrat(lng=lng, lat=lat,
