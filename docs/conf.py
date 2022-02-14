@@ -13,7 +13,6 @@
 import re
 import sys
 import os
-import sphinx_rtd_theme
 import striplog
 
 # If extensions (or modules to document with autodoc) are in another directory,
