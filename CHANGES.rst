@@ -1,64 +1,66 @@
 Changelog
 =========
 
-0.8.9 (in progress)
-----
+0.9.0 (coming February 2022)
+----------------------------
 
 - No longer supporting versions of Python before 3.6 (because I like f-strings).
-- Reorganized the tutorial notebooks make them a bit easier to follow.
+- Reorganized and moved ``the documentation <https://code.agilescientific.com/striplog>``_ to make it a bit easier to follow.
+- You can now pass format string labels to ``striplog.plot()``, e.g. ``'{colour} {lithology}'``. These are passed to the Component summary method.
+- You can plot Striplog's logo with ``striplog.logo.plot()`` (requires Snare Drum font).
 
 
 0.8.8 (January 2021)
-----
+--------------------
 
-- Added `Striplog.from_dict()` to create a striplog from a dictionary with items like `name: depth`.
-- When reading a Petrel 'tops' file, you can pass a single function to apply to every quantity, not just a mapping of field names to functions. (You might do this to replace all `-999.25` with `np.nan`, for example.) There's no way to do both at present, but if there's a need, please file an issue.
+- Added ``Striplog.from_dict()`` to create a striplog from a dictionary with items like ``name: depth``.
+- When reading a Petrel 'tops' file, you can pass a single function to apply to every quantity, not just a mapping of field names to functions. (You might do this to replace all ``-999.25`` with ``np.nan``, for example.) There's no way to do both at present, but if there's a need, please file an issue.
 - Updated the default lexicon with some 'modifiers' like 'silty', 'sandy', etc.
-- `Lexicon._parse_description()` is now a private static method (it was previously mangled which was a mistake). It can be called without instantiating a class to parse a piece of text. See the notebook, `Parsing_a_description.ipynb`.
+- ``Lexicon._parse_description()`` is now a private static method (it was previously mangled which was a mistake). It can be called without instantiating a class to parse a piece of text. See the notebook, ``Parsing_a_description.ipynb``.
 - Fixed a bug causing the default Lexicon to be a shallow copy, which was annoying.
 
 
 0.8.7 (November 2020)
-----
+---------------------
 
-- Breaking change: `Striplog.extract()` now returns a copy of the striplog instead of changing the striplog in place.
-- Added option to send actual data to `Striplog.to_log()` instead of index from lookup table.
-- Added a tutorial, `Blocking_curves_with_striplog.ipynb`.
+- Breaking change: ``Striplog.extract()`` now returns a copy of the striplog instead of changing the striplog in place.
+- Added option to send actual data to ``Striplog.to_log()`` instead of index from lookup table.
+- Added a tutorial, ``Blocking_curves_with_striplog.ipynb``.
 
 
 0.8.6 (October 2020)
-----
+--------------------
 
 - Multi-step Markov chains now work properly, respecting 'self-transitions'.
-- Added `include_self` property to the repr of a Markov chain object.
-- Added `match_only` argument to `Legend.random()` to allow you to keep only certain properties in the components.
-- `Component.from_text()` will now use `Lexicon.default()` if you don't pass one in.
+- Added ``include_self`` property to the repr of a Markov chain object.
+- Added ``match_only`` argument to ``Legend.random()``` to allow you to keep only certain properties in the components.
+- ``Component.from_text()`` will now use ``Lexicon.default()`` if you don't pass one in.
 
-We started adding an experimental new feature; feedback welcome! Added `Striplog.from_macrostrat()` which takes a lat/lon location and returns a striplog in geological time or in depth below the surface at that location.
+We started adding an experimental new feature; feedback welcome! Added ``Striplog.from_macrostrat()`` which takes a lat/lon location and returns a striplog in geological time or in depth below the surface at that location.
 
 
 0.8.5 (May 2020)
-----
+----------------
 
 - Fixed sphinx documentation.
 - Documentation now includes all tutorial notebooks.
 
 
 0.8.4 (April 2020)
-----
+------------------
 
-- Added `label` kwarg to `striplog.plot()`. Give it the name of a field in the `primary` component and it will be added to the plot as text. Experimental feature; might break with some sizes of striplog. Feedback welcome.
+- Added ``label`` kwarg to ``striplog.plot()``. Give it the name of a field in the ``primary`` component and it will be added to the plot as text. Experimental feature; might break with some sizes of striplog. Feedback welcome.
 - Fixed a bug in ``Striplog.hist()`` which produced the wrong colours and labels for the bars.
 
 
 0.8.3 (July 2019)
-----
+-----------------
 
 - Minor release. Updated tutorials and fixed some bugs.
 
 
 0.8.2 (July 2019)
------
+-----------------
 
 - Added ``Striplog.shift()`` to allow you to shift all the tops and bases by some ``delta`` or by setting a new ``start``.
 - Added ``striplog.markov.Markov_chain()``. See the ``Markov_chain.ipynb`` notebook in ``tutorial`` to see how to use it. This is an experimental module. There might be an elegant way to add the Markov chain as an attribute/methods on ``Striplog`` objects, but I couldn't think of it.
@@ -66,7 +68,7 @@ We started adding an experimental new feature; feedback welcome! Added `Striplog
 
 
 0.8.1 (June 2019)
------
+-----------------
 
 - Added ``append``, ``extend`` and ``pop`` methods to ``Striplog`` objects.
 - Breaking change: Changed the name of ``Striplog.__insert()`` to ``Striplog.insert()`` to match ``append()``, ``extend()`` and ``pop()``.
@@ -80,7 +82,7 @@ We started adding an experimental new feature; feedback welcome! Added `Striplog
 
 
 0.8.0 (March 2019)
------
+------------------
 
 - New point release because of breaking changes.
 - Breaking change: ``Striplog.prune()`` and ``Striplog.anneal()`` now return copies, so you can chain them.
