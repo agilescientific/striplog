@@ -25,6 +25,7 @@ from .component import Component
 from .legend import Legend
 from .canstrat import parse_canstrat
 from .markov import Markov_chain
+from .lexicon import Lexicon
 from . import utils
 from . import templates
 
@@ -503,6 +504,12 @@ class Striplog(object):
         Returns:
             list.
         """
+        if not lexicon:
+            lexicon = Lexicon.default()
+            with warnings.catch_warnings():
+                warnings.simplefilter("module")
+                w = 'No lexicon provided, using the default.'
+                warnings.warn(w)
 
         include = include or {}
         exclude = exclude or {}
@@ -568,11 +575,18 @@ class Striplog(object):
                         if v is not None:
                             d[k] = v  # It's data
                 comp = [Component(c)] if c else None
-                this = Interval(**{'top': top,
-                                   'base': base,
-                                   'description': descr,
-                                   'data': d,
-                                   'components': comp})
+                if comp:
+                    this = Interval(**{'top': top,
+                                    'base': base,
+                                    'description': descr,
+                                    'data': d,
+                                    'components': comp})
+                elif not comp:
+                    this = Interval(**{'top': top,
+                                    'base': base,
+                                    'data': d,
+                                    'description': descr,
+                                    'lexicon': lexicon})
             else:
                 this = Interval(**{'top': top,
                                    'base': base,

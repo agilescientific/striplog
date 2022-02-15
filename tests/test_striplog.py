@@ -96,6 +96,11 @@ top_dict = {'Ardmore': 2510.03,
             'Niobrara': 2530.75
            }
 
+data_dict = {'top': [70.273, 70.744],
+             'facies': [3, 0],
+             'description': ['brown shale with interbedded sandstone pebbles', 'cyrstalline dolomite'],
+            }
+
 
 def test_error():
     """Test the generic error.
@@ -172,6 +177,14 @@ def test_from_dict():
     striplog = Striplog.from_dict(top_dict)
     assert len(striplog) == 7
     assert striplog.thinnest().summary() == '0.00 m of Cody'
+
+
+def test_descriptions_and_data():
+    """Test that descriptions are parsed into Components when
+    miscellaneous data is present.
+    """
+    strip = Striplog._build_list_of_Intervals(data_dict)
+    assert len(strip[0].components[0]) == 2
 
 
 def test_from_image():
