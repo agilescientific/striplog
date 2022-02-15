@@ -1,6 +1,5 @@
 """
 Markov chains for the striplog package.
-
 """
 from collections import namedtuple
 
@@ -69,14 +68,14 @@ class Markov_chain(object):
     """
     Markov_chain object.
 
-    TODO
-    - Pretty transition matrix printing with state names and row/col sums.
-    - Allow self-transitions. See also this:
-      https://stackoverflow.com/q/49340520/3381305
-    - Hidden Markov model?
-    - 'Joint' Markov model... where you have lithology and bioturbation index
-      (say). Not sure if this is really a thing, I just made it up.
-    - More generally, explore other sequence models, eg LSTM.
+    TODO:
+        - Pretty transition matrix printing with state names and row/col sums.
+        - Allow self-transitions. See also this:
+        https://stackoverflow.com/q/49340520/3381305
+        - Hidden Markov model?
+        - 'Joint' Markov model... where you have lithology and bioturbation index
+        (say). Not sure if this is really a thing, I just made it up.
+        - More generally, explore other sequence models, eg LSTM.
     """
     def __init__(self,
                  observed_counts,
@@ -87,7 +86,7 @@ class Markov_chain(object):
         """
         Initialize the Markov chain instance.
 
-        Args
+        Args:
             observed_counts (ndarray): A 2-D array representing the counts
                 of change of state in the Markov Chain.
             states (array-like): An array-like representing the possible states
@@ -194,7 +193,7 @@ class Markov_chain(object):
 
         **Provide sequence(s) ordered in upwards direction.**
 
-        Args
+        Args:
             sequence (list-like): A list-like, or list-like of list-likes.
                 The inner list-likes represent sequences of states.
                 For example, can be a string or list of strings, or
@@ -238,30 +237,30 @@ class Markov_chain(object):
         """
         return self.observed_freqs[self._index_dict[state]]
 
-    def _next_state(self, current_state: str) -> str:
+    def _next_state(self, current_state):
         """
         Returns the state of the random variable at the next time
         instance.
 
-        Args
+        Args:
             current_state (str): The current state of the system.
 
-        Returns
+        Returns:
             str. One realization of the next state.
         """
         return np.random.choice(self.states,
                                 p=self._conditional_probs(current_state)
                                 )
 
-    def generate_states(self, n:int=10, current_state:str=None) -> list:
+    def generate_states(self, n=10, current_state=None):
         """
         Generates the next states of the system.
 
-        Args
+        Args:
             n (int): The number of future states to generate.
             current_state (str): The state of the current random variable.
 
-        Returns
+        Returns:
             list. The next n states.
         """
         if current_state is None:
@@ -446,10 +445,10 @@ class Markov_chain(object):
             fig, ax = plt.subplots(figsize=figsize)
             return_ax = False
 
-        e_neg   = {(u, v):round(d['weight'],1) for (u, v, d) in G.edges(data=True) if        d['weight'] <= -1.0}
-        e_small = {(u, v):round(d['weight'],1) for (u, v, d) in G.edges(data=True) if -1.0 < d['weight'] <=  1.0}
-        e_med   = {(u, v):round(d['weight'],1) for (u, v, d) in G.edges(data=True) if  1.0 < d['weight'] <=  2.0}
-        e_large = {(u, v):round(d['weight'],1) for (u, v, d) in G.edges(data=True) if        d['weight'] >   2.0}
+        e_neg = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if d['weight'] <= -1.0}
+        e_small = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if -1.0 < d['weight'] <= 1.0}
+        e_med = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if 1.0 < d['weight'] <= 2.0}
+        e_large = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if d['weight'] > 2.0}
 
         pos = nx.spring_layout(G)
 
@@ -468,8 +467,8 @@ class Markov_chain(object):
                                    edge_color='k')
 
         if edge_labels:
-            nx.draw_networkx_edge_labels(G,pos,edge_labels=e_large)
-            nx.draw_networkx_edge_labels(G,pos,edge_labels=e_med)
+            nx.draw_networkx_edge_labels(G, pos, edge_labels=e_large)
+            nx.draw_networkx_edge_labels(G, pos, edge_labels=e_med)
 
         labels = nx.get_node_attributes(G, 'state')
         ax = nx.draw_networkx_labels(G, pos, labels=labels,
@@ -487,22 +486,32 @@ class Markov_chain(object):
     def plot_norm_diff(self,
                        ax=None,
                        cmap='RdBu',
-                       center_zero=True,
                        vminmax=None,
                        rotation=0,
                        annotate=False,
-                      ):
+                       ):
         """
         A visualization of the normalized difference matrix.
 
-        Args
+        Args:
+            ax (Axes): The axes to plot on. If None, a new figure will be
+                created.
+            cmap (str): The name of a matplotlib colormap.
+            vminmax (tuple): The minimum and maximum values to use for the
+                colormap. If None, the min and max of the matrix will be used.
+            rotation (float): The angle to rotate the labels.
+            annotate (bool): Whether to annotate the matrix with the values.
+
+        Returns:
+            Axes: The axes on which the plot was drawn.
         """
         if self.normalized_difference.ndim > 2:
             raise MarkovError("You can only plot one-step chains.")
 
         return_ax = True
         if ax is None:
-            fig, ax = plt.subplots(figsize=(1 + self.states.size/1.5, self.states.size/1.5))
+            figsize = (1 + self.states.size/1.5, self.states.size/1.5)
+            fig, ax = plt.subplots(figsize=figsize)
             return_ax = False
 
         if vminmax is None:
@@ -511,18 +520,23 @@ class Markov_chain(object):
         else:
             vmin, vmax = vminmax
 
-        im = ax.imshow(self.normalized_difference, cmap=cmap, vmin=vmin, vmax=vmax, interpolation='none')
+        im = ax.imshow(self.normalized_difference,
+                       cmap=cmap,
+                       vmin=vmin,
+                       vmax=vmax,
+                       interpolation='none'
+                       )
         plt.colorbar(im)
 
         ax.tick_params(axis='x', which='both',
                        bottom=False, labelbottom=False,
                        top=False, labeltop=True,
-                      )
+                       )
 
         ax.tick_params(axis='y', which='both',
                        left=False, labelleft=True,
                        right=False, labelright=False,
-                      )
+                       )
 
         ticks = np.arange(self.states.size)
         ax.set_yticks(ticks)
@@ -549,7 +563,7 @@ class Markov_chain(object):
                     col = 'w' if rgb_is_dark(lookup(norm(val))) else 'k'
                     fmt = annotate if isinstance(annotate, str) else '0.1f'
                     s = format(val, fmt)
-                    text = ax.text(j, i, s, ha="center", va="center", color=col)
+                    _ = ax.text(j, i, s, ha="center", va="center", color=col)
 
         # Deal with probable bug in matplotlib 3.1.1
         ax.set_ylim(reversed(ax.get_xlim()))

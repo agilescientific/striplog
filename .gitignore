@@ -12,6 +12,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+striplog/_version.py
 .Python
 env/
 build/

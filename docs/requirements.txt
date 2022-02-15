@@ -1,5 +1,0 @@
-sphinx>=1.8
-sphinxcontrib-apidoc
-ipykernel
-nbsphinx
-nbsphinx_link

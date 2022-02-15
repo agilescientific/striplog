@@ -10,6 +10,7 @@ from .position import Position
 from .interval import Interval
 from .striplog import Striplog
 from .markov import Markov_chain
+from .logo import plot
 
 __all__ = ['Lexicon',
            'Component',

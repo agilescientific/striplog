@@ -779,6 +779,8 @@ class Legend(object):
                 try:
                     if getattr(c, 'mnemonic').lower() == decor.curve.mnemonic:
                         return decor
+                    if getattr(c, '_alias').lower() == decor.curve.mnemonic:
+                        return decor
                 except AttributeError:
                     continue
         return Decor({'colour': '#eeeeee', 'component': Component()})
