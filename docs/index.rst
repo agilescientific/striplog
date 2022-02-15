@@ -5,6 +5,7 @@
 
    `Fork on GitHub <https://github.com/agile-geoscience/striplog>`_
 
+
 Striplog: Intervals of rocks and things
 =======================================
 

@@ -4,10 +4,11 @@ Changelog
 0.9.0 (coming February 2022)
 ----------------------------
 
-- No longer supporting versions of Python before 3.6 (because I like f-strings).
-- Reorganized and moved ``the documentation <https://code.agilescientific.com/striplog>``_ to make it a bit easier to follow.
+- We are no longer supporting versions of Python before 3.6 (because I like f-strings).
 - You can now pass format string labels to ``striplog.plot()``, e.g. ``'{colour} {lithology}'``. These are passed to the Component summary method.
-- You can plot Striplog's logo with ``striplog.logo.plot()`` (requires Snare Drum font).
+- The Striplog constructor now creates Components if it is given miscellaneous data. If there are not components (e.g. "comp" fields in the CSV), then the description and either the provided Lexicon or the default one will be passed to the Interval constructor.
+- Reorganized and moved ``the documentation <https://code.agilescientific.com/striplog>``_ to make it a bit easier to follow.
+- You can plot Striplog's logo with ``striplog.logo.plot()``.
 
 
 0.8.8 (January 2021)
