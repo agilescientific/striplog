@@ -191,7 +191,7 @@ def test_from_image():
     """Test the generation of a striplog from an image.
     """
     legend = Legend.builtin('NSDOE')
-    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+    imgfile = "tests/data/M-MG-70_14.3_135.9.png"
     striplog = Striplog.from_image(imgfile, 200, 300, legend=legend)
     assert len(striplog) == 26
     assert striplog[-1].primary.summary() == 'Volcanic'
@@ -298,7 +298,7 @@ def test_striplog_intersect():
                                    }),
                        ])
     legend = Legend.builtin('NSDOE')
-    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+    imgfile = "tests/data/M-MG-70_14.3_135.9.png"
     strip = Striplog.from_image(imgfile, 14.3, 135.9, legend=legend)
     sands = strip.find('sandstone')
     cretaceous = chrono.find('Palaeogene')

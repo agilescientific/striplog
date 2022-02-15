@@ -32,7 +32,7 @@ def test_striplog_plot():
     """
     legend = Legend.builtin('NSDOE')
 
-    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+    imgfile = "tests/data/M-MG-70_14.3_135.9.png"
 
     striplog = Striplog.from_image(imgfile, 14.3, 135.9, legend=legend)
 
@@ -49,7 +49,7 @@ def test_striplog_ladder_plot():
     """
     legend = Legend.builtin('NSDOE')
 
-    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+    imgfile = "tests/data/M-MG-70_14.3_135.9.png"
 
     striplog = Striplog.from_image(imgfile, 14.3, 135.9, legend=legend)
 
@@ -66,7 +66,7 @@ def test_striplog_colour_plot():
     """
     legend = Legend.builtin('NSDOE')
 
-    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+    imgfile = "tests/data/M-MG-70_14.3_135.9.png"
 
     striplog = Striplog.from_image(imgfile, 14.3, 135.9, legend=legend)
 
@@ -85,7 +85,7 @@ def test_striplog_point_plot():
     """
     legend = Legend.builtin('NSDOE')
 
-    imgfile = "tutorial/M-MG-70_14.3_135.9.png"
+    imgfile = "tests/data/M-MG-70_14.3_135.9.png"
 
     striplog = Striplog.from_image(imgfile, 14.3, 135.9, legend=legend)
 

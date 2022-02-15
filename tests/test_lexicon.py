@@ -18,6 +18,6 @@ def test_lexicon():
     answer = 'lighter green sandstone with spotty gray shale'
     assert lexicon.expand_abbreviations(s) == answer
 
-    fname = "tutorial/lexicon.json"
+    fname = "tests/data/lexicon.json"
     l = Lexicon.from_json_file(fname)
     assert l.__repr__() is not ''
