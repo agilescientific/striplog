@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Parsing a description into components" href="11_Parsing_descriptions.html" /><link rel="prev" title="Striplog expert functions" href="04_Beyond_basics.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="How to parse a description into Striplog Components" href="11_Parsing_descriptions.html" /><link rel="prev" title="striplog beyond the basics" href="04_Beyond_basics.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
-        <title>Striplog for abstracting curves - striplog documentation</title>
+        <title>How to abstract curves using Striplog - striplog documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -158,21 +158,17 @@
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="00_Read_me_first.html">Read me first!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Striplog basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_Basic_objects.html">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_Display_objects.html">Display objects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04_Beyond_basics.html">Striplog expert functions</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Striplog for abstracting curves</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#random-curve-data">Random curve data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#extract-data-from-the-curve-into-the-striplog">Extract data from the curve into the striplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#extract-and-reduce-data">Extract and reduce data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">Parsing a description into components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="12_Moving_sand_proportion.html">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="13_Binary_morphologies.html">Binary morphologies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">Striplog merge</a></li>
-<li class="toctree-l1"><a class="reference internal" href="15_Markov_chains.html">Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">Blocking curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_Beyond_basics.html"><code class="docutils literal notranslate"><span class="pre">striplog</span></code> beyond the basics</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">How to abstract curves using Striplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">How to parse a description into Striplog <code class="docutils literal notranslate"><span class="pre">Components</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_Moving_sand_proportion.html">How to calculate the proportion of sand using a moving window</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_Binary_morphologies.html">How to work with binary logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">How to merge two overlapping <code class="docutils literal notranslate"><span class="pre">Striplog</span></code>s merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_Markov_chains.html">How to use Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">How to block curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
@@ -238,8 +234,8 @@
           </label>
         </div>
         <article role="main">
-          <section id="striplog-for-abstracting-curves">
-<h1>Striplog for abstracting curves<a class="headerlink" href="#striplog-for-abstracting-curves" title="Permalink to this headline">#</a></h1>
+          <section class="tex2jax_ignore mathjax_ignore" id="how-to-abstract-curves-using-striplog">
+<h1>How to abstract curves using Striplog<a class="headerlink" href="#how-to-abstract-curves-using-striplog" title="Permalink to this headline">#</a></h1>
 <p>Sometimes you’d like to summarize or otherwise extract curve data (e.g. wireline log data) into a striplog (e.g. one that represents formations).</p>
 <p>We’ll start by making some fake CSV text — we’ll make 5 formations called A, B, C, D and E:</p>
 <div class="cell docutils container">
@@ -300,9 +296,8 @@
 <img alt="../_images/10_Handling_curve_data_9_0.png" src="../_images/10_Handling_curve_data_9_0.png"/>
 </div>
 </div>
-</section>
 <section id="random-curve-data">
-<h1>Random curve data<a class="headerlink" href="#random-curve-data" title="Permalink to this headline">#</a></h1>
+<h2>Random curve data<a class="headerlink" href="#random-curve-data" title="Permalink to this headline">#</a></h2>
 <p>Make some fake data:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -316,7 +311,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_1998/2575214075.py:6: DeprecationWarning: In a future release, the basis argument will be removed; use index instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2040/2575214075.py:6: DeprecationWarning: In a future release, the basis argument will be removed; use index instead.
   curve = Curve(data=data, basis=basis)
 </pre></div>
 </div>
@@ -340,7 +335,7 @@
 </div>
 </section>
 <section id="extract-data-from-the-curve-into-the-striplog">
-<h1>Extract data from the curve into the striplog<a class="headerlink" href="#extract-data-from-the-curve-into-the-striplog" title="Permalink to this headline">#</a></h1>
+<h2>Extract data from the curve into the striplog<a class="headerlink" href="#extract-data-from-the-curve-into-the-striplog" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="n">basis</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'GR'</span><span class="p">)</span>
@@ -431,7 +426,7 @@
 </div>
 </section>
 <section id="extract-and-reduce-data">
-<h1>Extract and reduce data<a class="headerlink" href="#extract-and-reduce-data" title="Permalink to this headline">#</a></h1>
+<h2>Extract and reduce data<a class="headerlink" href="#extract-and-reduce-data" title="Permalink to this headline">#</a></h2>
 <p>We don’t have to store all the data points. We can optionaly pass a function to produce anything we like, and store the result of that:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -535,6 +530,7 @@
  -0.23064571 -0.13235175]</td></tr><tr><td><strong>GRmean</strong></td><td>-0.12697991702493913</td></tr><tr><td><strong>foo</strong></td><td>bar</td></tr><tr><td><strong>GRsum</strong></td><td>38.34394442743438</td></tr><tr><td><strong>GRstats</strong></td><td>{'samples': 50, 'nulls': 0, 'mean': -0.12697991702493913, 'min': -0.9992759921366277, 'max': 0.9997929001426692}</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>250.0</td></tr></table></div></div></div>
 </div>
 </section>
+</section>
 
         </article>
       </div>
@@ -546,7 +542,7 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Parsing a description into components</div>
+                <div class="title">How to parse a description into Striplog <code class="docutils literal notranslate"><span class="pre">Components</span></code></div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -557,7 +553,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Striplog expert functions</div>
+                <div class="title"><code class="docutils literal notranslate"><span class="pre">striplog</span></code> beyond the basics</div>
                 
               </div>
             </a>
@@ -593,10 +589,12 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Striplog for abstracting curves</a></li>
+<li><a class="reference internal" href="#">How to abstract curves using Striplog</a><ul>
 <li><a class="reference internal" href="#random-curve-data">Random curve data</a></li>
 <li><a class="reference internal" href="#extract-data-from-the-curve-into-the-striplog">Extract data from the curve into the striplog</a></li>
 <li><a class="reference internal" href="#extract-and-reduce-data">Extract and reduce data</a></li>
+</ul>
+</li>
 </ul>
 
           </div>

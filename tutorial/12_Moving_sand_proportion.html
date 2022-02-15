@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Binary morphologies" href="13_Binary_morphologies.html" /><link rel="prev" title="Parsing a description into components" href="11_Parsing_descriptions.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="How to work with binary logs" href="13_Binary_morphologies.html" /><link rel="prev" title="How to parse a description into Striplog Components" href="11_Parsing_descriptions.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
-        <title>Moving sand proportion with striplog - striplog documentation</title>
+        <title>How to calculate the proportion of sand using a moving window - striplog documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -158,21 +158,17 @@
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="00_Read_me_first.html">Read me first!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Striplog basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_Basic_objects.html">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_Display_objects.html">Display objects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04_Beyond_basics.html">Striplog expert functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html">Striplog for abstracting curves</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#random-curve-data">Random curve data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-data-from-the-curve-into-the-striplog">Extract data from the curve into the striplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-and-reduce-data">Extract and reduce data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">Parsing a description into components</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="13_Binary_morphologies.html">Binary morphologies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">Striplog merge</a></li>
-<li class="toctree-l1"><a class="reference internal" href="15_Markov_chains.html">Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">Blocking curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_Beyond_basics.html"><code class="docutils literal notranslate"><span class="pre">striplog</span></code> beyond the basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html">How to abstract curves using Striplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">How to parse a description into Striplog <code class="docutils literal notranslate"><span class="pre">Components</span></code></a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">How to calculate the proportion of sand using a moving window</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_Binary_morphologies.html">How to work with binary logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">How to merge two overlapping <code class="docutils literal notranslate"><span class="pre">Striplog</span></code>s merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_Markov_chains.html">How to use Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">How to block curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
@@ -238,9 +234,8 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="moving-sand-proportion-with-striplog">
-<h1>Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code><a class="headerlink" href="#moving-sand-proportion-with-striplog" title="Permalink to this headline">#</a></h1>
-<p>We’d like to calculate the proportion of sand in a moving window.</p>
+          <section class="tex2jax_ignore mathjax_ignore" id="how-to-calculate-the-proportion-of-sand-using-a-moving-window">
+<h1>How to calculate the proportion of sand using a moving window<a class="headerlink" href="#how-to-calculate-the-proportion-of-sand-using-a-moving-window" title="Permalink to this headline">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s2">"""top,base,number</span>
@@ -530,7 +525,7 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Binary morphologies</div>
+                <div class="title">How to work with binary logs</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -541,7 +536,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Parsing a description into components</div>
+                <div class="title">How to parse a description into Striplog <code class="docutils literal notranslate"><span class="pre">Components</span></code></div>
                 
               </div>
             </a>
@@ -577,7 +572,7 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a><ul>
+<li><a class="reference internal" href="#">How to calculate the proportion of sand using a moving window</a><ul>
 <li><a class="reference internal" href="#make-a-striplog">Make a striplog</a></li>
 <li><a class="reference internal" href="#make-a-sand-flag-log">Make a sand flag log</a></li>
 <li><a class="reference internal" href="#convolve-with-running-window">Convolve with running window</a></li>

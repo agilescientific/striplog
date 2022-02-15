@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Striplog merge" href="14_Merge.html" /><link rel="prev" title="Moving sand proportion with striplog" href="12_Moving_sand_proportion.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="How to merge two overlapping Striplogs merge" href="14_Merge.html" /><link rel="prev" title="How to calculate the proportion of sand using a moving window" href="12_Moving_sand_proportion.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
-        <title>Binary morphologies - striplog documentation</title>
+        <title>How to work with binary logs - striplog documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -158,21 +158,17 @@
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="00_Read_me_first.html">Read me first!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Striplog basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_Basic_objects.html">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_Display_objects.html">Display objects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04_Beyond_basics.html">Striplog expert functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html">Striplog for abstracting curves</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#random-curve-data">Random curve data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-data-from-the-curve-into-the-striplog">Extract data from the curve into the striplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-and-reduce-data">Extract and reduce data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">Parsing a description into components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="12_Moving_sand_proportion.html">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Binary morphologies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">Striplog merge</a></li>
-<li class="toctree-l1"><a class="reference internal" href="15_Markov_chains.html">Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">Blocking curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_Beyond_basics.html"><code class="docutils literal notranslate"><span class="pre">striplog</span></code> beyond the basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html">How to abstract curves using Striplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">How to parse a description into Striplog <code class="docutils literal notranslate"><span class="pre">Components</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_Moving_sand_proportion.html">How to calculate the proportion of sand using a moving window</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">How to work with binary logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">How to merge two overlapping <code class="docutils literal notranslate"><span class="pre">Striplog</span></code>s merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_Markov_chains.html">How to use Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">How to block curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
@@ -238,8 +234,8 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="binary-morphologies">
-<h1>Binary morphologies<a class="headerlink" href="#binary-morphologies" title="Permalink to this headline">#</a></h1>
+          <section class="tex2jax_ignore mathjax_ignore" id="how-to-work-with-binary-logs">
+<h1>How to work with binary logs<a class="headerlink" href="#how-to-work-with-binary-logs" title="Permalink to this headline">#</a></h1>
 <p>We will invent a binary log – maybe you can load it from an LAS file with <code class="docutils literal notranslate"><span class="pre">welly</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -256,7 +252,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f24bc146920&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f7fc81fe980&gt;]
 </pre></div>
 </div>
 <img alt="../_images/13_Binary_morphologies_1_1.png" src="../_images/13_Binary_morphologies_1_1.png"/>
@@ -304,7 +300,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>100.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>2.00 m of False</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>102.0</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>100.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>0.50 m of False</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>100.5</td></tr></table></div></div></div>
 </div>
 </section>
 <section id="plot-the-intervals">
@@ -453,7 +449,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(Component({'pay': True}), 32.0), (Component({'pay': False}), 18.5)]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(Component({'pay': True}), 28.0), (Component({'pay': False}), 22.5)]
 </pre></div>
 </div>
 </div>
@@ -466,7 +462,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>143.5</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>4.50 m of True</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>148.0</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>109.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>3.00 m of False</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>112.0</td></tr></table></div></div></div>
 </div>
 <p>These functions optionally take an integer argument <code class="docutils literal notranslate"><span class="pre">n</span></code> specifying how many of the thickest or thinnest intervals you want to see. If <code class="docutils literal notranslate"><span class="pre">n</span></code> is greater than 1, a <code class="docutils literal notranslate"><span class="pre">Striplog</span></code> object is returned so you can see the positions of those items:</p>
 <div class="cell docutils container">
@@ -528,7 +524,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(42 Intervals, start=100.0, stop=150.5)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(61 Intervals, start=100.0, stop=150.5)
 </pre></div>
 </div>
 </div>
@@ -540,7 +536,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><th>hatch</th><th>colour</th><th>component</th><th>width</th></tr><tr><td style="color:black; background-color:white">None</td><td style="color:#000000; background-color:#48cc0e">#48cc0e</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td><td style="color:black; background-color:white">1.0</td></tr><tr><td style="color:black; background-color:white">None</td><td style="color:#ffffff; background-color:#5779e2">#5779e2</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td><td style="color:black; background-color:white">0.2</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><th>width</th><th>hatch</th><th>colour</th><th>component</th></tr><tr><td style="color:black; background-color:white">1.0</td><td style="color:black; background-color:white">None</td><td style="color:#000000; background-color:#48cc0e">#48cc0e</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td></tr><tr><td style="color:black; background-color:white">0.2</td><td style="color:black; background-color:white">None</td><td style="color:#ffffff; background-color:#5779e2">#5779e2</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -577,7 +573,7 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Striplog merge</div>
+                <div class="title">How to merge two overlapping <code class="docutils literal notranslate"><span class="pre">Striplog</span></code>s merge</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -588,7 +584,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></div>
+                <div class="title">How to calculate the proportion of sand using a moving window</div>
                 
               </div>
             </a>
@@ -624,7 +620,7 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Binary morphologies</a><ul>
+<li><a class="reference internal" href="#">How to work with binary logs</a><ul>
 <li><a class="reference internal" href="#make-a-striplog">Make a striplog</a></li>
 <li><a class="reference internal" href="#plot-the-intervals">Plot the intervals</a></li>
 <li><a class="reference internal" href="#remove-thin-things">Remove thin things</a></li>

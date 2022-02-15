@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Striplog for abstracting curves" href="10_Handling_curve_data.html" /><link rel="prev" title="Display objects" href="03_Display_objects.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="How to abstract curves using Striplog" href="10_Handling_curve_data.html" /><link rel="prev" title="Display objects" href="03_Display_objects.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
-        <title>Striplog expert functions - striplog documentation</title>
+        <title>striplog beyond the basics - striplog documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -158,21 +158,17 @@
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="00_Read_me_first.html">Read me first!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Striplog basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_Basic_objects.html">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_Display_objects.html">Display objects</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Striplog expert functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html">Striplog for abstracting curves</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#random-curve-data">Random curve data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-data-from-the-curve-into-the-striplog">Extract data from the curve into the striplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-and-reduce-data">Extract and reduce data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">Parsing a description into components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="12_Moving_sand_proportion.html">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="13_Binary_morphologies.html">Binary morphologies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">Striplog merge</a></li>
-<li class="toctree-l1"><a class="reference internal" href="15_Markov_chains.html">Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">Blocking curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">striplog</span></code> beyond the basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html">How to abstract curves using Striplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">How to parse a description into Striplog <code class="docutils literal notranslate"><span class="pre">Components</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_Moving_sand_proportion.html">How to calculate the proportion of sand using a moving window</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_Binary_morphologies.html">How to work with binary logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">How to merge two overlapping <code class="docutils literal notranslate"><span class="pre">Striplog</span></code>s merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_Markov_chains.html">How to use Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">How to block curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
@@ -238,8 +234,8 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="striplog-expert-functions">
-<h1>Striplog expert functions<a class="headerlink" href="#striplog-expert-functions" title="Permalink to this headline">#</a></h1>
+          <section class="tex2jax_ignore mathjax_ignore" id="striplog-beyond-the-basics">
+<h1><code class="docutils literal notranslate"><span class="pre">striplog</span></code> beyond the basics<a class="headerlink" href="#striplog-beyond-the-basics" title="Permalink to this headline">#</a></h1>
 <p>This notebooks looks at the main <code class="docutils literal notranslate"><span class="pre">striplog</span></code> object. For the basic objects it depends on, see <a class="reference internal" href="02_Basic_objects.html"><span class="doc std std-doc">Basic objects</span></a>.</p>
 <p>First, import anything we might need.</p>
 <div class="cell docutils container">
@@ -482,7 +478,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>14.3</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>anhydrite</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>36.94 m of anhydrite</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.063</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>51.24117647058824</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>14.3</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>anhydrite</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>36.94 m of anhydrite</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.094</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>51.24117647058824</td></tr></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1014,7 +1010,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>60.95882352941177</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>2.96 m of sandstone, grey, vf-f</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.233</td></tr><tr><td><strong>porosity</strong></td><td>[0.1107259  0.16367082 0.21743196]</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>63.92352941176471</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>60.95882352941177</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>2.96 m of sandstone, grey, vf-f</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.232</td></tr><tr><td><strong>porosity</strong></td><td>[0.15886966 0.20209543 0.05518558]</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>63.92352941176471</td></tr></table></div></div></div>
 </div>
 <p>We can also write a function that returns <code class="docutils literal notranslate"><span class="pre">True</span></code> for some condition, and then <code class="docutils literal notranslate"><span class="pre">filter</span></code> intervals on that condition:</p>
 <div class="cell docutils container">
@@ -1027,7 +1023,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(7 Intervals, start=51.24117647058824, stop=131.47647058823532)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(4 Intervals, start=51.24117647058824, stop=130.04117647058825)
 </pre></div>
 </div>
 </div>
@@ -1046,7 +1042,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(7 Intervals, start=51.24117647058824, stop=131.47647058823532)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(4 Intervals, start=51.24117647058824, stop=130.04117647058825)
 </pre></div>
 </div>
 </div>
@@ -1089,7 +1085,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>60.95882352941177</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>2.96 m of sandstone, grey, vf-f</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.233</td></tr><tr><td><strong>porosity</strong></td><td>[0.1107259  0.16367082 0.21743196]</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>63.92352941176471</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>60.95882352941177</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>colour</strong></td><td>grey</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>2.96 m of sandstone, grey, vf-f</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.232</td></tr><tr><td><strong>porosity</strong></td><td>[0.15886966 0.20209543 0.05518558]</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>63.92352941176471</td></tr></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1211,7 +1207,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>131.47647058823532</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>volcanic</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>4.42 m of volcanic</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.004</td></tr><tr><td><strong>porosity</strong></td><td>[0.21375421 0.01895106 0.14521745]</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>135.9</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>131.47647058823532</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>volcanic</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>4.42 m of volcanic</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.207</td></tr><tr><td><strong>porosity</strong></td><td>[0.07216647 0.03652541 0.06721901]</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>135.9</td></tr></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1237,7 +1233,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>135.9</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>volcanic</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>4.42 m of volcanic</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.004</td></tr><tr><td><strong>porosity</strong></td><td>[0.21375421 0.01895106 0.14521745]</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>131.47647058823532</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>135.9</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>volcanic</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>4.42 m of volcanic</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.207</td></tr><tr><td><strong>porosity</strong></td><td>[0.07216647 0.03652541 0.06721901]</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>131.47647058823532</td></tr></table></div></div></div>
 </div>
 </section>
 <hr class="docutils"/>
@@ -1622,7 +1618,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>20.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>anhydrite</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>31.24 m of anhydrite</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.063</td></tr><tr><td><strong>porosity</strong></td><td>[0.01684561 0.21347711 0.03248973]</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>51.24117647058824</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>20.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>anhydrite</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>31.24 m of anhydrite</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table><tr><td><strong>por</strong></td><td>0.094</td></tr><tr><td><strong>porosity</strong></td><td>[0.20353392 0.00334868 0.13171732]</td></tr></table></div></td></tr><tr><td><strong>base</strong></td><td>51.24117647058824</td></tr></table></div></div></div>
 </div>
 <p><strong>Limitation</strong> — right now you cannot ‘crop’ to an extent larger than the current striplog. Maybe we should allow that, with padding…</p>
 <div class="cell docutils container">
@@ -1713,7 +1709,7 @@ import matplotlib.pyplot as plt
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Striplog for abstracting curves</div>
+                <div class="title">How to abstract curves using Striplog</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -1760,7 +1756,7 @@ import matplotlib.pyplot as plt
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Striplog expert functions</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">striplog</span></code> beyond the basics</a><ul>
 <li><a class="reference internal" href="#making-a-striplog-from-a-png">Making a <code class="docutils literal notranslate"><span class="pre">striplog</span></code> from a PNG</a></li>
 <li><a class="reference internal" href="#making-finding-and-annealing-gaps">Making, finding and annealing gaps</a></li>
 <li><a class="reference internal" href="#label-the-intervals">Label the intervals</a><ul>

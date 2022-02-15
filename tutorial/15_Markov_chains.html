@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Blocking curves with welly and striplog" href="16_Blocked_logs.html" /><link rel="prev" title="Striplog merge" href="14_Merge.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="How to block curves with welly and striplog" href="16_Blocked_logs.html" /><link rel="prev" title="How to merge two overlapping Striplogs merge" href="14_Merge.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
-        <title>Markov chains with striplog - striplog documentation</title>
+        <title>How to use Markov chains with striplog - striplog documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -158,21 +158,17 @@
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="00_Read_me_first.html">Read me first!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Striplog basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_Basic_objects.html">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_Display_objects.html">Display objects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04_Beyond_basics.html">Striplog expert functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html">Striplog for abstracting curves</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#random-curve-data">Random curve data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-data-from-the-curve-into-the-striplog">Extract data from the curve into the striplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-and-reduce-data">Extract and reduce data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">Parsing a description into components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="12_Moving_sand_proportion.html">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="13_Binary_morphologies.html">Binary morphologies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">Striplog merge</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">Blocking curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_Beyond_basics.html"><code class="docutils literal notranslate"><span class="pre">striplog</span></code> beyond the basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html">How to abstract curves using Striplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">How to parse a description into Striplog <code class="docutils literal notranslate"><span class="pre">Components</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_Moving_sand_proportion.html">How to calculate the proportion of sand using a moving window</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_Binary_morphologies.html">How to work with binary logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">How to merge two overlapping <code class="docutils literal notranslate"><span class="pre">Striplog</span></code>s merge</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">How to use Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">How to block curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
@@ -238,8 +234,8 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="markov-chains-with-striplog">
-<h1>Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code><a class="headerlink" href="#markov-chains-with-striplog" title="Permalink to this headline">#</a></h1>
+          <section class="tex2jax_ignore mathjax_ignore" id="how-to-use-markov-chains-with-striplog">
+<h1>How to use Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code><a class="headerlink" href="#how-to-use-markov-chains-with-striplog" title="Permalink to this headline">#</a></h1>
 <p>Launch this notebook:</p>
 <p>https://colab.research.google.com/github/agile-geoscience/striplog/blob/develop/tutorial/Markov_chains.ipynb</p>
 <hr class="docutils"/>
@@ -259,8 +255,8 @@
 </div>
 </div>
 </div>
-<section id="ways-to-get-a-markov-chain">
-<h2>2 ways to get a Markov chain<a class="headerlink" href="#ways-to-get-a-markov-chain" title="Permalink to this headline">#</a></h2>
+<section id="two-ways-to-get-a-markov-chain">
+<h2>Two ways to get a Markov chain<a class="headerlink" href="#two-ways-to-get-a-markov-chain" title="Permalink to this headline">#</a></h2>
 <p>There are two ways to generate <a class="reference external" href="https://en.wikipedia.org/wiki/Markov_chain">a Markov chain</a>:</p>
 <ol class="simple">
 <li><p>Parse one or more sequences of states. This will be turned into a transition matrix, from which a probability matrix will be computed.</p></li>
@@ -428,7 +424,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'CBACABADBCBABABDBCABABDBABCBCB'
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'BABCBCABABCABABCACBDABCABCABAB'
 </pre></div>
 </div>
 </div>
@@ -448,7 +444,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'012110131111201222101333311001'
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'112100122120010221331221210121'
 </pre></div>
 </div>
 </div>
@@ -617,8 +613,10 @@
 <h3>Experimental implementation!</h3>
 <p>Multistep Markov chains are a bit of an experiment in `striplog`. Please [get in touch](matt@agilescientific.com) if you have thoughts about how it should work.</p>
 </div></section>
+<section id="multistep-transitions">
+<h2>Multistep transitions<a class="headerlink" href="#multistep-transitions" title="Permalink to this headline">#</a></h2>
 <section id="step-2">
-<h2>Step = 2<a class="headerlink" href="#step-2" title="Permalink to this headline">#</a></h2>
+<h3>Step = 2<a class="headerlink" href="#step-2" title="Permalink to this headline">#</a></h3>
 <p>So far we’ve just been looking at direct this-to-that transitions, i.e. only considering each previous transition. What if we use the previous-but-one?</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -665,17 +663,17 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9  -&gt; 11 -&gt; 9    13.509
-8  -&gt; 9  -&gt; 10   10.710
-1  -&gt; 2  -&gt; 1    10.569
-7  -&gt; 1  -&gt; 7    10.334
-2  -&gt; 1  -&gt; 2    8.376
-2  -&gt; 1  -&gt; 4    6.968
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9  -&gt; 11 -&gt; 9    13.507
+7  -&gt; 1  -&gt; 7    12.694
+8  -&gt; 9  -&gt; 10   12.616
+1  -&gt; 2  -&gt; 1    9.889
+2  -&gt; 1  -&gt; 2    8.444
+9  -&gt; 10 -&gt; 9    7.238
+9  -&gt; 10 -&gt; 8    6.681
 11 -&gt; 9  -&gt; 1    6.665
-9  -&gt; 10 -&gt; 8    6.230
-9  -&gt; 10 -&gt; 9    5.855
-5  -&gt; 6  -&gt; 1    5.668
-10 -&gt; 8  -&gt; 9    5.023
+2  -&gt; 1  -&gt; 4    6.167
+5  -&gt; 6  -&gt; 1    5.488
+10 -&gt; 8  -&gt; 9    5.022
 </pre></div>
 </div>
 </div>
@@ -687,7 +685,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Chi2(chi2=1236.9004098659173, crit=112.02198574980785, perc=1.0)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Chi2(chi2=1317.8896772999503, crit=112.02198574980785, perc=1.0)
 </pre></div>
 </div>
 </div>
@@ -789,7 +787,7 @@
 </div>
 </section>
 <section id="step-3">
-<h2>Step = 3<a class="headerlink" href="#step-3" title="Permalink to this headline">#</a></h2>
+<h3>Step = 3<a class="headerlink" href="#step-3" title="Permalink to this headline">#</a></h3>
 <p>We can actually make a model for any number of steps, but we will need commensurately more data, especially if we’re not going to include self-transitions:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -805,6 +803,7 @@
 </div>
 </div>
 <p>I have no idea how to visualize or interpret this thing, let me know if you do something with it!</p>
+</section>
 </section>
 <section id="from-striplog-instance">
 <h2>From <code class="docutils literal notranslate"><span class="pre">Striplog()</span></code> instance<a class="headerlink" href="#from-striplog-instance" title="Permalink to this headline">#</a></h2>
@@ -932,7 +931,7 @@ The iterable function was deprecated in Matplotlib 3.1 and will be removed in 3.
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Blocking curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></div>
+                <div class="title">How to block curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -943,7 +942,7 @@ The iterable function was deprecated in Matplotlib 3.1 and will be removed in 3.
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Striplog merge</div>
+                <div class="title">How to merge two overlapping <code class="docutils literal notranslate"><span class="pre">Striplog</span></code>s merge</div>
                 
               </div>
             </a>
@@ -979,8 +978,8 @@ The iterable function was deprecated in Matplotlib 3.1 and will be removed in 3.
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a><ul>
-<li><a class="reference internal" href="#ways-to-get-a-markov-chain">2 ways to get a Markov chain</a></li>
+<li><a class="reference internal" href="#">How to use Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a><ul>
+<li><a class="reference internal" href="#two-ways-to-get-a-markov-chain">Two ways to get a Markov chain</a></li>
 <li><a class="reference internal" href="#powers-easterling-data">Powers &amp; Easterling data</a><ul>
 <li><a class="reference internal" href="#testing-for-independence">Testing for independence</a></li>
 <li><a class="reference internal" href="#which-transitions-are-interesting">Which transitions are interesting?</a></li>
@@ -989,8 +988,11 @@ The iterable function was deprecated in Matplotlib 3.1 and will be removed in 3.
 <li><a class="reference internal" href="#generating-random-sequences">Generating random sequences</a></li>
 <li><a class="reference internal" href="#parse-states">Parse states</a></li>
 <li><a class="reference internal" href="#data-from-matt-s-thesis">Data from Matt’s thesis</a></li>
+<li><a class="reference internal" href="#multistep-transitions">Multistep transitions</a><ul>
 <li><a class="reference internal" href="#step-2">Step = 2</a></li>
 <li><a class="reference internal" href="#step-3">Step = 3</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#from-striplog-instance">From <code class="docutils literal notranslate"><span class="pre">Striplog()</span></code> instance</a></li>
 </ul>
 </li>

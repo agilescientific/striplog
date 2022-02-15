@@ -158,21 +158,17 @@
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="00_Read_me_first.html">Read me first!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Striplog basics</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_Display_objects.html">Display objects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04_Beyond_basics.html">Striplog expert functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html">Striplog for abstracting curves</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#random-curve-data">Random curve data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-data-from-the-curve-into-the-striplog">Extract data from the curve into the striplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html#extract-and-reduce-data">Extract and reduce data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">Parsing a description into components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="12_Moving_sand_proportion.html">Moving sand proportion with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="13_Binary_morphologies.html">Binary morphologies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">Striplog merge</a></li>
-<li class="toctree-l1"><a class="reference internal" href="15_Markov_chains.html">Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">Blocking curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_Beyond_basics.html"><code class="docutils literal notranslate"><span class="pre">striplog</span></code> beyond the basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Handling_curve_data.html">How to abstract curves using Striplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_Parsing_descriptions.html">How to parse a description into Striplog <code class="docutils literal notranslate"><span class="pre">Components</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_Moving_sand_proportion.html">How to calculate the proportion of sand using a moving window</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13_Binary_morphologies.html">How to work with binary logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14_Merge.html">How to merge two overlapping <code class="docutils literal notranslate"><span class="pre">Striplog</span></code>s merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15_Markov_chains.html">How to use Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="16_Blocked_logs.html">How to block curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
@@ -871,9 +867,8 @@ class Lexicon(builtins.object)
 <div class="output text_html"><div class="table-wrapper"><table><tr><td><strong>upper</strong></td><td>18.0</td></tr><tr><td><strong>middle</strong></td><td>18.0</td></tr><tr><td><strong>lower</strong></td><td>18.0</td></tr></table></div></div></div>
 </div>
 <hr/>
-</section>
 <section id="comparing-and-combining-intervals">
-<h2>Comparing and combining intervals<a class="headerlink" href="#comparing-and-combining-intervals" title="Permalink to this headline">#</a></h2>
+<h3>Comparing and combining intervals<a class="headerlink" href="#comparing-and-combining-intervals" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Depth ordered</span>
@@ -1054,6 +1049,7 @@ False
 <hr/>
 <p style="color:gray">©2015 Agile Geoscience. Licensed CC-BY. <a href="https://github.com/agile-geoscience/striplog">striplog.py</a></p></section>
 </section>
+</section>
 
         </article>
       </div>
@@ -1116,8 +1112,10 @@ False
 <li><a class="reference internal" href="#lexicon">Lexicon</a></li>
 <li><a class="reference internal" href="#component">Component</a></li>
 <li><a class="reference internal" href="#position">Position</a></li>
-<li><a class="reference internal" href="#interval">Interval</a></li>
+<li><a class="reference internal" href="#interval">Interval</a><ul>
 <li><a class="reference internal" href="#comparing-and-combining-intervals">Comparing and combining intervals</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
