@@ -424,7 +424,8 @@ class Markov_chain(object):
                    max_size=1000,
                    directed=True,
                    edge_labels=False,
-                   draw_neg=False
+                   draw_neg=False,
+                   seed=None,  # For spring layout.
                    ):
         if self.normalized_difference.ndim > 2:
             raise MarkovError("You can only graph one-step chains.")
@@ -450,16 +451,16 @@ class Markov_chain(object):
         e_med = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if 1.0 < d['weight'] <= 2.0}
         e_large = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if d['weight'] > 2.0}
 
-        pos = nx.spring_layout(G)
+        pos = nx.spring_layout(G, seed=seed)
 
         sizes = max_size * (self._state_counts / max(self._state_counts))
         nx.draw_networkx_nodes(G, pos, ax=ax, node_size=sizes, node_color='orange')
-        nx.draw_networkx_edges(G, pos, ax=ax, edgelist=e_large, width=10, arrowsize=40, splines='curved')
-        nx.draw_networkx_edges(G, pos, ax=ax, edgelist=e_med, width=4, arrowsize=20)
+        nx.draw_networkx_edges(G, pos, ax=ax, edgelist=e_large, width=10, arrowsize=40, connectionstyle="arc3,rad=0.2")
+        nx.draw_networkx_edges(G, pos, ax=ax, edgelist=e_med, width=4, arrowsize=40, connectionstyle="arc3,rad=0.2")
         nx.draw_networkx_edges(G, pos, ax=ax, edgelist=e_small,
                                width=3,
                                alpha=0.1,
-                               edge_color='k')
+                               edge_color='k', connectionstyle="arc3,rad=0.2")
         if draw_neg:
             nx.draw_networkx_edges(G, pos, ax=ax, edgelist=e_neg,
                                    width=2,
@@ -480,8 +481,7 @@ class Markov_chain(object):
             return ax
         else:
             plt.axis('off')
-            plt.show()
-            return
+            return fig
 
     def plot_norm_diff(self,
                        ax=None,

@@ -2,9 +2,11 @@
 Define a suite a tests for the Striplog module.
 """
 import numpy as np
+import pytest
 
-from striplog.markov import Markov_chain
+from striplog.markov import Markov_chain, MarkovError
 
+data = "sssmmmlllmlmlsslsllsmmllllmssssllllssmmlllllssssssmmmmsmllllssslmslmsmmmslsllll"""
 
 def test_basics():
     data = [[0, 37,  3,  2],
@@ -27,8 +29,9 @@ def test_basics():
 
 
 def test_sequence():
-    data = "sssmmmlllmlmlsslsllsmmllllmssssllllssmmlllllssssssmmmmsmllllssslmslmsmmmslsllll"""
     m = Markov_chain.from_sequence(data, include_self=True)
+
+    assert len(m._state_counts) == 3
 
     ans = np.array([[19., 5., 7.],
                     [6., 9., 5.],
@@ -44,3 +47,22 @@ def test_sequence():
                     [-1.81677174,  1.82886491, -0.94412655],
                     [-2.68890472, -0.51627836,  0.76836845]])
     assert np.allclose(m.normalized_difference, ans)
+
+
+def test_generate():
+    m = Markov_chain.from_sequence(data, include_self=True)
+    
+    assert len(m.generate_states()) == 10
+
+
+def test_step_2():
+    m = Markov_chain.from_sequence(data, include_self=True, step=2)
+    
+    assert m.observed_freqs.ndim == 3
+
+def test_graph_fail():
+    m = Markov_chain.from_sequence(data, include_self=True, step=2)
+    with pytest.raises(MarkovError):
+        G = m.as_graph()
+
+# Graph itself tested via plot in test_plots.py.

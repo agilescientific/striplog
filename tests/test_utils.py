@@ -11,12 +11,20 @@ from striplog.utils import hex_to_name, name_to_hex
 from striplog.utils import hex_is_dark, text_colour_for_hex
 from striplog.utils import list_and_add
 from striplog.utils import tops_from_loglike
+from striplog.utils import binary_dilation, binary_erosion
 
 
 def test_null():
     """Test the null function on itself.
     """
     assert null(null) == null
+
+
+def test_binary():
+    arr = [1,0,0,0,1,1,1,0,1]
+    assert np.all(binary_dilation(arr, 1) == arr)
+    assert np.all(binary_dilation(arr, 3) == [1,1,0,1,1,1,1,1,1])
+    assert np.all(binary_erosion(arr, 3) == [0,0,0,0,0,1,0,0,0])
 
 
 def test_partial():

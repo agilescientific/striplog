@@ -55,7 +55,7 @@ def plot(fname=None):
     strip.plot(ax=ax, legend=legend, aspect=1)
     ax.axis('off')
 
-    logo_ax = fig.add_axes([0.162, 0.585, 0.7, 0.2], anchor='NE', zorder=1)
+    logo_ax = fig.add_axes([0.162, 0.585, 0.7, 0.2], anchor='NE', zorder=1, facecolor='none')
     logo_ax.imshow(im, cmap='gray', interpolation='none')
     logo_ax.axis('off')
 
