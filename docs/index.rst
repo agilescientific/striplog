@@ -12,31 +12,18 @@ Striplog: Intervals of rocks and things
     | ``striplog`` facilitates the loading, processing, and analysis of striplogs and other sequential data in the subsurface (stratigraphy, chronostratigraphy, and so on). 
 
 
-Quick start
------------
-
-.. toctree::
-    :caption: Quick start
-
-Install ``striplog`` with pip:
-
-.. code-block:: shell
-
-    pip install striplog
-
-Carry on exploring with the user guide below.
-
-
 User guide
 ----------
 
 .. toctree::
    :caption: User guide
    :maxdepth: 2
-   :glob:
 
    installation
-   tutorial/*
+   tutorial/01_Basics.ipynb
+   tutorial/02_Basic_objects.ipynb
+   tutorial/03_Display_objects.ipynb
+   howto
 
 
 API reference

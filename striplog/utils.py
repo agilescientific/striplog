@@ -336,9 +336,11 @@ def rgb_to_hex(rgb):
     """
     Utility function to convert (r,g,b) triples to hex.
     http://ageo.co/1CFxXpO
+
     Args:
       rgb (tuple): A sequence of RGB values in the
         range 0-255 or 0-1.
+
     Returns:
       str: The hex code for the colour.
     """
@@ -552,9 +554,11 @@ def add_subplot_axes(ax, rect, axisbg='w'):
     From: http://stackoverflow.com/questions/17458580/
     embedding-small-plots-inside-subplots-in-matplotlib
     License: CC-BY-SA
+
     Args:
         ax (axis): A matplotlib axis.
         rect (list): A rect specifying [left pos, bot pos, width, height]
+
     Returns:
         axis: The sub-axis in the specified position.
     """

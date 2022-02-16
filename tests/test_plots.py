@@ -194,11 +194,13 @@ def test_markov():
     ax = m.plot_norm_diff(ax=ax)
     return fig
 
+
 @pytest.mark.mpl_image_compare(**params)
 def test_markov_graph_plot():
     """Test Markov plot.
     """
+    fig, ax = plt.subplots()
     data = "sssmmmlllmlmlsslsllsmmllllmssssllllssmmlllllssssssmmmmsmllllssslmslmsmmmslsllll"""
     m = Markov_chain.from_sequence(data, include_self=False)
-    fig = m.plot_graph(seed=42)
+    ax = m.plot_graph(ax=ax, seed=42)
     return fig

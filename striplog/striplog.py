@@ -988,6 +988,13 @@ class Striplog(object):
         Returns:
             Striplog: The ``striplog`` object.
         """
+        # Try to deal with the log potentially being a welly.Curve, pd.Series,
+        # or pd.DataFrame. Squeeze down to 1D in case it's a column vector.
+        try:
+            log_arr = np.squeeze(log.values)
+        except AttributeError:
+            log_arr = np.squeeze(np.asanyarray(log))
+
         if (components is None) and (legend is None) and (field is None):
             m = 'You must provide a list of components and legend, or a field.'
             raise StriplogError(m)
@@ -1018,12 +1025,12 @@ class Striplog(object):
 
             # Digitize.
             try:  # To use cutoff as a list.
-                a = np.digitize(log, cutoff, right)
+                a = np.digitize(log_arr, cutoff, right)
             except ValueError:  # It's just a number.
-                a = np.digitize(log, [cutoff], right)
+                a = np.digitize(log_arr, [cutoff], right)
 
         else:
-            a = np.copy(log)
+            a = np.copy(log_arr)
 
         tops, values = utils.tops_from_loglike(a)
 
@@ -1785,6 +1792,13 @@ class Striplog(object):
         Returns:
             A copy of the striplog.
         """
+        # Try to deal with the log potentially being a welly.Curve, pd.Series,
+        # or pd.DataFrame. Squeeze down to 1D in case it's a column vector.
+        try:
+            log_arr = np.squeeze(log.values)
+        except AttributeError:
+            log_arr = np.squeeze(np.asanyarray(log))
+
         # Build a dict of {index: [log values]} to keep track.
         intervals = {}
         previous_ix = -1
@@ -1793,9 +1807,9 @@ class Striplog(object):
             if ix is None:
                 continue
             if ix == previous_ix:
-                intervals[ix].append(log[i])
+                intervals[ix].append(log_arr[i])
             else:
-                intervals[ix] = [log[i]]
+                intervals[ix] = [log_arr[i]]
             previous_ix = ix
 
         # Set the requested attribute in the primary comp of each interval.

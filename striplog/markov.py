@@ -441,10 +441,8 @@ class Markov_chain(object):
 
         G = self.as_graph(directed=directed)
 
-        return_ax = True
         if ax is None:
             fig, ax = plt.subplots(figsize=figsize)
-            return_ax = False
 
         e_neg = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if d['weight'] <= -1.0}
         e_small = {(u, v): round(d['weight'], 1) for (u, v, d) in G.edges(data=True) if -1.0 < d['weight'] <= 1.0}
@@ -472,16 +470,12 @@ class Markov_chain(object):
             nx.draw_networkx_edge_labels(G, pos, edge_labels=e_med)
 
         labels = nx.get_node_attributes(G, 'state')
-        ax = nx.draw_networkx_labels(G, pos, labels=labels,
+        _ = nx.draw_networkx_labels(G, pos, ax=ax, labels=labels,
                                      font_size=20,
                                      font_family='sans-serif',
                                      font_color='blue')
-
-        if return_ax:
-            return ax
-        else:
-            plt.axis('off')
-            return fig
+        ax.axis('off')
+        return ax
 
     def plot_norm_diff(self,
                        ax=None,
@@ -568,8 +562,4 @@ class Markov_chain(object):
         # Deal with probable bug in matplotlib 3.1.1
         ax.set_ylim(reversed(ax.get_xlim()))
 
-        if return_ax:
-            return ax
-        else:
-            plt.show()
-            return
+        return ax
