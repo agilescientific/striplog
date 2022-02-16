@@ -101,6 +101,9 @@ class Position(UserDict):
     def __len__(self):
         return len(self.__dict__)
 
+    def __len__(self):
+        return len(self.__dict__)
+
     def _repr_html_(self):
         """
         Jupyter Notebook magic repr function.
