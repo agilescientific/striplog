@@ -161,18 +161,20 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorial/01_Basics.html">Striplog basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/02_Basic_objects.html">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial/03_Display_objects.html">Display objects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/04_Beyond_basics.html"><code class="docutils literal notranslate"><span class="pre">striplog</span></code> beyond the basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/10_Handling_curve_data.html">How to abstract curves using Striplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/11_Parsing_descriptions.html">How to parse a description into Striplog <code class="docutils literal notranslate"><span class="pre">Components</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/12_Moving_sand_proportion.html">How to calculate the proportion of sand using a moving window</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/13_Binary_morphologies.html">How to work with binary logs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/14_Merge.html">How to merge two overlapping <code class="docutils literal notranslate"><span class="pre">Striplog</span></code>s merge</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/15_Markov_chains.html">How to use Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/16_Blocked_logs.html">How to block curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="howto.html">How to…</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/10_Extract_curves_into_striplogs.html">Extract curves into striplogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/11_Parse_a_description_into_components.html">Parse a description into components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/12_Calculate_sand_proportion.html">Calculate sand proportion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/13_Work_with_binary_logs.html">How to work with binary logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/14_Merge_overlapping_striplogs.html">Merge overlapping striplogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/15_Model_sequences_with_Markov_chains.html">Model sequences with Markov chains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/16_Block_logs.html">Block logs</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api/striplog.html">striplog package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/striplog.html">striplog package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/striplog.canstrat.html">striplog.canstrat module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/striplog.canstrat_codes.html">striplog.canstrat_codes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/striplog.component.html">striplog.component module</a></li>
@@ -239,10 +241,11 @@
 <section id="coming-february-2022">
 <h2>0.9.0 (coming February 2022)<a class="headerlink" href="#coming-february-2022" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
-<li><p>No longer supporting versions of Python before 3.6 (because I like f-strings).</p></li>
-<li><p>Reorganized and moved <code class="docutils literal notranslate"><span class="pre">the</span> <span class="pre">documentation</span> <span class="pre">&lt;https://code.agilescientific.com/striplog&gt;</span></code>_ to make it a bit easier to follow.</p></li>
+<li><p>We are no longer supporting versions of Python before 3.6 (because I like f-strings).</p></li>
 <li><p>You can now pass format string labels to <code class="docutils literal notranslate"><span class="pre">striplog.plot()</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">'{colour}</span> <span class="pre">{lithology}'</span></code>. These are passed to the Component summary method.</p></li>
-<li><p>You can plot Striplog’s logo with <code class="docutils literal notranslate"><span class="pre">striplog.logo.plot()</span></code> (requires Snare Drum font).</p></li>
+<li><p>The Striplog constructor now creates Components if it is given miscellaneous data. If there are not components (e.g. “comp” fields in the CSV), then the description and either the provided Lexicon or the default one will be passed to the Interval constructor.</p></li>
+<li><p>Reorganized and moved <code class="docutils literal notranslate"><span class="pre">the</span> <span class="pre">documentation</span> <span class="pre">&lt;https://code.agilescientific.com/striplog&gt;</span></code>_ to make it a bit easier to follow.</p></li>
+<li><p>You can plot Striplog’s logo with <code class="docutils literal notranslate"><span class="pre">striplog.logo.plot()</span></code>.</p></li>
 </ul>
 </section>
 <section id="january-2021">

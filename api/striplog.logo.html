@@ -161,18 +161,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/01_Basics.html">Striplog basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/02_Basic_objects.html">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/03_Display_objects.html">Display objects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/04_Beyond_basics.html"><code class="docutils literal notranslate"><span class="pre">striplog</span></code> beyond the basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/10_Handling_curve_data.html">How to abstract curves using Striplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/11_Parsing_descriptions.html">How to parse a description into Striplog <code class="docutils literal notranslate"><span class="pre">Components</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/12_Moving_sand_proportion.html">How to calculate the proportion of sand using a moving window</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/13_Binary_morphologies.html">How to work with binary logs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/14_Merge.html">How to merge two overlapping <code class="docutils literal notranslate"><span class="pre">Striplog</span></code>s merge</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/15_Markov_chains.html">How to use Markov chains with <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/16_Blocked_logs.html">How to block curves with <code class="docutils literal notranslate"><span class="pre">welly</span></code> and <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../howto.html">How to…</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/10_Extract_curves_into_striplogs.html">Extract curves into striplogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/11_Parse_a_description_into_components.html">Parse a description into components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/12_Calculate_sand_proportion.html">Calculate sand proportion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/13_Work_with_binary_logs.html">How to work with binary logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/14_Merge_overlapping_striplogs.html">Merge overlapping striplogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/15_Model_sequences_with_Markov_chains.html">Model sequences with Markov chains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/16_Block_logs.html">Block logs</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="striplog.html">striplog package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="striplog.html">striplog package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="striplog.canstrat.html">striplog.canstrat module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="striplog.canstrat_codes.html">striplog.canstrat_codes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="striplog.component.html">striplog.component module</a></li>
@@ -238,15 +240,12 @@
 <span id="striplog-logo-module"></span><h1>striplog.logo module<a class="headerlink" href="#module-striplog.logo" title="Permalink to this headline">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="striplog.logo.plot">
-<span class="sig-prename descclassname"><span class="pre">striplog.logo.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.logo.plot" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">striplog.logo.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.logo.plot" title="Permalink to this definition">#</a></dt>
 <dd><p>Plots the Striplog logo.
 Requires Snare Drum font, by Nate Halley.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fname</strong> (<em>str</em>) – Filename to save the plot to.</p></li>
-<li><p><strong>font_path</strong> (<em>str</em>) – Path to the font file.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – Filename to save the plot to.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The figure object.</p>
