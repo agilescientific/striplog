@@ -64,7 +64,7 @@ def regularize(sequence, strings_are_states=False) -> tuple:
     return np.array(sorted(uniques)), seq_of_seqs
 
 
-class Markov_chain(object):
+class Markov_chain:
     """
     Markov_chain object.
 

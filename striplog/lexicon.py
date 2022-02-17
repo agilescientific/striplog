@@ -23,7 +23,7 @@ class LexiconError(Exception):
     pass
 
 
-class Lexicon(object):
+class Lexicon:
     """
     A Lexicon is a dictionary of 'types' and regex patterns.
 

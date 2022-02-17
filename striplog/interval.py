@@ -26,7 +26,7 @@ class IntervalError(Exception):
 
 
 @total_ordering
-class Interval(object):
+class Interval:
     """
     Used to represent a lithologic or stratigraphic interval, or single point,
     such as a sample location.

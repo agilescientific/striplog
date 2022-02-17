@@ -37,7 +37,7 @@ class StriplogError(Exception):
     pass
 
 
-class Striplog(object):
+class Striplog:
     """
     A Striplog is a sequence of intervals.
 
