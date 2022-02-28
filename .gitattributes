@@ -1,2 +1,3 @@
-docs/* linguist-documentation
-tutorial/* linguist-documentation
+tests/assets/* linguist-vendored
+tests/baseline/* linguist-vendored
+docs/** linguist-documentation
