@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Basic objects" href="02_Basic_objects.html" /><link rel="prev" title="Installation" href="../installation.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
-        <title>Striplog basics - striplog documentation</title>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.23"/>
+        <title>Quick start - striplog documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=3c656993158f05539f962c5cea52a5e6c184bb8c" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
@@ -158,7 +158,7 @@
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Striplog basics</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Quick start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_Basic_objects.html">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_Display_objects.html">Display objects</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../howto.html">How to…</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -222,6 +222,12 @@
   <div class="main">
     <div class="content">
       <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
         <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
@@ -236,21 +242,17 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="striplog-basics">
-<h1>Striplog basics<a class="headerlink" href="#striplog-basics" title="Permalink to this headline">#</a></h1>
+          <section class="tex2jax_ignore mathjax_ignore" id="quick-start">
+<h1>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">#</a></h1>
 <p>This notebooks looks at the main <code class="docutils literal notranslate"><span class="pre">striplog</span></code> object. For the basic objects it depends on, see <a class="reference internal" href="02_Basic_objects.html"><span class="doc std std-doc">Basic objects</span></a>.</p>
 <p>First, import anything we might need.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
-
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">import</span> <span class="nn">striplog</span>
 <span class="n">striplog</span><span class="o">.</span><span class="n">__version__</span>
-
-<span class="c1"># If you get a lot of warnings here, try running this block again.</span>
 </pre></div>
 </div>
 </div>
@@ -260,66 +262,237 @@
 </div>
 </div>
 </div>
+<section id="making-a-striplog-from-csv-data">
+<h2>Making a striplog from CSV data<a class="headerlink" href="#making-a-striplog-from-csv-data" title="Permalink to this headline">#</a></h2>
+<p>Suppose we have CSV data like this:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Legend</span><span class="p">,</span> <span class="n">Lexicon</span><span class="p">,</span> <span class="n">Interval</span><span class="p">,</span> <span class="n">Component</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">csv_string</span> <span class="o">=</span> <span class="s2">"""top, base, comp lithology, comp grainsize</span>
+<span class="s2">  230.329,  233.269,  Grey sandstone, vf-f</span>
+<span class="s2">  233.269,  234.700,  Anhydrite,</span>
+<span class="s2">  234.700,  236.596,  Dolomite,</span>
+<span class="s2">  236.596,  237.911,  Red siltstone,</span>
+<span class="s2">  237.911,  238.723,  Anhydrite,</span>
+<span class="s2">  238.723,  239.807,  Grey sandstone, vf-f</span>
+<span class="s2">  239.807,  240.774,  Red siltstone,</span>
+<span class="s2">  240.774,  241.122,  Dolomite,</span>
+<span class="s2">  241.122,  241.702,  Grey siltstone,</span>
+<span class="s2">  241.702,  243.095,  Dolomite,</span>
+<span class="s2">"""</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">legend</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">builtin</span><span class="p">(</span><span class="s1">'NSDOE'</span><span class="p">)</span>
-<span class="n">lexicon</span> <span class="o">=</span> <span class="n">Lexicon</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<section id="making-a-striplog">
-<h2>Making a <code class="docutils literal notranslate"><span class="pre">striplog</span></code><a class="headerlink" href="#making-a-striplog" title="Permalink to this headline">#</a></h2>
+<p>Because the lithology column is named <strong>comp lithology</strong> (or <strong>component lithology</strong>), striplog will interpret this column as the lithology of a component. Likewise, the grainsize is pulled out as another property. However, the colour of the rock is not pulled out – it remains combined with the lithology.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Striplog</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">Striplog</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+
+<span class="n">strip</span> <span class="o">=</span> <span class="n">Striplog</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">csv_string</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    A Striplog is a sequence of intervals.
-
-    We will build them from LAS files or CSVs.
-
-    Args:
-        list_of_Intervals (list): A list of Interval objects.
-        source (str): A source for the data. Default None.
-        order (str): 'auto', 'depth', 'elevation', or 'none'. Please refer to
-            the documentation for details. Best idea is to let the default
-            work. Default: 'auto'.
-    
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/striplog/striplog.py:512: UserWarning: No lexicon provided, using the default.
+  warnings.warn(w)
 </pre></div>
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/01_Basics_7_0.png" src="../_images/01_Basics_7_0.png"/>
+</div>
+</div>
+<p>Later we’ll see how to make this plot look nicer.</p>
+<p>Let’s look at one <strong>interval</strong> of the striplog. We’ll choose the first one, because it has the grainsize property. It looks like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>230.329</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>Grey sandstone</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>2.94 m of Grey sandstone, vf-f</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>233.269</td></tr></table></div></div></div>
+</div>
+</section>
+<section id="adding-a-lexicon">
+<h2>Adding a lexicon<a class="headerlink" href="#adding-a-lexicon" title="Permalink to this headline">#</a></h2>
+<p>Often, we don’t have properties conveniently separated out into columns like the example above. Instead we have data like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Light grey vf sandstone
+</pre></div>
+</div>
+<p>We can get <code class="docutils literal notranslate"><span class="pre">striplog</span></code> to pull these different properties apart for us, by using a <code class="docutils literal notranslate"><span class="pre">Lexicon</span></code>. This is a dictionary-like look-up table that tells Striplog what different words mean. For example, using the default lexicon, here are the things it understands to be ‘lithologies’:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Lexicon</span>
+
+<span class="n">lexicon</span> <span class="o">=</span> <span class="n">Lexicon</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
+
+<span class="n">lexicon</span><span class="o">.</span><span class="n">lithology</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>['overburden',
+ 'sandstone',
+ 'siltstone',
+ 'shale',
+ 'conglomerate',
+ 'mudstone',
+ 'limestone',
+ 'dolomite',
+ 'salt',
+ 'halite',
+ 'anhydrite',
+ 'gypsum',
+ 'sylvite',
+ 'clay',
+ 'mud',
+ 'silt',
+ 'sand',
+ 'gravel',
+ 'boulders']
+</pre></div>
+</div>
+</div>
+</div>
+<p>And grainsize (these use regular expressions to capture variance in how grainsize might be expressed; all of them are case insensitive):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lexicon</span><span class="o">.</span><span class="n">grainsize</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>['vf(?:-)?',
+ 'f(?:-)?',
+ 'm(?:-)?',
+ 'c(?:-)?',
+ 'vc',
+ 'very fine(?: to)?',
+ 'fine(?: to)?',
+ 'medium(?: to)?',
+ 'coarse(?: to)?',
+ 'very coarse',
+ 'v fine(?: to)?',
+ 'med(?: to)?',
+ 'med.(?: to)?',
+ 'v coarse',
+ 'grains?',
+ 'granules?',
+ 'pebbles?',
+ 'cobbles?',
+ 'boulders?']
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can accept data in which the descriptions combine several properties:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">csv_string</span> <span class="o">=</span> <span class="s2">"""top, base, description</span>
+<span class="s2">  200.000,  230.329,  Anhydrite                                       </span>
+<span class="s2">  230.329,  233.269,  Grey vf-f sandstone</span>
+<span class="s2">  233.269,  234.700,  Anhydrite                                       </span>
+<span class="s2">  234.700,  236.596,  Dolomite                                        </span>
+<span class="s2">  236.596,  237.911,  Red siltstone                                   </span>
+<span class="s2">  237.911,  238.723,  Anhydrite                                       </span>
+<span class="s2">  238.723,  239.807,  Grey vf-f sandstone                             </span>
+<span class="s2">  239.807,  240.774,  Red siltstone                                   </span>
+<span class="s2">  240.774,  241.122,  Dolomite                                        </span>
+<span class="s2">  241.122,  241.702,  Grey siltstone                                  </span>
+<span class="s2">  241.702,  243.095,  Dolomite                                        </span>
+<span class="s2">  243.095,  246.654,  Grey vf-f sandstone                             </span>
+<span class="s2">  246.654,  247.234,  Dolomite                                        </span>
+<span class="s2">  247.234,  255.435,  Grey vf-f sandstone                             </span>
+<span class="s2">  255.435,  258.723,  Grey siltstone                                  </span>
+<span class="s2">  258.723,  259.729,  Dolomite                                        </span>
+<span class="s2">  259.729,  260.967,  Grey siltstone                                  </span>
+<span class="s2">  260.967,  261.354,  Dolomite                                        </span>
+<span class="s2">  261.354,  267.041,  Grey siltstone                                  </span>
+<span class="s2">  267.041,  267.350,  Dolomite                                        </span>
+<span class="s2">  267.350,  274.004,  Grey siltstone                                  </span>
+<span class="s2">  274.004,  274.313,  Dolomite                                        </span>
+<span class="s2">  274.313,  294.816,  Grey siltstone                                  </span>
+<span class="s2">  294.816,  295.397,  Dolomite                                        </span>
+<span class="s2">  295.397,  296.286,  Limestone                                       </span>
+<span class="s2">  296.286,  300.000,  Volcanic                                        </span>
+<span class="s2">"""</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s see how the lexicon parses one of these ‘descriptions’:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Component</span>
+
+<span class="n">Component</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="s1">'Light grey vf-f sandstone'</span><span class="p">,</span> <span class="n">lexicon</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>colour</strong></td><td>light grey</td></tr></table></div></div></div>
+</div>
+<p>Now we can pass in the CSV text and apply the lexicon to it, producing a striplog:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip2</span> <span class="o">=</span> <span class="n">Striplog</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">csv_string</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">=</span><span class="n">lexicon</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">strip2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(26 Intervals, start=200.0, stop=300.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>230.329</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>colour</strong></td><td>grey</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>2.94 m of sandstone, vf-f, grey</td></tr><tr><td><strong>description</strong></td><td>Grey vf-f sandstone</td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>233.269</td></tr></table></div></div></div>
+</div>
+</section>
+<section id="making-a-striplog-from-an-image">
+<h2>Making a <code class="docutils literal notranslate"><span class="pre">striplog</span></code> from an image<a class="headerlink" href="#making-a-striplog-from-an-image" title="Permalink to this headline">#</a></h2>
+<p>We originally made <code class="docutils literal notranslate"><span class="pre">striplog</span></code> for a specific use-case: we had a lot of images of striplogs, with tops and bottom depths. So striplog can read images and try to make striplog objects out of them:</p>
 <p>Here is one of the images we will convert into striplogs:</p>
-<img src="M-MG-70_14.3_135.9.png" style="float:left" width="50"/><div class="cell docutils container">
+<img src="https://raw.githubusercontent.com/agile-geoscience/striplog/master/docs/tutorial/M-MG-70_14.3_135.9.png" style="float:left" width="50"/><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">imgfile</span> <span class="o">=</span> <span class="s2">"M-MG-70_14.3_135.9.png"</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>Striplog’s <code class="docutils literal notranslate"><span class="pre">Legend</span></code> class maps ‘components’ (rocks, if you will) to display styles (colour, width, etc). We will eventually use a legend to control how striplogs are displayed, but a legend can also control how a striplog image is interpreted.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip</span> <span class="o">=</span> <span class="n">Striplog</span><span class="o">.</span><span class="n">from_img</span><span class="p">(</span><span class="n">imgfile</span><span class="p">,</span> <span class="mf">14.3</span><span class="p">,</span> <span class="mf">135.9</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Legend</span>
+
+<span class="n">legend</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">builtin</span><span class="p">(</span><span class="s1">'NSDOE'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip</span> <span class="o">=</span> <span class="n">Striplog</span><span class="o">.</span><span class="n">from_image</span><span class="p">(</span><span class="n">imgfile</span><span class="p">,</span> <span class="mf">14.3</span><span class="p">,</span> <span class="mf">135.9</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">)</span>
 <span class="n">strip</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/striplog/striplog.py:906: UserWarning: from_img() is deprecated; please use from_image()
-  warnings.warn(w)
-</pre></div>
-</div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(26 Intervals, start=14.3, stop=135.9)
 </pre></div>
 </div>
@@ -332,8 +505,18 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/01_Basics_10_0.png" src="../_images/01_Basics_10_0.png"/>
+<img alt="../_images/01_Basics_29_0.png" src="../_images/01_Basics_29_0.png"/>
 </div>
+</div>
+<p>This thing might look like the image (because it uses the same legend), but it’s data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>14.3</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>anhydrite</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>36.94 m of anhydrite</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>51.24117647058824</td></tr></table></div></div></div>
 </div>
 </section>
 <section id="representations-of-a-striplog">
@@ -341,7 +524,8 @@
 <p>There are several ways to inspect a striplog:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">print</span></code></strong> prints the contents of the striplog</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">top</span></code></strong> shows us a list of the primary lithologies in the striplog, in order of cumulative thickness</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">unique</span></code></strong> shows us a list of the primary lithologies in the striplog, in order of cumulative thickness</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">histogram</span></code></strong> makes a histogram of the lithologies (and also returns the histogram data)</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">plot</span></code></strong> makes a plot of the striplog with coloured bars</p></li>
 </ul>
 <div class="cell docutils container">
@@ -379,38 +563,17 @@
 </div>
 </div>
 </div>
-<p>It’s easy enough to visualize this. Perhaps this should be a method…</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">list_of_int</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">strip</span><span class="o">.</span><span class="n">unique</span><span class="p">:</span>
-    <span class="n">list_of_int</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Interval</span><span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]]))</span>
-    <span class="n">depth</span> <span class="o">+=</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="n">Striplog</span><span class="p">(</span><span class="n">list_of_int</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">strip</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">'right'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/01_Basics_16_0.png" src="../_images/01_Basics_16_0.png"/>
+<img alt="../_images/01_Basics_36_0.png" src="../_images/01_Basics_36_0.png"/>
 </div>
 </div>
-</section>
-<section id="plot">
-<h2>Plot<a class="headerlink" href="#plot" title="Permalink to this headline">#</a></h2>
-<p>If you call <code class="docutils literal notranslate"><span class="pre">plot()</span></code> on a <code class="docutils literal notranslate"><span class="pre">Striplog</span></code> you’ll get random colours (one per rock type in the striplog), and preset aspect ratio of 10.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/01_Basics_19_0.png" src="../_images/01_Basics_19_0.png"/>
-</div>
-</div>
-<p>For more control, you can pass some parameters. You’ll probably always want to pass a legend.</p>
+<p>You have already seen some basic plotting. For more control, you can pass some parameters to the <code class="docutils literal notranslate"><span class="pre">Striplog.plot()</span></code> method, but all of them are optional.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">ladder</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -418,7 +581,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/01_Basics_21_0.png" src="../_images/01_Basics_21_0.png"/>
+<img alt="../_images/01_Basics_38_0.png" src="../_images/01_Basics_38_0.png"/>
 </div>
 </div>
 <div class="cell docutils container">
@@ -438,7 +601,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/01_Basics_22_0.png" src="../_images/01_Basics_22_0.png"/>
+<img alt="../_images/01_Basics_39_0.png" src="../_images/01_Basics_39_0.png"/>
 </div>
 </div>
 </section>
@@ -490,19 +653,8 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">strip</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>26
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">d</span><span class="o">.</span><span class="n">top</span><span class="o">.</span><span class="n">z</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">strip</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">13</span><span class="p">]])</span>
 </pre></div>
 </div>
@@ -514,21 +666,6 @@
 </div>
 </div>
 </div>
-<p>You can even index into it with an iterable, like a list of indices. The result is a striplog.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
-<span class="n">strip</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/01_Basics_31_0.png" src="../_images/01_Basics_31_0.png"/>
-</div>
-</div>
-</section>
-<section id="slicing-and-indexing">
-<h2>Slicing and indexing<a class="headerlink" href="#slicing-and-indexing" title="Permalink to this headline">#</a></h2>
 <p>Slicing returns a new <code class="docutils literal notranslate"><span class="pre">striplog</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -542,151 +679,35 @@
 </div>
 </div>
 </div>
+<p>You can even index into it with an iterable, like a list of indices. The result is a striplog.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rock</span> <span class="o">=</span> <span class="n">strip</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">'sandstone'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">rock2</span> <span class="o">=</span> <span class="n">Component</span><span class="p">({</span><span class="s1">'lithology'</span><span class="p">:</span><span class="s1">'shale'</span><span class="p">,</span> <span class="s1">'colour'</span><span class="p">:</span><span class="s1">'grey'</span><span class="p">})</span>
-<span class="n">iv</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="n">rock</span><span class="p">,</span> <span class="n">rock2</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Striplog</span><span class="p">([</span><span class="n">iv</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">strip</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(3 Intervals, start=129.68823529411765, stop=350.0)
-</pre></div>
+<img alt="../_images/01_Basics_49_0.png" src="../_images/01_Basics_49_0.png"/>
 </div>
 </div>
-</div>
+<p>You can add striplogs:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">del</span> <span class="n">strip</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-
-<span class="n">strip</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">strip</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/01_Basics_37_0.png" src="../_images/01_Basics_37_0.png"/>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(10 Intervals, start=14.3, stop=135.9)
+</pre></div>
+</div>
 </div>
 </div>
 </section>
-<section id="read-or-write-csv-or-las3">
-<h2>Read or write CSV or LAS3<a class="headerlink" href="#read-or-write-csv-or-las3" title="Permalink to this headline">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">strip</span><span class="o">.</span><span class="n">to_las3</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>~Lithology_Parameter
-LITH .   Striplog         : Lithology source          {S}
-LITHD.   MD               : Lithology depth reference {S}
-
-~Lithology_Definition
-LITHT.M                   : Lithology top depth       {F}
-LITHB.M                   : Lithology base depth      {F}
-LITHD.                    : Lithology description     {S}
-
-~Lithology_Data | Lithology_Definition
-14.3,51.24117647058824,Anhydrite
-51.24117647058824,54.81764705882354,"Sandstone, grey, vf-f"
-54.81764705882354,56.55882352941177,Anhydrite
-56.55882352941177,58.86470588235295,Dolomite
-60.464705882352945,61.45294117647059,Anhydrite
-61.45294117647059,62.77058823529413,"Sandstone, grey, vf-f"
-62.77058823529413,63.94705882352942,"Siltstone, red"
-63.94705882352942,64.37058823529412,Dolomite
-64.37058823529412,65.0764705882353,"Siltstone, grey"
-65.0764705882353,66.77058823529413,Dolomite
-66.77058823529413,71.10000000000001,"Sandstone, grey, vf-f"
-71.10000000000001,71.80588235294118,Dolomite
-71.80588235294118,81.78235294117647,"Sandstone, grey, vf-f"
-81.78235294117647,85.78235294117647,"Siltstone, grey"
-85.78235294117647,87.00588235294119,Dolomite
-87.00588235294119,88.51176470588236,"Siltstone, grey"
-88.51176470588236,88.98235294117647,Dolomite
-88.98235294117647,95.9,"Siltstone, grey"
-95.9,96.2764705882353,Dolomite
-96.2764705882353,104.37058823529412,"Siltstone, grey"
-104.37058823529412,104.74705882352941,Dolomite
-104.74705882352941,129.68823529411765,"Siltstone, grey"
-129.68823529411765,130.39411764705883,Dolomite
-130.39411764705883,131.47647058823532,Limestone
-131.47647058823532,135.9,Volcanic
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip</span><span class="o">.</span><span class="n">source</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'Image'
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">csv_string</span> <span class="o">=</span> <span class="s2">"""top, base, lithology</span>
-<span class="s2">  200.000,  230.329,  Anhydrite                                       </span>
-<span class="s2">  230.329,  233.269,  Grey vf-f sandstone                             </span>
-<span class="s2">  233.269,  234.700,  Anhydrite                                       </span>
-<span class="s2">  234.700,  236.596,  Dolomite                                        </span>
-<span class="s2">  236.596,  237.911,  Red siltstone                                   </span>
-<span class="s2">  237.911,  238.723,  Anhydrite                                       </span>
-<span class="s2">  238.723,  239.807,  Grey vf-f sandstone                             </span>
-<span class="s2">  239.807,  240.774,  Red siltstone                                   </span>
-<span class="s2">  240.774,  241.122,  Dolomite                                        </span>
-<span class="s2">  241.122,  241.702,  Grey siltstone                                  </span>
-<span class="s2">  241.702,  243.095,  Dolomite                                        </span>
-<span class="s2">  243.095,  246.654,  Grey vf-f sandstone                             </span>
-<span class="s2">  246.654,  247.234,  Dolomite                                        </span>
-<span class="s2">  247.234,  255.435,  Grey vf-f sandstone                             </span>
-<span class="s2">  255.435,  258.723,  Grey siltstone                                  </span>
-<span class="s2">  258.723,  259.729,  Dolomite                                        </span>
-<span class="s2">  259.729,  260.967,  Grey siltstone                                  </span>
-<span class="s2">  260.967,  261.354,  Dolomite                                        </span>
-<span class="s2">  261.354,  267.041,  Grey siltstone                                  </span>
-<span class="s2">  267.041,  267.350,  Dolomite                                        </span>
-<span class="s2">  267.350,  274.004,  Grey siltstone                                  </span>
-<span class="s2">  274.004,  274.313,  Dolomite                                        </span>
-<span class="s2">  274.313,  294.816,  Grey siltstone                                  </span>
-<span class="s2">  294.816,  295.397,  Dolomite                                        </span>
-<span class="s2">  295.397,  296.286,  Limestone                                       </span>
-<span class="s2">  296.286,  300.000,  Volcanic                                        </span>
-<span class="s2">"""</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip2</span> <span class="o">=</span> <span class="n">Striplog</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">csv_string</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">=</span><span class="n">lexicon</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Notice the warning about a missing term in the lexicon.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Component</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="s1">'Grey vf-f sandstone'</span><span class="p">,</span> <span class="n">lexicon</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>colour</strong></td><td>grey</td></tr></table></div></div></div>
-</div>
+<section id="striplog-from-las-data">
+<h2>Striplog from LAS data<a class="headerlink" href="#striplog-from-las-data" title="Permalink to this headline">#</a></h2>
+<p>Suppose we have LAS 3.0 data like this:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">las3</span> <span class="o">=</span> <span class="s2">"""~Lithology_Parameter</span>
@@ -730,46 +751,80 @@ LITHD.                    : Lithology description     {S}
 </div>
 </div>
 </div>
+<p>There is a method for this format:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip3</span> <span class="o">=</span> <span class="n">Striplog</span><span class="o">.</span><span class="n">from_las3</span><span class="p">(</span><span class="n">las3</span><span class="p">,</span> <span class="n">lexicon</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">strip3</span><span class="p">)</span>
+<span class="n">strip3</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{'top': Position({'middle': 200.0, 'units': 'm'}), 'base': Position({'middle': 230.329, 'units': 'm'}), 'description': 'Anhydrite', 'data': {}, 'components': [Component({'lithology': 'anhydrite'})]}
-{'top': Position({'middle': 230.329, 'units': 'm'}), 'base': Position({'middle': 233.269, 'units': 'm'}), 'description': 'Grey vf-f sandstone', 'data': {}, 'components': [Component({'lithology': 'sandstone', 'grainsize': 'vf-f', 'colour': 'grey'})]}
-{'top': Position({'middle': 233.269, 'units': 'm'}), 'base': Position({'middle': 234.7, 'units': 'm'}), 'description': 'Anhydrite', 'data': {}, 'components': [Component({'lithology': 'anhydrite'})]}
-{'top': Position({'middle': 234.7, 'units': 'm'}), 'base': Position({'middle': 236.596, 'units': 'm'}), 'description': 'Dolomite', 'data': {}, 'components': [Component({'lithology': 'dolomite'})]}
-{'top': Position({'middle': 236.596, 'units': 'm'}), 'base': Position({'middle': 237.911, 'units': 'm'}), 'description': 'Red siltstone', 'data': {}, 'components': [Component({'lithology': 'siltstone', 'colour': 'red'})]}
-{'top': Position({'middle': 237.911, 'units': 'm'}), 'base': Position({'middle': 238.723, 'units': 'm'}), 'description': 'Anhydrite', 'data': {}, 'components': [Component({'lithology': 'anhydrite'})]}
-{'top': Position({'middle': 238.723, 'units': 'm'}), 'base': Position({'middle': 239.807, 'units': 'm'}), 'description': 'Grey vf-f sandstone', 'data': {}, 'components': [Component({'lithology': 'sandstone', 'grainsize': 'vf-f', 'colour': 'grey'})]}
-{'top': Position({'middle': 239.807, 'units': 'm'}), 'base': Position({'middle': 240.774, 'units': 'm'}), 'description': 'Red siltstone', 'data': {}, 'components': [Component({'lithology': 'siltstone', 'colour': 'red'})]}
-{'top': Position({'middle': 240.774, 'units': 'm'}), 'base': Position({'middle': 241.122, 'units': 'm'}), 'description': 'Dolomite', 'data': {}, 'components': [Component({'lithology': 'dolomite'})]}
-{'top': Position({'middle': 241.122, 'units': 'm'}), 'base': Position({'middle': 241.702, 'units': 'm'}), 'description': 'Grey siltstone', 'data': {}, 'components': [Component({'lithology': 'siltstone', 'colour': 'grey'})]}
-{'top': Position({'middle': 241.702, 'units': 'm'}), 'base': Position({'middle': 243.095, 'units': 'm'}), 'description': 'Dolomite', 'data': {}, 'components': [Component({'lithology': 'dolomite'})]}
-{'top': Position({'middle': 243.095, 'units': 'm'}), 'base': Position({'middle': 246.654, 'units': 'm'}), 'description': 'Grey vf-f sandstone', 'data': {}, 'components': [Component({'lithology': 'sandstone', 'grainsize': 'vf-f', 'colour': 'grey'})]}
-{'top': Position({'middle': 246.654, 'units': 'm'}), 'base': Position({'middle': 247.234, 'units': 'm'}), 'description': 'Dolomite', 'data': {}, 'components': [Component({'lithology': 'dolomite'})]}
-{'top': Position({'middle': 247.234, 'units': 'm'}), 'base': Position({'middle': 255.435, 'units': 'm'}), 'description': 'Grey vf-f sandstone', 'data': {}, 'components': [Component({'lithology': 'sandstone', 'grainsize': 'vf-f', 'colour': 'grey'})]}
-{'top': Position({'middle': 255.435, 'units': 'm'}), 'base': Position({'middle': 258.723, 'units': 'm'}), 'description': 'Grey siltstone', 'data': {}, 'components': [Component({'lithology': 'siltstone', 'colour': 'grey'})]}
-{'top': Position({'middle': 258.723, 'units': 'm'}), 'base': Position({'middle': 259.729, 'units': 'm'}), 'description': 'Dolomite', 'data': {}, 'components': [Component({'lithology': 'dolomite'})]}
-{'top': Position({'middle': 259.729, 'units': 'm'}), 'base': Position({'middle': 260.967, 'units': 'm'}), 'description': 'Grey siltstone', 'data': {}, 'components': [Component({'lithology': 'siltstone', 'colour': 'grey'})]}
-{'top': Position({'middle': 260.967, 'units': 'm'}), 'base': Position({'middle': 261.354, 'units': 'm'}), 'description': 'Dolomite', 'data': {}, 'components': [Component({'lithology': 'dolomite'})]}
-{'top': Position({'middle': 261.354, 'units': 'm'}), 'base': Position({'middle': 267.041, 'units': 'm'}), 'description': 'Grey siltstone', 'data': {}, 'components': [Component({'lithology': 'siltstone', 'colour': 'grey'})]}
-{'top': Position({'middle': 267.041, 'units': 'm'}), 'base': Position({'middle': 267.35, 'units': 'm'}), 'description': 'Dolomite', 'data': {}, 'components': [Component({'lithology': 'dolomite'})]}
-{'top': Position({'middle': 267.35, 'units': 'm'}), 'base': Position({'middle': 274.004, 'units': 'm'}), 'description': 'Grey siltstone', 'data': {}, 'components': [Component({'lithology': 'siltstone', 'colour': 'grey'})]}
-{'top': Position({'middle': 274.004, 'units': 'm'}), 'base': Position({'middle': 274.313, 'units': 'm'}), 'description': 'Dolomite', 'data': {}, 'components': [Component({'lithology': 'dolomite'})]}
-{'top': Position({'middle': 274.313, 'units': 'm'}), 'base': Position({'middle': 294.816, 'units': 'm'}), 'description': 'Grey siltstone', 'data': {}, 'components': [Component({'lithology': 'siltstone', 'colour': 'grey'})]}
-{'top': Position({'middle': 294.816, 'units': 'm'}), 'base': Position({'middle': 295.397, 'units': 'm'}), 'description': 'Dolomite', 'data': {}, 'components': [Component({'lithology': 'dolomite'})]}
-{'top': Position({'middle': 295.397, 'units': 'm'}), 'base': Position({'middle': 296.286, 'units': 'm'}), 'description': 'Limestone', 'data': {}, 'components': [Component({'lithology': 'limestone'})]}
-{'top': Position({'middle': 296.286, 'units': 'm'}), 'base': Position({'middle': 300.0, 'units': 'm'}), 'description': 'Volcanic', 'data': {}, 'components': [Component({})]}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(26 Intervals, start=200.0, stop=300.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strip3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/01_Basics_56_0.png" src="../_images/01_Basics_56_0.png"/>
+</div>
+</div>
+<p>We can also produce a file like this from a striplog:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">strip3</span><span class="o">.</span><span class="n">to_las3</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>~Lithology_Parameter
+LITH .   Striplog         : Lithology source          {S}
+LITHD.   MD               : Lithology depth reference {S}
+
+~Lithology_Definition
+LITHT.M                   : Lithology top depth       {F}
+LITHB.M                   : Lithology base depth      {F}
+LITHD.                    : Lithology description     {S}
+
+~Lithology_Data | Lithology_Definition
+200.0,230.329,Anhydrite
+230.329,233.269,"Sandstone, vf-f, grey"
+233.269,234.7,Anhydrite
+234.7,236.596,Dolomite
+236.596,237.911,"Siltstone, red"
+237.911,238.723,Anhydrite
+238.723,239.807,"Sandstone, vf-f, grey"
+239.807,240.774,"Siltstone, red"
+240.774,241.122,Dolomite
+241.122,241.702,"Siltstone, grey"
+241.702,243.095,Dolomite
+243.095,246.654,"Sandstone, vf-f, grey"
+246.654,247.234,Dolomite
+247.234,255.435,"Sandstone, vf-f, grey"
+255.435,258.723,"Siltstone, grey"
+258.723,259.729,Dolomite
+259.729,260.967,"Siltstone, grey"
+260.967,261.354,Dolomite
+261.354,267.041,"Siltstone, grey"
+267.041,267.35,Dolomite
+267.35,274.004,"Siltstone, grey"
+274.004,274.313,Dolomite
+274.313,294.816,"Siltstone, grey"
+294.816,295.397,Dolomite
+295.397,296.286,Limestone
+296.286,300.0,
 </pre></div>
 </div>
 </div>
 </div>
 <hr/>
-<p style="color:gray">©2015 Agile Geoscience. Licensed CC-BY. <a href="https://github.com/agile-geoscience/striplog">striplog.py</a></p></section>
+<p style="color:gray">©2022 Agile Geoscience. Licensed CC-BY. <a href="https://github.com/agile-geoscience/striplog">striplog.py</a></p></section>
 </section>
 
         </article>
@@ -836,13 +891,13 @@ LITHD.                    : Lithology description     {S}
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Striplog basics</a><ul>
-<li><a class="reference internal" href="#making-a-striplog">Making a <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
+<li><a class="reference internal" href="#">Quick start</a><ul>
+<li><a class="reference internal" href="#making-a-striplog-from-csv-data">Making a striplog from CSV data</a></li>
+<li><a class="reference internal" href="#adding-a-lexicon">Adding a lexicon</a></li>
+<li><a class="reference internal" href="#making-a-striplog-from-an-image">Making a <code class="docutils literal notranslate"><span class="pre">striplog</span></code> from an image</a></li>
 <li><a class="reference internal" href="#representations-of-a-striplog">Representations of a <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li><a class="reference internal" href="#plot">Plot</a></li>
 <li><a class="reference internal" href="#manipulating-a-striplog">Manipulating a <code class="docutils literal notranslate"><span class="pre">striplog</span></code></a></li>
-<li><a class="reference internal" href="#slicing-and-indexing">Slicing and indexing</a></li>
-<li><a class="reference internal" href="#read-or-write-csv-or-las3">Read or write CSV or LAS3</a></li>
+<li><a class="reference internal" href="#striplog-from-las-data">Striplog from LAS data</a></li>
 </ul>
 </li>
 </ul>

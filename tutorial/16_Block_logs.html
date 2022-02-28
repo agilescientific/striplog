@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="striplog package" href="../api/striplog.html" /><link rel="prev" title="Model sequences with Markov chains" href="15_Model_sequences_with_Markov_chains.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.23"/>
         <title>Block logs - striplog documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=3c656993158f05539f962c5cea52a5e6c184bb8c" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
@@ -158,7 +158,7 @@
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Striplog basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Quick start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_Basic_objects.html">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_Display_objects.html">Display objects</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../howto.html">How to…</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
@@ -222,6 +222,12 @@
   <div class="main">
     <div class="content">
       <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
         <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
@@ -351,7 +357,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><th>component</th><th>colour</th><th>width</th><th>hatch</th></tr><tr><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></div></td><td style="color:#000000; background-color:#fdf43f">#fdf43f</td><td style="color:black; background-color:white">3.0</td><td style="color:black; background-color:white">None</td></tr><tr><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>siltstone</td></tr></table></div></td><td style="color:#000000; background-color:#cfbb8f">#cfbb8f</td><td style="color:black; background-color:white">2.0</td><td style="color:black; background-color:white">None</td></tr><tr><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>shale</td></tr></table></div></td><td style="color:#000000; background-color:#c0d0c0">#c0d0c0</td><td style="color:black; background-color:white">1.0</td><td style="color:black; background-color:white">None</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><th>colour</th><th>hatch</th><th>component</th><th>width</th></tr><tr><td style="color:#000000; background-color:#fdf43f">#fdf43f</td><td style="color:black; background-color:white">None</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></div></td><td style="color:black; background-color:white">3.0</td></tr><tr><td style="color:#000000; background-color:#cfbb8f">#cfbb8f</td><td style="color:black; background-color:white">None</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>siltstone</td></tr></table></div></td><td style="color:black; background-color:white">2.0</td></tr><tr><td style="color:#000000; background-color:#c0d0c0">#c0d0c0</td><td style="color:black; background-color:white">None</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>shale</td></tr></table></div></td><td style="color:black; background-color:white">1.0</td></tr></table></div></div></div>
 </div>
 <p>Now the plot will look more geological:</p>
 <div class="cell docutils container">
@@ -510,7 +516,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f46f209d750&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fc3f7e89360&gt;]
 </pre></div>
 </div>
 <img alt="../_images/16_Block_logs_35_1.png" src="../_images/16_Block_logs_35_1.png"/>

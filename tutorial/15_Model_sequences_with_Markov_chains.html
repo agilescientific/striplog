@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Block logs" href="16_Block_logs.html" /><link rel="prev" title="Merge overlapping striplogs" href="14_Merge_overlapping_striplogs.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.23"/>
         <title>Model sequences with Markov chains - striplog documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=3c656993158f05539f962c5cea52a5e6c184bb8c" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
@@ -158,7 +158,7 @@
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Striplog basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Quick start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_Basic_objects.html">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_Display_objects.html">Display objects</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../howto.html">How to…</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
@@ -222,6 +222,12 @@
   <div class="main">
     <div class="content">
       <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
         <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
@@ -429,7 +435,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'BDBCABABDBCBABCABCBCABCBDBDBDC'
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'CBCABABCBABDBABCBCABABDBCBDBCA'
 </pre></div>
 </div>
 </div>
@@ -449,7 +455,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'133331212133120120211122211211'
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'022121001201312120120121222212'
 </pre></div>
 </div>
 </div>
@@ -671,18 +677,17 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7  -&gt; 1  -&gt; 7    17.990
-9  -&gt; 11 -&gt; 9    14.598
-8  -&gt; 9  -&gt; 10   13.494
-1  -&gt; 2  -&gt; 1    10.128
-2  -&gt; 1  -&gt; 2    8.703
-2  -&gt; 1  -&gt; 4    7.264
-9  -&gt; 10 -&gt; 9    6.674
-10 -&gt; 8  -&gt; 9    6.674
-9  -&gt; 10 -&gt; 8    6.223
-11 -&gt; 9  -&gt; 1    6.173
-5  -&gt; 6  -&gt; 1    5.380
-5  -&gt; 9  -&gt; 11   5.017
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8  -&gt; 9  -&gt; 10   14.606
+7  -&gt; 1  -&gt; 7    12.688
+9  -&gt; 11 -&gt; 9    12.610
+1  -&gt; 2  -&gt; 1    9.936
+2  -&gt; 1  -&gt; 2    8.492
+10 -&gt; 8  -&gt; 9    7.950
+11 -&gt; 9  -&gt; 1    6.945
+5  -&gt; 6  -&gt; 1    6.012
+9  -&gt; 10 -&gt; 9    5.852
+2  -&gt; 1  -&gt; 4    5.686
+9  -&gt; 10 -&gt; 8    5.534
 </pre></div>
 </div>
 </div>
@@ -694,7 +699,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Chi2(chi2=1588.0954014224435, crit=112.02198574980785, perc=1.0)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Chi2(chi2=1368.8726043409974, crit=112.02198574980785, perc=1.0)
 </pre></div>
 </div>
 </div>
@@ -719,53 +724,53 @@
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[[0.   , 0.   , 0.   , ..., 0.   , 0.   , 0.   ],
-        [2.617, 0.   , 1.222, ..., 0.679, 0.157, 0.154],
-        [3.495, 1.317, 0.   , ..., 0.97 , 0.224, 0.132],
+        [2.694, 0.   , 1.193, ..., 0.699, 0.181, 0.11 ],
+        [3.525, 1.209, 0.   , ..., 0.905, 0.16 , 0.175],
         ...,
-        [1.867, 0.633, 0.792, ..., 0.   , 0.123, 0.064],
-        [0.476, 0.2  , 0.197, ..., 0.095, 0.   , 0.006],
-        [0.35 , 0.114, 0.132, ..., 0.083, 0.025, 0.   ]],
+        [1.807, 0.647, 0.902, ..., 0.   , 0.132, 0.098],
+        [0.509, 0.15 , 0.206, ..., 0.11 , 0.   , 0.015],
+        [0.408, 0.12 , 0.135, ..., 0.083, 0.025, 0.   ]],
 
-       [[0.   , 0.872, 1.219, ..., 0.706, 0.147, 0.117],
+       [[0.   , 0.908, 1.242, ..., 0.666, 0.163, 0.123],
         [0.   , 0.   , 0.   , ..., 0.   , 0.   , 0.   ],
-        [1.185, 0.393, 0.   , ..., 0.319, 0.074, 0.049],
+        [1.264, 0.414, 0.   , ..., 0.291, 0.074, 0.031],
         ...,
-        [0.617, 0.19 , 0.316, ..., 0.   , 0.028, 0.018],
-        [0.135, 0.055, 0.092, ..., 0.04 , 0.   , 0.009],
-        [0.144, 0.043, 0.074, ..., 0.018, 0.006, 0.   ]],
+        [0.617, 0.172, 0.344, ..., 0.   , 0.034, 0.034],
+        [0.178, 0.034, 0.095, ..., 0.043, 0.   , 0.006],
+        [0.123, 0.055, 0.083, ..., 0.031, 0.006, 0.   ]],
 
-       [[0.   , 1.161, 1.68 , ..., 0.823, 0.209, 0.181],
-        [1.244, 0.   , 0.574, ..., 0.31 , 0.077, 0.058],
+       [[0.   , 1.249, 1.663, ..., 0.868, 0.221, 0.19 ],
+        [1.276, 0.   , 0.5  , ..., 0.267, 0.089, 0.049],
         [0.   , 0.   , 0.   , ..., 0.   , 0.   , 0.   ],
         ...,
-        [0.851, 0.264, 0.424, ..., 0.   , 0.034, 0.055],
-        [0.224, 0.074, 0.104, ..., 0.068, 0.   , 0.006],
-        [0.16 , 0.055, 0.092, ..., 0.018, 0.009, 0.   ]],
+        [0.877, 0.258, 0.433, ..., 0.   , 0.08 , 0.037],
+        [0.184, 0.071, 0.12 , ..., 0.034, 0.   , 0.009],
+        [0.187, 0.049, 0.067, ..., 0.046, 0.006, 0.   ]],
 
        ...,
 
-       [[0.   , 0.712, 0.915, ..., 0.338, 0.147, 0.071],
-        [0.602, 0.   , 0.27 , ..., 0.144, 0.043, 0.034],
-        [0.857, 0.298, 0.   , ..., 0.227, 0.052, 0.052],
+       [[0.   , 0.644, 0.859, ..., 0.393, 0.092, 0.083],
+        [0.641, 0.   , 0.248, ..., 0.163, 0.043, 0.043],
+        [0.908, 0.295, 0.   , ..., 0.202, 0.049, 0.031],
         ...,
         [0.   , 0.   , 0.   , ..., 0.   , 0.   , 0.   ],
-        [0.12 , 0.034, 0.052, ..., 0.021, 0.   , 0.003],
-        [0.071, 0.028, 0.028, ..., 0.018, 0.003, 0.   ]],
+        [0.123, 0.037, 0.067, ..., 0.028, 0.   , 0.   ],
+        [0.101, 0.04 , 0.018, ..., 0.025, 0.006, 0.   ]],
 
-       [[0.   , 0.129, 0.233, ..., 0.135, 0.025, 0.028],
-        [0.178, 0.   , 0.089, ..., 0.04 , 0.006, 0.006],
-        [0.197, 0.071, 0.   , ..., 0.043, 0.012, 0.018],
+       [[0.   , 0.135, 0.261, ..., 0.114, 0.034, 0.015],
+        [0.144, 0.   , 0.08 , ..., 0.034, 0.012, 0.   ],
+        [0.245, 0.08 , 0.   , ..., 0.058, 0.021, 0.012],
         ...,
-        [0.123, 0.055, 0.055, ..., 0.   , 0.009, 0.003],
+        [0.101, 0.025, 0.055, ..., 0.   , 0.006, 0.012],
         [0.   , 0.   , 0.   , ..., 0.   , 0.   , 0.   ],
-        [0.009, 0.003, 0.012, ..., 0.003, 0.   , 0.   ]],
+        [0.015, 0.003, 0.006, ..., 0.006, 0.   , 0.   ]],
 
-       [[0.   , 0.138, 0.178, ..., 0.098, 0.015, 0.015],
-        [0.089, 0.   , 0.061, ..., 0.018, 0.009, 0.006],
-        [0.157, 0.055, 0.   , ..., 0.012, 0.018, 0.006],
+       [[0.   , 0.138, 0.181, ..., 0.074, 0.028, 0.021],
+        [0.135, 0.   , 0.074, ..., 0.018, 0.003, 0.009],
+        [0.132, 0.074, 0.   , ..., 0.052, 0.   , 0.006],
         ...,
-        [0.095, 0.028, 0.028, ..., 0.   , 0.006, 0.003],
-        [0.018, 0.003, 0.009, ..., 0.012, 0.   , 0.   ],
+        [0.077, 0.04 , 0.037, ..., 0.   , 0.009, 0.   ],
+        [0.012, 0.003, 0.012, ..., 0.   , 0.   , 0.003],
         [0.   , 0.   , 0.   , ..., 0.   , 0.   , 0.   ]]])
 </pre></div>
 </div>

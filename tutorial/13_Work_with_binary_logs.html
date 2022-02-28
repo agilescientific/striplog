@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Merge overlapping striplogs" href="14_Merge_overlapping_striplogs.html" /><link rel="prev" title="Calculate sand proportion" href="12_Calculate_sand_proportion.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.23"/>
         <title>How to work with binary logs - striplog documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=3c656993158f05539f962c5cea52a5e6c184bb8c" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
@@ -158,7 +158,7 @@
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Striplog basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_Basics.html">Quick start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_Basic_objects.html">Basic objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_Display_objects.html">Display objects</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../howto.html">How to…</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
@@ -222,6 +222,12 @@
   <div class="main">
     <div class="content">
       <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
         <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
@@ -254,7 +260,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f20e9bba9b0&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f9f844827d0&gt;]
 </pre></div>
 </div>
 <img alt="../_images/13_Work_with_binary_logs_1_1.png" src="../_images/13_Work_with_binary_logs_1_1.png"/>
@@ -302,7 +308,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>100.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>0.50 m of False</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>100.5</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>100.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>1.00 m of False</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>101.0</td></tr></table></div></div></div>
 </div>
 </section>
 <section id="plot-the-intervals">
@@ -451,7 +457,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(Component({'pay': True}), 27.0), (Component({'pay': False}), 23.5)]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(Component({'pay': True}), 28.5), (Component({'pay': False}), 22.0)]
 </pre></div>
 </div>
 </div>
@@ -464,7 +470,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>114.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>7.00 m of True</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>121.0</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>142.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>3.50 m of True</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>145.5</td></tr></table></div></div></div>
 </div>
 <p>These functions optionally take an integer argument <code class="docutils literal notranslate"><span class="pre">n</span></code> specifying how many of the thickest or thinnest intervals you want to see. If <code class="docutils literal notranslate"><span class="pre">n</span></code> is greater than 1, a <code class="docutils literal notranslate"><span class="pre">Striplog</span></code> object is returned so you can see the positions of those items:</p>
 <div class="cell docutils container">
@@ -526,7 +532,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(47 Intervals, start=100.0, stop=150.5)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(52 Intervals, start=100.0, stop=150.5)
 </pre></div>
 </div>
 </div>
@@ -538,7 +544,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><th>width</th><th>colour</th><th>component</th><th>hatch</th></tr><tr><td style="color:black; background-color:white">1.0</td><td style="color:#000000; background-color:#48cc0e">#48cc0e</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td><td style="color:black; background-color:white">None</td></tr><tr><td style="color:black; background-color:white">0.2</td><td style="color:#ffffff; background-color:#5779e2">#5779e2</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td><td style="color:black; background-color:white">None</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><th>component</th><th>hatch</th><th>colour</th><th>width</th></tr><tr><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td><td style="color:black; background-color:white">None</td><td style="color:#000000; background-color:#48cc0e">#48cc0e</td><td style="color:black; background-color:white">1.0</td></tr><tr><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td><td style="color:black; background-color:white">None</td><td style="color:#ffffff; background-color:#5779e2">#5779e2</td><td style="color:black; background-color:white">0.2</td></tr></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
