@@ -13,7 +13,7 @@ class DescriptionError(Exception):
     pass
 
 
-class Description(object):
+class Description:
     """
     Used to represent a description.
 

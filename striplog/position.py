@@ -14,7 +14,7 @@ class PositionError(Exception):
     pass
 
 
-class Meta(object):
+class Meta:
     """
     Used for metadata.
     """
@@ -25,7 +25,7 @@ class Meta(object):
 
 
 @total_ordering
-class Position(object):
+class Position:
     """
     Used to represent a position: a top or base.
 

@@ -47,7 +47,7 @@ class LegendError(Exception):
     pass
 
 
-class Decor(object):
+class Decor:
     """
     A single display style. A Decor describes how to display a given set
     of Component properties.
@@ -329,7 +329,7 @@ class Decor(object):
         return r
 
 
-class Legend(object):
+class Legend:
     """
     A look-up table to assist in the conversion of Components to
     a plot colour.

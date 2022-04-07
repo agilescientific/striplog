@@ -8,13 +8,29 @@ def simplify_credits(html):
     """
     Replace the credit part of the HTML footer. Return the new text.
     """
-    s = r"Created using <a href=\"https://www\.sphinx.+?Furo theme</a>."
-    pattern = re.compile(s, flags=re.DOTALL)
+    s = r'<a class="muted-link" href="https://pradyunsg\.me">@pradyunsg</a>\'s'
+    pattern = re.compile(s)
+    html = pattern.sub(r'', html)
 
-    new_s = '<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>'
-    new_s += ' | Created using Sphinx & Furo'
+    s = r'Copyright &#169; 2022, The Bruges Authors'
+    pattern = re.compile(s)
+    new_s = '&#169; 2022, The Bruges Authors | <a href="https://creativecommons.org/licenses/by/4.0/">CC BY</a>'
+    html = pattern.sub(new_s, html)
 
-    return pattern.sub(new_s, html)
+    return html
+
+
+def add_analytics(html):
+    """
+    Add snippet to head.
+    """
+    s = r'</head>'
+    pattern = re.compile(s)
+    new_s = '<script defer data-domain="code.agilescientific.com" src="https://plausible.io/js/plausible.js"></script></head>'
+    html = pattern.sub(new_s, html)
+
+    return html
+
 
 def main(path):
     """
@@ -26,6 +42,7 @@ def main(path):
             html = f.read()
 
             new_html = simplify_credits(html)
+            new_html = add_analytics(html)
 
             f.seek(0)
             f.write(new_html)
