@@ -5,13 +5,13 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Merge overlapping striplogs" href="14_Merge_overlapping_striplogs.html" /><link rel="prev" title="Calculate sand proportion" href="12_Calculate_sand_proportion.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.23"/>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
         <title>How to work with binary logs - striplog documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=3c656993158f05539f962c5cea52a5e6c184bb8c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
     
     
@@ -23,24 +23,28 @@
   --color-code-foreground: black;
   
   }
-  body[data-theme="dark"] {
-    --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
-  
-  }
-  @media (prefers-color-scheme: dark) {
-    body:not([data-theme="light"]) {
+  @media not print {
+    body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   
     }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
@@ -260,7 +264,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f9f844827d0&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fa68fe9ed10&gt;]
 </pre></div>
 </div>
 <img alt="../_images/13_Work_with_binary_logs_1_1.png" src="../_images/13_Work_with_binary_logs_1_1.png"/>
@@ -308,7 +312,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>100.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>1.00 m of False</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>101.0</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>100.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>1.50 m of False</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>101.5</td></tr></table></div></div></div>
 </div>
 </section>
 <section id="plot-the-intervals">
@@ -457,7 +461,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(Component({'pay': True}), 28.5), (Component({'pay': False}), 22.0)]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(Component({'pay': False}), 27.0), (Component({'pay': True}), 23.5)]
 </pre></div>
 </div>
 </div>
@@ -470,7 +474,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>142.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>3.50 m of True</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>145.5</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>125.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>6.00 m of False</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>131.0</td></tr></table></div></div></div>
 </div>
 <p>These functions optionally take an integer argument <code class="docutils literal notranslate"><span class="pre">n</span></code> specifying how many of the thickest or thinnest intervals you want to see. If <code class="docutils literal notranslate"><span class="pre">n</span></code> is greater than 1, a <code class="docutils literal notranslate"><span class="pre">Striplog</span></code> object is returned so you can see the positions of those items:</p>
 <div class="cell docutils container">
@@ -532,7 +536,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(52 Intervals, start=100.0, stop=150.5)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Striplog(49 Intervals, start=100.0, stop=150.5)
 </pre></div>
 </div>
 </div>
@@ -544,7 +548,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><th>component</th><th>hatch</th><th>colour</th><th>width</th></tr><tr><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td><td style="color:black; background-color:white">None</td><td style="color:#000000; background-color:#48cc0e">#48cc0e</td><td style="color:black; background-color:white">1.0</td></tr><tr><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td><td style="color:black; background-color:white">None</td><td style="color:#ffffff; background-color:#5779e2">#5779e2</td><td style="color:black; background-color:white">0.2</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><th>colour</th><th>width</th><th>hatch</th><th>component</th></tr><tr><td style="color:#000000; background-color:#48cc0e">#48cc0e</td><td style="color:black; background-color:white">1.0</td><td style="color:black; background-color:white">None</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td></tr><tr><td style="color:#ffffff; background-color:#5779e2">#5779e2</td><td style="color:black; background-color:white">0.2</td><td style="color:black; background-color:white">None</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

@@ -5,13 +5,13 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="How to…" href="../howto.html" /><link rel="prev" title="Basic objects" href="02_Basic_objects.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.02.23"/>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
         <title>Display objects - striplog documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=3c656993158f05539f962c5cea52a5e6c184bb8c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
     
     
@@ -23,24 +23,28 @@
   --color-code-foreground: black;
   
   }
-  body[data-theme="dark"] {
-    --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
-  
-  }
-  @media (prefers-color-scheme: dark) {
-    body:not([data-theme="light"]) {
+  @media not print {
+    body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   
     }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
@@ -528,9 +532,9 @@ the Decors to the Legend.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/striplog/legend.py:687: UserWarning: This legend contains duplicate components.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.10.4/x64/lib/python3.10/site-packages/striplog/legend.py:687: UserWarning: This legend contains duplicate components.
   warnings.warn(w)
-/opt/hostedtoolcache/Python/3.10.2/x64/lib/python3.10/site-packages/striplog/legend.py:687: UserWarning: This legend contains duplicate components.
+/opt/hostedtoolcache/Python/3.10.4/x64/lib/python3.10/site-packages/striplog/legend.py:687: UserWarning: This legend contains duplicate components.
   warnings.warn(w)
 </pre></div>
 </div>
@@ -544,25 +548,25 @@ the Decors to the Legend.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>colour,width,hatch,component grainsize,component lithology,component colour
-#f7e9a6,3.0,None,vf-f,sandstone,grey,
-#ff99cc,2.0,None,,anhydrite,,
-#dbd6bc,3.0,None,,heterolithic,grey,
-#ff4c4a,2.0,None,,volcanic,,
-#86f0b6,5.0,None,,conglomerate,,
-#ff96f6,2.0,None,,halite,,
-#f2ff42,4.0,None,f-m,sandstone,grey,
-#dbc9bc,3.0,None,,heterolithic,red,
-#a68374,2.0,None,,siltstone,grey,
-#a657fa,3.0,None,,dolomite,,
-#ffd073,4.0,None,c-m,sandstone,red,
-#a6d1ff,3.0,None,,limestone,,
-#ffdbba,3.0,None,vf-f,sandstone,red,
-#ffe040,4.0,None,c-m,sandstone,grey,
-#a1655a,2.0,None,,siltstone,red,
-#363434,1.0,None,,coal,,
-#664a4a,1.0,None,,mudstone,red,
-#666666,1.0,None,,mudstone,grey,
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>colour,width,hatch,component lithology,component grainsize,component colour
+#f7e9a6,3.0,None,sandstone,vf-f,grey,
+#ff99cc,2.0,None,anhydrite,,,
+#dbd6bc,3.0,None,heterolithic,,grey,
+#ff4c4a,2.0,None,volcanic,,,
+#86f0b6,5.0,None,conglomerate,,,
+#ff96f6,2.0,None,halite,,,
+#f2ff42,4.0,None,sandstone,f-m,grey,
+#dbc9bc,3.0,None,heterolithic,,red,
+#a68374,2.0,None,siltstone,,grey,
+#a657fa,3.0,None,dolomite,,,
+#ffd073,4.0,None,sandstone,c-m,red,
+#a6d1ff,3.0,None,limestone,,,
+#ffdbba,3.0,None,sandstone,vf-f,red,
+#ffe040,4.0,None,sandstone,c-m,grey,
+#a1655a,2.0,None,siltstone,,red,
+#363434,1.0,None,coal,,,
+#664a4a,1.0,None,mudstone,,red,
+#666666,1.0,None,mudstone,,grey,
 </pre></div>
 </div>
 </div>
@@ -728,7 +732,7 @@ the Decors to the Legend.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><th>component</th><th>width</th><th>hatch</th><th>colour</th></tr><tr><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>colour</strong></td><td>red</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></div></td><td style="color:black; background-color:white">1.0</td><td style="color:black; background-color:white">None</td><td style="color:#ffffff; background-color:#4a57c9">#4a57c9</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><th>component</th><th>width</th><th>hatch</th><th>colour</th></tr><tr><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>colour</strong></td><td>red</td></tr><tr><td><strong>grainsize</strong></td><td>vf-f</td></tr><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></div></td><td style="color:black; background-color:white">1.0</td><td style="color:black; background-color:white">None</td><td style="color:#ffffff; background-color:#896caf">#896caf</td></tr></table></div></div></div>
 </div>
 <p>Sometimes we also want to use a width for a given lithology:</p>
 <div class="cell docutils container">
