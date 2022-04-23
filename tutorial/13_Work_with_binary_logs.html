@@ -264,7 +264,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fa68fe9ed10&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7efcb3992d10&gt;]
 </pre></div>
 </div>
 <img alt="../_images/13_Work_with_binary_logs_1_1.png" src="../_images/13_Work_with_binary_logs_1_1.png"/>
@@ -312,7 +312,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>100.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>1.50 m of False</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>101.5</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>100.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>2.00 m of True</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>102.0</td></tr></table></div></div></div>
 </div>
 </section>
 <section id="plot-the-intervals">
@@ -461,7 +461,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(Component({'pay': False}), 27.0), (Component({'pay': True}), 23.5)]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(Component({'pay': True}), 28.0), (Component({'pay': False}), 22.5)]
 </pre></div>
 </div>
 </div>
@@ -474,7 +474,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>125.0</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>6.00 m of False</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>131.0</td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><td rowspan="6" style="width:2em; background-color:#DDDDDD"></td><td><strong>top</strong></td><td>143.5</td></tr><tr><td><strong>primary</strong></td><td><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td></tr><tr><td><strong>summary</strong></td><td>4.00 m of True</td></tr><tr><td><strong>description</strong></td><td></td></tr><tr><td><strong>data</strong></td><td><div class="table-wrapper"><table></table></div></td></tr><tr><td><strong>base</strong></td><td>147.5</td></tr></table></div></div></div>
 </div>
 <p>These functions optionally take an integer argument <code class="docutils literal notranslate"><span class="pre">n</span></code> specifying how many of the thickest or thinnest intervals you want to see. If <code class="docutils literal notranslate"><span class="pre">n</span></code> is greater than 1, a <code class="docutils literal notranslate"><span class="pre">Striplog</span></code> object is returned so you can see the positions of those items:</p>
 <div class="cell docutils container">
@@ -548,7 +548,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><th>colour</th><th>width</th><th>hatch</th><th>component</th></tr><tr><td style="color:#000000; background-color:#48cc0e">#48cc0e</td><td style="color:black; background-color:white">1.0</td><td style="color:black; background-color:white">None</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td></tr><tr><td style="color:#ffffff; background-color:#5779e2">#5779e2</td><td style="color:black; background-color:white">0.2</td><td style="color:black; background-color:white">None</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><th>component</th><th>hatch</th><th>colour</th><th>width</th></tr><tr><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>True</td></tr></table></div></td><td style="color:black; background-color:white">None</td><td style="color:#000000; background-color:#48cc0e">#48cc0e</td><td style="color:black; background-color:white">1.0</td></tr><tr><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>pay</strong></td><td>False</td></tr></table></div></td><td style="color:black; background-color:white">None</td><td style="color:#ffffff; background-color:#5779e2">#5779e2</td><td style="color:black; background-color:white">0.2</td></tr></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
