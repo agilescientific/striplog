@@ -305,6 +305,53 @@
 </div>
 </div>
 <p>But now we’re not really dealing with regularly-sampled data anymore, we’re dealing with ‘intervals’. <strong>Striplog</strong> is sometimes a better option for representing this sort of data. So let’s try using that instead:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gr_blocky</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">block</span><span class="p">(</span><span class="n">cutoffs</span><span class="o">=</span><span class="p">[</span><span class="mi">40</span><span class="p">])</span>
+<span class="n">gr_blocky</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={'center':'GR'}, xlabel='gAPI'&gt;
+</pre></div>
+</div>
+<img alt="../_images/16_Block_logs_7_1.png" src="../_images/16_Block_logs_7_1.png"/>
+</div>
+</div>
+<p>We could find the thickest bed in this result using NumPy (i.e. the longest run of 1’s):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
+
+<span class="n">samples</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">run</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">gr_blocky</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="k">if</span> <span class="n">val</span><span class="p">)</span>
+<span class="n">samples</span> <span class="o">*</span> <span class="mf">0.1524</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>197.0532
+</pre></div>
+</div>
+</div>
+</div>
+<p>But it’s much easier to use Striplog, which can compute the resut directly from the <code class="docutils literal notranslate"><span class="pre">gr</span></code> log itself. (You have to pass ‘components’ to the <code class="docutils literal notranslate"><span class="pre">from_log()</span></code> function, but it doesn’t matter what they are.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">striplog</span> <span class="kn">import</span> <span class="n">Striplog</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">Striplog</span><span class="o">.</span><span class="n">from_log</span><span class="p">(</span><span class="n">gr</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="n">gr</span><span class="o">.</span><span class="n">basis</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="p">[</span><span class="mi">40</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+<span class="n">s</span><span class="o">.</span><span class="n">thickest</span><span class="p">()</span><span class="o">.</span><span class="n">thickness</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>197.05320000000017
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s look at how to do that with actual components…</p>
 <section id="make-a-striplog-instead-of-a-blocked-log">
 <h2>Make a striplog instead of a blocked log<a class="headerlink" href="#make-a-striplog-instead-of-a-blocked-log" title="Permalink to this headline">#</a></h2>
 <p>Striplog objects are potentially a bit more versatile than trying to use a log to represent intervals.</p>
@@ -340,7 +387,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/16_Block_logs_10_0.png" src="../_images/16_Block_logs_10_0.png"/>
+<img alt="../_images/16_Block_logs_16_0.png" src="../_images/16_Block_logs_16_0.png"/>
 </div>
 </div>
 <p>For a more natural visualization, it’s a good idea to make a legend to display things. For example:</p>
@@ -361,7 +408,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div class="table-wrapper"><table><tr><th>colour</th><th>width</th><th>hatch</th><th>component</th></tr><tr><td style="color:#000000; background-color:#fdf43f">#fdf43f</td><td style="color:black; background-color:white">3.0</td><td style="color:black; background-color:white">None</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></div></td></tr><tr><td style="color:#000000; background-color:#cfbb8f">#cfbb8f</td><td style="color:black; background-color:white">2.0</td><td style="color:black; background-color:white">None</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>siltstone</td></tr></table></div></td></tr><tr><td style="color:#000000; background-color:#c0d0c0">#c0d0c0</td><td style="color:black; background-color:white">1.0</td><td style="color:black; background-color:white">None</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>shale</td></tr></table></div></td></tr></table></div></div></div>
+<div class="output text_html"><div class="table-wrapper"><table><tr><th>width</th><th>component</th><th>hatch</th><th>colour</th></tr><tr><td style="color:black; background-color:white">3.0</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>sandstone</td></tr></table></div></td><td style="color:black; background-color:white">None</td><td style="color:#000000; background-color:#fdf43f">#fdf43f</td></tr><tr><td style="color:black; background-color:white">2.0</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>siltstone</td></tr></table></div></td><td style="color:black; background-color:white">None</td><td style="color:#000000; background-color:#cfbb8f">#cfbb8f</td></tr><tr><td style="color:black; background-color:white">1.0</td><td style="color:black; background-color:white"><div class="table-wrapper"><table><tr><td><strong>lithology</strong></td><td>shale</td></tr></table></div></td><td style="color:black; background-color:white">None</td><td style="color:#000000; background-color:#c0d0c0">#c0d0c0</td></tr></table></div></div></div>
 </div>
 <p>Now the plot will look more geological:</p>
 <div class="cell docutils container">
@@ -371,7 +418,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/16_Block_logs_14_0.png" src="../_images/16_Block_logs_14_0.png"/>
+<img alt="../_images/16_Block_logs_20_0.png" src="../_images/16_Block_logs_20_0.png"/>
 </div>
 </div>
 <p>Let’s simplify it a bit by removing beds thinner than 3 m, then ‘annealing’ over the gaps, then merging like neighbours (otherwise you’ll likely have a lot of beds juxtaposed with similar beds):</p>
@@ -384,7 +431,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/16_Block_logs_16_0.png" src="../_images/16_Block_logs_16_0.png"/>
+<img alt="../_images/16_Block_logs_22_0.png" src="../_images/16_Block_logs_22_0.png"/>
 </div>
 </div>
 <p>The easiest way to plot with a curve is like:</p>
@@ -408,7 +455,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/16_Block_logs_18_0.png" src="../_images/16_Block_logs_18_0.png"/>
+<img alt="../_images/16_Block_logs_24_0.png" src="../_images/16_Block_logs_24_0.png"/>
 </div>
 </div>
 <p>You can still make a blocky version from this Striplog:</p>
@@ -427,7 +474,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2000.0, 0.0)
 </pre></div>
 </div>
-<img alt="../_images/16_Block_logs_20_1.png" src="../_images/16_Block_logs_20_1.png"/>
+<img alt="../_images/16_Block_logs_26_1.png" src="../_images/16_Block_logs_26_1.png"/>
 </div>
 </div>
 <p>Note that this is a NumPy array, because <code class="docutils literal notranslate"><span class="pre">striplog</span></code> doesn’t know about <code class="docutils literal notranslate"><span class="pre">welly</span></code>. But you could make a <code class="docutils literal notranslate"><span class="pre">welly.Curve</span></code> object:</p>
@@ -445,7 +492,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={'center':'GR-B'}&gt;
 </pre></div>
 </div>
-<img alt="../_images/16_Block_logs_22_1.png" src="../_images/16_Block_logs_22_1.png"/>
+<img alt="../_images/16_Block_logs_28_1.png" src="../_images/16_Block_logs_28_1.png"/>
 </div>
 </div>
 <p>Let’s add this Curve to the well object <code class="docutils literal notranslate"><span class="pre">w</span></code> — then we can make a multi-track plot with <code class="docutils literal notranslate"><span class="pre">welly</span></code>:</p>
@@ -460,7 +507,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/16_Block_logs_24_0.png" src="../_images/16_Block_logs_24_0.png"/>
+<img alt="../_images/16_Block_logs_30_0.png" src="../_images/16_Block_logs_30_0.png"/>
 </div>
 </div>
 </section>
@@ -480,7 +527,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={'center':'RHOB'}, xlabel='g/cm3'&gt;
 </pre></div>
 </div>
-<img alt="../_images/16_Block_logs_26_1.png" src="../_images/16_Block_logs_26_1.png"/>
+<img alt="../_images/16_Block_logs_32_1.png" src="../_images/16_Block_logs_32_1.png"/>
 </div>
 </div>
 <p>Now we will ‘extract’ the RHOB data, using some reducing function — the default is to take the mean of the interval — into the intervals of the striplog <code class="docutils literal notranslate"><span class="pre">s</span></code>:</p>
@@ -520,10 +567,10 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7eff67f7aa70&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fa9f4b1c730&gt;]
 </pre></div>
 </div>
-<img alt="../_images/16_Block_logs_35_1.png" src="../_images/16_Block_logs_35_1.png"/>
+<img alt="../_images/16_Block_logs_41_1.png" src="../_images/16_Block_logs_41_1.png"/>
 </div>
 </div>
 <p>…but it’s more useful to make it into a <code class="docutils literal notranslate"><span class="pre">Curve</span></code> object and store it in the well object <code class="docutils literal notranslate"><span class="pre">w</span></code>:</p>
@@ -541,7 +588,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={'center':'RHOB-B'}, xlabel='g/cm3'&gt;
 </pre></div>
 </div>
-<img alt="../_images/16_Block_logs_37_1.png" src="../_images/16_Block_logs_37_1.png"/>
+<img alt="../_images/16_Block_logs_43_1.png" src="../_images/16_Block_logs_43_1.png"/>
 </div>
 </div>
 <p>Now let’s plot it next to the blocky GR to verify that the blocks are the same:</p>
@@ -557,7 +604,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={'center':'RHOB-B'}, xlabel='g/cm3'&gt;
 </pre></div>
 </div>
-<img alt="../_images/16_Block_logs_39_1.png" src="../_images/16_Block_logs_39_1.png"/>
+<img alt="../_images/16_Block_logs_45_1.png" src="../_images/16_Block_logs_45_1.png"/>
 </div>
 </div>
 <p>Or we can plot everything together using <code class="docutils literal notranslate"><span class="pre">welly</span></code> (if we first extend the legend again to accommodate the new logs):</p>
@@ -581,7 +628,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/16_Block_logs_41_0.png" src="../_images/16_Block_logs_41_0.png"/>
+<img alt="../_images/16_Block_logs_47_0.png" src="../_images/16_Block_logs_47_0.png"/>
 </div>
 </div>
 <hr class="docutils"/>
