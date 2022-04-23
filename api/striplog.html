@@ -1517,81 +1517,25 @@ for. Strings are treated as regular expressions.</p></li>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="striplog.Striplog.from_csv">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'depth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usecols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dlm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lexicon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.Striplog.from_csv" title="Permalink to this definition">#</a></dt>
-<dd><p>Read a csv file and generate a Striplog.
-There are a number of cases that should be handled:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Only tops are given - bases are inferred to be the next top.</p></li>
-<li><p>Only bases are given - tops are inferred to be the next base.</p></li>
-<li><p>Both bases and tops are given</p></li>
-<li><dl class="simple">
-<dt>Either bases or tops are given along with a thickness -</dt><dd><p>the missing value is calculated using the thickness.</p>
-</dd>
-</dl>
-</li>
-</ul>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dlm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lexicon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#striplog.Striplog.from_csv" title="Permalink to this definition">#</a></dt>
+<dd><p>Load from a CSV file or text.</p>
 <dl class="simple">
-<dt>TODO: handle the missing cases when creating the list of intervals.</dt><dd><p>Currently only the first and third cases will work.</p>
+<dt>Args</dt><dd><p>filename (str): The filename, or use <cite>text</cite>.
+text (str): CSV data as a string, or use <cite>filename</cite>.
+dlm (str): The delimiter, default ‘,’.
+lexicon (Lexicon): The lexicon to use, optional. Only needed if                 parsing descriptions (e.g. cuttings).
+points (bool): Whether to make a point dataset (as opposed to                 ordinary intervals with top and base. Default is False.
+include: Default is None.
+exclude: Default is None.
+remap: Default is None.
+function: Default is None.
+null: Default is None.
+ignore: Default is None.
+source: Default is None.
+stop: Default is None.
+fieldnames: Default is None.</p>
 </dd>
-</dl>
-</div></blockquote>
-<dl class="simple">
-<dt>The easiest is to have the headers in the csv, and then use the</dt><dd><p><cite>name</cite> argument. If you do this, then the <cite>top</cite>, <cite>base</cite> and
-<cite>thickness</cite> columns will be inferred if they are named that.</p>
-</dd>
-<dt>Alternatively, the columns to use can be supplied as a tuple of ints</dt><dd><p>using <cite>usecols</cite>.</p>
-</dd>
-<dt>The actual CSV reading is done using numpy’s genfromtxt, so all its</dt><dd><p>arguments can be passed as kwargs. For details, see
-<a class="reference external" href="https://numpy.org/devdocs/reference/generated/numpy.genfromtxt.html">https://numpy.org/devdocs/reference/generated/numpy.genfromtxt.html</a></p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> – Filename, a string, a list of strings, a generator
-or an open file-like object with a read method, for example,
-a file or io.StringIO object. If a single string is provided,
-it is assumed to be the name of a local or remote file. If a
-list of strings or a generator returning strings is provided,
-each string is treated as one line in a file. When the URL of
-a remote file is passed, the file is automatically downloaded
-to the current directory and opened.</p></li>
-<li><p><strong>text</strong> (<em>str</em><em>, </em><em>optional</em>) – Deprecated.</p></li>
-<li><p><strong>order</strong> (<em>str</em><em>, </em><em>optional</em>) – Controls the direction of the striplogs.
-Accepted values are ‘depth’ or ‘elevation’. This is most important
-when using a thickness, defaults to ‘depth’.</p></li>
-<li><p><strong>usecols</strong> (<em>int</em><em>, </em><em>list of ints</em><em>, </em><em>optional</em>) – Which columns to read. This
-should be linked with the use of <cite>names</cite> in many cases.</p></li>
-<li><p><strong>source</strong> (<em>string</em><em>, </em><em>optional</em>) – The attribution or source of the file.</p></li>
-<li><p><strong>dlm</strong> (<em>string</em><em>, </em><em>optional</em>) – Delimiter character between data entries in row of
-file. Deprecated. Please use ‘delimiter’ instead. Defaults to ‘,’.</p></li>
-<li><p><strong>delimiter</strong> (<em>string</em><em>, </em><em>optional</em>) – The string used to separate values.
-By default, a single comma (,) acts as delimiter. An integer or
-sequence of integers can also be provided as width(s) of each field.</p></li>
-<li><p><strong>skip_header</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of rows to skip. Defaults to 0.</p></li>
-<li><p><strong>names</strong> (<em>optional</em>) – If True, uses first unskipped row to define column
-headers. Definitely the easiest and most reliable approach.
-If a list, uses the list for column names. Defaults to None.</p></li>
-<li><p><strong>fieldnames</strong> (<em>str</em><em>, </em><em>sequence of strings</em><em>, </em><em>optional</em>) – [description].
-Deprecated. See <cite>names</cite>. Defaults to None.</p></li>
-<li><p><strong>points</strong> (<em>[</em><em>]</em><em>, </em><em>optional</em>) – </p></li>
-<li><p><strong>lexicon</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
-<li><p><strong>include</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
-<li><p><strong>exclude</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
-<li><p><strong>ignore</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
-<li><p><strong>stop</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
-<li><p><strong>function</strong> (<em>function</em><em>, </em><em>optional</em>) – Not currently used here, but will be.
-Defaults to None.</p></li>
-<li><p><strong>null</strong> (<em>string</em><em>, </em><em>optional</em>) – Deprecated. Defaults to None.</p></li>
-<li><p><strong>remap</strong> (<em>string</em><em>, </em><em>optional</em>) – Deprecated. Defaults to None.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A Striplog, made of the intervals as defined in the CSV file.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#striplog.Striplog" title="striplog.Striplog">Striplog</a></p>
+<dt>Returns</dt><dd><p>Striplog. A new instance.</p>
 </dd>
 </dl>
 </dd></dl>
