@@ -597,98 +597,156 @@ class Striplog:
         return list_of_Intervals
 
     @classmethod
-    def from_csv(cls, filename=None,
+    def from_csv(cls, filename,
                  text=None,
-                 dlm=',',
-                 lexicon=None,
+                 usecols=None,
+                 source=None,
+                 dlm=',',  # DEPRECATED, remove in v0.10.0
+                 encoding=None,
+                 delimiter=',',
+                 skip_header=0,
+                 names=True,
+                 remap=None,
+                 fieldnames=None,  # DEPRECATED, remove in v0.10.0
                  points=False,
+                 lexicon=None,
                  include=None,
                  exclude=None,
-                 remap=None,
-                 function=None,
-                 null=None,
                  ignore=None,
-                 source=None,
                  stop=None,
-                 fieldnames=None):
+                 null=None,
+                 func=None,
+                 **kwargs
+        ):
         """
-        Load from a CSV file or text.
+        Read a csv file and generate a Striplog. Columns called 'top' and
+        'base' have special meaning, and you must provide at least one of
+        them. Columns with names starting with 'comp' or 'component' are
+        treated as component properties.
 
-        Args
-            filename (str): The filename, or use `text`.
-            text (str): CSV data as a string, or use `filename`.
-            dlm (str): The delimiter, default ','.
-            lexicon (Lexicon): The lexicon to use, optional. Only needed if \
-                parsing descriptions (e.g. cuttings).
-            points (bool): Whether to make a point dataset (as opposed to \
-                ordinary intervals with top and base. Default is False.
-            include: Default is None.
-            exclude: Default is None.
-            remap: Default is None.
-            function: Default is None.
-            null: Default is None.
-            ignore: Default is None.
-            source: Default is None.
-            stop: Default is None.
-            fieldnames: Default is None.
+        If you have a column called 'Tops [m]', you must change it to 'top', or
+        add a column called 'top', or pass `remap={'Tops': 'top'}`, or pass
+        a full set of `names` which includes 'top'.
 
-        Returns
-            Striplog. A new instance.
+        The easiest thing is to have the headers in the CSV, and then set
+        `name=True`.
+
+        Alternatively, the columns to use can be supplied as a sequence of ints
+        using `usecols`, and `names` can be a sequence of names of the same
+        length.
+
+        The actual CSV reading is done using NumPy's `genfromtxt`, so all its
+        arguments can be passed as kwargs. For details, see
+        https://numpy.org/devdocs/reference/generated/numpy.genfromtxt.html
+
+        Args:
+            filename: Filename, a string, a list of strings, a generator 
+                or an open file-like object with a read method, for example,
+                a file or io.StringIO object. If a single string is provided,
+                it is assumed to be the name of a local or remote file. If a
+                list of strings or a generator returning strings is provided,
+                each string is treated as one line in a file. When the URL of
+                a remote file is passed, the file is automatically downloaded
+                to the current directory and opened. 
+            text (str, optional): Deprecated.
+            encoding (str, optional): Defaults to the system default.
+            usecols (int, list of ints, optional): Which columns to read. This
+                should be linked with the use of `names` in many cases.
+            source (string, optional): The attribution or source of the file.
+            dlm (string, optional): Delimiter character between data entries in row of
+                file. Deprecated: please use 'delimiter' instead. Defaults to ','.
+            delimiter (string, optional): The string used to separate values. 
+                By default, a single comma (,) acts as delimiter. An integer or
+                sequence of integers can also be provided as width(s) of each field. 
+            skip_header (int, optional): Number of rows to skip. Defaults to 0.
+            names (optional): If True (default), uses first unskipped row to
+                define column headers (the easiest and most reliable approach).
+                If a list, uses the list for column names. Length must match
+                `usecols` (if used) or the number of columns in the file.
+            remap (dict, optional): A dictionary mapping CSV column names to
+                desired column names. Note: if passing a sequences of names,
+                you do not need `remap`; simply pass the names you want.
+            func (callable): A dictionary mapping columns names to functions to
+                apply to the data. Defaults to None. Note: the keys will be
+                looked up after applying the remap dictionary, so use the new
+                names you assigned.
+            fieldnames (str, sequence of strings, optional): [description].
+                Deprecated. See `names`. Defaults to None.
+            points ([], optional) [description]. Defaults to None.
+            lexicon ([type], optional): [description]. Defaults to None.
+            include ([type], optional): [description]. Defaults to None.
+            exclude ([type], optional): [description]. Defaults to None.
+            ignore ([type], optional): [description]. Defaults to None.
+            stop ([type], optional): [description]. Defaults to None.
+            function (function, optional): Not currently used here, but will be.
+                Defaults to None.
+            null (string, optional): Deprecated. Defaults to None.
+
+        Returns:
+            Striplog: A Striplog, made of the intervals as defined in the CSV file.
+
+        TODO:
+            There are a number of cases that should be handled:
+
+                * Only tops are given - bases are inferred to be the next top.
+                * Only bases are given - tops are inferred to be the next base.
+                * Both bases and tops are given
+                * Either bases or tops are given along with a thickness -
+                    the missing value is calculated using the thickness.
+                * Only thickness is given and is accumulated to the next top
+                    (would also need order).
         """
-        if (filename is None) and (text is None):
-            raise StriplogError("You must provide a filename or CSV text.")
+        # Deprecations.
+        removed_by = 'This argument will be removed in version 0.10.0.'
+        if (dlm != ','):
+            delimiter = dlm
+            w = f"`dlm` is deprecated; please use `delimiter`. {removed_by}"
+            warnings.warn(w, FutureWarning, stacklevel=2)
 
-        if (filename is not None):
-            if source is None:
-                source = filename
-            with open(filename, 'r') as f:
-                text = f.read()
+        if (null is not None):
+            w1 = "`null` is deprecated; please use `fill_values` or `missing_values`."
+            w2 = f"See numpy.genfromtxt for how these work."
+            warnings.warn(w1+w2, FutureWarning, stacklevel=2)
 
-        source = source or 'CSV'
+        if (fieldnames is not None):
+            names = fieldnames
+            w = f"`fieldnames` is deprecated; please use `names`. {removed_by}"
+            warnings.warn(w, FutureWarning, stacklevel=2)
 
-        # Deal with multiple spaces in space delimited file.
-        if dlm == ' ':
-            text = re.sub(r'[ \t]+', ' ', text)
+        if (text is not None):
+            filename = StringIO(text)
+            w = f"`text` is deprecated; please use `Striplog.from_csv(filename=io.StringIO(text))`. {removed_by}"
+            warnings.warn(w, FutureWarning, stacklevel=2)
 
-        if fieldnames is not None:
-            text = dlm.join(fieldnames) + '\n' + text
+        data = np.genfromtxt(filename,
+                             dtype=None,  # All types.
+                             encoding=encoding,
+                             delimiter=delimiter,
+                             usecols=usecols,
+                             names=names,
+                             skip_header=skip_header,
+                             **kwargs
+                             )
 
-        try:
-            f = StringIO(text)  # Python 3
-        except TypeError:
-            f = StringIO(unicode(text))  # Python 2
+        data_dict = {k: data[k] for k in data.dtype.names}
 
-        reader = csv.DictReader(f, delimiter=dlm)
+        if remap is not None:
+            for k, v in remap.items():
+                data_dict[v] = data_dict.pop(k)
 
-        # Reorganize the data to make fixing it easier.
-        reorg = {k.strip().lower(): []
-                 for k in reader.fieldnames
-                 if k is not None}
-        t = f.tell()
-        for key in reorg:
-            f.seek(t)
-            for r in reader:
-                s = {k.strip().lower(): v.strip() for k, v in r.items()}
-                try:
-                    reorg[key].append(float(s[key]))
-                except ValueError:
-                    reorg[key].append(s[key])
+        if func is not None:
+            for k, v in func.items():
+                data_dict[k] = v(data_dict[k])
 
-        f.close()
-
-        remap = remap or {}
-        for k, v in remap.items():
-            reorg[v] = reorg.pop(k)
-
-        data = cls._clean_longitudinal_data(reorg, null=null)
-
-        list_of_Intervals = cls._build_list_of_Intervals(data,
+        # Now we make the intervals.
+        list_of_Intervals = cls._build_list_of_Intervals(data_dict,
                                                          points=points,
                                                          lexicon=lexicon,
                                                          include=include,
                                                          exclude=exclude,
                                                          ignore=ignore,
-                                                         stop=stop)
+                                                         stop=stop,
+                                                         )
 
         return cls(list_of_Intervals, source=source)
 
