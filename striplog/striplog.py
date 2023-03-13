@@ -1764,7 +1764,11 @@ class Striplog:
         """
         for i, iv in enumerate(self):
             if iv.spans(d):
-                return i if index else iv
+                if iv.base.lower==d:
+                    pass
+                else:    
+                    return i if index else iv
+
         return None
 
     def depth(self, d):
