@@ -1,8 +1,6 @@
 name: Build docs
 
 on:
-  push:
-    branches: [ develop, master ]
   release:
     types: [ published ]
 
@@ -12,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
+        python-version: '3.11'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -26,7 +24,7 @@ jobs:
         cd docs
         make html
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@v4.2.3
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
         folder: docs/_build/html
